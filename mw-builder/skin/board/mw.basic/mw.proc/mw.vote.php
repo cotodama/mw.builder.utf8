@@ -33,7 +33,13 @@ header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
 header("Cache-Control: pre-check=0, post-check=0, max-age=0"); // HTTP/1.1
 header("Pragma: no-cache"); // HTTP/1.0
 
-if (!$width) $width = 350;
+$width = $_GET['width'];
+if (!$width) {
+    if ($board['bo_table_width'] > 100)
+        $width = @intval($board['bo_table_width']*.5);
+    else
+        $width = 350;
+}
 
 if ($mw_basic[cf_vote]) {
     $vote = sql_fetch("select * from $mw[vote_table] where bo_table = '$bo_table' and wr_id = '$wr_id'");
@@ -49,7 +55,7 @@ if ($mw_basic[cf_vote]) {
         else
             $row[vt_rate] = "<span class='zero'>0</span>";
 
-        $row[vt_width] = @intval($width * $row[vt_rate] / 100);
+        $row[vt_width] = @intval($width * ($row[vt_rate] / 100));
         $vote_list[$i] = $row;
     }
 

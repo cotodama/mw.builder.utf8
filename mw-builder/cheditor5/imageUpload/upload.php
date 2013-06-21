@@ -39,7 +39,8 @@ default :
 $pos = strrpos($filename, '.');
 $ext = substr($filename, $pos, strlen($filename));
 //$random_name = random_generator() . $ext;
-$random_name = md5($_SERVER['REMOTE_ADDR']) . '_' . random_generator() . $ext;
+//$random_name = md5($_SERVER['REMOTE_ADDR']) . '_' . random_generator() . $ext;
+$random_name = md5($_SERVER['REMOTE_ADDR']) . '_' . get_microtime() . $ext;
 $savefile = SAVE_DIR . '/' . $random_name;
 move_uploaded_file($tempfile, $savefile);
 $imgsize = getimagesize($savefile);

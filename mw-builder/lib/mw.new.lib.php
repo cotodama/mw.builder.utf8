@@ -43,7 +43,7 @@ function mw_new($skin_dir="", $rows=10, $subject_len=40, $minute=0)
 	$sql = "select n.bo_table, n.wr_id, b.bo_subject 
 		  from $g4[board_new_table] as n, $g4[board_table] as b 
 		 where n.bo_table = b.bo_table and wr_id = wr_parent and b.bo_use_search = '1' 
-		 order by bn_id desc limit $rows";
+		 order by bn_datetime desc limit $rows";
 	$qry = sql_query($sql);
 	for ($i=0; $row=mysql_fetch_array($qry); $i++) {
 	    $bo_table = $row[bo_table];

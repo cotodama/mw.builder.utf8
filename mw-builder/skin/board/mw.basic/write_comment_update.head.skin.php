@@ -49,7 +49,7 @@ if (!$is_comment_write)
     alert("코멘트를 작성할 수 없습니다.");
 
 // 코멘트 작성 기간
-if ($mw_basic[cf_comment_period] > 0) {
+if ($w != 'cu' && $mw_basic[cf_comment_period] > 0) {
     if ($g4[server_time] - strtotime($write[wr_datetime]) > 60*60*24*$mw_basic[cf_comment_period]) {
         alert("작성한지 $mw_basic[cf_comment_period]일이 지난 게시물에는 코멘트를 작성할 수 없습니다.");
     }
@@ -90,7 +90,7 @@ if (($w != "cu") && $mw_basic[cf_comment_day] && $mw_basic[cf_comment_day_count]
     }
 }
 
-if ($mw_basic[cf_comment_write_count]) {
+if ($w != "cu" && $mw_basic[cf_comment_write_count]) {
     $sql = " select count(*) as cnt from $write_table where wr_num = '$write[wr_num]' and wr_is_comment = '1' ";
     if ($board[bo_comment_level] == 1 && !$is_member)
         $sql.= " and wr_ip = '$_SERVER[REMOTE_ADDR]' ";

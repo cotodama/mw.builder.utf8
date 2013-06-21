@@ -28,6 +28,8 @@ include_once("$board_skin_path/mw.lib/mw.skin.basic.lib.php");
 mw_bomb();
 mw_basic_move_cate($bo_table, $wr_id);
 
+$mb = get_member($view[mb_id], 'mb_level');
+
 // is_notice 그누보드 버그 보완
 $view[is_notice] = preg_match("/(^|[\r\n]){$wr_id}($|[\r\n])/",$board[bo_notice]); 
 
@@ -158,7 +160,7 @@ for ($i=$file_start; $i<=$view[file][count]; $i++) {
         continue;
     }
 
-    if (preg_match("/\.($config[cf_movie_extension])$/i", $view[file][$i][file])) {
+    if (strstr($mw_basic['cf_multimedia'], '/movie/') && preg_match("/\.($config[cf_movie_extension])$/i", $view[file][$i][file])) {
         $tmp = '';
         echo mw_jwplayer("{$g4[path]}/data/file/{$board[bo_table]}/{$view[file][$i][file]}");
         echo "<br/><br/>";
@@ -215,6 +217,14 @@ for ($i=$file_start; $i<=$view[file][count]; $i++) {
         if (trim($view[file][$i][content]))
             echo $view[file][$i][content] . "<br/><br/>";
     }
+    else if ($mw_basic[cf_iframe_level] and $mw_basic[cf_iframe_level] <= $mb[mb_level]) {
+        if (strstr($mw_basic['cf_multimedia'], '/image/') && preg_match("/\.($config[cf_image_extension])$/i", $view['file'][$i]['file'])) {
+            echo mw_file_view($view['file'][$i]['path'].'/'.$view['file'][$i]['file'], $view)."<br><br>";
+        }
+        else if (strstr($mw_basic['cf_multimedia'], '/flash/') && preg_match("/\.($config[cf_flash_extension])$/i", $view['file'][$i]['file'])) {
+            echo mw_file_view($view['file'][$i]['path'].'/'.$view['file'][$i]['file'], $view)."<br><br>";
+        }
+    }
 }
 $file_viewer = ob_get_contents();
 ob_end_clean();
@@ -222,20 +232,20 @@ ob_end_clean();
 // 링크 첨부
 $link_file_viewer = '';
 for ($i=1; $i<=$g4['link_count']; $i++) {
-    if (preg_match("/youtu/i", $view['link'][$i])) {
+    if (strstr($mw_basic['cf_multimedia'], '/youtube/') && preg_match("/youtu/i", $view['link'][$i])) {
         //$link_file_viewer .= mw_jwplayer($view['link'][$i])."<br><br>";
         $link_file_viewer .= mw_youtube($view['link'][$i])."<br><br>";
         $view['link'][$i] = '';
     }
-    elseif (preg_match("/\.($config[cf_movie_extension])$/i", $view['link'][$i])) {
+    elseif (strstr($mw_basic['cf_multimedia'], '/link_movie/') && preg_match("/\.($config[cf_movie_extension])$/i", $view['link'][$i])) {
         $link_file_viewer .= mw_jwplayer($view['link'][$i])."<br><br>";
         $view['link'][$i] = '';
     }
-    else if (preg_match("/\.($config[cf_image_extension])$/i", $view['link'][$i])) {
+    else if (strstr($mw_basic['cf_multimedia'], '/link_image/') && preg_match("/\.($config[cf_image_extension])$/i", $view['link'][$i])) {
         $link_file_viewer .= mw_file_view($view['link'][$i], $view)."<br><br>";
         $view['link'][$i] = '';
     }
-    else if (preg_match("/\.($config[cf_flash_extension])$/i", $view['link'][$i])) {
+    else if (strstr($mw_basic['cf_multimedia'], '/link_flash/') && preg_match("/\.($config[cf_flash_extension])$/i", $view['link'][$i])) {
         $link_file_viewer .= mw_file_view($view['link'][$i], $view)."<br><br>";
         $view['link'][$i] = '';
     }
@@ -553,7 +563,6 @@ if ($write[wr_reply] == "" && ($is_admin == "super" || $is_admin == "group")) {
 // 배추코드
 $view[rich_content] = bc_code($view[rich_content]);
 
-$mb = get_member($view[mb_id], 'mb_level');
 if ($mw_basic[cf_iframe_level] && $mw_basic[cf_iframe_level] <= $mb[mb_level]) {
     $view[rich_content] = preg_replace("/\&lt;([\/]?)(script|iframe)(.*)&gt;/iUs", "<$1$2$3>", $view[rich_content]);
     $view[rich_content] = str_replace("&#111;&#110;", "on", $view[rich_content]);
@@ -600,6 +609,7 @@ if ($mw_basic[cf_sns])
     $cy_url.= "'recom_icon_pop', 'width=400,height=364,scrollbars=no,resizable=no');";
     $naver_url = "http://bookmark.naver.com/post?ns=1&title=".urlencode(set_utf8($view[wr_subject]))."&url={$sns_url}";
     $google_url = "http://www.google.com//bookmarks/mark?op=add&title=".urlencode(set_utf8($view[wr_subject]))."&bkmk={$sns_url}";
+    $kakao_url = "kakaolink://sendurl?msg=".urlencode(set_utf8($view[wr_subject]))."&appver=1&appid={$_SERVER[HTTP_HOST]}&url=".urlencode($sns_url);
 
     $facebook_like_href = urlencode($view_url);
 
@@ -632,6 +642,9 @@ if ($mw_basic[cf_sns])
     <? if (strstr($mw_basic[cf_sns], '/google/')) { ?>
     <div><a href="<?=$google_url?>" target="_blank" title="이 글을 구글 북마크로 보내기"><img
         src="<?=$board_skin_path?>/img/send_google.png" border="0"></a></div>
+    <? } ?>
+    <? if (strstr(strtolower($_SERVER[HTTP_USER_AGENT]), "mobile") && strstr($mw_basic[cf_sns], '/kakao/')) { ?>
+    <div><a href="<?=$kakao_url?>"><img src="<?=$board_skin_path?>/img/send_kakaotalk.png" valign="middle"></a></div>
     <? } ?>
 
     <? if (strstr($mw_basic[cf_sns], '/facebook_good/')) { ?>
@@ -715,9 +728,11 @@ if ($mw_basic[cf_contents_shop] == '2' and $write[wr_contents_price]) // 배추 
         $view[file] = null;
     }
 }
+
+$view[rich_content] = mw_youtube_content($view[rich_content]);
 ?>
 <script type="text/javascript">
-document.title = "<?=get_text(addslashes($view[wr_subject]))?>";
+document.title = "<?=strip_tags(addslashes($view[wr_subject]))?>";
 </script>
 <!--
 <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet" />
@@ -774,7 +789,8 @@ AutoSourcing.init( 'view_%id%' , true);
 <!-- 게시글 보기 시작 -->
 <table width="<?=$bo_table_width?>" align="center" cellpadding="0" cellspacing="0"><tr><td id=mw_basic>
 
-<? @include_once($mw_basic[cf_include_head]); ?>
+<?  if ($mw_basic['cf_include_head'] && file_exists($mw_basic['cf_include_head']) && strstr($mw_basic[cf_include_head_page], '/v/'))
+    include_once($mw_basic[cf_include_head]); ?>
 
 <? include_once("$board_skin_path/mw.proc/mw.list.hot.skin.php"); ?>
 
@@ -797,8 +813,11 @@ AutoSourcing.init( 'view_%id%' , true);
         <? } ?>
         <? include("$board_skin_path/mw.proc/mw.smart-alarm-config.php") ?>
         <span class=mw_basic_total>총 게시물 <?=number_format($total_count)?>건, 최근 <?=number_format($new_count)?> 건</span>
-        <? if ($is_admin && $mw_basic[cf_collect] && file_exists("$g4[path]/plugin/rss-collect/_lib.php")) {?>
+        <? if ($is_admin && $mw_basic[cf_collect] == 'rss-collect' && file_exists("$g4[path]/plugin/rss-collect/_lib.php")) {?>
         <img src="<?=$g4[path]?>/plugin/rss-collect/img/btn_collect.png" align="absmiddle" style="cursor:pointer;" onclick="win_open('<?=$g4[path]?>/plugin/rss-collect/config.php?bo_table=<?=$bo_table?>', 'rss_collect', 'width=800,height=600,scrollbars=1')">
+        <? } ?>
+        <? if ($is_admin && $mw_basic[cf_collect] == 'youtube' && file_exists("$g4[path]/plugin/youtube-collect/_lib.php")) {?>
+        <img src="<?=$g4[path]?>/plugin/youtube-collect/img/btn_collect.png" align="absmiddle" style="cursor:pointer;" onclick="win_open('<?=$g4[path]?>/plugin/youtube-collect/config.php?bo_table=<?=$bo_table?>', 'youtube_collect', 'width=800,height=600,scrollbars=1')">
         <? } ?>
         <a style="cursor:pointer" class="tooltip"
             title="읽기:<?=$board[bo_read_point]?>,
@@ -1561,7 +1580,8 @@ if (!$view[wr_comment_hide] && ($mw_basic[cf_comment_level] <= $member[mb_level]
 
 <?=$link_buttons?>
 
-<? @include_once($mw_basic[cf_include_tail]); ?>
+<?  if ($mw_basic['cf_include_tail'] && file_exists($mw_basic['cf_include_tail']) && strstr($mw_basic[cf_include_tail_page], '/v/'))
+    include_once($mw_basic[cf_include_tail]); ?>
 
 </td></tr></table><br>
 

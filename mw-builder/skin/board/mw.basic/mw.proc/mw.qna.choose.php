@@ -42,7 +42,7 @@ if (!get_session($ss_name)) die("해당 게시물에서만 답변을 채택하�
 if ($mw_basic[cf_attribute] != 'qna')
     die("이 게시판은 질문 채택 기능을 사용하지 않습니다.");
 
-if ($write[wr_qna_status] > 0) 
+if (!$is_admin && $write[wr_qna_status] > 0) 
     die("이미 답변이 채택되었거나 보류되었습니다.");
 
 if (!($member[mb_id] && ($member[mb_id] == $write[mb_id] || $is_admin))) 
@@ -67,6 +67,7 @@ if ($choose_id) { //채택
     $qna_save_point = round($write[wr_qna_point] * round($mw_basic[cf_qna_save]/100,2));
     $qna_total_point = $qna_save_point + $mw_basic[cf_qna_point_add];
 
+    delete_point($write[mb_id], $bo_table, $wr_id, '@qna-hold');
     insert_point($answer[mb_id], $qna_total_point, "답변채택 포인트", $bo_table, $wr_id, '@qna-choose');
 
     die("답변이 채택되었습니다.|ok");

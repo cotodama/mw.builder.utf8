@@ -80,6 +80,26 @@ if ($cf_sns_google) $cf_sns.= '/google/';
 if ($cf_sns_facebook) $cf_sns.= '/facebook/';
 if ($cf_sns_facebook_good) $cf_sns.= '/facebook_good/';
 if ($cf_sns_google_plus) $cf_sns.= '/google_plus/';
+if ($cf_sns_kakao) $cf_sns.= '/kakao/';
+
+$cf_include_head_page = '';
+if ($cf_include_head_list) $cf_include_head_page.= '/l/';
+if ($cf_include_head_view) $cf_include_head_page.= '/v/';
+if ($cf_include_head_write) $cf_include_head_page.= '/w/';
+
+$cf_include_tail_page = '';
+if ($cf_include_tail_list) $cf_include_tail_page.= '/l/';
+if ($cf_include_tail_view) $cf_include_tail_page.= '/v/';
+if ($cf_include_tail_write) $cf_include_tail_page.= '/w/';
+
+$cf_multimedia = '';
+if ($cf_multimedia_movie) $cf_multimedia.= '/movie/';
+if ($cf_multimedia_image) $cf_multimedia.= '/image/';
+if ($cf_multimedia_flash) $cf_multimedia.= '/flash/';
+if ($cf_multimedia_youtube) $cf_multimedia.= '/youtube/';
+if ($cf_multimedia_link_movie) $cf_multimedia.= '/link_movie/';
+if ($cf_multimedia_link_image) $cf_multimedia.= '/link_image/';
+if ($cf_multimedia_link_flash) $cf_multimedia.= '/link_flash/';
 
 $cf_auto_move = array();
 $cf_auto_move['use'] = $cf_auto_move_use;
@@ -152,6 +172,7 @@ bo_table = '$bo_table'
 ,cf_post_emoticon = '$cf_post_emoticon'
 ,cf_comment_write = '$cf_comment_write'
 ,cf_comment_level = '$cf_comment_level'
+,cf_search_level = '$cf_search_level'
 ,cf_singo = '$cf_singo'
 ,cf_singo_id = '$cf_singo_id'
 ,cf_memo_id = '$cf_memo_id'
@@ -206,6 +227,7 @@ bo_table = '$bo_table'
 ,cf_notice_name = '$cf_notice_name'
 ,cf_notice_date = '$cf_notice_date'
 ,cf_notice_hit = '$cf_notice_hit'
+,cf_notice_good = '$cf_notice_good'
 ,cf_post_name = '$cf_post_name'
 ,cf_post_date = '$cf_post_date'
 ,cf_post_hit = '$cf_post_hit'
@@ -286,7 +308,9 @@ bo_table = '$bo_table'
 ,cf_include_file_head = '$cf_include_file_head'
 ,cf_include_file_tail = '$cf_include_file_tail'
 ,cf_include_head = '$cf_include_head'
+,cf_include_head_page = '$cf_include_head_page'
 ,cf_include_tail = '$cf_include_tail'
+,cf_include_tail_page = '$cf_include_tail_page'
 ,cf_include_list_main = '$cf_include_list_main'
 ,cf_include_comment_main = '$cf_include_comment_main'
 ,cf_subject_style = '$cf_subject_style'
@@ -333,6 +357,7 @@ bo_table = '$bo_table'
 ,cf_singo_level = '$cf_singo_level'
 ,cf_singo_writer = '$cf_singo_writer'
 ,cf_image_auto_rotate = '$cf_image_auto_rotate'
+,cf_multimedia = '$cf_multimedia'
 ,cf_youtube_size = '$cf_youtube_size'
 ,cf_watermark_use = '$cf_watermark_use'
 ,cf_watermark_use_thumb = '$cf_watermark_use_thumb'
@@ -362,6 +387,7 @@ bo_table = '$bo_table'
 ,cf_lucky_writing_comment_chance = '$cf_lucky_writing_comment_chance'
 ,cf_lucky_writing_comment_point_start = '$cf_lucky_writing_comment_point_start'
 ,cf_lucky_writing_comment_point_end = '$cf_lucky_writing_comment_point_end'
+,cf_lucky_writing_no_admin = '$cf_lucky_writing_no_admin'
 where bo_table = '$bo_table'";
 sql_query($sql);
 //,cf_preview_level = '$cf_preview_level'
@@ -455,6 +481,7 @@ if ($chk[cf_comment_emoticon]) $sql .= ", cf_comment_emoticon = '$cf_comment_emo
 if ($chk[cf_post_emoticon]) $sql .= ", cf_post_emoticon = '$cf_post_emoticon' ";
 if ($chk[cf_comment_write]) $sql .= ", cf_comment_write = '$cf_comment_write' ";
 if ($chk[cf_comment_level]) $sql .= ", cf_comment_level = '$cf_comment_level' ";
+if ($chk[cf_search_level]) $sql .= ", cf_search_level = '$cf_search_level' ";
 if ($chk[cf_comment_html]) $sql .= ", cf_comment_html = '$cf_comment_html' ";
 if ($chk[cf_singo]) $sql .= ", cf_singo = '$cf_singo' ";
 if ($chk[cf_singo_id]) $sql .= ", cf_singo_id = '$cf_singo_id' ";
@@ -514,6 +541,7 @@ if ($chk[bo_insert_content]) {
 if ($chk[cf_notice_name]) $sql .= ", cf_notice_name = '$cf_notice_name' ";
 if ($chk[cf_notice_date]) $sql .= ", cf_notice_date = '$cf_notice_date' ";
 if ($chk[cf_notice_hit]) $sql .= ", cf_notice_hit = '$cf_notice_hit' ";
+if ($chk[cf_notice_good]) $sql .= ", cf_notice_good = '$cf_notice_good' ";
 if ($chk[cf_post_name]) $sql .= ", cf_post_name = '$cf_post_name' ";
 if ($chk[cf_post_date]) $sql .= ", cf_post_date = '$cf_post_date' ";
 if ($chk[cf_post_hit]) $sql .= ", cf_post_hit = '$cf_post_hit' ";
@@ -607,7 +635,9 @@ if ($chk[cf_include_view_tail]) $sql .= ", cf_include_view_tail = '$cf_include_v
 if ($chk[cf_include_file_head]) $sql .= ", cf_include_file_head = '$cf_include_file_head' ";
 if ($chk[cf_include_file_tail]) $sql .= ", cf_include_file_tail = '$cf_include_file_tail' ";
 if ($chk[cf_include_head]) $sql .= ", cf_include_head = '$cf_include_head' ";
+if ($chk[cf_include_head_page]) $sql .= ", cf_include_head_page = '$cf_include_head_page' ";
 if ($chk[cf_include_tail]) $sql .= ", cf_include_tail = '$cf_include_tail' ";
+if ($chk[cf_include_tail_page]) $sql .= ", cf_include_tail_page = '$cf_include_tail_page' ";
 if ($chk[cf_include_list_main]) $sql .= ", cf_include_list_main = '$cf_include_list_main' ";
 if ($chk[cf_include_comment_main]) $sql .= ", cf_include_comment_main = '$cf_include_comment_main' ";
 if ($chk[cf_subject_style]) {
@@ -680,6 +710,7 @@ if ($chk[cf_good_graph]) $sql .= ", cf_good_graph = '$cf_good_graph' ";
 //if ($chk[cf_star]) $sql .= ", cf_star = '$cf_star' ";
 
 if ($chk[cf_image_auto_rotate]) $sql .= ", cf_image_auto_rotate = '$cf_image_auto_rotate' ";
+if ($chk[cf_multimedia]) $sql .= ", cf_multimedia = '$cf_multimedia' ";
 if ($chk[cf_youtube_size]) $sql .= ", cf_youtube_size = '$cf_youtube_size' ";
 if ($chk[cf_watermark_use]) {
     $sql .= ", cf_watermark_use = '$cf_watermark_use' ";
@@ -710,6 +741,7 @@ if ($chk[cf_lucky_writing_chance]) {
     $sql .= ", cf_lucky_writing_comment_chance = '$cf_lucky_writing_comment_chance' ";
     $sql .= ", cf_lucky_writing_comment_point_start = '$cf_lucky_writing_comment_point_start' ";
     $sql .= ", cf_lucky_writing_comment_point_end = '$cf_lucky_writing_comment_point_end' ";
+    $sql .= ", cf_lucky_writing_no_admin = '$cf_lucky_writing_no_admin' ";
 }
 $sql .= " where gr_id = '$gr_id' ";
 $def .= " where gr_id = '$gr_id' ";

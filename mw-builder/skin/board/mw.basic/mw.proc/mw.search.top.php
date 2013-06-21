@@ -21,6 +21,9 @@
 
 if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
 
+
+if (!$is_admin && (!$mw_basic['cf_search_level'] || $mw_basic['cf_search_level'] > $member['mb_level'])) return;
+
 if ($mw_basic[cf_search_top]) {
 ?>
 <div id="search_top">

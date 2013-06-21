@@ -100,7 +100,7 @@ function mw_latest_multi($skin_dir="", $tables, $rows=10, $subject_len=40, $is_i
         for ($i=0; $i<count($file); $i++) {
             $sql.= " and !(n.bo_table = '{$file[$i][bo_table]}' and n.wr_id = '{$file[$i][wr_id]}') ";
         }
-	$sql .= " order by bn_id desc limit $rows";
+	$sql .= " order by bn_datetime desc limit $rows";
 	$qry = sql_query($sql);
 	for ($i=0; $row=sql_fetch_array($qry); $i++) {
 	    if ($old_board != $row[bo_table]) {

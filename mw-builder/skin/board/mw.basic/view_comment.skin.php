@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Bechu-Basic Skin for Gnuboard4
  *
@@ -318,6 +318,8 @@ if ($mw_basic[cf_comment_best]) {
     // BC코드
     $row[content] = bc_code($row[content]);
     $row[content] = mw_tag_debug($row[content]); // 잘못된 태그교정
+
+    $row[content] = mw_youtube_content($row[content]); // 유투브 자동 재생
 ?>
 
 <div class="mw_basic_comment_best">
@@ -599,6 +601,7 @@ for ($i=$from_record; $i<$to_record; $i++) {
 
     $list[$i][content] = bc_code($list[$i][content]);
     $list[$i][content] = mw_tag_debug($list[$i][content]);
+    $list[$i][content] = mw_youtube_content($list[$i][content]); // 유투브 자동 재생
 
     // 관리자 게시물은 IP 주소를 보이지 않습니다
     if ($list[$i][mb_id] == $config[cf_admin]) $list[$i][ip] = "";
@@ -726,7 +729,7 @@ for ($i=$from_record; $i<$to_record; $i++) {
         <div style="text-align:right; padding-right:10px;">
             <span class="mw_basic_comment_url" value="<?=$list[$i][wr_id]?>">댓글주소</span>
             <? if ($mw_basic[cf_attribute] == 'qna'
-                && !$write[wr_qna_status] && $member[mb_id] && ($member[mb_id] == $write[mb_id] || $is_admin) && !$view[is_notice]) { ?>
+                && ($is_admin || !$write[wr_qna_status]) && $member[mb_id] && ($member[mb_id] == $write[mb_id] || $is_admin) && !$view[is_notice]) { ?>
                 <span class="mw_basic_qna_choose"><a onclick="mw_qna_choose(<?=$list[$i][wr_id]?>)">답변채택</a> <? } ?>
             <? if ($mw_basic[cf_comment_good]) { ?>
                 <span class="mw_basic_comment_good"><a onclick="mw_comment_good(<?=$list[$i][wr_id]?>, 'good')"><img src="<?=$board_skin_path?>/img/thumbs_up.png" alt="추천"/> 추천</a>
@@ -739,6 +742,7 @@ for ($i=$from_record; $i<$to_record; $i++) {
 
         <div id='edit_<?=$comment_id?>' style='display:none;'></div><!-- 수정 -->
         <div id='reply_<?=$comment_id?>' style='display:none;'></div><!-- 답변 -->
+        <input type="hidden" id='secret_<?=$comment_id?>' value="<?=strstr($list[$i][wr_option], 'secret')?'1':'';?>"> <!-- 비밀글 -->
 
         <textarea id='save_comment_<?=$comment_id?>' style='display:none;'><?=get_text($list[$i][content1], 0)?></textarea></td>
         <? } ?>
@@ -898,12 +902,12 @@ if ($is_comment_editor && $mw_basic[cf_editor] == "cheditor") {
     <? if ($mw_basic[cf_comment_emoticon] && !$is_comment_editor && !$write_error) {?>
     <span class=mw_basic_comment_emoticon><a href="javascript:win_open('<?=$board_skin_path?>/mw.proc/mw.emoticon.skin.php?bo_table=<?=$bo_table?>','emo','width=600,height=400,scrollbars=yes')">☞ 이모티콘</a></span>
     <? } ?>
-    <? if ($mw_basic[cf_comment_file] && !$write_error) { ?>
+    <? if ($mw_basic[cf_comment_file] && $mw_basic[cf_comment_file] <= $member['mb_level'] && !$write_error) { ?>
     <span class=mw_basic_comment_file onclick="$('#comment_file_layer').toggle('slow');">☞ 첨부파일</span>
     <? } ?>
 </div>
 
-<? if ($mw_basic[cf_comment_file]) { ?>
+<? if ($mw_basic[cf_comment_file] && $mw_basic[cf_comment_file] <= $member['mb_level']) { ?>
 <div id="comment_file_layer" style="padding:5px 0 5px 5px; display:none;">
     <input type="file" name="bf_file" size="50" title='파일 용량 <?=$upload_max_filesize?> 이하만 업로드 가능' class="mw_basic_text">
     <input type="checkbox" name="bf_file_del" value="1"> 첨부파일 삭제
@@ -1139,6 +1143,9 @@ function comment_box(comment_id, work)
                 <? } ?>
 
             <? } ?>
+            if ($("#secret_"+comment_id).val() == '1')
+                $("#wr_secret").attr("checked", "true");
+            
         }
 
         $("#comment_id").val(comment_id);
@@ -1202,7 +1209,7 @@ function comment_delete(url)
 }
 </script>
 
-<? if ($mw_basic[cf_attribute] == 'qna' && !$write[wr_qna_status] && $member[mb_id] && ($member[mb_id] == $write[mb_id] || $is_admin) && !$view[is_notice]) { ?>
+<? if ($mw_basic[cf_attribute] == 'qna' && ($is_admin || !$write[wr_qna_status]) && $member[mb_id] && ($member[mb_id] == $write[mb_id] || $is_admin) && !$view[is_notice]) { ?>
 <script type="text/javascript">
 function mw_qna_choose(wr_id) {
     if (wr_id) {
@@ -1321,6 +1328,13 @@ function btn_ip_search(ip) {
     win_open("<?=$g4[admin_path]?>/member_list.php?sfl=mb_ip&stx=" + ip);
 }
 </script>
+<? if ($mw_basic[cf_post_history]) { ?>
+<script type="text/javascript">
+function btn_history(wr_id) {
+    win_open("<?=$board_skin_path?>/mw.proc/mw.history.list.php?bo_table=<?=$bo_table?>&wr_id=" + wr_id, "mw_history", "width=500, height=300, scrollbars=yes");
+}
+</script>
+<? } ?>
 <? if ($mw_basic[cf_singo]) { ?>
 <script type="text/javascript">
 function btn_singo(wr_id, parent_id) {

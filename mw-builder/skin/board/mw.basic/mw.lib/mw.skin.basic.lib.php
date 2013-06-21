@@ -171,6 +171,10 @@ if (!$is_admin && $mw_basic[cf_board_week] && $mw_basic[cf_board_week] != '0,0,0
     }
 }
 
+if ($stx && !$is_admin && (!$mw_basic['cf_search_level'] || $mw_basic['cf_search_level'] > $member['mb_level'])) {
+    alert("검색 권한이 없습니다.");
+}
+
 // 플러그인 컨텐츠샵
 $sql = "select * from $mw_cash[board_config_table] limit 1";
 $row = sql_fetch($sql, false);
@@ -194,9 +198,13 @@ if (file_exists("$quiz_path/_config.php")) include_once("$quiz_path/_config.php"
 $lucky_writing_path = "$g4[path]/plugin/lucky-writing";
 if (file_exists("$lucky_writing_path/_lib.php")) include_once("$lucky_writing_path/_lib.php");
 
-// 수집기
+// RSS 수집기
 $rss_collect_path = "$g4[path]/plugin/rss-collect";
 if (file_exists("$rss_collect_path/_config.php")) include_once("$rss_collect_path/_config.php");
+
+// youtube 수집기
+$youtube_collect_path = "$g4[path]/plugin/youtube-collect";
+if (file_exists("$youtube_collect_path/_config.php")) include_once("$youtube_collect_path/_config.php");
 
 if ($mw_basic[cf_social_commerce]) {
     $social_commerce_path = "$g4[path]/plugin/social-commerce";
@@ -283,6 +291,7 @@ $thumb3_path = "$file_path/thumbnail3";
 $thumb4_path = "$file_path/thumbnail4";
 $thumb5_path = "$file_path/thumbnail5";
 
+mw_mkdir($file_path);
 mw_mkdir($thumb_path);
 mw_mkdir($thumb2_path);
 mw_mkdir($thumb3_path);

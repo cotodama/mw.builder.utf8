@@ -338,7 +338,8 @@ jQuery(function($){
 <!-- 글작성 시작 -->
 <table width="<?=$bo_table_width?>" align="center" cellpadding="0" cellspacing="0"><tr><td id=mw_basic>
 
-<? @include_once($mw_basic[cf_include_head]); ?>
+<?  if ($mw_basic['cf_include_head'] && file_exists($mw_basic['cf_include_head']) && strstr($mw_basic[cf_include_head_page], '/w/'))
+    include_once($mw_basic[cf_include_head]); ?>
 
 <script type="text/javascript">
 // 글자수 제한
@@ -369,8 +370,11 @@ var char_max = parseInt(<?=$write_max?>); // 최대
         <span class=mw_basic_total style="cursor:pointer;" onclick="win_open('<?=$social_commerce_path?>/order_list.php?bo_table=<?=$bo_table?>', 'order_list', 'width=800,height=600,scrollbars=1');">[주문내역]</span>
         <? } ?>
         <span class=mw_basic_total>총 게시물 <?=number_format($total_count)?>건, 최근 <?=number_format($new_count)?> 건</span>
-        <? if ($is_admin && $mw_basic[cf_collect] && file_exists("$g4[path]/plugin/rss-collect/_lib.php")) {?>
+        <? if ($is_admin && $mw_basic[cf_collect] == 'rss-collect' && file_exists("$g4[path]/plugin/rss-collect/_lib.php")) {?>
         <img src="<?=$g4[path]?>/plugin/rss-collect/img/btn_collect.png" align="absmiddle" style="cursor:pointer;" onclick="win_open('<?=$g4[path]?>/plugin/rss-collect/config.php?bo_table=<?=$bo_table?>', 'rss_collect', 'width=800,height=600,scrollbars=1')">
+        <? } ?>
+        <? if ($is_admin && $mw_basic[cf_collect] == 'youtube' && file_exists("$g4[path]/plugin/youtube-collect/_lib.php")) {?>
+        <img src="<?=$g4[path]?>/plugin/youtube-collect/img/btn_collect.png" align="absmiddle" style="cursor:pointer;" onclick="win_open('<?=$g4[path]?>/plugin/youtube-collect/config.php?bo_table=<?=$bo_table?>', 'youtube_collect', 'width=800,height=600,scrollbars=1')">
         <? } ?>
         <a style="cursor:pointer" class="tooltip"
             title="읽기:<?=$board[bo_read_point]?>,
@@ -559,6 +563,7 @@ if ($mw_basic[cf_category_radio]) {
     <? if ($mw_basic[cf_subject_style_color_picker]) { ?>
     색상 : <input type="text" size="7" class="ed" name="wr_subject_color" id="wr_subject_color"/>
     <input type="button" class="btn1" value="색상 선택기▼" id="btn_color_picker" style="font-size:11px;"/>
+    <input type="button" class="btn1" value="기본값" id="btn_color_picker_default" style="font-size:11px;"/>
     <div id="color_picker" style="position:absolute; display:none; padding:10px; background-color:#fff; border:1px solid #ccc; z-index:999;"></div>
 
     <? if (!$write[wr_subject_color]) $write[wr_subject_color] = $mw_basic[cf_subject_style_color_default]; ?>
@@ -575,6 +580,10 @@ if ($mw_basic[cf_category_radio]) {
                 $(this).val("색상 선택기▼");
             else
                 $(this).val("색상 선택기▲");
+        });
+        $('#btn_color_picker_default').click(function () {
+            fwrite.wr_subject_color.value = "<?=$mw_basic[cf_subject_style_color_default]?>";
+            $.farbtastic($('#color_picker')).setColor("<?=$mw_basic[cf_subject_style_color_default]?>");
         });
 
         $('#color_picker').farbtastic('#wr_subject_color');
@@ -1488,7 +1497,8 @@ if ($w == "") {
 </table>
 </form>
 
-<? @include_once($mw_basic[cf_include_tail]); ?>
+<?  if ($mw_basic['cf_include_tail'] && file_exists($mw_basic['cf_include_tail']) && strstr($mw_basic[cf_include_tail_page], '/w/'))
+    include_once($mw_basic[cf_include_tail]); ?>
 
 </td></tr></table>
 
@@ -1752,6 +1762,7 @@ function fwrite_check(f) {
 
     //document.getElementById('btn_submit').disabled = true;
     $("#btn_submit").attr("src", $("#loading img").attr("src"));
+    $("#btn_submit").attr("disabled", "true");
     document.getElementById('btn_list').disabled = true;
 
     <?

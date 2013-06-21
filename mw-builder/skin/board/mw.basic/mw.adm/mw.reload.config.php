@@ -20,7 +20,6 @@
  */
 
 include_once("_common.php");
-include_once("$board_skin_path/mw.lib/mw.skin.basic.lib.php");
 
 header("Content-Type: text/html; charset=$g4[charset]");
 $gmnow = gmdate("D, d M Y H:i:s") . " GMT";
@@ -33,17 +32,9 @@ header("Pragma: no-cache"); // HTTP/1.0
 if ($is_admin != "super")
     die("접근 권한이 없습니다.");
 
-// 환경설정 파일 경로
 $mw_basic_config_path = "$g4[path]/data/mw.basic.config";
-$mw_basic_config_file = "$mw_basic_config_path/$bo_table";
-mw_mkdir($mw_basic_config_path, 0707);
-
-include_once("$board_skin_path/mw.adm/mw.upgrade.php");
-$mw_basic_upgrade_time_file = "$mw_basic_config_path/{$bo_table}_upgrade_time";
-mw_write_file($mw_basic_upgrade_time_file, filectime("$board_skin_path/mw.adm/mw.upgrade.php"));
-
-// 환경설정  파일 없으면 생성
-mw_basic_write_config_file();
+$files = glob("$g4[path]/data/mw.basic.config/*");
+array_map('unlink', $files);
 
 die("설정다시읽기 완료");
 

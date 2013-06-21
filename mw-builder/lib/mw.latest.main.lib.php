@@ -91,7 +91,7 @@ function mw_latest_main($skin_dir="", $bo_tables, $rows=10, $subject_len=40, $mi
         for ($i=0; $i<count($file); $i++) {
             $sql.= " and !(n.bo_table = '{$file[$i][bo_table]}' and n.wr_id = '{$file[$i][wr_id]}') ";
         }
-	$sql .= " order by bn_id desc limit $main_rows";
+	$sql .= " order by bn_datetime desc limit $main_rows";
 	$qry =  sql_query($sql);
 	for ($i=0; $row = sql_fetch_array($qry); $i++) {
 	    $tmp_write_table = $g4['write_prefix'] . $row[bo_table]; // 게시판 테이블 전체이름

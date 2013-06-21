@@ -108,7 +108,7 @@ function mw_latest_group($skin_dir="", $gr_id, $rows=10, $subject_len=40, $is_im
 	$sql = "select n.bo_table, n.wr_id 
 		  from $g4[board_new_table] as n, $g4[board_table] as b 
 		 where n.bo_table = b.bo_table and wr_id = wr_parent and b.bo_use_search = '1' and n.bo_table in ('$sql_tables') and n.wr_id not in ('$noids')
-		 order by bn_id desc limit $rows";
+		 order by bn_datetime desc limit $rows";
 	$qry = sql_query($sql);
 	for ($i=0; $row=sql_fetch_array($qry); $i++) {
 	    if ($old_board != $row[bo_table]) {

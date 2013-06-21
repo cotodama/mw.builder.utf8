@@ -284,6 +284,7 @@ function mw_get_last_thumb($bo_tables, $cnt=1)
     $list = array();
     for ($i=1; $i<=$cnt; $i++) {
         $list[] = array_shift($files);
+        if (!$files) break;
     }
 
     $files = null;

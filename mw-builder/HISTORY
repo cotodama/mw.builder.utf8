@@ -1,3 +1,25 @@
+4.36.22 (2013.06.13)
+    :   우편번호 2013.02.01.자 반영 52,144건
+    :   cheditor5에서 파일업로드시 파일명이 중복될수 있는 경우를 최소화함 (카이루님께서 알려주셨습니다.)
+
+        bbs/zip.db
+
+        cheditor5/imageUpload/upload.php 를 아래와 같이 수정했습니다.
+
+            $random_name = md5($_SERVER['REMOTE_ADDR']) . '_' . get_microtime() . $ext;
+
+4.36.21 (2013.04.09)
+    :   중복된 자바스크립트 코드 제거
+
+        adm/admin.head.php
+            <script type="text/javascript" src="<?=$g4['path']?>/js/common.js"></script> 제거
+
+        adm/auth_list.php
+        adm/boardgroupmember_list.php
+        adm/member_list.php
+        adm/point_list.php
+            <script type="text/javascript" src="<?=$g4[path]?>/js/sideview.js"></script> 제거
+
 4.36.20 (2013.03.11)
     :   중복된 코드 제거와 DTD 선언시 좌표 오류 해결 (kuma 님의 해결책을 처음으로님께서 알려 주셨습니다.)
 

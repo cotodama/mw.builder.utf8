@@ -187,6 +187,7 @@ if (is_null($mw_basic[cf_notice_name])) {
     sql_query("alter table $mw[basic_config_table] add cf_notice_date tinyint default '0' not null", false);
     sql_query("alter table $mw[basic_config_table] add cf_notice_hit tinyint default '0' not null", false);
 }
+    sql_query("alter table $mw[basic_config_table] add cf_notice_good tinyint default '0' not null", false);
 
 // 일반게시물 이름, 날짜, 조회수 출력 여부 
 if (is_null($mw_basic[cf_notice_name])) {
@@ -698,6 +699,8 @@ if (is_null($mw_basic[cf_include_head])) {
     sql_query("alter table $mw[basic_config_table] add cf_include_head varchar(255) not null", false);
     sql_query("alter table $mw[basic_config_table] add cf_include_tail varchar(255) not null", false);
 }
+    sql_query("alter table $mw[basic_config_table] add cf_include_head_page varchar(20) default '/l//v//w/' not null", false);
+    sql_query("alter table $mw[basic_config_table] add cf_include_tail_page varchar(20) default '/l//v//w/' not null", false);
 
 // 본문추가
 if (is_null($mw_basic[cf_include_view])) {
@@ -930,6 +933,7 @@ if (is_null($mw_basic[cf_lucky_writing_ment])) {
 if (is_null($mw_basic[cf_lucky_writing_comment])) {
     sql_query("alter table $mw[basic_config_table] add cf_lucky_writing_comment varchar(255) not null", false);
 }
+    sql_query("alter table $mw[basic_config_table] add cf_lucky_writing_no_admin varchar(1) not null", false);
 
 // 임시저장
 $sql = "create table if not exists $mw[temp_table] (
@@ -1173,4 +1177,8 @@ if (is_null($mw_basic[cf_talent_market])) {
     sql_query("alter table $mw[basic_config_table] add cf_lightbox_y int not null default '100'", false);
 
     sql_query("alter table $write_table add wr_lightbox varchar(1) not null default ''", false);
+
+    sql_query("alter table $mw[basic_config_table] add cf_multimedia varchar(100) default '/movie//image//flash//youtube//link_movie//link_image//link_flash/' not null", false);
+
+    sql_query("alter table $mw[basic_config_table] add cf_search_level tinyint default '1' not null", false);
 
