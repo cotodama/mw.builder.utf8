@@ -1,0 +1,583 @@
+1.3.0 (13.05.31)
+    : 최신글 썸네일 게시판오류 출력 안되게 (금광님 제안)
+    : 최신글 mw.list.img 스킨 오류 수정 (l2zeo님 제안)
+    : 배추스킨 최신버전 2.1.3 (13.05.31) 탑재
+
+    HISTORY-MW-BUILDER
+    lib/mw.common.lib.php
+    skin/latest/mw.list.img/latest.skin.php
+ 
+1.2.9 (13.05.24)
+    : 최근게시물에 에디터 이미지, 유튜브 썸네일 지원 (승군82님 제안)
+      mw_latest, mw_latest_group, mw_latest_multi 함수만
+    : 배추스킨 최신버전 2.1.2 (13.05.24) 탑재
+
+    HISTORY-MW-BUILDER
+    lib/mw.common.lib.php
+    lib/mw.latest.lib.php
+    lib/mw.latest.group.lib.php
+    lib/mw.latest.multi.lib.php
+ 
+1.2.8 (13.05.17)
+    : 그룹관리에 중메뉴관리 바로가기 버튼 추가
+    : 중메뉴관리에 그룹관리 바로가기 버튼 추가
+    : 중메뉴관리에 소메뉴관리 바로가기 버튼 추가
+    : 배추스킨 최신버전 2.1.1 (13.05.17) 탑재
+
+    HISTORY-MW-BUILDER
+    adm/mw.builder/mw.group.form.php
+    adm/mw.builder/mw.m.menu.form.php
+ 
+1.2.7 (13.04.26)
+    : 공지최신글 코멘트수 짤림 해결
+    : 배추스킨 최신버전 2.0.8 (13.04.26) 탑재
+
+    HISTORY-MW-BUILDER
+    skin/latest/mw.news/latest.skin.php
+ 
+1.2.6 (13.04.05)
+    : 2단메뉴 - 소메뉴 바로이동 옵션 사용시 오류 수정 (재아님 제안)
+    : 배추스킨 최신버전 2.0.5 (13.04.05) 탑재
+
+    HISTORY-MW-BUILDER
+    lib/mw.menus.lib.php
+    lib/mw.builder.lib.php
+ 
+1.2.5 (13.03.29)
+    : 서브도메인 미사용시 2단 메뉴구성 버그수정 (재아님 제안)
+    : 배추스킨 최신버전 2.0.4 (13.03.29) 탑재
+
+    HISTORY-MW-BUILDER
+    lib/mw.builder.lib.php
+ 
+1.2.4 (13.03.15)
+    : 관리자-배추빌더-업그레이드를 반드시 실행해주세요.
+    : 기본그룹설정 (2단메뉴 사용가능)
+    : 팝업시간 오류 수정 (슬프다님 제안)
+    : 설치시 기본스킨지정 사용자추가 편의 개선 (재아님 제안)
+    : 그누보드 최신버전 4.36.20 (13.03.11) 탑재
+    : 배추스킨 최신버전 2.0.2 (13.03.15) 탑재
+
+    HISTORY-MW-BUILDER
+    adm/mw.builder/mw.config.form.php
+    adm/mw.builder/mw.config.update.php
+    lib/mw.builder.lib.php
+    lib/mw.popup.lib.php
+    mw.upgrade.php
+ 
+1.2.3 (13.02.28)
+    : 그누보드 최신버전 4.36.19 (13.02.26) 탑재
+    : 배추스킨 최신버전 2.0.0 (13.02.28) 탑재
+    : mw.news (latest)스킨, 날짜에 게시판 바로가기 링크
+
+    HISTORY-MW-BUILDER
+    skin/latest/mw.news/latest.skin.php
+ 
+1.2.2 (13.02.15)
+    : 그누보드 최신버전 4.36.16 (13.02.14) 탑재
+    : 배추스킨 최신버전 1.9.8 (13.02.15) 탑재
+
+    HISTORY-MW-BUILDER
+ 
+1.2.1 (13.02.08)
+    : 그누보드 최신버전 4.36.15 (13.02.06) 탑재
+    : 배추스킨 최신버전 1.9.7 (13.02.08) 탑재
+    : 하단링크 모바일 기기에서 글자 커보이는 문제 해결 (2세대,3세대)
+    : 최신글 이미지 제목 커서 모양변경 (골목길님 제안)
+    : 인기검색어 롤링 버그 (바리데기님 제안)
+
+    HISTORY-MW-BUILDER
+    plugin/board_group/lib.php
+    skin/mw.builder/mw.basic.2/index.tail.skin.php
+    skin/mw.builder/mw.basic.3/index.tail.skin.php
+    skin/popular/mw.scroll/popular.skin.php
+    skin/popular/mw.scroll.3/popular.skin.php
+ 
+1.2.0 (13.01.18)
+    : 검색창 크롬에서의 outline 제거 및 여백 배경색 지정 (금광님 제안)
+    : 가로사이즈 100 이하는 % 표시 (재아님 제안)
+    : 그룹 가로크기 % 설정 
+    : 퀵링크 여백 수정 (승군82님 제안)
+    : 배추스킨 최신버전 1.9.4 (13.01.18)
+
+    HISTORY-MW-BUILDER
+    adm/mw.builder/mw.index.form.php
+    adm/mw.builder/mw.group.form.php
+    skin/mw.builder/mw.basic.1/index.head.skin.php
+    skin/mw.builder/mw.basic.1/group.head.skin.php
+    skin/mw.builder/mw.basic.2/index.head.skin.php
+    skin/mw.builder/mw.basic.2/group.head.skin.php
+    skin/mw.builder/mw.basic.3/index.head.skin.php
+    skin/mw.builder/mw.basic.3/group.head.skin.php
+ 
+1.1.9 (13.01.11)
+    : html5 대응
+    : 서브도메인 자동설정 개선
+    : 가로크기 % 설정 (세이브모드님 제안)
+    : 사이드뷰 아이콘 적용
+    : 그누보드 최신버전 4.36.12 (13.01.09)
+    : 배추스킨 최신버전 1.9.3 (13.01.11)
+
+    HISTORY-MW-BUILDER
+    lib/mw.builder.lib.php
+    lib/mw.host.lib.php
+    plugin/board_group/lib.php
+    js/sideview.js
+    js/sideview_icon/*
+
+    skin/mw.builder/mw.basic.1/index.head.skin.php
+    skin/mw.builder/mw.basic.1/index.tail.skin.php
+    skin/mw.builder/mw.basic.1/group.head.skin.php
+    skin/mw.builder/mw.basic.1/menu.more.skin.php
+
+    skin/mw.builder/mw.basic.2/index.head.skin.php
+    skin/mw.builder/mw.basic.2/index.tail.skin.php
+    skin/mw.builder/mw.basic.2/group.head.skin.php
+    skin/mw.builder/mw.basic.2/menu.more.skin.php
+
+    skin/mw.builder/mw.basic.3/index.head.skin.php
+    skin/mw.builder/mw.basic.3/index.tail.skin.php
+    skin/mw.builder/mw.basic.3/group.head.skin.php
+    skin/mw.builder/mw.basic.3/menu.more.skin.php
+
+    skin/popular/mw.index/popular.skin.php
+ 
+1.1.8 (13.01.04)
+    : 배추스킨 최신버전 1.9.2 (12.01.04)
+    : 초기 설치시 default charset 적용 (euckr 제외)
+    : 소메뉴 목록에서 페이지 선택 (배추없다님 제안)
+    : 팝업창 z-index (재아님 제안)
+
+    HISTORY-MW-BUILDER
+    adm/mw.builder/mw.s.menu.list.php
+    adm/mw.builder/mw.s.menu.list.update.php
+    lib/mw.popup.lib.php
+    mw.upgrade.php
+ 
+1.1.7 (12.12.28)
+    : 그누보드 최신버전 4.36.11 (12.12.13)
+    : 배추스킨 최신버전 1.9.1 (12.12.28)
+    : 초기 설치시 default charset 적용
+    : outlogin 경고창 오류
+    : 1,2세대 종합메인 스킨에 게시판명 출력 (위즈위드님 제안)
+    : 메인 최근 게시물 댓글수 출력 (1세대, 2세대, 3세대, 잼스박님 제안)
+
+    HISTORY-MW-BUILDER
+    lib/mw.new.lib.php
+    lib/mw.latest.main.lib.php
+    lib/mw.latest.multi.lib.php
+    lib/mw.latest.rand.lib.php
+    lib/mw.latest.group.lib.php
+    lib/mw.latest.lib.php
+    plugin/board_group/lib.php
+    skin/latest/mw.index.main/latest.skin.php
+    skin/latest/mw.index.scroll/latest.skin.php
+    skin/latest/mw.board.group.list/latest.skin.php
+    skin/latest/mw.board.group.image/latest.skin.php
+    skin/latest/mw.index.list/latest.skin.php
+    skin/latest/mw.index.list.img/latest.skin.php
+    skin/latest/mw.index.side/latest.skin.php
+    skin/latest/mw.index.side2/latest.skin.php
+    skin/latest/mw.index.side.img/latest.skin.php
+    skin/latest/mw.group/latest.skin.php
+    skin/outlogin/mw.outlogin/outlogin.skin.1.php
+    skin/outlogin/mw.outlogin2/outlogin.skin.1.php
+    skin/outlogin/mw.outlogin3/outlogin.skin.1.php
+    skin/outlogin/mw.outlogin4/outlogin.skin.1.php
+    mw.upgrade.php
+ 
+1.1.6 (12.11.09)
+    : 배추스킨 최신버전 1.8.4 (12.11.09)
+    : 그누보드 최신버전 4.36.08 (12.11.01)
+    : 탭스킨 overflow:hidden; 처리
+    : 상단 소메뉴 css 크롬 최신버전 변경사항 적용
+    : 소메뉴 관리에서 게시판 이름에 ID도 출력
+    : 관리자 - 배추빌더 - 업그레이드 실행해주세요.
+
+    HISTORY-MW-BUILDER
+    adm/mw.builder/mw.s.menu.form.php
+    adm/mw.builder/mw.popup.form.php
+    adm/mw.builder/mw.popup.update.php
+    lib/mw.popup.lib.php
+    skin/latest/mw.tab/latest.skin.php
+    skin/mw.builder/mw.builder.1/group.head.skin.php
+    skin/mw.builder/mw.builder.2/group.head.skin.php
+    skin/mw.builder/mw.builder.3/group.head.skin.php
+    mw.upgrade.php
+ 
+1.1.5 (12.10.19)
+    : 배추스킨 최신버전 1.8.1 (12.10.19)
+    : 그누보드 최신버전 4.36.06 (12.10.12)
+    : 최근게시물 배추스킨 라이브러리 중복 선언문제
+    : 팝업창 관리 제목 길이 조정
+    : 접근권한 반복알람 오류
+
+    HISTORY-MW-BUILDER
+    adm/mw.builder/mw.popup.php
+    lib/mw.builder.lib.php
+    skin/latest/mw.list/latest.skin.php
+    skin/latest/mw.news/latest.skin.php
+    skin/latest/mw.side.list/latest.skin.php
+
+1.1.4 (12.08.31)
+    : 파일교체 후 관리자-배추빌더-업그레이드 실행해주세요.
+    : 그누보드 최신버전 4.36.04 (12.08.22) - 그누보드 업데이트는 별도 작업요
+    : 배추스킨 최신버전 1.7.5 (12.08.31)
+    : 점검중, 메뉴별 나이, 성별 접근제한 오류 수정 및 관리자 제외
+
+    HISTORY-MW-BUILDER
+    lib/mw.builder.lib.php
+    lib/mw.age.lib.php
+    mw.upgrade.php
+
+1.1.3 (12.08.24)
+    : 파일교체 후 관리자-배추빌더-업그레이드 실행해주세요.
+    : 그누보드 최신버전 4.36.04 (12.08.22) - 그누보드 업데이트는 별도 작업요
+    : 배추스킨 최신버전 1.7.4 (12.08.24)
+    : 중메뉴, 소메뉴 고유번호 출력
+    : mw.latest.main 같은 게시물 출력 오류수정 (1,2세대)
+    : 페이지에 스크립트 사용가능
+    : 팝업 가운데 설정
+    : 소메뉴 선택삭제 기능
+    : 회원가입통계, 원글댓글, 댓글통계 검색 페이징 오류
+    : 그룹, 중메뉴, 소메뉴 점검중 메시지 옵션
+    : 메뉴별 나이, 성별 접근제한
+    : 설치시 메뉴 및 게시판 생성 안함 옵션
+    : 최신글 file_exists 오류수정
+
+    HISTORY-MW-BUILDER
+    adm/mw.builder/mw.group.form.php
+    adm/mw.builder/mw.group.update.php
+    adm/mw.builder/mw.m.menu.form.php
+    adm/mw.builder/mw.m.menu.list.php
+    adm/mw.builder/mw.s.menu.form.php
+    adm/mw.builder/mw.s.menu.list.php
+    adm/mw.builder/mw.s.menu.list.update.php
+    adm/mw.builder/mw.s.menu.list.delete.php
+    adm/mw.builder/mw.s.menu.php
+    adm/mw.builder/mw.popup.form.php
+    adm/mw.builder/mw.popup.update.php
+    adm/mw.builder/mw.member.count.php
+    adm/mw.builder/mw.write.count.php
+    adm/mw.builder/mw.comment.count.php
+    lib/mw.latest.main.lib.php
+    lib/mw.popup.lib.php
+    lib/mw.builder.lib.php
+    lib/mw.age.lib.php
+    skin/latest/mw.list/latest.skin.php
+    skin/latest/mw.news/latest.skin.php
+    skin/latest/mw.side.list/latest.skin.php
+    page.php
+    mw.upgrade.php
+ 
+1.1.2 (12.07.06)
+    : 최근게시물 이미지 제목 html 태그 처리 
+    : 인기검색어 링크 오류 수정
+    : 최근게시물 일부 배추스킨 BCCode 연동
+    : 그누보드 최신버전 4.36.02 (12.06.27)
+    : 배추스킨 최신버전 1.6.8 (12.06.29)
+
+    HISTORY-MW-BUILDER
+    lib/mw.latest.lib.php
+    lib/mw.latest.group.lib.php
+    lib/mw.latest.main.lib.php
+    lib/mw.latest.multi.lib.php
+    lib/mw.latest.rand.lib.php
+    skin/popuplar/mw.scroll.3/popuplar.skin.php
+    skin/latest/mw.news/latest.skin.php
+    skin/latest/mw.list/latest.skin.php
+    skin/latest/mw.side.list/latest.skin.php
+    *
+ 
+1.1.1 BETA (12.01.20)
+    : 파일교체 후 관리자-배추빌더-업그레이드 실행해주세요.
+    : 팝업 레이어 z-index 설정
+    : 버전 확인페이지 추가
+    : 페이지 생성기능
+    : 팝업창관리 geditor 에서 cheditor 로 변경
+    : 중메뉴, 소메뉴 레벨별 접근 권한
+
+    HISTORY-MW-BUILDER
+    adm/mw.builder/mw.m.menu.form.php
+    adm/mw.builder/mw.m.menu.update.php
+    adm/mw.builder/mw.s.menu.form.php
+    adm/mw.builder/mw.s.menu.update.php
+    adm/mw.builder/mw.version.php
+    adm/mw.builder/mw.popup.form.php
+    adm/mw.builder/mw.page.php
+    adm/mw.builder/mw.page.form.php
+    adm/mw.builder/mw.page.update.php
+    adm/mw.builder/mw.page.delete.php
+    adm/mw.builder/mw.page.list.delete.php
+    adm/mw.builder/mw.menus.lib.php
+    adm/admin.menu110.php
+    lib/mw.builder.lib.php
+    lib/mw.popup.lib.php
+    mw.upgrade.php
+    mw.config.php
+    page.php
+
+1.1.0 BETA (11.10.14)
+    : 팝업창 날짜 입력오류 수정 
+    : 팝업창 jquery date picker 로 교체
+    : mw.index.main 최신글 스킨에서 { 닉네임} 치환 적용 안되는 문제 해결 
+    : { 별명} 치환 적용 안되는 문제 해결 
+    : 그누보드 100% 호환성을 위해 세션DB 및 중복로그인 방지 기능 제외 ( 필요하신 분은 http://umz.kr/000PA )
+    : 그누보드 최신 4.34.14 (11.10.04) 버전에 맞춰 업데이트
+    : 배추스킨 최신버전 1.4.8 (11.10.07) 포함
+
+    adm/mw.builder/mw.popup.form.php 
+    adm/mw.builder/mw.config.form.php
+    adm/mw.builder/mw.config.update.php
+    lib/mw.common.lib.php
+    skin/latest/*
+
+1.0.9 BETA (11.08.20)
+    : 관리자 메뉴관리에 no-cache 코드 적용
+    : geditor 누락분 추가
+    : 그누보드 최신 4.34.10 (11.08.10) 버전에 맞춰 업데이트
+    : 배추스킨 최신버전 1.4.4 (11.08.19) 
+
+    adm/mw.builder/mw.group.list.php
+    adm/mw.builder/mw.group.theme.php
+    adm/mw.builder/mw.m.menu.list.php
+    adm/mw.builder/mw.s.menu.cate.php
+    adm/mw.builder/mw.s.menu.list.php
+    geditor/*
+
+1.0.8 BETA (11.06.20)
+    : 관리자 - 배추빌더 - 업그레이드 실행해주세요.
+    : 그누보드 최신 4.34.06 (11.06.21) 버전에 맞춰 업데이트
+    : 배추스킨 최신버전 1.4.2 (11.06.20) 
+    : 회원관련 페이지에만 멤버 head/tail 스킨 출력되도록 변경
+    : 인기검색어 회원아이디 노출 안함 (mysql 4.1 이상)
+    : 팝업창에서 jquery 불러오는 부분 제거
+
+    adm/mw.builder/mw.config.form.php
+    adm/mw.builder/mw.config.update.php
+    lib/mw.builder.lib.php
+    lib/mw.popular.lib.php
+    lib/mw.popup.lib.php
+    mw.upgrade.php
+    head.php
+    tail.php
+ 
+1.0.7 BETA (10.02.14)
+    : 그누보드 최신 4.33.04 (11.02.12) 버전에 맞춰 업데이트
+    : 배추스킨 최신버전 1.3.6 (11.01.21) 
+    : 팝업-인덱스 오류 수정
+    : 그룹테마 미지정시 기본테마설정 mw.blue
+    : 소메뉴 cache 생성 오류 수정 
+    : 중메뉴관리 target 설정 오류 수정
+    : 소메뉴 왼쪽, 오른쪽 출력안암 옵션 추가
+
+    adm/mw.builder/mw.m.menu.form.php
+    adm/mw.builder/mw.s.menu.form.php
+    adm/mw.builder/mw.s.menu.update.php
+    adm/mw.builder/mw.menus.lib.php
+    lib/mw.popup.lib.php
+    lib/mw.builder.lib.php
+    skin/mw.builder/mw.basic.1/group.head.skin.php
+    skin/mw.builder/mw.basic.2/group.head.skin.php
+    skin/mw.builder/mw.basic.3/group.head.skin.php
+    skin/mw.builder/mw.basic.1/group.tail.skin.php
+    skin/mw.builder/mw.basic.2/group.tail.skin.php
+    skin/mw.builder/mw.basic.3/group.tail.skin.php
+    mw.upgrade.php
+ 
+1.0.6 BETA (10.10.14)
+    : 중메뉴, 소메뉴 출력안함 옵션
+    : 그룹메뉴, 중메뉴 target 지정
+    : 그누보드 최신 (4.32.11, 100911) 버전에 맞춰 업데이트
+    : 소메뉴관리 페이지번호 삭제
+    : 회원가입, 로그인 페이지 디자인 적용
+    : 배추스킨 최신버전 1.2.6 (10.07.13) 
+
+    adm/mw.builder/mw.menus.lib.php
+    adm/mw.builder/mw.group.form.php
+    adm/mw.builder/mw.group.update.php
+    adm/mw.builder/mw.m.menu.form.php
+    adm/mw.builder/mw.m.menu.update.php
+    adm/mw.builder/mw.s.menu.list.php
+    adm/mw.builder/mw.s.menu.form.php
+    adm/mw.builder/mw.s.menu.update.php
+    skin/mw.builder/mw.basic.1/group.head.skin.php
+    skin/mw.builder/mw.basic.2/group.head.skin.php
+    skin/mw.builder/mw.basic.3/group.head.skin.php
+    skin/mw.builder/mw.basic.1/member.head.skin.php
+    skin/mw.builder/mw.basic.1/member.tail.skin.php
+    skin/mw.builder/mw.basic.2/member.head.skin.php
+    skin/mw.builder/mw.basic.2/member.tail.skin.php
+    skin/mw.builder/mw.basic.3/member.head.skin.php
+    skin/mw.builder/mw.basic.3/member.tail.skin.php
+    common.php
+
+1.0.5 BETA (10.07.13)
+    : 3세대 스킨 검색경로 수정
+    : 사이드 최신글목록에 코멘트 수 추가
+    : 탭최신글 마우스 오버 시간 단축
+    : 소메뉴수정 오류메세지 수정
+    : 3세대 메인최신글 이미지 2줄이상 가능
+    : 크롬지원, 로그인시 엔터로 로그인 안되던 증상 해결
+    : 우측 mw.side.img 스킨 다중사용 가능
+    : 설치시 첨부파일 디렉토리 자동생성
+    : 회원레벨별 그룹접근 권한
+    : 소메뉴 외부URL target 오류 수정
+    : 3세대 메인 board_group 더블클릭 게시판 이동
+    : 탭 최신글 여러개 사용 가능 (mw.tab)
+    : 최근게시물 캐쉬경로 오류해결
+    : 그룹홈 title 메타 그룹명으로 변경
+    : 팝업 일반 페이지에서 무조건 출력되는 오류 수정
+    : 최신글 이미지 출력 변경 (게시물외 이미지x, 이미지외 게시물o)
+    : 그룹삭제시 속해있는 중메뉴, 소메뉴 자동삭제 
+    : 그누보드 최신버전 4.32.04 (10.07.02) 
+    : 배추스킨 최신버전 1.2.6 (10.07.13) 
+
+    adm/mw.builder/*
+    skin/mw.builder/mw.basic.3/index.head.skin.php
+    skin/latest/mw.side.list/latest.skin.php
+    skin/latest/mw.side.img/latest.skin.php
+    skin/latest/mw.tab/latest.skin.php
+    skin/latest/mw.board.group.image/latest.skin.php
+    skin/outlogin/mw.outlogin/outlogin.skin.1.php
+    skin/outlogin/mw.outlogin2/outlogin.skin.1.php
+    skin/outlogin/mw.outlogin3/outlogin.skin.1.php
+    skin/outlogin/mw.outlogin4/outlogin.skin.1.php
+    skin/board/mw.basic/*
+    plugin/board_group/lib.php
+    lib/mw.builer.lib.php
+    lib/mw.common.lib.php
+    lib/mw.popup.lib.php
+    lib/mw.latest.*
+    mw.upgrade.php
+    index.php
+    
+1.0.4 BETA REPACK (09.12.02)
+    : goto_url2 함수 추가
+    : 배추빌더 1세대, 2세대, 3세대 스킨선택 추가
+
+    lib/mw.builer.lib.php
+    plugin/board_group/*
+    skin/mw.builder/mw.basic.1/group.head.skin.php
+    skin/mw.builder/mw.basic.2/*
+    skin/mw.builder/mw.basic.3/*
+    skin/outlogin/mw.outlogin4/*
+    skin/popular/mw.index.scroll.3/*
+    skin/latest/mw.board.group.list/*
+    skin/latest/mw.board.group.image/*
+    skin/latest/mw.news/*
+    skin/latest/mw.index.tab.image/*
+    install/install_config.php
+    install/install_db.php
+    mw.upgrade.php
+    style.css
+
+1.0.3 BETA (09.05.22)
+    : 소메뉴-사용자URL 버그수정
+    : 인기검색어 알고리즘 개선 (Rino님제안)
+    : 중-소메뉴 외부링크URL 및 CSS 기능 추가
+    : [종합] 최신글에 분류 추가 (ca_name)
+    : 메뉴삭제시 순서꼬이는 오류수정
+    : 그룹테마명 오류 수정
+    : 팝업관리권한 오류수정
+    : 메인최신글 이미지출력 버그 수정
+    : 플래쉬 첨부파일때문에 최신글에서 엑박나오는 오류수정
+    : 그룹스킨 사이트외곽 div 에서 table 로 변경 (컨텐츠 가로사이즈가 늘어날 경우 메뉴길이 자동 조정)
+    : 소메뉴 새창 기능 (target)
+
+    adm/mw.builder/mw.menus.lib.php
+    adm/mw.builder/mw.group.theme.php
+    adm/mw.builder/mw.m.menu.form.php
+    adm/mw.builder/mw.m.menu.update.php
+    adm/mw.builder/mw.m.menu.delete.php
+    adm/mw.builder/mw.s.menu.form.php
+    adm/mw.builder/mw.s.menu.update.php
+    adm/mw.builder/mw.s.menu.delete.php
+    lib/mw.builer.lib.php
+    lib/mw.popular.lib.php
+    lib/mw.latest.main.lib.php
+    lib/mw.latest.*
+    skin/mw.builder/mw.basic.1/group.head.skin.php
+    skin/mw.builder/mw.basic.1/group.tail.skin.php
+
+1.0.2 BETA (09.01.28)
+    : UTF8 수정
+    : 최근게시물 썸네일 에러 수정
+    : 서브도메인 인식 문제 수정
+    : 관리자 링크 끝에 / 추가
+    : 새로 로그인 했을 경우 기존 로그인 풀리는 현상 수정
+    : 인덱스화면 가로크기 문제 수정
+    : www. 서브도메인 기본 설정 제거
+    : 인기검색어에 슬래쉬(/) 포함시 검색 안함 (해킹간주)
+    : index 스킨 head 와 main 서로 분리
+    : 인기검색어 스크롤 스킨에서 글자 흰색으로 출력되는 css 수정
+    : 그룹메뉴 사이트맵 출력 안함 추가
+    : 그룹메뉴 더보기 추가 
+    : 그룹메뉴 더보기 CSS 옵션 추가 
+    : 투표의견에 get_text() 적용
+    : 그룹 외부링크 옵션 추가
+    : 사이트맵 서브도메인 적용버그 수정
+    : 소메뉴 게시판-분류선택 추가
+    : 메인 검색사용게시판 이미지만 나오게 수정
+    : 중메뉴,소메뉴 관리자만 출력 옵션 추가
+    : group 설정에서 main 스킨설정 삭제
+    : skin 디렉토리의 group.main.skin.php -> mmenu.skin.main.php 파일명 변경
+    : 출력안함 에러 수정
+    : 소메뉴 사용자 URL 이해를 돕기위해 앞 주소 출력
+    : local 설치시 로그인 문제 해결
+
+    adm/mw.builder/*
+    lib/mw.builder.lib.php
+    lib/mw.menus.lib.php
+    lib/mw.latest.*.php
+    lib/cheditor.lib.php
+    lib/cheditor4.lib.php
+    skin/latest/*
+    skin/outlogin/mw.outlogin/outlogin.skin.2.php
+    skin/outlogin/mw.outlogin2/outlogin.skin.2.php
+    skin/outlogin/mw.outlogin3/outlogin.skin.2.php
+    skin/mw.builder/mw.basic.1/group.head.skin.php
+    skin/mw.builder/mw.basic.1/index.head.skin.php
+    skin/mw.builder/mw.basic.1/index.main.skin.php
+    skin/mw.builder/mw.basic.1/mmenu.skin.skin.php
+    skin/mw.builder/mw.basic.1/img/x.gif
+    skin/member/mw.member/login_check.skin.php
+    skin/popular/mw.scroll/popular.skin.php
+    skin/poll/mw.poll/poll_result.skin.php
+    extend/mw.stx.extend.php
+    config.php
+    mw.upgrade.php
+
+
+08.12.22    베타 1.0.1 배포
+
+ 배추빌더 이력 ↑
+
+
+================================================================================
+배추빌더 주요기능
+--------------------------------------------------------------------------------
+- 3단 자동생성 메뉴
+- 그룹별 다중 서브도메인 지원
+- 캐쉬 기능으로 DB 부하 최소화 
+- 세션 DB 지원
+- 중복로그인 방지 기능
+
+- 그누보드 최신버전 지원
+- 게시판별 접속자 카운터
+- 회원가입 통계
+- 원본글 통계
+- 댓글 통계
+- 팝업창 관리 (layer 및 window 모두 지원)
+- 포인트 일괄지급 기능
+
+- 랜덤 최근게시물 지원
+- 멀티탭 최근게시물 지원
+- 인기검색어 변동순위 지원
+
+- 포털형식의 basic 스킨
+- 인덱스, 그룹 페이지 스킨화로 다양한 형태 변형 가능
+- 익스플로러, 파이어폭스 크로스브라우징 지원
+
+================================================================================
+
