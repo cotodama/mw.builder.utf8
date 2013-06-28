@@ -562,6 +562,7 @@ if ($write[wr_reply] == "" && ($is_admin == "super" || $is_admin == "group")) {
 
 // 배추코드
 $view[rich_content] = bc_code($view[rich_content]);
+$view[rich_content] = mw_tag_debug($view[rich_content]);
 
 if ($mw_basic[cf_iframe_level] && $mw_basic[cf_iframe_level] <= $mb[mb_level]) {
     $view[rich_content] = preg_replace("/\&lt;([\/]?)(script|iframe)(.*)&gt;/iUs", "<$1$2$3>", $view[rich_content]);
@@ -813,7 +814,7 @@ AutoSourcing.init( 'view_%id%' , true);
         <? } ?>
         <? include("$board_skin_path/mw.proc/mw.smart-alarm-config.php") ?>
         <span class=mw_basic_total>총 게시물 <?=number_format($total_count)?>건, 최근 <?=number_format($new_count)?> 건</span>
-        <? if ($is_admin && $mw_basic[cf_collect] == 'rss-collect' && file_exists("$g4[path]/plugin/rss-collect/_lib.php")) {?>
+        <? if ($is_admin && $mw_basic[cf_collect] == 'rss' && file_exists("$g4[path]/plugin/rss-collect/_lib.php")) {?>
         <img src="<?=$g4[path]?>/plugin/rss-collect/img/btn_collect.png" align="absmiddle" style="cursor:pointer;" onclick="win_open('<?=$g4[path]?>/plugin/rss-collect/config.php?bo_table=<?=$bo_table?>', 'rss_collect', 'width=800,height=600,scrollbars=1')">
         <? } ?>
         <? if ($is_admin && $mw_basic[cf_collect] == 'youtube' && file_exists("$g4[path]/plugin/youtube-collect/_lib.php")) {?>
@@ -1192,7 +1193,7 @@ if ($bomb) {
 
         <? @include_once($mw_basic[cf_include_view_head])?>
 
-        <?=$mw_basic[cf_content_head]?>
+        <?=bc_code($mw_basic[cf_content_head])?>
 
         <div id=view_content>
 
@@ -1237,6 +1238,7 @@ if ($bomb) {
 
         <?echo $view[rich_content]; // {이미지:0} 과 같은 코드를 사용할 경우?>
 
+        <?=bc_code($mw_basic[cf_content_add])?>
         <? @include_once($mw_basic[cf_include_view])?>
 
         </div>
@@ -1307,7 +1309,7 @@ if ($bomb) {
             </script>
         <? } ?>
 
-        <?=$mw_basic[cf_content_tail]?>
+        <?=bc_code($mw_basic[cf_content_tail])?>
 
         <? @include_once($mw_basic[cf_include_view_tail])?>
 

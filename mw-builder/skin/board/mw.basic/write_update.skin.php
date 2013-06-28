@@ -388,7 +388,7 @@ if ($mw_basic[cf_vote] && $mw_basic[cf_vote_level] <= $member[mb_level])
     }
     $vt_item = $tmp;
     if ($w == "" && sizeof($vt_item)) {
-        $sql = "insert into $mw[vote_table] set bo_table = '$bo_table', wr_id = '$wr_id', vt_sdate = '$vt_sdate', vt_edate = '$vt_edate', vt_point = '$vt_point', vt_multi = '$vt_multi' ";
+        $sql = "insert into $mw[vote_table] set bo_table = '$bo_table', wr_id = '$wr_id', vt_sdate = '$vt_sdate', vt_edate = '$vt_edate', vt_point = '$vt_point', vt_multi = '$vt_multi', vt_comment = '$vt_comment' ";
         $qry = sql_query($sql);
         $vt_id = mysql_insert_id();
 
@@ -403,13 +403,13 @@ if ($mw_basic[cf_vote] && $mw_basic[cf_vote_level] <= $member[mb_level])
         $sql = "select vt_id from $mw[vote_table] where bo_table = '$bo_table' and wr_id = '$wr_id'";
         $row = sql_fetch($sql);
         if (!$row) {
-            $sql = "insert into $mw[vote_table] set bo_table = '$bo_table', wr_id = '$wr_id', vt_sdate = '$vt_sdate', vt_edate = '$vt_edate', vt_point = '$vt_point', vt_multi = '$vt_multi'";
+            $sql = "insert into $mw[vote_table] set bo_table = '$bo_table', wr_id = '$wr_id', vt_sdate = '$vt_sdate', vt_edate = '$vt_edate', vt_point = '$vt_point', vt_multi = '$vt_multi', vt_comment = '$vt_comment' ";
             $qry = sql_query($sql);
             $vt_id = mysql_insert_id();
         } else {
             $vt_id = $row[vt_id];
 
-            $sql = "update $mw[vote_table] set vt_sdate = '$vt_sdate', vt_edate = '$vt_edate', vt_point = '$vt_point', vt_multi = '$vt_multi' where bo_table = '$bo_table' and wr_id = '$wr_id'";
+            $sql = "update $mw[vote_table] set vt_sdate = '$vt_sdate', vt_edate = '$vt_edate', vt_point = '$vt_point', vt_multi = '$vt_multi', vt_comment = '$vt_comment' where bo_table = '$bo_table' and wr_id = '$wr_id'";
             $qry = sql_query($sql);
         }
 

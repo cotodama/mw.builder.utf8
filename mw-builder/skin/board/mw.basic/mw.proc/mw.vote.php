@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Bechu-Basic Skin for Gnuboard4
  *
@@ -100,7 +100,7 @@ if ($mw_basic[cf_vote] && $vote && sizeof($vote_list)) {
             if ($vote[vt_point]) echo number_format($vote[vt_point])." 포인트 지급, ";
             if ($vote[vt_multi]) echo $vote[vt_multi]."개까지 복수선택 가능, ";
             echo number_format($vt_total)."명 참여";
-        ?>)</span>
+        ?>)<? if ($is_admin) { ?> [<a href="#;" onclick="win_open('<?=$board_skin_path?>/mw.proc/mw.vote.list.php?bo_table=<?=$bo_table?>&wr_id=<?=$wr_id?>', 'vote_list', 'width=600,height=500,scrollbars=1');">참여목록</a>]<? } ?></span>
     </h3>
 
     <? if (!$is_vote && !$result_view) { ?>
@@ -141,4 +141,6 @@ if ($mw_basic[cf_vote] && $vote && sizeof($vote_list)) {
         </div>
     <? } ?>
 
-<? } ?>
+<?
+}
+

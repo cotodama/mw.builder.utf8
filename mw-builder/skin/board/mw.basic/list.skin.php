@@ -223,7 +223,9 @@ $new_count = $row[cnt];
             <input onclick="if (this.checked) all_checked(true); else all_checked(false);" type=checkbox>
         <?}?>
 
-        <? if ($write_href) { ?><a href="<?=$write_href?>"><img src="<?=$board_skin_path?>/img/btn_write.gif" border="0" align="absmiddle"></a><? } ?>
+        <? if ($write_href) { ?>
+            <a href="<?=$write_href?>"><img src="<?=$board_skin_path?>/img/btn_write.gif" border="0" align="absmiddle"></a>
+        <? } ?>
         </form>
     </td>
     <td align="right">

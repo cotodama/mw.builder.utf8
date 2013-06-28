@@ -909,13 +909,20 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
     </div>
 
     <div class="cf_item">
+	<div class="cf_title"> <input type=checkbox name=chk[cf_content_add] value=1>&nbsp; 본문추가 </div>
+	<div class="cf_content" height=110>
+	    <textarea name=cf_content_add cols=60 rows=5 class=edarea><?=$mw_basic[cf_content_add]?></textarea>
+	    <div class="cf_info">게시글 본문에 추가 출력 코드 </div>
+	</div>
+    </div>
+
+    <div class="cf_item">
 	<div class="cf_title"> <input type=checkbox name=chk[cf_content_tail] value=1>&nbsp; 본문하단 </div>
 	<div class="cf_content" height=110>
 	    <textarea name=cf_content_tail cols=60 rows=5 class=edarea><?=$mw_basic[cf_content_tail]?></textarea>
 	    <div class="cf_info">게시글 본문 하단에 출력될 코드 </div>
 	</div>
     </div>
-
 
     <div class="cf_item">
 	<div class="cf_title"> <input type=checkbox name=chk[cf_css] value=1>&nbsp; 사용자정의 CSS </div>

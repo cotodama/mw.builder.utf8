@@ -1,3 +1,30 @@
+ver 2.1.7 (13.06.28)
+    : 설문 로그 (하느락이님 제안)
+    : 유투브 출력코드 개선 (Dae-Seok Kim님 제안)
+    : 썸네일 생성시간 게시물 작성시간으로 조정
+    : 보기에 [본문 추가] 항목 추가
+    : 본문상단,추가,하단에 bc_code 적용
+    : bc_code 에 link1, link2 추가
+    : 글쓰기 기본 내용 에디터 사용여부에 맞추어 br 적용 (제이피님 제안) 
+    : 공지사항 추천수 출력안함 무조건 체크되는 문제 해결 (csacsa님 제안)
+    : 데이터 정렬시 wr_num 자동 조정
+    : 썸네일 재생성시 유투브 섬네일도 재수집
+    : buttonWhite.gif 파일 누락분 (껨보이님 제안)
+    : 코멘트를 남겨야 설문 참여 가능
+
+    mw.basic/HISTORY
+    mw.basic/mw.adm/mw.config.php
+    mw.basic/mw.adm/mw.config.update.php
+    mw.basic/mw.adm/mw.upgrade.php
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/mw.proc/mw.vote.list.php
+    mw.basic/mw.proc/mw.vote.join.php
+    mw.basic/mw.proc/mw.adm.thumb.remake.php
+    mw.basic/img/buttonWhite.gif
+    mw.basic/view.skin.php
+    mw.basic/write.skin.php
+    mw.basic/write_update.skin.php
+
 ver 2.1.6 (13.06.21)
     : 유투브 수집기 플러그인 지원 (신규출시! -> http://mwt.so/0FBEw )
     : 유투브 첨부시 아이콘

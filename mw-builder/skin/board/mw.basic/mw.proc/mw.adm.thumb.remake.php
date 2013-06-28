@@ -40,15 +40,15 @@ $sql.= " or right(lower(bf_source), 3) = 'png') ";
 $qry = sql_query($sql);
 while ($row = sql_fetch_array($qry)) {
     $file = "$g4[path]/data/file/$bo_table/$row[bf_file]";
-    $size = getImageSize($file);
+    $size = @getImageSize($file);
     sql_query(" update $g4[board_file_table] set bf_width = '$size[0]', bf_height = '$size[1]', bf_type = '$size[2]' where bo_table = '$bo_table' and wr_id = '$row[wr_id]' and bf_no = '$row[bf_no]' ");
 }
 
-$sql = "select wr_id, wr_content from $write_table where wr_is_comment = '0' order by wr_num";
+$sql = "select wr_id, wr_content, wr_datetime, wr_link1, wr_link2 from $write_table where wr_is_comment = '0' order by wr_num";
 $qry = sql_query($sql);
-while ($row = sql_fetch_array($qry)) {
-    $wr_id = $row[wr_id];
-    $wr_content = $row[wr_content];
+while ($write = sql_fetch_array($qry)) {
+    $wr_id = $write[wr_id];
+    $wr_content = $write[wr_content];
 
     $file = mw_get_first_file($bo_table, $wr_id, true);
     if (!empty($file)) {
@@ -63,7 +63,8 @@ while ($row = sql_fetch_array($qry)) {
             "{$thumb4_path}/{$wr_id}", $mw_basic[cf_thumb4_keep]);
         mw_make_thumbnail($mw_basic[cf_thumb5_width], $mw_basic[cf_thumb5_height], $source_file,
             "{$thumb5_path}/{$wr_id}", $mw_basic[cf_thumb5_keep]);
-    } else {
+    }
+    else {
         preg_match("/<img.*src=\"(.*)\"/iU", $wr_content, $match);
         if ($match[1]) {
             $match[1] = str_replace($g4[url], "..", $match[1]);
@@ -84,6 +85,11 @@ while ($row = sql_fetch_array($qry)) {
             @unlink("$thumb4_path/{$wr_id}");
             @unlink("$thumb5_path/{$wr_id}");
         }
+    }
+
+    if (!file_exists("{$thumb_path}/{$wr_id}")) {
+        if (preg_match("/youtu/i", $write['wr_link1'])) mw_get_youtube_thumb($wr_id, $write['wr_link1'], $write['wr_datetime']);
+        else if (preg_match("/youtu/i", $write['wr_link2'])) mw_get_youtube_thumb($wr_id, $write['wr_link2'], $write['wr_datetime']);
     }
 }
 

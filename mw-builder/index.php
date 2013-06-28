@@ -8,7 +8,7 @@ include_once("_common.php");
 include_once("$g4[path]/lib/mw.builder.lib.php");
 
 if ($mg_id) { 
-    $g4[title] = $group[gr_subject];
+    //$g4[title] = $group[gr_subject];
     include_once("$g4[path]/head.php");
     if ($mm_id) 
         include_once("$mw_mmenu_skin_path/mmenu.main.skin.php");

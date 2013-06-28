@@ -183,6 +183,7 @@ bo_table = '$bo_table'
 ,cf_file_head = '$cf_file_head'
 ,cf_file_tail = '$cf_file_tail'
 ,cf_content_head = '$cf_content_head'
+,cf_content_add = '$cf_content_add'
 ,cf_content_tail = '$cf_content_tail'
 ,cf_comment_notice = '$cf_comment_notice'
 ,cf_download_comment = '$cf_download_comment'
@@ -491,6 +492,7 @@ if ($chk[cf_hp]) $sql .= ", cf_hp = '$cf_hp', cf_sms_id = '$cf_sms_id', cf_sms_p
 if ($chk[cf_file_head]) $sql .= ", cf_file_head = '$cf_file_head' ";
 if ($chk[cf_file_tail]) $sql .= ", cf_file_tail = '$cf_file_tail' ";
 if ($chk[cf_content_head]) $sql .= ", cf_content_head = '$cf_content_head' ";
+if ($chk[cf_content_add]) $sql .= ", cf_content_add = '$cf_content_add' ";
 if ($chk[cf_content_tail]) $sql .= ", cf_content_tail = '$cf_content_tail' ";
 if ($chk[cf_comment_notice]) $sql .= ", cf_comment_notice = '$cf_comment_notice' ";
 if ($chk[cf_download_comment]) {

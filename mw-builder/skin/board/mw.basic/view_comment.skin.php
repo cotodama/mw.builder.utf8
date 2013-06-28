@@ -318,7 +318,6 @@ if ($mw_basic[cf_comment_best]) {
     // BC코드
     $row[content] = bc_code($row[content]);
     $row[content] = mw_tag_debug($row[content]); // 잘못된 태그교정
-
     $row[content] = mw_youtube_content($row[content]); // 유투브 자동 재생
 ?>
 
@@ -657,7 +656,7 @@ for ($i=$from_record; $i<$to_record; $i++) {
             <td>
                 <? if ($list[$i][wr_is_mobile]) echo "<img src='$board_skin_path/img/icon_mobile.png' align='absmiddle' class='comment_mobile_icon'>"; ?>
                 <? if ($is_admin) { ?> <input type="checkbox" name="chk_comment_id[]" class="chk_comment_id" value="<?=$list[$i][wr_id]?>"> <? } ?>
-                <? if ($mw_basic[cf_attribute] == 'qna' && $write[wr_qna_id] == $list[$i][wr_id]) { ?> <img src="<?=$board_skin_path?>/img/icon_choose.png" align="absmiddle"> <? } ?>
+                <? if ($mw_basic[cf_attribute] == 'qna' && $view[wr_qna_status] && $write[wr_qna_id] == $list[$i][wr_id]) { ?> <img src="<?=$board_skin_path?>/img/icon_choose.png" align="absmiddle"> <? } ?>
                 <span class=mw_basic_comment_name><?=$list[$i][name]?></span>
                 <? if ($is_ip_view && $list[$i][ip]) { ?> <span class=mw_basic_comment_ip>(<?=$list[$i][ip]?>)</span> <?}?>
                 <? if ($history_href) { echo "<a href=\"$history_href\"><img src=\"$board_skin_path/img/btn_comment_history.gif\" align=absmiddle title=\"변경기록\"></a>"; } ?>

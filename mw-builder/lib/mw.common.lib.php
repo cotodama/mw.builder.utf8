@@ -252,6 +252,8 @@ function mw_get_last_thumb($bo_tables, $cnt=1)
         $row = sql_fetch("select max(wr_id) as max_id from $g4[write_prefix]$bo_table where wr_is_comment = 0", false);
         $max = $row['max_id'];
 
+        if (!$max) continue;;
+
         $path = "$g4[path]/data/file/{$bo_table}/thumbnail"; 
         if (!is_dir($path))
             $path = "$g4[path]/data/file/{$bo_table}/thumb"; 

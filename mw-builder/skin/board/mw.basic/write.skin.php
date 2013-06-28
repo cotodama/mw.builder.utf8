@@ -122,8 +122,12 @@ $html = 0;
 if (strstr($write['wr_option'], "html1")) $html = 1;
 if (strstr($write['wr_option'], "html2")) $html = 2;
 
+if ($w == '' && !$is_dhtml_editor && trim($board[bo_insert_content])) {
+    $content = nl2br($content);
+}
+
 if (($html == 0 || $html == 2) && $is_dhtml_editor) {
-    if ($w != '' || !$board[bo_insert_content]) {
+    if ($w != '' || !trim($board[bo_insert_content])) {
         $content = nl2br($content);
     }
 }
@@ -249,10 +253,10 @@ if (($mw_basic[cf_attribute] == "anonymous" || ($w == 'u' && $write[wr_anonymous
 <link rel="stylesheet" href="<?=$board_skin_path?>/style.common.css?<?=filemtime("$board_skin_path/style.common.css")?>" type="text/css">
 <!--
 <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet" />
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/jquery-ui.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/jquery-ui.min.js"></script>
 -->
 <link type="text/css" href="<?=$board_skin_path?>/mw.js/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
-<script type="text/javascript" src="<?=$board_skin_path?>/mw.js/jquery-ui-1.8.19.custom.min.js"></script>
+<script src="<?=$board_skin_path?>/mw.js/jquery-ui-1.8.19.custom.min.js"></script>
 
 <?
 //==============================================================================
@@ -272,7 +276,7 @@ if (($mw_basic[cf_attribute] == "anonymous" || ($w == 'u' && $write[wr_anonymous
 .ui-datepicker-trigger { margin:0 0 -5px 2px; }
 -->
 </style>
-<script type="text/javascript">
+<script>
 /* Korean initialisation for the jQuery calendar extension. */
 /* Written by DaeKwon Kang (ncrash.dk@gmail.com). */
 jQuery(function($){
@@ -341,13 +345,13 @@ jQuery(function($){
 <?  if ($mw_basic['cf_include_head'] && file_exists($mw_basic['cf_include_head']) && strstr($mw_basic[cf_include_head_page], '/w/'))
     include_once($mw_basic[cf_include_head]); ?>
 
-<script type="text/javascript">
+<script>
 // 글자수 제한
 var char_min = parseInt(<?=$write_min?>); // 최소
 var char_max = parseInt(<?=$write_max?>); // 최대
 </script>
 
-<script type="text/javascript" src="<?=$board_skin_path?>/mw.js/tooltip.js"></script>
+<script src="<?=$board_skin_path?>/mw.js/tooltip.js"></script>
 
 <? include_once("$board_skin_path/mw.proc/mw.cash.membership.skin.php") ?>
 
@@ -370,7 +374,7 @@ var char_max = parseInt(<?=$write_max?>); // 최대
         <span class=mw_basic_total style="cursor:pointer;" onclick="win_open('<?=$social_commerce_path?>/order_list.php?bo_table=<?=$bo_table?>', 'order_list', 'width=800,height=600,scrollbars=1');">[주문내역]</span>
         <? } ?>
         <span class=mw_basic_total>총 게시물 <?=number_format($total_count)?>건, 최근 <?=number_format($new_count)?> 건</span>
-        <? if ($is_admin && $mw_basic[cf_collect] == 'rss-collect' && file_exists("$g4[path]/plugin/rss-collect/_lib.php")) {?>
+        <? if ($is_admin && $mw_basic[cf_collect] == 'rss' && file_exists("$g4[path]/plugin/rss-collect/_lib.php")) {?>
         <img src="<?=$g4[path]?>/plugin/rss-collect/img/btn_collect.png" align="absmiddle" style="cursor:pointer;" onclick="win_open('<?=$g4[path]?>/plugin/rss-collect/config.php?bo_table=<?=$bo_table?>', 'rss_collect', 'width=800,height=600,scrollbars=1')">
         <? } ?>
         <? if ($is_admin && $mw_basic[cf_collect] == 'youtube' && file_exists("$g4[path]/plugin/youtube-collect/_lib.php")) {?>
@@ -526,7 +530,7 @@ if ($mw_basic[cf_category_radio]) {
     } 
     if ($w == "u") {
         ?>
-        <script type="text/javascript">
+        <script>
         for (i=0; i<fwrite.ca_name.length; i++) {
             if (fwrite.ca_name[i].value == "<?=$write[ca_name]?>")
                 fwrite.ca_name[i].checked = true;
@@ -567,9 +571,9 @@ if ($mw_basic[cf_category_radio]) {
     <div id="color_picker" style="position:absolute; display:none; padding:10px; background-color:#fff; border:1px solid #ccc; z-index:999;"></div>
 
     <? if (!$write[wr_subject_color]) $write[wr_subject_color] = $mw_basic[cf_subject_style_color_default]; ?>
-    <script type="text/javascript" src="<?=$board_skin_path?>/mw.js/colorpicker/farbtastic.js"></script>
+    <script src="<?=$board_skin_path?>/mw.js/colorpicker/farbtastic.js"></script>
     <link rel="stylesheet" href="<?=$board_skin_path?>/mw.js/colorpicker/farbtastic.css" type="text/css" />
-    <script type="text/javascript">
+    <script>
     fwrite.wr_subject_font.value = "<?=$write[wr_subject_font]?>";
     fwrite.wr_subject_color.value = "<?=$write[wr_subject_color]?>";
 
@@ -601,7 +605,7 @@ if ($mw_basic[cf_category_radio]) {
     <option value="#000099" style="color:#000099;">남색</option>
     <option value="#9900cc" style="color:#9900cc;">보라</option>
     </select>
-    <script type="text/javascript"> fwrite.wr_subject_color.value = "<?=$write['wr_subject_color']?>"; </script>
+    <script> fwrite.wr_subject_color.value = "<?=$write['wr_subject_color']?>"; </script>
     <? } ?>
 </td>
 </tr>
@@ -633,7 +637,7 @@ if ($mw_basic[cf_category_radio]) {
     <textarea id="wr_content" name="wr_content" style='width:98%; word-break:break-all;' rows=10 itemname="내용" required  class=mw_basic_textarea
     <? if ($is_dhtml_editor && $mw_basic[cf_editor] == "geditor") echo "geditor"; ?>
     <? if ($write_min || $write_max) { ?>onkeyup="check_byte('wr_content', 'char_count');"<?}?>><?=$content?></textarea>
-    <? if (($write_min || $write_max) && !$is_dhtml_editor) { ?><script type="text/javascript"> check_byte('wr_content', 'char_count'); </script><?}?>
+    <? if (($write_min || $write_max) && !$is_dhtml_editor) { ?><script> check_byte('wr_content', 'char_count'); </script><?}?>
     <? } ?>
 
     <? if ($is_dhtml_editor && $mw_basic[cf_editor] == "cheditor") echo cheditor2('wr_content', $content); ?>
@@ -686,7 +690,7 @@ if ($mw_basic[cf_category_radio]) {
     }
     ?>)
     <? if ($mw_basic[cf_contents_shop_max] and $mw_basic[cf_contents_shop_min]) { ?>
-    <script type="text/javascript">
+    <script>
     function contents_price_check(obj) {
         var price = Number(obj.value);
         if (price == '') return;
@@ -712,7 +716,7 @@ if ($mw_basic[cf_category_radio]) {
 <td class=mw_basic_write_content>
     <input type="checkbox" name="wr_contents_domain" id="wr_contents_domain" itemname="컨텐츠 사용도메인" value="1">
     <label for="wr_contents_domain">컨텐츠 구입시 사용도메인을 입력 받습니다.</label>
-    <script type="text/javascript"> document.fwrite.wr_contents_domain.checked = "<?=$write[wr_contents_domain]?>" </script>
+    <script> document.fwrite.wr_contents_domain.checked = "<?=$write[wr_contents_domain]?>" </script>
 </td>
 </tr>
 <tr><td colspan=2 height=1 bgcolor=#e7e7e7></td></tr>
@@ -774,7 +778,7 @@ if ($mw_basic[cf_category_radio]) {
     <input type="button" value="지금" class="btn1" onclick="bomb_cate_now()"/>
     <input type="button" value="초기화" class="btn1" onclick="bomb_cate_init()"/>
     <input type="checkbox" name="bm_log" value="1">흔적 남기기
-    <script type="text/javascript">
+    <script>
     function bomb_cate_now() {
         var d = new Date();
 
@@ -877,7 +881,7 @@ if ($mw_basic[cf_category_radio]) {
         <option value="u"> 올림 </option>
         <option value="d"> 내림 </option>
     </select>
-    <script type="text/javascript">
+    <script>
     function move_cate_now() {
         var d = new Date();
 
@@ -927,7 +931,7 @@ if ($mw_basic[cf_category_radio]) {
     <input type="button" class="btn1" value="퀴즈설정" onclick="win_quiz()"/>
     <input type="button" class="btn1" value="퀴즈삭제" onclick="del_quiz()"/>
     <input type="hidden" name="qz_id" id="qz_id" value=""/>
-    <script type="text/javascript">
+    <script>
     function win_quiz() {
         wq = window.open("<?=$g4[path]?>/plugin/quiz/write.php?bo_table=<?=$bo_table?>&wr_id=<?=$wr_id?>&qz_id="+$("#qz_id").val(),
              "quiz", "width=700,height=400,scrollbars=yes");
@@ -953,9 +957,9 @@ if ($mw_basic[cf_category_radio]) {
     <input type="button" value="주소확인" class="btn1" onclick="win_google_map()">
     <div>(본문에 {구글지도} 라고 입력하면 원하는 위치에 구글지도가 삽입됩니다.)</div>
 
-    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
-    <script type="text/javascript" src="<?=$board_skin_path?>/mw.js/mw.google.js"></script>
-    <script type="text/javascript">
+    <script src="http://maps.google.com/maps/api/js?sensor=true"></script>
+    <script src="<?=$board_skin_path?>/mw.js/mw.google.js"></script>
+    <script>
     function win_google_map() {
         $("#google-map").css("display", "none");
         $("#dialog-map").dialog("close");
@@ -1010,7 +1014,7 @@ if ($mw_basic[cf_category_radio]) {
         <option value="2"> 보류 </option>
     </select>
     (관리자 전용)
-    <script type="text/javascript"> document.fwrite.wr_qna_status.value = "<?=$write[wr_qna_status]?>"; </script>
+    <script> document.fwrite.wr_qna_status.value = "<?=$write[wr_qna_status]?>"; </script>
 </td>
 </tr>
 <tr><td colspan=2 height=1 bgcolor=#e7e7e7></td></tr>
@@ -1026,7 +1030,7 @@ if ($mw_basic[cf_category_radio]) {
     <option value="<?=$i?>"> <?=$i?> </option>
     <? } ?>
     </select>
-    <script type="text/javascript"> fwrite.wr_read_level.value = "<?=$write[wr_read_level]?>"; </script>
+    <script> fwrite.wr_read_level.value = "<?=$write[wr_read_level]?>"; </script>
 </td>
 </tr>
 <tr><td colspan=2 height=1 bgcolor=#e7e7e7></td></tr>
@@ -1037,7 +1041,7 @@ if ($mw_basic[cf_category_radio]) {
 <td class=mw_basic_write_title>· <? echo $mw_basic[cf_kcb_typ] == "okname" ? "실명인증" : "성인인증" ?> </td>
 <td class=mw_basic_write_content>
     <input type=checkbox name=wr_kcb_use value=1> 사용
-    <script type="text/javascript"> document.fwrite.wr_kcb_use.checked = "<?=$write[wr_kcb_use]?>" </script>
+    <script> document.fwrite.wr_kcb_use.checked = "<?=$write[wr_kcb_use]?>" </script>
 </td>
 </tr>
 <tr><td colspan=2 height=1 bgcolor=#e7e7e7></td></tr>
@@ -1062,7 +1066,7 @@ if ($mw_basic[cf_reward]) {
     <option value="linkprice"> 링크프라이스 </option>
     <option value="ilikeclick"> 아이라이크클릭 </option>
     </select>
-    <script type="text/javascript"> fwrite.re_site.value = "<?=$reward[re_site]?>"; </script>
+    <script> fwrite.re_site.value = "<?=$reward[re_site]?>"; </script>
 </td>
 </tr>
 <tr><td colspan=2 height=1 bgcolor=#e7e7e7></td></tr>
@@ -1095,7 +1099,7 @@ if ($mw_basic[cf_reward]) {
     <option value=""> 종료 </option>
     <option value="1"> 진행중 </option>
     </select>
-    <script type="text/javascript"> fwrite.re_status.value = "<?=$reward[re_status]?>"; </script></td>
+    <script> fwrite.re_status.value = "<?=$reward[re_status]?>"; </script></td>
 </tr>
 <tr><td colspan=2 height=1 bgcolor=#e7e7e7></td></tr>
 <? } ?>
@@ -1137,7 +1141,7 @@ if ($mw_basic[cf_vote] && $mw_basic[cf_vote_level] <= $member[mb_level]) {
         <? } ?>
     </select> 시
     (비워두면 글작성시 부터 무제한)
-    <script type="text/javascript">
+    <script>
     document.fwrite.vt_stime.value = "<?=$vote[vt_stime]?>";
     document.fwrite.vt_etime.value = "<?=$vote[vt_etime]?>";
     </script>
@@ -1154,7 +1158,7 @@ if ($mw_basic[cf_vote] && $mw_basic[cf_vote_level] <= $member[mb_level]) {
     <? } ?>
     </select>
     <? if (!$vote[vt_multi]) $vote[vt_multi] = 0; ?>
-    <script type="text/javascript"> fwrite.vt_multi.value = "<?=$vote[vt_multi]?>" </script>
+    <script> fwrite.vt_multi.value = "<?=$vote[vt_multi]?>" </script>
 </td>
 </tr>
 <? if ($is_admin == "super") { ?>
@@ -1169,6 +1173,14 @@ if ($mw_basic[cf_vote] && $mw_basic[cf_vote_level] <= $member[mb_level]) {
 <tr><td colspan=2 height=1 bgcolor=#e7e7e7></td></tr>
 <? } ?>
 <tr>
+<td class=mw_basic_write_title>· 설문 코멘트  </td>
+<td class=mw_basic_write_content>
+    <input type=checkbox name=vt_comment value=1> 사용 (코멘트를 남겨야 설문에 참여할 수 있습니다.)
+    <script> document.fwrite.vt_comment.checked = "<?=$vote[vt_comment]?>" </script>
+</td>
+</tr>
+<tr><td colspan=2 height=1 bgcolor=#e7e7e7></td></tr>
+<tr>
 <td class=mw_basic_write_title>· 설문항목
         <span onclick="add_vote();" style='cursor:pointer; font-family:tahoma; font-size:12pt;'>+</span>
 </td>
@@ -1176,7 +1188,7 @@ if ($mw_basic[cf_vote] && $mw_basic[cf_vote_level] <= $member[mb_level]) {
 
 <div id="mw_vote"></div>
 
-<script type="text/javascript">
+<script>
 function add_vote(val) {
     if (!val) val = "";
     $("#mw_vote").append("<div style='margin:2px 0 2px 0;'><input type='text' size='50' name='vt_item[]' value=\""+val+"\" class=mw_basic_text></div>");
@@ -1218,7 +1230,7 @@ if ($w == "") {
 <td class=mw_basic_write_title>· 코멘트 금지</td>
 <td class=mw_basic_write_content>
     <input type=checkbox name=wr_comment_ban value=1> (코멘트를 원하지 않을 경우 체크해주세요.)
-    <script type="text/javascript"> document.fwrite.wr_comment_ban.checked = "<?=$write[wr_comment_ban]?>" </script>
+    <script> document.fwrite.wr_comment_ban.checked = "<?=$write[wr_comment_ban]?>" </script>
 </td>
 </tr>
 <tr><td colspan=2 height=1 bgcolor=#e7e7e7></td></tr>
@@ -1233,7 +1245,7 @@ if ($w == "") {
     변경 : <select name="wr_ccl_nd"><option value="nd">변경불가</option><option value="sa">동일조건변경가능</option><option value="">변경가능</option></select>
     <a href="http://www.creativecommons.or.kr/info/about" target=_blank>CCL이란?</a>
     <? if ($w == "u") {?>
-    <script type="text/javascript">
+    <script>
     document.fwrite.wr_ccl_by.value = "<?=$write[wr_ccl][by]?>";
     document.fwrite.wr_ccl_nc.value = "<?=$write[wr_ccl][nc]?>";
     document.fwrite.wr_ccl_nd.value = "<?=$write[wr_ccl][nd]?>";
@@ -1255,7 +1267,7 @@ if ($w == "") {
             <option value="_blank">새창 (_blank)</option>
             <option value="_self">현재창 (_self)</option>
         </select>
-        <script type="text/javascript"> fwrite.wr_link<?=$i?>_target.value = "<?=$write["wr_link{$i}_target"]?>"; </script>
+        <script> fwrite.wr_link<?=$i?>_target.value = "<?=$write["wr_link{$i}_target"]?>"; </script>
     <? } ?>
     <? if ($mw_basic[cf_link_write] && $mw_basic[cf_link_write] <= $member[mb_level] && $i == 1) { ?>
         <input type="checkbox" name="wr_link_write" value="1" <? if ($write[wr_link_write]) echo "checked"; ?> >
@@ -1299,8 +1311,8 @@ if ($w == "") {
 <tr>
 <td class=mw_basic_write_title> G 멀티업로더 </td>
 <td class=mw_basic_write_content>
-    <script type="text/javascript" src="<?=$board_skin_path?>/mw.guploader/guploader.js"></script>
-    <script type="text/javascript">
+    <script src="<?=$board_skin_path?>/mw.guploader/guploader.js"></script>
+    <script>
     var uploader = new guploader('uploader');
 
     uploader.set_path("<?=$board_skin_path?>/mw.guploader");
@@ -1361,7 +1373,7 @@ if ($w == "") {
         <? } else if ($mw_basic[cf_zzal] && $mw_basic[cf_zzal_must]) { ?>
         반드시 첫번째에 짤방 이미지를 첨부하셔야 합니다.
         <? } ?>
-        <script type="text/javascript">
+        <script>
         var flen = 0;
         function add_file(delete_code)
         {
@@ -1472,7 +1484,7 @@ if ($w == "") {
 </tr>
 <tr><td colspan=2 height=1 bgcolor=#e7e7e7></td></tr>
 <? /* ?>
-<script type="text/javascript"> var md5_norobot_key = ''; </script>
+<script> var md5_norobot_key = ''; </script>
 <tr>
     <td class=write_head><img id='kcaptcha_image' border='0' width=120 height=60 onclick="imageClick();" style="cursor:pointer;" title="글자가 잘안보이는 경우 클릭하시면 새로운 글자가 나옵니다."></td>
     <td><input class='ed' type=input size=10 name=wr_key itemname="자동등록방지" required>&nbsp;&nbsp;왼쪽의 글자를 입력하세요.</td>
@@ -1502,8 +1514,8 @@ if ($w == "") {
 
 </td></tr></table>
 
-<script type="text/javascript" src="<?="$g4[path]/js/jquery.kcaptcha.js"?>"></script>
-<script type="text/javascript">
+<script src="<?="$g4[path]/js/jquery.kcaptcha.js"?>"></script>
+<script>
 
 $(document).ready(function () {
     if (typeof(document.fwrite.ca_name) != 'undefined') {
@@ -1778,20 +1790,20 @@ function fwrite_check(f) {
 </script>
 
 <? if ($is_admin == "super") { ?>
-<script type="text/javascript">
+<script>
 function mw_config() {
     win_open("<?=$board_skin_path?>/mw.adm/mw.config.php?bo_table=<?=$bo_table?>", "config", "width=980, height=700, scrollbars=yes");
 }
 </script>
 <? } ?>
 
-<script type="text/javascript" src="<?="$g4[path]/js/board.js"?>"></script>
+<script src="<?="$g4[path]/js/board.js"?>"></script>
 
 <? if ($is_dhtml_editor && $mw_basic[cf_editor] == "geditor") { ?>
-    <script type="text/javascript"> var g4_skin_path = "<?=$board_skin_path?>"; </script>
-    <script type="text/javascript" src="<?=$board_skin_path?>/mw.geditor/geditor.js"></script>
+    <script> var g4_skin_path = "<?=$board_skin_path?>"; </script>
+    <script src="<?=$board_skin_path?>/mw.geditor/geditor.js"></script>
     <? if (strstr($write[wr_option], "html2")) { ?>
-	<script type="text/javascript"> geditor_wr_content.mode_change(); </script>
+	<script> geditor_wr_content.mode_change(); </script>
     <? } ?>
 <? } ?>
 

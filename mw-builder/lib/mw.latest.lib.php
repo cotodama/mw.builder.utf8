@@ -66,9 +66,10 @@ function mw_latest($skin_dir="", $bo_table, $rows=10, $subject_len=40, $is_img=0
         } */
         $file = mw_get_last_thumb($bo_table, $is_img);
         for ($i=0, $m=count($file); $i<$m; ++$i) {
-            $row = sql_fetch("select wr_subject, wr_comment from {$g4[write_prefix]}{$file[$i]['bo_table']} where wr_id = '{$file[$i]['wr_id']}'");
+            $row = sql_fetch("select wr_subject, wr_comment, wr_link1 from {$g4[write_prefix]}{$file[$i]['bo_table']} where wr_id = '{$file[$i]['wr_id']}'");
             $file[$i]['subject'] = conv_subject($row['wr_subject'], $subject_len, "…");
             $file[$i]['wr_comment'] = $row['wr_comment'];
+            $file[$i]['wr_link1'] = $row['wr_link1'];
         }
 
         if (count($file) < $is_img) {

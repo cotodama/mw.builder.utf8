@@ -38,6 +38,13 @@ $vote = sql_fetch("select * from $mw[vote_table] where bo_table = '$bo_table' an
 if ($vote[vt_sdate] != "0000-00-00 00:00:00" && $vote[vt_sdate] > $g4[time_ymdhis]) exit("설문 시작전입니다.");
 if ($vote[vt_edate] != "0000-00-00 00:00:00" && $vote[vt_edate] < $g4[time_ymdhis]) exit("설문종료날짜가 지났습니다.");
 
+if ($vote[vt_comment]) {
+    $sql = "select wr_id from $write_table where wr_parent = '$wr_id' and mb_id = '$member[mb_id]' and wr_is_comment = '1'";
+    $tmp = sql_fetch($sql);
+    if (!$tmp)
+        exit("코멘트를 작성해주셔야 설문에 참여가능합니다.");
+}
+
 if ($is_member) $row = sql_fetch("select * from $mw[vote_log_table] where vt_id = '$vote[vt_id]' and mb_id = '$member[mb_id]'");
 else $row = sql_fetch("select * from $mw[vote_log_table] where vt_id = '$vote[vt_id]' and vt_ip = '$_SERVER[REMOTE_ADDR]'");
 if ($row) exit("이미 설문에 참여하셨습니다.");

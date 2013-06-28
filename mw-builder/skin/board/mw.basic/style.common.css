@@ -947,6 +947,12 @@ img {
     font-weight:normal;
 }
 
+#mw_basic .mw_basic_view_vote h3 .info a {
+    font-size:11px;
+    color:#888;
+    font-weight:normal;
+}
+
 /* 설문 */
 #mw_basic .mw_basic_view_vote .mw_vote_list {
     margin:10px 0 10px 0;

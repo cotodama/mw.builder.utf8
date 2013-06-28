@@ -234,4 +234,22 @@ if ($mg_id) {
 if (!$group[gr_theme])
     $group[gr_theme] = "mw.blue";
 
+if (!$g4['title']) {
+    if ($ms_id) {
+        if ($mw_smenu['ms_name'])
+            $g4['title'] = $mw_smenu['ms_name'];
+    }
+
+    if ($mm_id && $mw_smenu['ms_name'] != $mw_mmenu['mm_name']) {
+        if ($g4['title']) $g4['title'] .= " - ";
+        if ($mw_mmenu['mm_name'])
+            $g4['title'] .= $mw_mmenu['mm_name'];
+    }
+
+    if ($mg_id) {
+        if ($g4['title']) $g4['title'] .= " - ";
+        if ($group['gr_subject'])
+            $g4['title'] .= $group['gr_subject'];
+    }
+}
 

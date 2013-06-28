@@ -187,7 +187,8 @@ if (is_null($mw_basic[cf_notice_name])) {
     sql_query("alter table $mw[basic_config_table] add cf_notice_date tinyint default '0' not null", false);
     sql_query("alter table $mw[basic_config_table] add cf_notice_hit tinyint default '0' not null", false);
 }
-    sql_query("alter table $mw[basic_config_table] add cf_notice_good tinyint default '0' not null", false);
+    sql_query("alter table $mw[basic_config_table] add cf_notice_good varchar(1) not null", false);
+    sql_query("alter table $mw[basic_config_table] change cf_notice_good cf_notice_good varchar(1) not null", false);
 
 // 일반게시물 이름, 날짜, 조회수 출력 여부 
 if (is_null($mw_basic[cf_notice_name])) {
@@ -530,6 +531,7 @@ if (is_null($mw_basic[cf_vote])) {
     sql_query("alter table $mw[vote_table] add vt_multi int not null", false);
     sql_query("alter table $mw[vote_table] add vt_sdate datetime not null after wr_id", false);
     sql_query("alter table $mw[vote_table] change vt_edate vt_edate datetime not null", false);
+    sql_query("alter table $mw[vote_table] add vt_comment varchar(1) not null", false);
     $sql = "create table if not exists $mw[vote_item_table] (
             vt_id int not null,
             vt_num int not null,
@@ -1181,4 +1183,7 @@ if (is_null($mw_basic[cf_talent_market])) {
     sql_query("alter table $mw[basic_config_table] add cf_multimedia varchar(100) default '/movie//image//flash//youtube//link_movie//link_image//link_flash/' not null", false);
 
     sql_query("alter table $mw[basic_config_table] add cf_search_level tinyint default '1' not null", false);
+
+    sql_query("alter table $mw[basic_config_table] add cf_content_add text not null", false);
+
 
