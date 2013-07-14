@@ -14,7 +14,7 @@ http://g4.miwit.com/plugin/product/pr_builder.php
 - 배추스킨 최신버전 2.1.7 (13.06.28)
 - 라이센스 : GPL2 (오픈소스)
 
-
+====================
 
 <b>2. 배추빌더 설치 및 업그레이드 방법 </b>
 
@@ -33,7 +33,7 @@ win merge 사용방법 : http://mwt.so/00oKo
 - 그누보드 : http://sir.co.kr/bbs/board.php?bo_table=g4_pds
 - 배추스킨 : http://g4.miwit.com/bbs/board.php?bo_table=g4_skin
 
-
+====================
 
 
 <b>3. 프로그램 문의, 제안, 버그 신고는? </b>
