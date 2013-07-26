@@ -311,7 +311,9 @@ if ($w == "" && $mw_basic[cf_sms_id] && $mw_basic[cf_sms_pw] && trim($mw_basic[c
             $strDest[] = $hp;
         }
     }
-    $strCallBack = "0000";
+    $strCallBack = $mw_basic[cf_hp_reply];
+    if (!$strCallBack)
+        $strCallBack = '0000';
     $strData = "{$board[bo_subject]} 게시판에 {$wr_name} 님이 글을 올리셨습니다.";
     if ($umz)
         $strData .= " $umz";

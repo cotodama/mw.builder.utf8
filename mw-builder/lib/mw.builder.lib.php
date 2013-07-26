@@ -82,7 +82,7 @@ $mw_groups_sitemap_count = sizeof($mw_groups_sitemap);
 if ($mw_groups_more_count) {
     $mw_groups_head[$mw_groups_head_count] = array();
     $mw_groups_head[$mw_groups_head_count][gr_subject] = "<span id='group-more-button'>더보기 ↓</span>";
-    $mw_groups_head[$mw_groups_head_count][gr_url] = "javascript:group_more();";
+    $mw_groups_head[$mw_groups_head_count][gr_url] = "#;\" onclick=\"javascript:group_more();\"";
     $mw_groups_head_count++;
 }
 

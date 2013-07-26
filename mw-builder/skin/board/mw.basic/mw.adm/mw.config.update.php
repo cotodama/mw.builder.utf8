@@ -81,6 +81,7 @@ if ($cf_sns_facebook) $cf_sns.= '/facebook/';
 if ($cf_sns_facebook_good) $cf_sns.= '/facebook_good/';
 if ($cf_sns_google_plus) $cf_sns.= '/google_plus/';
 if ($cf_sns_kakao) $cf_sns.= '/kakao/';
+if ($cf_sns_kakaostory) $cf_sns.= '/kakaostory/';
 
 $cf_include_head_page = '';
 if ($cf_include_head_list) $cf_include_head_page.= '/l/';
@@ -148,6 +149,7 @@ bo_table = '$bo_table'
 ,cf_hot = '$cf_hot'
 ,cf_hot_basis = '$cf_hot_basis'
 ,cf_hot_limit = '$cf_hot_limit'
+,cf_hot_len = '$cf_hot_len'
 ,cf_related = '$cf_related'
 ,cf_latest = '$cf_latest'
 ,cf_sns = '$cf_sns'
@@ -167,6 +169,7 @@ bo_table = '$bo_table'
 ,cf_comment_file = '$cf_comment_file'
 ,cf_comment_page = '$cf_comment_page'
 ,cf_comment_page_rows = '$cf_comment_page_rows'
+,cf_comment_page_first = '$cf_comment_page_first'
 ,cf_comment_html = '$cf_comment_html'
 ,cf_comment_emoticon = '$cf_comment_emoticon'
 ,cf_post_emoticon = '$cf_post_emoticon'
@@ -180,6 +183,7 @@ bo_table = '$bo_table'
 ,cf_sms_id = '$cf_sms_id'
 ,cf_sms_pw = '$cf_sms_pw'
 ,cf_hp = '$cf_hp'
+,cf_hp_reply = '$cf_hp_reply'
 ,cf_file_head = '$cf_file_head'
 ,cf_file_tail = '$cf_file_tail'
 ,cf_content_head = '$cf_content_head'
@@ -223,6 +227,7 @@ bo_table = '$bo_table'
 ,cf_auto_move = '$cf_auto_move'
 ,cf_list_shuffle = '$cf_list_shuffle'
 ,cf_sns_datetime = '$cf_sns_datetime'
+,cf_content_align = '$cf_content_align'
 ,cf_read_point_message = '$cf_read_point_message'
 ,cf_insert_subject = '$cf_insert_subject'
 ,cf_notice_name = '$cf_notice_name'
@@ -233,6 +238,7 @@ bo_table = '$bo_table'
 ,cf_post_date = '$cf_post_date'
 ,cf_post_hit = '$cf_post_hit'
 ,cf_list_good = '$cf_list_good'
+,cf_list_nogood = '$cf_list_nogood'
 ,cf_post_num = '$cf_post_num'
 ,cf_img_1_noview = '$cf_img_1_noview'
 ,cf_only_one = '$cf_only_one'
@@ -261,6 +267,7 @@ bo_table = '$bo_table'
 ,cf_social_commerce = '$cf_social_commerce'
 ,cf_social_commerce_hp = '$cf_social_commerce_hp'
 ,cf_google_map = '$cf_google_map'
+,cf_ban_subject = '$cf_ban_subject'
 ,cf_comment_nogood_re_point = '$cf_comment_nogood_re_point'
 ,cf_change_image_size = '$cf_change_image_size'
 ,cf_change_image_size_level = '$cf_change_image_size_level'
@@ -302,6 +309,7 @@ bo_table = '$bo_table'
 ,cf_board_member = '$cf_board_member'
 ,cf_board_member_list = '$cf_board_member_list'
 ,cf_board_member_view = '$cf_board_member_view'
+,cf_board_member_comment = '$cf_board_member_comment'
 ,cf_include_view_top = '$cf_include_view_top'
 ,cf_include_view_head = '$cf_include_view_head'
 ,cf_include_view = '$cf_include_view'
@@ -360,6 +368,7 @@ bo_table = '$bo_table'
 ,cf_image_auto_rotate = '$cf_image_auto_rotate'
 ,cf_multimedia = '$cf_multimedia'
 ,cf_youtube_size = '$cf_youtube_size'
+,cf_jwplayer_version = '$cf_jwplayer_version'
 ,cf_watermark_use = '$cf_watermark_use'
 ,cf_watermark_use_thumb = '$cf_watermark_use_thumb'
 ,cf_watermark_path = '$cf_watermark_path'
@@ -452,7 +461,7 @@ if ($chk[cf_board_time]) {
 }
 if ($chk[cf_board_week]) $sql .= ", cf_board_week = '$cf_board_week' ";
 if ($chk[cf_age]) $sql .= ", cf_age = '$cf_age' ";
-if ($chk[cf_hot]) $sql .= ", cf_hot = '$cf_hot', cf_hot_basis = '$cf_hot_basis', cf_hot_limit = '$cf_hot_limit'  ";
+if ($chk[cf_hot]) $sql .= ", cf_hot = '$cf_hot', cf_hot_basis = '$cf_hot_basis', cf_hot_limit = '$cf_hot_limit', cf_hot_len = '$cf_hot_len'  ";
 if ($chk[cf_related]) $sql .= ", cf_related = '$cf_related' ";
 if ($chk[cf_latest]) $sql .= ", cf_latest = '$cf_latest' ";
 if ($chk[cf_sns]) $sql .= ", cf_sns = '$cf_sns' ";
@@ -477,6 +486,7 @@ if ($chk[cf_lightbox]) {
 if ($chk[cf_comment_page]) {
     $sql .= ", cf_comment_page = '$cf_comment_page' ";
     $sql .= ", cf_comment_page_rows = '$cf_comment_page_rows' ";
+    $sql .= ", cf_comment_page_first = '$cf_comment_page_first' ";
 }
 if ($chk[cf_comment_emoticon]) $sql .= ", cf_comment_emoticon = '$cf_comment_emoticon' ";
 if ($chk[cf_post_emoticon]) $sql .= ", cf_post_emoticon = '$cf_post_emoticon' ";
@@ -488,7 +498,7 @@ if ($chk[cf_singo]) $sql .= ", cf_singo = '$cf_singo' ";
 if ($chk[cf_singo_id]) $sql .= ", cf_singo_id = '$cf_singo_id' ";
 if ($chk[cf_memo_id]) $sql .= ", cf_memo_id = '$cf_memo_id' ";
 if ($chk[cf_email]) $sql .= ", cf_email = '$cf_email' ";
-if ($chk[cf_hp]) $sql .= ", cf_hp = '$cf_hp', cf_sms_id = '$cf_sms_id', cf_sms_pw = '$cf_sms_pw' ";
+if ($chk[cf_hp]) $sql .= ", cf_hp = '$cf_hp', cf_sms_id = '$cf_sms_id', cf_sms_pw = '$cf_sms_pw', cf_hp_reply = '$cf_hp_reply' ";
 if ($chk[cf_file_head]) $sql .= ", cf_file_head = '$cf_file_head' ";
 if ($chk[cf_file_tail]) $sql .= ", cf_file_tail = '$cf_file_tail' ";
 if ($chk[cf_content_head]) $sql .= ", cf_content_head = '$cf_content_head' ";
@@ -535,6 +545,7 @@ if ($chk[cf_comment_default]) $sql .= ", cf_comment_default = '$cf_comment_defau
 if ($chk[cf_default_category]) $sql .= ", cf_default_category = '$cf_default_category' ";
 if ($chk[cf_list_shuffle]) $sql .= ", cf_list_shuffle = '$cf_list_shuffle' ";
 if ($chk[cf_sns_datetime]) $sql .= ", cf_sns_datetime = '$cf_sns_datetime' ";
+if ($chk[cf_content_align]) $sql .= ", cf_content_align = '$cf_content_align' ";
 if ($chk[cf_read_point_message]) $sql .= ", cf_read_point_message = '$cf_read_point_message' ";
 if ($chk[cf_insert_subject]) $sql .= ", cf_insert_subject = '$cf_insert_subject' ";
 if ($chk[bo_insert_content]) {
@@ -548,6 +559,7 @@ if ($chk[cf_post_name]) $sql .= ", cf_post_name = '$cf_post_name' ";
 if ($chk[cf_post_date]) $sql .= ", cf_post_date = '$cf_post_date' ";
 if ($chk[cf_post_hit]) $sql .= ", cf_post_hit = '$cf_post_hit' ";
 if ($chk[cf_list_good]) $sql .= ", cf_list_good = '$cf_list_good' ";
+if ($chk[cf_list_nogood]) $sql .= ", cf_list_nogood = '$cf_list_nogood' ";
 if ($chk[cf_post_num]) $sql .= ", cf_post_num = '$cf_post_num' ";
 if ($chk[cf_img_1_noview]) $sql .= ", cf_img_1_noview = '$cf_img_1_noview' ";
 if ($chk[cf_only_one]) $sql .= ", cf_only_one = '$cf_only_one' ";
@@ -595,6 +607,7 @@ if ($chk[cf_social_commerce]) {
     $sql .= ", cf_social_commerce_hp = '$cf_social_commerce_hp' ";
 }
 if ($chk[cf_google_map]) $sql .= ", cf_google_map = '$cf_google_map' ";
+if ($chk[cf_ban_subject]) $sql .= ", cf_ban_subject = '$cf_ban_subject' ";
 if ($chk[cf_contents_shop]) {
     $sql .= ", cf_contents_shop = '$cf_contents_shop' ";
     $sql .= ", cf_contents_shop_download_count = '$cf_contents_shop_download_count' ";
@@ -714,6 +727,7 @@ if ($chk[cf_good_graph]) $sql .= ", cf_good_graph = '$cf_good_graph' ";
 if ($chk[cf_image_auto_rotate]) $sql .= ", cf_image_auto_rotate = '$cf_image_auto_rotate' ";
 if ($chk[cf_multimedia]) $sql .= ", cf_multimedia = '$cf_multimedia' ";
 if ($chk[cf_youtube_size]) $sql .= ", cf_youtube_size = '$cf_youtube_size' ";
+if ($chk[cf_jwplayer_version]) $sql .= ", cf_jwplayer_version = '$cf_jwplayer_version' ";
 if ($chk[cf_watermark_use]) {
     $sql .= ", cf_watermark_use = '$cf_watermark_use' ";
     $sql .= ", cf_watermark_use_thumb = '$cf_watermark_use_thumb' ";

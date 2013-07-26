@@ -1,3 +1,23 @@
+4.36.23 (2013.07.11)
+    :   embed 태그의 allowscriptaccess 속성을 이용한 XSS 취약점 해결 (i2sec 최호성님께서 알려 주셨습니다.)
+        AllowScriptAccess 의 값 always 를 제거하고 never 로 적용하여 플래시에서 스크립트가 실행되지 않도록 합니다.
+        
+        lib/common.lib.php 에서 conv_content() 함수의 내용 중
+
+        //$content = preg_replace("/(sc)(ript)/i", "&#115;&#99;$2", $content);
+        ...
+        // 플래시의 액션스크립트와 자바스크립트의 연동을 차단하여 악의적인 사이트로의 이동을 막는다.
+        // value="always" 를 value="never" 로, allowScriptaccess="always" 를 allowScriptaccess="never" 로 변환하는데 목적이 있다.
+        //$content = preg_replace("/((?<=\<param|\<embed)[^>]+)(\s*=\s*[\'\"]?)always([\'\"]?)([^>]+(?=\>))/i", "$1$2never$3$4", $content);
+        // allowscript 속성의 param 태그를 삭제한다.
+        $content = preg_replace("#(<param.*?allowscript[^>]+>)(<\/param>)?#i", "", $content);
+        // embed 태그의 allowscript 속성을 삭제한다.
+        $content = preg_replace("#(<embed.*?)(allowscriptaccess[^\s\>]+)#i", "$1", $content);
+        // object 태그에 allowscript 의 값을 never 로 하여 태그를 추가한다.
+        $content = preg_replace("#(<object[^>]+>)#i", "$1<param name=\"allowscriptaccess\" value=\"never\">", $content);
+        // embed 태그에 allowscrpt 값을 never 로 하여 속성을 추가한다.
+        $content = preg_replace("#(<embed[^>]+)#i", "$1 allowscriptaccess=\"never\"", $content);
+
 4.36.22 (2013.06.13)
     :   우편번호 2013.02.01.자 반영 52,144건
     :   cheditor5에서 파일업로드시 파일명이 중복될수 있는 경우를 최소화함 (카이루님께서 알려주셨습니다.)

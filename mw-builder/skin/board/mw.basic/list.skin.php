@@ -307,11 +307,9 @@ if ($is_category && $mw_basic[cf_category_tab]) {
     <? if ($mw_basic[cf_attribute] == "qna") { ?> <td width=50>상태</td> <?}?>
     <? if ($mw_basic[cf_attribute] == "qna" && $mw_basic[cf_qna_point_use]) { ?> <td width=40>포인트</td> <?}?>
     <? if (!$mw_basic[cf_post_date]) { ?> <td width=50>날짜</td> <?}?>
+    <? if (!$mw_basic[cf_list_good] && $is_good) { ?><td width=40><?=subject_sort_link('wr_good', $qstr2, 1)?>추천</a></td><?}?>
+    <? if (!$mw_basic[cf_list_nogood] && $is_nogood) { ?><td width=40><?=subject_sort_link('wr_nogood', $qstr2, 1)?>비추천</a></td><?}?>
     <? if (!$mw_basic[cf_post_hit]) { ?> <td width=40><?=subject_sort_link('wr_hit', $qstr2, 1)?>조회</a></td> <?}?>
-    <? if (!$mw_basic[cf_list_good]) { ?>
-    <? if ($is_good) { ?><td width=40><?=subject_sort_link('wr_good', $qstr2, 1)?>추천</a></td><?}?>
-    <? if ($is_nogood) { ?><td width=40><?=subject_sort_link('wr_nogood', $qstr2, 1)?>비추천</a></td><?}?>
-    <? } ?>
 </tr>
 <tr><td colspan=<?=$colspan?> height=1 class=mw_basic_line_color></td></tr>
 <? } ?>
@@ -594,8 +592,8 @@ else if ($mw_basic[cf_type] == "gall")
         $thumb_width = "width='$mw_basic[cf_thumb_width]'";
         $thumb_height = "height='$mw_basic[cf_thumb_height]'";
     } else {
-        $thumb_width = "";
-        $thumb_height = "";
+        $thumb_width = "width='$mw_basic[cf_thumb_width]'";
+        $thumb_height = "height='$mw_basic[cf_thumb_height]'";
     }
 
     $style = "";
@@ -747,11 +745,9 @@ else if ($mw_basic[cf_type] == "gall")
         <td class=mw_basic_list_qna_status><div><img src="<?=$board_skin_path?>/img/icon_qna_<?=$list[$i][wr_qna_status]?>.png"></div></td> <?}?>
     <? if ($mw_basic[cf_attribute] == 'qna' && $mw_basic[cf_qna_point_use]) { ?> <td class=mw_basic_list_point><?=$list[$i][wr_qna_point]?></span></td> <?}?>
     <? if (!$mw_basic[cf_post_date]) { ?> <td class=mw_basic_list_datetime><?=$list[$i][datetime2]?></span></td> <?}?>
+    <? if (!$mw_basic[cf_list_good] && $is_good) { ?><td class=mw_basic_list_good><?=$list[$i][wr_good]?></td><? } ?>
+    <? if (!$mw_basic[cf_list_nogood] && $is_nogood) { ?><td class=mw_basic_list_nogood><?=$list[$i][wr_nogood]?></td><? } ?>
     <? if (!$mw_basic[cf_post_hit]) { ?> <td class=mw_basic_list_hit><?=$list[$i][wr_hit]?></span></td> <?}?>
-    <? if (!$mw_basic[cf_list_good]) { ?>
-    <? if ($is_good) { ?><td class=mw_basic_list_good><?=$list[$i][wr_good]?></td><? } ?>
-    <? if ($is_nogood) { ?><td class=mw_basic_list_nogood><?=$list[$i][wr_nogood]?></td><? } ?>
-    <? } ?>
 </tr>
 <? if ($i<count($list)-1) { // 마지막 라인 출력 안함 ?>
 <!--<tr><td colspan=<?=$colspan?> height=1 bgcolor=#E7E7E7></td></tr>-->

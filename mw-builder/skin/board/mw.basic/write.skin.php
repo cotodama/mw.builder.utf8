@@ -122,10 +122,6 @@ $html = 0;
 if (strstr($write['wr_option'], "html1")) $html = 1;
 if (strstr($write['wr_option'], "html2")) $html = 2;
 
-if ($w == '' && !$is_dhtml_editor && trim($board[bo_insert_content])) {
-    $content = nl2br($content);
-}
-
 if (($html == 0 || $html == 2) && $is_dhtml_editor) {
     if ($w != '' || !trim($board[bo_insert_content])) {
         $content = nl2br($content);
@@ -149,7 +145,7 @@ if ($w == "u")
         $row = sql_fetch(" select bf_file, bf_content from $g4[board_file_table] where bo_table = '$bo_table' and wr_id = '$wr_id' and bf_no = '$i' ");
         if ($row[bf_file])
         {
-            $file_script .= "add_file(\"&nbsp;&nbsp;<a href='{$file[$i][href]}'>".cut_str($file[$i][source], 20)."({$file[$i][size]})</a> <input type='checkbox' name='bf_file_del[$i]' value='1'> 파일 삭제하려면 체크하세요.";
+            $file_script .= "add_file(\"&nbsp;&nbsp;<a href='#;' onclick='hiddenframe.location.href=\\\"{$file[$i][href]}\\\"'>".cut_str($file[$i][source], 20)."({$file[$i][size]})</a> <input type='checkbox' name='bf_file_del[$i]' value='1'> 파일 삭제하려면 체크하세요.";
             if ($is_file_content)
                 //$file_script .= "<br><input type='text' class=ed size=50 name='bf_content[$i]' value='{$row[bf_content]}' title='업로드 이미지 파일에 해당 되는 내용을 입력하세요.'>";
                 // 첨부파일설명에서 ' 또는 " 입력되면 오류나는 부분 수정
@@ -489,7 +485,11 @@ if ($is_category && $mw_basic[cf_category_tab]) {
 <input type=hidden value="html1" name="html">
 <? } ?>
 
-<? if ($is_notice || ($is_html && !$is_dhtml_editor) || $is_secret || $is_mail || $mw_basic[cf_anonymous]) { ?>
+<?
+if ($is_dhtml_editor) $mw_basic[cf_content_align] = false;
+?>
+
+<? if ($is_notice || ($is_html && !$is_dhtml_editor) || $is_secret || $is_mail || $mw_basic[cf_anonymous] || $mw_basic[cf_content_align]) { ?>
 <tr>
 <td class=mw_basic_write_title>· 옵션</td>
 <td><? if ($is_notice) { ?><input type=checkbox name=notice value="1" <?=$notice_checked?>>공지&nbsp;<? } ?>
@@ -507,6 +507,15 @@ if ($is_category && $mw_basic[cf_category_tab]) {
     <? if ($is_mail) { ?><input type=checkbox value="mail" name="mail" <?=$recv_email_checked?>>답변메일받기&nbsp;<? } ?>
     <? if ($mw_basic[cf_anonymous]) {?>
     <input type="checkbox" name="wr_anonymous" value="1" <?if ($write[wr_anonymous]) echo 'checked';?>> 익명
+    <? } ?>
+    <? if ($mw_basic[cf_content_align]) { ?>
+    <select name="wr_align" id="wr_align">
+        <option value="">본문 정렬</option>
+        <option value="left">왼쪽 </option>
+        <option value="center">가운데 </option>
+        <option value="right">오른쪽 </option>
+    </select>
+    <script>$("#wr_align").val("<?=$write[wr_align]?>");</script>
     <? } ?>
 </td></tr>
 <tr><td colspan=2 height=1 bgcolor=#e7e7e7></td></tr>
@@ -624,9 +633,36 @@ if ($mw_basic[cf_category_radio]) {
             <span style="cursor: pointer;" onclick="textarea_increase('wr_content', 10);"><img src="<?=$board_skin_path?>/img/btn_down.gif"></span>
             <? if ($mw_basic[cf_post_emoticon]) {?>
                 <span class=mw_basic_comment_emoticon><a 
-                    href="javascript:win_open('<?=$board_skin_path?>/mw.proc/mw.emoticon.skin.php?bo_table=<?=$bo_table?>','emo'
+                    href="#;" onclick="win_open('<?=$board_skin_path?>/mw.proc/mw.emoticon.skin.php?bo_table=<?=$bo_table?>','emo'
                     ,'width=600,height=400,scrollbars=yes')">☞ 이모티콘</a></span>
             <? } ?>
+            <a href="#;" onclick="specialchars()">☞특수문자</a>
+            <style>
+            #mw_basic_special_characters {
+                display:none;
+                border:1px solid #ddd;
+                background-color:#fff;
+                padding:10px;
+                position:absolute;
+            }
+            #mw_basic_special_characters table td {
+                padding:3px;
+                cursor:pointer;
+            }
+            </style>
+            <div id="mw_basic_special_characters">hi</div>
+            <script>
+            function specialchars() {
+                $.get("<?=$board_skin_path?>/mw.proc/mw.special.characters.php", function (str) {
+                    $("#mw_basic_special_characters").html(str);
+                    $("#mw_basic_special_characters table td").click(function () {
+                        $("#wr_content").val($("#wr_content").val()+$(this).text());
+                        $("#mw_basic_special_characters").toggle();
+                    });
+                });
+                $("#mw_basic_special_characters").toggle();
+            }
+            </script>
         </td>
         <td align=right><? if ($write_min || $write_max) { ?><span id=char_count></span>글자<?}?></td>
     </tr>
@@ -1721,6 +1757,13 @@ function fwrite_check(f) {
             return false;
         }
     }*/
+
+    <? if (!$is_admin && $mw_basic[cf_ban_subject]) { ?>
+    if (f.wr_subject.value.match(/\[.*\]/)) {
+        alert("제목에 말머리는 사용하실 수 없습니다.");
+        return false;
+    }
+    <? } ?>
 
     <? if ($mw_basic[cf_zzal] && $mw_basic[cf_zzal_must]) { ?>
     var zzal = document.getElementById("bf_file_0").value;

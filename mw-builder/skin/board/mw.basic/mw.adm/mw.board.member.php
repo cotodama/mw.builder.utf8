@@ -34,12 +34,12 @@ $admin_menu[board_member] = "select";
 $sfl = "mb_id";
 $colspan = 5;
 
-$sql_common = " from $mw[board_member_table] ";
+$sql_common = " from $mw[board_member_table] b, $g4[member_table] m ";
 $sql_order = " order by bm_datetime desc ";
-$sql_search = " where bo_table = '$bo_table' ";
+$sql_search = " where b.mb_id = m.mb_id and bo_table = '$bo_table' ";
 
 if ($sfl && $stx)
-    $sql_search .= " and $sfl like '%$stx%' ";
+    $sql_search .= " and (b.mb_id like '%$stx%' or m.mb_nick like '%$stx%') ";
 
 $sql = "select count(*) as cnt
         $sql_common
@@ -84,7 +84,7 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 <div style="height:30px; background-color:#fff;">
     <form name="fwrite" method=post action="mw.board.member.update.php" style="margin:5px 0 5px 5px; float:left;">
     <input type=hidden name=bo_table value="<?=$bo_table?>">
-    회원ID : <input type=text size=15 class=ed name=mb_id required itemname="회원ID">
+    회원ID : <input type=text size=15 class=ed name=mb_id required itemname="회원ID"> (닉네임도 가능)
     <input type=submit value="등록" class="bt">
     </form>
 

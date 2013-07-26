@@ -565,9 +565,7 @@ $view[rich_content] = bc_code($view[rich_content]);
 $view[rich_content] = mw_tag_debug($view[rich_content]);
 
 if ($mw_basic[cf_iframe_level] && $mw_basic[cf_iframe_level] <= $mb[mb_level]) {
-    $view[rich_content] = preg_replace("/\&lt;([\/]?)(script|iframe)(.*)&gt;/iUs", "<$1$2$3>", $view[rich_content]);
-    $view[rich_content] = str_replace("&#111;&#110;", "on", $view[rich_content]);
-    $view[rich_content] = str_replace("&#115;&#99;", "sc", $view[rich_content]);
+    $view[rich_content] = mw_special_tag($view[rich_content]);
 }
 
 if ($mw_basic[cf_umz]) { // 짧은 글주소 사용 
@@ -611,6 +609,7 @@ if ($mw_basic[cf_sns])
     $naver_url = "http://bookmark.naver.com/post?ns=1&title=".urlencode(set_utf8($view[wr_subject]))."&url={$sns_url}";
     $google_url = "http://www.google.com//bookmarks/mark?op=add&title=".urlencode(set_utf8($view[wr_subject]))."&bkmk={$sns_url}";
     $kakao_url = "kakaolink://sendurl?msg=".urlencode(set_utf8($view[wr_subject]))."&appver=1&appid={$_SERVER[HTTP_HOST]}&url=".urlencode($sns_url);
+    $kakaostory_url = "storylink://posting?post=".urlencode(set_utf8($view[wr_subject])).urlencode("\n".$sns_url)."&apiver=1.0&appname=".urlencode($config[cf_title])."&appver=1&appid={$_SERVER[HTTP_HOST]}";
 
     $facebook_like_href = urlencode($view_url);
 
@@ -644,8 +643,13 @@ if ($mw_basic[cf_sns])
     <div><a href="<?=$google_url?>" target="_blank" title="이 글을 구글 북마크로 보내기"><img
         src="<?=$board_skin_path?>/img/send_google.png" border="0"></a></div>
     <? } ?>
-    <? if (strstr(strtolower($_SERVER[HTTP_USER_AGENT]), "mobile") && strstr($mw_basic[cf_sns], '/kakao/')) { ?>
-    <div><a href="<?=$kakao_url?>"><img src="<?=$board_skin_path?>/img/send_kakaotalk.png" valign="middle"></a></div>
+    <? if (strstr(strtolower($_SERVER[HTTP_USER_AGENT]), "mobile")) { ?>
+        <? if (strstr($mw_basic[cf_sns], '/kakaostory/')) { ?>
+        <div><a href="<?=$kakaostory_url?>"><img src="<?=$board_skin_path?>/img/send_kakaostory.png" valign="middle"></a></div>
+        <? } ?>
+        <? if (strstr($mw_basic[cf_sns], '/kakao/')) { ?>
+        <div><a href="<?=$kakao_url?>"><img src="<?=$board_skin_path?>/img/send_kakaotalk.png" valign="middle"></a></div>
+        <? } ?>
     <? } ?>
 
     <? if (strstr($mw_basic[cf_sns], '/facebook_good/')) { ?>
@@ -785,6 +789,12 @@ AutoSourcing.setTemplate("<p style='margin:11px 0 7px 0;padding:0'> <a href='{li
 AutoSourcing.setString(<?=$wr_id?> ,"<?=$config[cf_title];//$view[wr_subject]?>", "<?=$view[wr_name]?>", "<?=$copy_url?>");
 AutoSourcing.init( 'view_%id%' , true);
 </script>
+<? } ?>
+
+<? if ($mw_basic[cf_content_align] && $write[wr_align]) { ?>
+<style>
+#view_content { text-align:<?=$write[wr_align]?>; }
+</style>
 <? } ?>
 
 <!-- 게시글 보기 시작 -->

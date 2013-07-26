@@ -103,6 +103,9 @@ if ($mw_basic[cf_board_member] == '1' && !$is_admin) {
         elseif ($mw_basic[cf_board_member_view] && $mw_is_view) {
             ;
         }
+        elseif ($mw_basic[cf_board_member_comment] && $mw_is_comment) {
+            ;
+        }
         else
             alert("게시판에 접근권한이 없습니다.");
     } else {
@@ -227,7 +230,7 @@ if ($mw_basic[cf_write_notice]) {
 }
 
 if (!$mw_basic[cf_singo_id])
-    $mw_basic[cf_singo_id] = "admin,";
+    $mw_basic[cf_singo_id] = $config[cf_admin];
 
 if (!$mw_basic[cf_email])
     $mw_basic[cf_email] = "test@test.com\ntest@test.com\n";

@@ -150,6 +150,9 @@ if ($mw_basic[cf_attribute] == 'qna' && $mw_basic[cf_qna_point_use] && $w == '')
 if (!$is_admin && $write[wr_view_block])
     alert("이 게시물 보기는 차단되었습니다. 관리자만 접근 가능합니다.");
 
+if (!$is_admin && $mw_basic[cf_ban_subject] && preg_match("/\[.*\]/i", $wr_subject))
+    alert("제목에 말머리는 사용하실 수 없습니다.");
+
 // 재능마켓
 if ($mw_basic[cf_talent_market]) include("$talent_market_path/write_update.head.skin.php");
 

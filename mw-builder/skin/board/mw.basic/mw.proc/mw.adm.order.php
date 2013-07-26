@@ -63,7 +63,7 @@ foreach ($data as $row) {
     $wr_num--;
     //$row[wr_num] *= -1;
 
-    $sql = "update {$write_table} set wr_num = '{$wr_num}' where wr_parent = '{$row[wr_id]}'";
+    $sql = "update {$write_table} set wr_num = '{$wr_num}' where wr_id = '{$row[wr_id]}'";
     sql_query($sql);
 }
 

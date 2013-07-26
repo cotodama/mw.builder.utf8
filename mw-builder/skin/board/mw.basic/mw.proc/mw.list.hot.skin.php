@@ -22,6 +22,8 @@ if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
 
 if ($mw_basic[cf_hot])
 {
+    if (!$mw_basic[cf_hot_len]) $mw_basic[cf_hot_len] = 90;
+
     if (!$mw_basic[cf_hot_limit]) $mw_basic[cf_hot_limit] = 10;
     ?>
     <style type="text/css">
@@ -111,7 +113,7 @@ if ($mw_basic[cf_hot])
             $row[wr_subject] = bc_code($row[wr_subject], 0);
             ?>
             <li class=hot_icon_<?=($i+1)?>> 
-                <nobr><a href="<?=$row[href]?>"><?=cut_str($row[wr_subject], 90)?></a></nobr>
+                <nobr><a href="<?=$row[href]?>"><?=cut_str($row[wr_subject], $mw_basic[cf_hot_len])?></a></nobr>
             </li>
             <?
             if (($i+1)%($mw_basic[cf_hot_limit]/2)==0) echo "</ul><ul>";

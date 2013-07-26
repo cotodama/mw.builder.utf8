@@ -66,3 +66,4 @@ for ($i=count($tmp_array)-1; $i>=0; $i--)
     mw_delete_row($board, $write, false);
 
 }
+

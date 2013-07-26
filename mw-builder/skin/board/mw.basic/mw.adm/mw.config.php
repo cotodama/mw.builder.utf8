@@ -523,8 +523,9 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
             <? for ($i=2; $i<=10; $i=$i+2) { ?>
             <option value="<?=$i?>"><?=$i?></option>
             <? } ?>
-            </select> 개
-	    <span class="cf_info">(목록상단에 인기게시물을 출력합니다.)</span>
+            </select> 개, 제목길이 :
+            <input type="text" name="cf_hot_len" id="cf_hot_len" size="3" value="<?=$mw_basic[cf_hot_len]?>">
+	    <span class="cf_info">(목록상단에 인기 게시물을 출력합니다.)</span>
 	    <script>
 	    document.cf_form.cf_hot.value = "<?=$mw_basic[cf_hot]?>";
 	    document.cf_form.cf_hot_basis.value = "<?=$mw_basic[cf_hot_basis]?>";
@@ -801,7 +802,7 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
     </div>
 
     <div class="cf_item">
-	<div class="cf_title"> <input type=checkbox name=chk[cf_list_good] value=1>&nbsp; 추천,비추천 </div>
+	<div class="cf_title"> <input type=checkbox name=chk[cf_list_good] value=1>&nbsp; 추천 </div>
 	<div class="cf_content">
 	    <input type=checkbox name=cf_list_good value=1> 출력안함 
 	    <span class="cf_info">(체크하면 목록에서 출력하지 않습니다.)</span>
@@ -809,6 +810,15 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 	</div>
     </div>
 
+    <div class="cf_item">
+	<div class="cf_title"> <input type=checkbox name=chk[cf_list_nogood] value=1>&nbsp; 비추천 </div>
+	<div class="cf_content">
+	    <input type=checkbox name=cf_list_nogood value=1> 출력안함 
+	    <span class="cf_info">(체크하면 목록에서 출력하지 않습니다.)</span>
+	    <script> document.cf_form.cf_list_nogood.checked = <?=$mw_basic[cf_list_nogood]?>; </script>
+	</div>
+    </div>
+ 
     <div class="cf_item">
 	<div class="cf_title"> <input type=checkbox name=chk[cf_good_graph] value=1>&nbsp; 추천,비추천 그래프 </div>
 	<div class="cf_content">
@@ -1175,6 +1185,26 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 	</div>
     </div>
 
+    <div class="cf_item">
+	<div class="cf_title"> <input type=checkbox name=chk[cf_jwplayer_version] value=1>&nbsp; jwplayer 버전 </div>
+	<div class="cf_content" height=60>
+	    <select name="cf_jwplayer_version">
+                <option value="jwplayer6">jwplayer6</option>
+                <option value="jwplayer5">jwplayer5</option>
+	    </select>
+	    <script> document.cf_form.cf_jwplayer_version.value = "<?=$mw_basic[cf_jwplayer_version]?>"; </script>
+	</div>
+    </div>
+
+    <div class="cf_item">
+	<div class="cf_title"><input type=checkbox name=chk[cf_content_align] value=1>&nbsp; 본문정렬 선택 </div>
+	<div class="cf_content">
+	    <input type=checkbox name=cf_content_align value=1> 사용 
+	    <span class="cf_info">(글작성시 본문 정렬 옵션을 사용합니다. 에디터 미사용시 작동. 예:왼쪽, 가운데, 오른쪽)</span>
+	    <script> document.cf_form.cf_content_align.checked = '<?=$mw_basic[cf_content_align]?>'; </script>
+	</div>
+    </div>
+
     <div class="block"></div>
 
 </div>
@@ -1251,7 +1281,11 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 	<div class="cf_content">
 	    <input type=checkbox name=cf_comment_page value=1> 사용,
 	    한페이지당 <input type="text" name="cf_comment_page_rows" size="3" value="<?=$mw_basic[cf_comment_page_rows]?>" class="ed"> 개 출력
-	    <script> document.cf_form.cf_comment_page.checked = "<?=$mw_basic[cf_comment_page]?>"; </script>
+	    <input type="checkbox" name="cf_comment_page_first" value="1">첫 페이지부터 출력
+	    <script>
+            document.cf_form.cf_comment_page.checked = "<?=$mw_basic[cf_comment_page]?>";
+            document.cf_form.cf_comment_page_first.checked = "<?=$mw_basic[cf_comment_page_first]?>";
+            </script>
 	</div>
     </div>
 
@@ -1459,6 +1493,7 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 	    <input type=checkbox name=cf_sns_google_plus value=1> 구글플러스
             <br>
 	    <input type=checkbox name=cf_sns_kakao value=1> 카카오톡 <span class="cf_info">(모바일에서만)</span>
+	    <input type=checkbox name=cf_sns_kakaostory value=1> 카카오스토리 <span class="cf_info">(모바일에서만)</span>
 	    <script>
             document.cf_form.cf_sns_twitter.checked = '<? echo strstr($mw_basic[cf_sns], '/twitter/')?'1':''; ?>';
             document.cf_form.cf_sns_me2day.checked = '<? echo strstr($mw_basic[cf_sns], '/me2day/')?'1':''; ?>';
@@ -1470,6 +1505,7 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
             document.cf_form.cf_sns_facebook_good.checked = '<? echo strstr($mw_basic[cf_sns], '/facebook_good/')?'1':''; ?>';
             document.cf_form.cf_sns_google_plus.checked = '<? echo strstr($mw_basic[cf_sns], '/google_plus/')?'1':''; ?>';
             document.cf_form.cf_sns_kakao.checked = '<? echo strstr($mw_basic[cf_sns], '/kakao/')?'1':''; ?>';
+            document.cf_form.cf_sns_kakaostory.checked = '<? echo strstr($mw_basic[cf_sns], '/kakaostory/')?'1':''; ?>';
             </script>
 	</div>
     </div>
@@ -1768,6 +1804,15 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 	</div>
     </div>
 
+    <div class="cf_item">
+	<div class="cf_title"> <input type=checkbox name=chk[cf_ban_subject] value=1>&nbsp; 말머리 금지</div>
+	<div class="cf_content">
+	    <input type=checkbox name=cf_ban_subject value=1> 사용 
+	    <span class="cf_info">(제목에 말머리를 사용할 수 없게 합니다.)</span>
+	    <script> document.cf_form.cf_ban_subject.checked = '<?=$mw_basic[cf_ban_subject]?>'; </script>
+	</div>
+    </div>
+
     <div class="block"></div>
 
 </div> <!-- tabs-3 -->
@@ -1840,6 +1885,7 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 	<div class="cf_title"> <input type=checkbox name=chk[cf_hp] value=1>&nbsp; 글등록 알림문자 </div>
 	<div class="cf_content" height=140>
 	    <div>
+                회신 : <input type=text size=10 name=cf_hp_reply value="<?=$mw_basic[cf_hp_reply]?>" class=ed>
 		ID : <input type=text size=10 name=cf_sms_id value="<?=$mw_basic[cf_sms_id]?>" class=ed>
 		PW : <input type=text size=10 name=cf_sms_pw value="<?=$mw_basic[cf_sms_pw]?>" class=ed>
 		<span class="cf_info">(<a href="http://www.icodekorea.com" target=_blank>ICODEKOREA</a>,
@@ -1847,6 +1893,7 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 	    </div>
 	    <textarea name=cf_hp cols=60 rows=5 class=edarea><?=$mw_basic[cf_hp]?></textarea>
 	    <div class="cf_info">핸드폰번호 Enter 로 구분</div>
+            
 	</div>
     </div>
 
@@ -2299,6 +2346,16 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 	    <script> document.cf_form.cf_board_member_view.checked = "<?=$mw_basic[cf_board_member_view]?>"; </script>
 	</div>
     </div>
+
+    <div class="cf_item">
+	<div class=cf_title> 게시판 접근코멘트 </div>
+	<div class=cf_content>
+	    <input type=checkbox name=cf_board_member_comment value=1> 사용
+	    <span class="cf_info">(접근권한이 없어도 코멘트를 작성함)</span>
+	    <script> document.cf_form.cf_board_member_comment.checked = "<?=$mw_basic[cf_board_member_comment]?>"; </script>
+	</div>
+    </div>
+
 
     <div class="block"></div>
 </div> <!-- tabs-6 -->

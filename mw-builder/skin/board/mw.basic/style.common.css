@@ -554,11 +554,21 @@ img {
 /* 추천수 */
 #mw_basic .mw_basic_list_good {
     color:#888;
+
+    font-family:verdana,arial;
+    font-size:10px;
+    font-weight:bold;
+    color:#ff4800;
 }
 
 /* 비추천수 */
 #mw_basic .mw_basic_list_nogood {
     color:#888;
+
+    font-family:verdana,arial;
+    font-size:10px;
+    font-weight:bold;
+    color:#008dcc;
 }
 
 /* 페이지 번호 */

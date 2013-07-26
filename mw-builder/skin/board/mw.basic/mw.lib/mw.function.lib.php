@@ -406,7 +406,7 @@ function mw_set_sync_tag($content) {
 	$len = strlen($matchs[0][$i]);
 	$content = substr($content, 0, $pos + $len - 1) . ">" . substr($content, $pos + $len - 1, strlen($content));
     }
- 
+
     $content = mw_get_sync_tag($content, "div");
     $content = mw_get_sync_tag($content, "table");
     $content = mw_get_sync_tag($content, "font");
@@ -672,11 +672,20 @@ function mw_delete_editor_image($data)
 // 팝업공지
 function mw_board_popup($view, $html=0)
 {
-    global $is_admin, $bo_table, $g4, $board_skin_path, $mw_basic, $board;
+    global $is_admin, $bo_table, $g4, $board_skin_path, $mw_basic, $board, $pc_skin_path;
+
+    if (!$pc_skin_path) $pc_skin_path = $board_skin_path;
 
     $dialog_id = "mw_board_popup_$view[wr_id]";
 
     $board[bo_image_width] = 550;
+    $minWidth = 600;
+    $minHeight = 300;
+    if (strstr($_SERVER[PHP_SELF], "plugin/mobile")) {
+        $board[bo_image_width] = 300;
+        $minWidth = 300;
+        $minHeight = 300;
+    }
 
     // 파일 출력
     ob_start();
@@ -733,7 +742,7 @@ function mw_board_popup($view, $html=0)
             "팝업내림": function () {
                 var q = confirm("정말로 팝업공지를 내리시겠습니까?")
                 if (q) {
-                    $.get("$board_skin_path/mw.proc/mw.popup.php?bo_table=$bo_table&wr_id=$view[wr_id]&token=$token", function (ret) {
+                    $.get("$pc_skin_path/mw.proc/mw.popup.php?bo_table=$bo_table&wr_id=$view[wr_id]&token=$token", function (ret) {
                         alert(ret);
                     });
                 }
@@ -750,8 +759,8 @@ HEREDOC;
         $(function() {
             $("#dialog-message-$view[wr_id]").dialog({
                 modal: true,
-                minWidth: 600,
-                minHeight: 300,
+                minWidth: $minWidth,
+                minHeight: $minHeight,
                 buttons: {
                     $add_script
                     "24시간 동안 창을 띄우지 않습니다.": function () {
@@ -939,6 +948,7 @@ function bc_code($str, $is_content=1) {
     global $g4, $bo_table, $wr_id, $board_skin_path;
 
     if ($is_content) {
+        $str = preg_replace("/\[url:\/\/(.*)\](.*)\[\/url\]/iU", "<a href='http://$1' target='_blank'>$2</a>", $str);
         $str = preg_replace("/\[s\](.*)\[\/s\]/iU", "<s>$1</s>", $str);
         $str = preg_replace("/\[b\](.*)\[\/b\]/iU", "<b>$1</b>", $str);
         $str = preg_replace("/\[u\](.*)\[\/u\]/iU", "<u>$1</u>", $str);
@@ -1944,6 +1954,8 @@ function mw_bomb()
 
 function mw_tag_debug($str) // 잘못된 태그교정
 {
+    $str = preg_replace("/&lt;br\/>/i", "<br/>", $str);
+
     $tags = array('td', 'tr', 'table', 'div', 'ol', 'ul', 'span');
 
     foreach ($tags as $tag) {
@@ -1968,21 +1980,30 @@ function mw_get_noimage()
 
 function mw_jwplayer($url, $opt="")
 {
-    global $jwplayer, $jwplayer_count, $board_skin_path, $pc_skin_path;
+    global $jwplayer, $jwplayer_count, $board_skin_path, $pc_skin_path, $mw_basic;
 
     if (!$pc_skin_path) $pc_skin_path = $board_skin_path;
     if (!$jwplayer) $jwplayer = false;
     if (!$jwplayer_count) $jwplayer_count = 0;
 
+    if (!$mw_basic['cf_jwplayer_version'])
+        $mw_basic['cf_jwplayer_version'] = 'jwplayer6';
+
     $buffer = '';
     if (!$jwplayer) {
-        $buffer .= "<script src='$pc_skin_path/jwplayer/jwplayer.js'></script>";
+        $buffer .= "<script src='$pc_skin_path/{$mw_basic['cf_jwplayer_version']}/jwplayer.js'></script>";
         $buffer .= "<script>jwplayer.key='';</script>";
         $jwplayer = true;
     }
     $buffer .= "<div id='jwplayer{$jwplayer_count}'>Loading the player...</div>";
-    $buffer .= "<script> jwplayer('jwplayer{$jwplayer_count}').setup({ file: ";
-    $buffer .= "'{$url}' {$opt} }); </script>";
+    $buffer .= "<script> jwplayer('jwplayer{$jwplayer_count}').setup({ ";
+    if ($mw_basic['cf_jwplayer_version'] == 'jwplayer5') {
+        $buffer .= " flashplayer:'$pc_skin_path/jwplayer5/player.swf', ";
+        global $g4;
+        $url = str_replace("../..", $g4[url], $url);
+        $url = str_replace("..", $g4[url], $url);
+    }
+    $buffer .= " file:'{$url}' {$opt} }); </script>";
 
     $jwplayer_count++;
 
@@ -2057,7 +2078,7 @@ function mw_get_youtube_thumb($wr_id, $url, $datetime='')
 
     $fp = fsockopen ("img.youtube.com", 80, $errno, $errstr, 10);
     if (!$fp) return false;
-    fputs($fp, "GET /vi/{$v}/default.jpg HTTP/1.0\r\n");
+    fputs($fp, "GET /vi/{$v}/hqdefault.jpg HTTP/1.0\r\n");
     fputs($fp, "Host: img.youtube.com:80\r\n");
     fputs($fp, "\r\n");
     while (trim($buffer = fgets($fp,1024)) != "") $header .= $buffer;
@@ -2075,6 +2096,9 @@ function mw_get_youtube_thumb($wr_id, $url, $datetime='')
         $size = getimagesize($file);
         if ($size[2] != 2) unlink($file);
     }
+
+    mw_make_thumbnail($mw_basic[cf_thumb_width], $mw_basic[cf_thumb_height], $file, $file, true);
+
     if (!$datetime) {
         global $write;
         if ($write['wr_datetime'])
@@ -2137,7 +2161,7 @@ function mw_youtube_content($content)
 {
     $pt1 = "/\[<a href=\"(http:\/\/youtu\.be\/[^\"]+)\"[^>]+>[^<]+<\/a>\]/ie";
     $pt2 = "/\[<a href=\"(http:\/\/www\.youtube\.com\/[^\"]+)\"[^>]+>[^<]+<\/a>\]/ie";
-    $pt3 = "/\[(http:\/\/youtu.be\/[^\]]+)\]/ie";
+    $pt3 = "/\[(http:\/\/youtu\.be\/[^\]]+)\]/ie";
     $pt4 = "/\[(http:\/\/www\.youtube\.com\/[^\]]+)\]/ie";
 
     $content = preg_replace($pt1, "mw_youtube('\\1')", $content);
@@ -2174,3 +2198,10 @@ function mw_make_lightbox()
     }
 }
 
+function mw_special_tag($con)
+{
+    $con = preg_replace("/\&lt;([\/]?)(script|iframe)(.*)&gt;/iUs", "<$1$2$3>", $con);
+    $con = str_replace("&#111;&#110;", "on", $con);
+    $con = str_replace("&#115;&#99;", "sc", $con);
+    return $con;
+}

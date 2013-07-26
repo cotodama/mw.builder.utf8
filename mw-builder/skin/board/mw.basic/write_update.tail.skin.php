@@ -36,3 +36,7 @@ if (function_exists('mw_lucky_writing') && $w == '') {
 
 sql_query(" delete from $mw[temp_table] where bo_table = '$bo_table' and mb_id = '$member[mb_id]' ", false);
 
+if ($mw_basic[cf_content_align] && $wr_align) {
+    sql_query(" update $write_table set wr_align = '$wr_align' where wr_id = '$wr_id' ");
+}
+

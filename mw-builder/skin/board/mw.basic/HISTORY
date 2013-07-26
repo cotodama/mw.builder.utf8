@@ -1,3 +1,81 @@
+ver 2.2.1 (13.07.26)
+    : bc_code 업데이트 [ url:링크 ]내용[/url]  
+    : 접근권한이 없어도 코멘트는 작성 가능하도록 (슬프다님 제안)
+    : 특수문자 입력창 (금광님 제안)
+
+    mw.basic/HISTORY
+    mw.basic/mw.adm/mw.config.php
+    mw.basic/mw.adm/mw.config.update.php
+    mw.basic/mw.adm/mw.upgrade.php
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/mw.proc/mw.special.characters.php
+    mw.basic/write.skin.php
+    mw.basic/write_comment_update.head.skin.php
+    mw.basic/delete_comment.head.skin.php
+
+ver 2.2.0 (13.07.19)
+    : 유투브 썸네일 큰이미지로 가져오기 (늘미소님 제안)
+    : 코멘트 작성 제한시 수정불가문제 보완 (호이님 제안)
+    : 목록에서 추천, 비추천 출력 옵션 나누기 (재아님 제안)
+    : 인기게시물 제목 길이설정 (금광님 제안)
+    : 코멘트 페이징 및 익명 사용시 익명순번 문제 (csacsa님 제안)
+    : 에디터 미사용시 본문 정렬 기능 (신비님 제안)
+    : 코멘트 페이징 첫페이지 선택옵션 (csacsa님 제안)
+    : 글쓰기 기본내용 에디터 사용시 무조건 html 로 작성 (홍길동1님 제안)
+
+    mw.basic/HISTORY
+    mw.basic/mw.adm/mw.config.php
+    mw.basic/mw.adm/mw.config.update.php
+    mw.basic/mw.adm/mw.upgrade.php
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/mw.proc/mw.list.hot.skin.php
+    mw.basic/list.skin.php
+    mw.basic/view.skin.php
+    mw.basic/view_comment.skin.php
+    mw.basic/write.skin.php
+ 
+ver 2.1.9 (13.07.12)
+    : 이모티콘 창 열릴때 경고창 안나오게 (신비님 제안)
+    : 수정페이지 첨부파일 다운로드시 경고창 안나오게
+    : 말머리 사용 금지 기능
+    : 특수태그 사용권한 코멘트에도 적용 (제이리님 제안)
+    : 카카오스토리 퍼가기 (구름★님  제안)
+    : 그누보드 html 줄바꿈 xss 버그 보완 (csacsa님 제안)
+
+    mw.basic/HISTORY
+    mw.basic/mw.adm/mw.config.php
+    mw.basic/mw.adm/mw.config.update.php
+    mw.basic/mw.adm/mw.upgrade.php
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/img/send_kakaostory.png
+    mw.basic/view.skin.php
+    mw.basic/view_comment.skin.php
+    mw.basic/write.skin.php
+    mw.basic/write_update.head.skin.php
+
+ver 2.1.8 (13.07.05)
+    : jwplayer5 와 jwplayer6 선택기능 (캡틴님 제안)
+    : 목록에서 추천과 조회 순서 바꿈
+    : 문자알림 회신번호 설정 (호이님 제안)
+    : 유투브 주소 오류 수정 (Dae-Seok Kim님 제안)
+    : 코멘트 작성 제한시 수정불가문제 해결 (호이님 제안)
+    : 데이터 정렬 오류 수정
+    : 접근권한 닉네임도 등록 가능 (엑노님 제안)
+
+    mw.basic/HISTORY
+    mw.basic/mw.adm/mw.config.php
+    mw.basic/mw.adm/mw.config.update.php
+    mw.basic/mw.adm/mw.upgrade.php
+    mw.basic/mw.adm/mw.board.member.php
+    mw.basic/mw.adm/mw.board.member.update.php
+    mw.basic/mw.proc/mw.adm.order.php
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/jwplayer6 (디렉토리명 변경, 기존 jwplayer)
+    mw.basic/jwplayer5 (추가)
+    mw.basic/list.skin.php
+    mw.basic/view_comment.skin.php
+    mw.basic/write_update.skin.php
+ 
 ver 2.1.7 (13.06.28)
     : 설문 로그 (하느락이님 제안)
     : 유투브 출력코드 개선 (Dae-Seok Kim님 제안)
