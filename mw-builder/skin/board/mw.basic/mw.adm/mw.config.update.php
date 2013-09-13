@@ -190,6 +190,7 @@ bo_table = '$bo_table'
 ,cf_content_add = '$cf_content_add'
 ,cf_content_tail = '$cf_content_tail'
 ,cf_comment_notice = '$cf_comment_notice'
+,cf_comment_write_notice = '$cf_comment_write_notice'
 ,cf_download_comment = '$cf_download_comment'
 ,cf_download_good = '$cf_download_good'
 ,cf_download_popup = '$cf_download_popup'
@@ -250,6 +251,7 @@ bo_table = '$bo_table'
 ,cf_comment_nogood = '$cf_comment_nogood'
 ,cf_comment_best = '$cf_comment_best'
 ,cf_comment_best_limit = '$cf_comment_best_limit'
+,cf_comment_best_point = '$cf_comment_best_point'
 ,cf_icon_level = '$cf_icon_level'
 ,cf_icon_level_point = '$cf_icon_level_point'
 ,cf_iframe_level = '$cf_iframe_level'
@@ -505,6 +507,7 @@ if ($chk[cf_content_head]) $sql .= ", cf_content_head = '$cf_content_head' ";
 if ($chk[cf_content_add]) $sql .= ", cf_content_add = '$cf_content_add' ";
 if ($chk[cf_content_tail]) $sql .= ", cf_content_tail = '$cf_content_tail' ";
 if ($chk[cf_comment_notice]) $sql .= ", cf_comment_notice = '$cf_comment_notice' ";
+if ($chk[cf_comment_write_notice]) $sql .= ", cf_comment_write_notice = '$cf_comment_write_notice' ";
 if ($chk[cf_download_comment]) {
     $sql .= ", cf_download_comment = '$cf_download_comment' ";
     $sql .= ", cf_download_good = '$cf_download_good' ";
@@ -571,8 +574,11 @@ if ($chk[cf_must_notice]) {
 }
 if ($chk[cf_comment_good]) $sql .= ", cf_comment_good = '$cf_comment_good' ";
 if ($chk[cf_comment_nogood]) $sql .= ", cf_comment_nogood = '$cf_comment_nogood' ";
-if ($chk[cf_comment_best]) $sql .= ", cf_comment_best = '$cf_comment_best' ";
-if ($chk[cf_comment_best_limit]) $sql .= ", cf_comment_best_limit = '$cf_comment_best_limit' ";
+if ($chk[cf_comment_best]) {
+    $sql .= ", cf_comment_best = '$cf_comment_best' ";
+    $sql .= ", cf_comment_best_limit = '$cf_comment_best_limit' ";
+    $sql .= ", cf_comment_best_point = '$cf_comment_best_point' ";
+}
 if ($chk[cf_iframe_level]) $sql .= ", cf_iframe_level = '$cf_iframe_level' ";
 if ($chk[cf_icon_level]) {
     $sql .= ", cf_icon_level = '$cf_icon_level' ";

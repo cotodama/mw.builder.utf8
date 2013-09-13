@@ -20,6 +20,9 @@
  */
 
 include_once("_common.php");
+
+$mw_is_view = true;
+
 include_once("$board_skin_path/mw.lib/mw.skin.basic.lib.php");
 
 header("Content-Type: text/html; charset=$g4[charset]");

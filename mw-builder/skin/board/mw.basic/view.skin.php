@@ -595,7 +595,8 @@ if ($mw_basic[cf_sns])
 
     if ($mw_basic[cf_umz] && $view[wr_umz]) $sns_url = $view[wr_umz];
     else if ($mw_basic[cf_shorten]) $sns_url = $shorten;
-    else $sns_url = $trackback_url;
+    else if ($trackback_url) $sns_url = $trackback_url;
+    else $sns_url = $view_url;
 
     $sns_url = trim($sns_url);
 
@@ -645,7 +646,22 @@ if ($mw_basic[cf_sns])
     <? } ?>
     <? if (strstr(strtolower($_SERVER[HTTP_USER_AGENT]), "mobile")) { ?>
         <? if (strstr($mw_basic[cf_sns], '/kakaostory/')) { ?>
-        <div><a href="<?=$kakaostory_url?>"><img src="<?=$board_skin_path?>/img/send_kakaostory.png" valign="middle"></a></div>
+        <script src="<?=$board_skin_path?>/mw.js/kakao.link.js"></script>
+        <script>
+        function kakaostorylink()
+        {
+            kakao.link("story").send({
+                post : "<?=set_utf8($view[wr_subject])?>\n<?=$sns_url?>",
+                appid : "<?=$_SERVER[HTTP_HOST]?>",
+                appver : "1",
+                appname : "<?=$config[cf_title]?>",
+                urlinfo : JSON.stringify({imageurl:["<?=$g4[url]?>/data/file/<?=$bo_table?>/thumbnail/<?=$wr_id?>"]})
+            });
+        }
+        </script>
+
+        <!--<div><a href="<?=$kakaostory_url?>"><img src="<?=$board_skin_path?>/img/send_kakaostory.png" valign="middle"></a></div>-->
+        <div><a href="#;" onclick="kakaostorylink()"><img src="<?=$board_skin_path?>/img/send_kakaostory.png" valign="middle" style="cursor:pointer;"></a></div>
         <? } ?>
         <? if (strstr($mw_basic[cf_sns], '/kakao/')) { ?>
         <div><a href="<?=$kakao_url?>"><img src="<?=$board_skin_path?>/img/send_kakaotalk.png" valign="middle"></a></div>
@@ -1293,7 +1309,7 @@ if ($bomb) {
         </div>
         <? } ?>
 
-        <? if ($good_href || $nogood_href) { // 추천, 비추천?>
+        <? if ($board[bo_use_good] || $board[bo_use_nogood]) { // 추천, 비추천?>
             <div id="mw_good"></div>
 
             <script type="text/javascript">
@@ -1553,10 +1569,17 @@ if ($mw_basic[cf_attribute] == 'qna' && !$view[is_notice]) {
 <? if ($mw_basic[cf_latest]) { ?>
 <? $latest = mw_view_latest(); ?>
 <? if (count($latest)) {?>
+<?
+$bo_subject = $board[bo_subject];
+if ($mw_basic[cf_latest_table]) {
+    $tmp = sql_fetch("select bo_subject from $g4[board_table] where bo_table = '$mw_basic[cf_latest_table]'");
+    $bo_subject = $tmp[bo_subject];
+}
+?>
 <tr>
     <td class=mw_basic_view_latest>
         <h3>
-            <?=$view[name]?> 님의 <?=$board[bo_subject]?> 최신글
+            <?=$view[name]?> 님의 <?=$bo_subject?> 최신글
             <a href="board.php?bo_table=<?=$bo_table?>&sfl=mb_id,1&stx=<?=$write[mb_id]?>">[더보기]</a>
         </h3>
     </td>

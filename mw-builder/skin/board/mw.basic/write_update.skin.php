@@ -182,6 +182,9 @@ if ($mw_basic[cf_change_image_size] && $member[mb_level] >= $mw_basic[cf_change_
 }
 else
 {*/
+    $thumb_file = "$thumb_path/{$wr_id}";
+    unlink($thumb_file);
+
     $thumb_file = "";
     $file = mw_get_first_file($bo_table, $wr_id, true);
     if (!empty($file)) {
@@ -360,9 +363,13 @@ if ($mw_basic[cf_contents_shop]) {
 
 // 제목 스타일
 if ($mw_basic[cf_subject_style] && $mw_basic[cf_subject_style_level] <= $member[mb_level]) {
-    sql_query("update $write_table set wr_subject_font = '$wr_subject_font', wr_subject_color = '$wr_subject_color' where wr_id = '$wr_id'");
+    $sql = "update $write_table set ";
+    $sql.= "   wr_subject_font = '$wr_subject_font' ";
+    $sql.= " , wr_subject_color = '$wr_subject_color' ";
+    $sql.= " , wr_subject_bold = '$wr_subject_bold' ";
+    $sql.= " where wr_id = '$wr_id'";
+    sql_query($sql);
 }
-
 
 // 퀴즈 
 if ($mw_basic[cf_quiz] && $mw_basic[cf_quiz_level] <= $member[mb_level] && $w == '' && $qz_id) {
@@ -527,7 +534,14 @@ if ($mw_basic[cf_bomb_level] && $mw_basic[cf_bomb_level] <= $member[mb_level]) {
                 alert("자동폭파는 최대 $mw_basic[cf_bomb_days_max]일까지만 설정 가능합니다.");
         }
 
-        sql_query("replace into $mw[bomb_table] set bo_table = '$bo_table', wr_id = '$wr_id', bm_datetime = '$bm_datetime', bm_log = '$bm_log'");
+        $sql = "replace into $mw[bomb_table] set ";
+        $sql.= "   bo_table = '$bo_table' ";
+        $sql.= " , wr_id = '$wr_id' ";
+        $sql.= " , bm_datetime = '$bm_datetime' ";
+        $sql.= " , bm_log = '$bm_log' ";
+        if ($is_admin == 'super')
+            $sql.= " , bm_move_table = '$bm_move_table' ";
+        sql_query($sql);
     }
     else {
         sql_query("delete from $mw[bomb_table] where bo_table = '$bo_table' and wr_id = '$wr_id'");

@@ -268,7 +268,7 @@ if ($w == "" || $w == "r")
     {
         $mb_id = "";
         // 비회원의 경우 이름이 누락되는 경우가 있음
-        $wr_name = strip_tags(mysql_escape_string($_POST['wr_name']));
+        $wr_name = strip_tags(mysql_real_escape_string($_POST['wr_name']));
         if (!trim($wr_name))
             alert("이름은 필히 입력하셔야 합니다.");
         $wr_password = sql_password($wr_password);

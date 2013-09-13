@@ -198,7 +198,10 @@ if ($mw_basic[cf_comment_best]) {
     }
     $sql.= " order by wr_good desc, wr_datetime asc limit $mw_basic[cf_comment_best] ";
     $qry = sql_query($sql);
-    while ($row = sql_fetch_array($qry)) {
+    while ($row = sql_fetch_array($qry)) { // 베플 루프 시작
+
+    if ($mw_basic[cf_comment_best_point])
+        insert_point($row[mb_id], $mw_basic[cf_comment_best_point], '베플 선정', $bo_table, $row[wr_id], '베플');
 
     $mb = get_member($row[mb_id], 'mb_level');
 
@@ -829,6 +832,9 @@ if (($mw_basic[cf_comment_editor] && $is_comment_write) || ($mw_basic[cf_admin_d
 else
     $is_comment_editor = false;
 
+if (!$mw_basic[cf_comment_default])
+    $mw_basic[cf_comment_default] = trim($mw_basic[cf_comment_write_notice]);
+
 if ($mw_basic[cf_comment_default] && $is_comment_editor)
     $mw_basic[cf_comment_default] = nl2br($mw_basic[cf_comment_default]);
 
@@ -917,6 +923,40 @@ if ($is_comment_editor && $mw_basic[cf_editor] == "cheditor") {
     </td>
 </tr>
 </table>
+
+<? if (trim($mw_basic[cf_comment_write_notice])) { ?>
+<script>
+$(document).ready(function () {
+<? if ($is_comment_editor) { ?>
+    <? if ($mw_basic[cf_editor] == "cheditor") { ?>
+    ed_wr_content.editArea.blur();
+    ed_wr_content.editArea.onfocus = function () {
+        var ed = ed_wr_content.outputBodyHTML();
+        if (ed == "<?=$mw_basic[cf_comment_write_notice]?>") {
+            ed_wr_content.doc.body.innerHTML = '';
+        }
+    }
+    <? } else { ?>
+    ged = document.getElementById("geditor_wr_content_frame").contentWindow.document.body;
+    ged.onfocus = function () {
+        var ed = document.getElementById('wr_content').value;
+        if (ed == "<?=$mw_basic[cf_comment_write_notice]?>") {
+            ged.innerHTML = '';
+        }
+    }
+    <? } ?>
+<? } else { ?>
+    $("#wr_content").focus(function () {
+        if ($("#wr_content").val() == "<?=$mw_basic[cf_comment_write_notice]?>") {
+            $("#wr_content").val('');
+        }
+    });
+<? } ?>
+});
+
+</script>
+<? } ?>
+
 
 <div style="padding:2px 0 2px 0;">
     <? if (!$write_error && !$mw_basic[cf_comment_secret_no]) { ?>
@@ -1066,28 +1106,29 @@ function fviewcomment_submit(f)
 
     // 양쪽 공백 없애기
     var pattern = /(^\s*)|(\s*$)/g; // \s 공백 문자
-    document.getElementById('wr_content').value = document.getElementById('wr_content').value.replace(pattern, "");
-    <? if (!$is_comment_editor && ($comment_min || $comment_max)) { ?>
-    if (char_min > 0 || char_max > 0)
-    {
-        check_byte('wr_content', 'char_count');
-        var cnt = parseInt(document.getElementById('char_count').innerHTML);
-        if (char_min > 0 && char_min > cnt)
+    if (document.getElementById('wr_content')) {
+        document.getElementById('wr_content').value = document.getElementById('wr_content').value.replace(pattern, "");
+        <? if (!$is_comment_editor && ($comment_min || $comment_max)) { ?>
+        if (char_min > 0 || char_max > 0)
         {
-            alert("코멘트는 "+char_min+"글자 이상 쓰셔야 합니다.");
-            return false;
-        } else if (char_max > 0 && char_max < cnt)
+            check_byte('wr_content', 'char_count');
+            var cnt = parseInt(document.getElementById('char_count').innerHTML);
+            if (char_min > 0 && char_min > cnt)
+            {
+                alert("코멘트는 "+char_min+"글자 이상 쓰셔야 합니다.");
+                return false;
+            } else if (char_max > 0 && char_max < cnt)
+            {
+                alert("코멘트는 "+char_max+"글자 이하로 쓰셔야 합니다.");
+                return false;
+            }
+        }
+        else <? } ?> if (!document.getElementById('wr_content').value)
         {
-            alert("코멘트는 "+char_max+"글자 이하로 쓰셔야 합니다.");
+            alert("코멘트를 입력하여 주십시오.");
             return false;
         }
     }
-    else <? } ?> if (!document.getElementById('wr_content').value)
-    {
-        alert("코멘트를 입력하여 주십시오.");
-        return false;
-    }
-
     if (typeof(f.wr_name) != 'undefined')
     {
         f.wr_name.value = f.wr_name.value.replace(pattern, "");

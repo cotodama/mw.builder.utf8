@@ -1,3 +1,40 @@
+ver 2.2.3 (13.09.13)
+    : 자동폭파 후 이동 게시판 게시물별로 설정, 관리자전용 (브라운아이즈님 제안)
+    : 베플선정시 추가 포인트 지급 (브라운아이즈님 제안)
+    : 코멘트 작성창 공지 (슬프다님 제안)
+    : 접근권한 사용시 코멘트 추천 안되는 문제 해결 (청해님 제안)
+    : 제목 스타일에 bold 기능 추가 (라이오스님 제안)
+    : 본문 타게시판 최신글 출력시 게시판명 오류 수정 (슬프다님 제안)
+    : 카카오스토리 공유기능에 썸네일 출력 추가 (nick1224님 제안)
+
+    mw.basic/HISTORY
+    mw.basic/mw.adm/mw.config.php
+    mw.basic/mw.adm/mw.config.update.php
+    mw.basic/mw.adm/mw.upgrade.php
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/mw.proc/mw.comment.good.php
+    mw.basic/mw.js/kakao.link.js
+    mw.basic/list.skin.php
+    mw.basic/view.skin.php
+    mw.basic/view_comment.skin.php
+    mw.basic/write.skin.php
+    mw.basic/write_update.skin.php
+ 
+ver 2.2.2 (13.09.06)
+    : 본문 추천수 및 버튼 비회원에게도 보이기 (제이리님 제안)
+    : 썸네일 비율 유지 오류 (슬프다님 제안)
+    : 글 수정시 썸네일 삭제 후 재생성
+    : 코멘트 에디터 사용시 추천+댓글 안되는 현상 (메모리스토리님 제안)
+    : SNS 퍼가기 트랙백 권한 없을 경우 주소 표시안되는 문제 (nick1224님 제안)
+    : 특수문자 euc-kr 버전 글자 깨짐현상  (마루밑다락방님 제안)
+
+    mw.basic/HISTORY
+    mw.basic/mw.proc/mw.special.characters.php
+    mw.basic/view.skin.php
+    mw.basic/list.skin.php
+    mw.basic/write_update.skin.php
+    mw.basic/view_comment.skin.php
+
 ver 2.2.1 (13.07.26)
     : bc_code 업데이트 [ url:링크 ]내용[/url]  
     : 접근권한이 없어도 코멘트는 작성 가능하도록 (슬프다님 제안)

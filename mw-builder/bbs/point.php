@@ -9,7 +9,7 @@ include_once("$g4[path]/head.sub.php");
 
 $list = array();
 
-$sql_common = " from $g4[point_table] where mb_id = '".mysql_escape_string($member[mb_id])."' ";
+$sql_common = " from $g4[point_table] where mb_id = '".mysql_real_escape_string($member[mb_id])."' ";
 $sql_order = " order by po_id desc ";
 
 $sql = " select count(*) as cnt $sql_common ";

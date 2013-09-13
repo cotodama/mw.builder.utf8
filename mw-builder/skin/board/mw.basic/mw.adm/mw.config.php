@@ -691,6 +691,14 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
     </div>
 
     <div class="cf_item">
+	<div class="cf_title"> <input type=checkbox name=chk[cf_comment_write_notice] value=1>&nbsp; 코멘트 작성전 공지 </div>
+	<div class="cf_content" height=110>
+	    <textarea name=cf_comment_write_notice cols=60 rows=5 class=edarea><?=$mw_basic[cf_comment_write_notice]?></textarea>
+	    <div class="cf_info">코멘트 작성창에 표시되는 안내 메시지 (코멘트 기본입력내용이 있을시 표시되지 않습니다.)</div>
+	</div>
+    </div>
+
+    <div class="cf_item">
 	<div class="cf_title"> <input type=checkbox name=chk[cf_default_category] value=1>&nbsp; 기본분류설정 </div>
 	<div class="cf_content" height=110>
             <select name="cf_default_category">
@@ -1620,15 +1628,13 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
     <div class="cf_item">
 	<div class="cf_title"> <input type=checkbox name=chk[cf_comment_best] value=1>&nbsp; 코멘트 베플</div>
 	<div class="cf_content">
-            <input type="text" name="cf_comment_best" class="ed" size="3" value="<?=$mw_basic[cf_comment_best]?>"> 개 출력
-	    <span class="cf_info">(베스트 코멘트 기능을 사용합니다.)</span>
-	</div>
-    </div>
+            <input type="text" name="cf_comment_best" class="ed" size="3" value="<?=$mw_basic[cf_comment_best]?>"> 개 출력,
+            추천 <input type="text" name="cf_comment_best_limit" class="ed" size="3"
+                value="<?=$mw_basic[cf_comment_best_limit]?>"> 개 이상,
+            적립 포인트 <input type="text" name="cf_comment_best_point" class="ed" size="5"
+                value="<?=$mw_basic[cf_comment_best_point]?>"> 점
 
-    <div class="cf_item">
-	<div class="cf_title"> <input type=checkbox name=chk[cf_comment_best_limit] value=1>&nbsp; 코멘트 베플 기준</div>
-	<div class="cf_content">
-            추천 <input type="text" name="cf_comment_best_limit" class="ed" size="3" value="<?=$mw_basic[cf_comment_best_limit]?>"> 개 이상
+	    <!--<span class="cf_info">(베스트 코멘트 기능을 사용합니다.)</span>-->
 	</div>
     </div>
 

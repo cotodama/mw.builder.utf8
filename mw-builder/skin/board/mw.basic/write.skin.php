@@ -563,7 +563,7 @@ if ($mw_basic[cf_category_radio]) {
 <tr>
 <td class=mw_basic_write_title>· 제목 모양</td>
 <td>
-
+    굵게 : <input type="checkbox" name="wr_subject_bold" value="1" <? if ($write[wr_subject_bold]) echo "checked"; ?>> 사용,
     글꼴 : <select name="wr_subject_font" id="wr_subject_font">
     <option value="">글꼴</option>
     <option value="">----</option>
@@ -571,7 +571,7 @@ if ($mw_basic[cf_category_radio]) {
     <option value="돋움">돋움</option>
     <option value="바탕">바탕</option>
     <option value="궁서">궁서</option>
-    </select>
+    </select>,
 
     <? if ($mw_basic[cf_subject_style_color_picker]) { ?>
     색상 : <input type="text" size="7" class="ed" name="wr_subject_color" id="wr_subject_color"/>
@@ -814,6 +814,9 @@ if ($mw_basic[cf_category_radio]) {
     <input type="button" value="지금" class="btn1" onclick="bomb_cate_now()"/>
     <input type="button" value="초기화" class="btn1" onclick="bomb_cate_init()"/>
     <input type="checkbox" name="bm_log" value="1">흔적 남기기
+    <? if ($is_admin == 'super') { ?>
+    <br/>폭파 후 이동할 게시판 : <input type="text" size="10" name="bm_move_table" value="<?=$bomb[bm_move_table]?>">
+    <? } ?>
     <script>
     function bomb_cate_now() {
         var d = new Date();

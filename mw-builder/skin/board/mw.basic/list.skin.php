@@ -592,8 +592,8 @@ else if ($mw_basic[cf_type] == "gall")
         $thumb_width = "width='$mw_basic[cf_thumb_width]'";
         $thumb_height = "height='$mw_basic[cf_thumb_height]'";
     } else {
-        $thumb_width = "width='$mw_basic[cf_thumb_width]'";
-        $thumb_height = "height='$mw_basic[cf_thumb_height]'";
+        $thumb_width = "";
+        $thumb_height = "";
     }
 
     $style = "";
@@ -608,8 +608,13 @@ else if ($mw_basic[cf_type] == "gall")
     $td_width = (int)(100 / $board[bo_gallery_cols]);
 
     // 제목스타일
-    if ($mw_basic[cf_subject_style])
-        $style .= " style='font-family:{$list[$i][wr_subject_font]}; color:{$list[$i][wr_subject_color]}'";
+    if ($mw_basic[cf_subject_style]) {
+        $style .= " style='font-family:{$list[$i][wr_subject_font]}; color:{$list[$i][wr_subject_color]}";
+        if ($list[$i][wr_subject_bold]) {
+            $style .= "; font-weight:bold; ";
+        }
+        $style .= " '";
+    }
 
     $list[$i][subject] = "<span{$style}>{$list[$i][subject]}</span></a>";
 
@@ -705,8 +710,12 @@ else if ($mw_basic[cf_type] == "gall")
         }
 
         // 제목스타일
-        if ($mw_basic[cf_subject_style])
-            $style .= " style='font-family:{$list[$i][wr_subject_font]}; color:{$list[$i][wr_subject_color]}'";
+        if ($mw_basic[cf_subject_style]) {
+            $style .= " style='font-family:{$list[$i][wr_subject_font]}; color:{$list[$i][wr_subject_color]}";
+            if ($list[$i][wr_subject_bold])
+                $style .= "; font-weight:bold; ";
+            $style .= " '";
+        }
 
         echo "<span{$style}>{$list[$i][subject]}</span></a>";
 
@@ -744,10 +753,10 @@ else if ($mw_basic[cf_type] == "gall")
     <? if ($mw_basic[cf_attribute] == 'qna') { ?>
         <td class=mw_basic_list_qna_status><div><img src="<?=$board_skin_path?>/img/icon_qna_<?=$list[$i][wr_qna_status]?>.png"></div></td> <?}?>
     <? if ($mw_basic[cf_attribute] == 'qna' && $mw_basic[cf_qna_point_use]) { ?> <td class=mw_basic_list_point><?=$list[$i][wr_qna_point]?></span></td> <?}?>
-    <? if (!$mw_basic[cf_post_date]) { ?> <td class=mw_basic_list_datetime><?=$list[$i][datetime2]?></span></td> <?}?>
+    <? if (!$mw_basic[cf_post_date]) { ?> <td class=mw_basic_list_datetime><?=$list[$i][datetime2]?></td> <?}?>
     <? if (!$mw_basic[cf_list_good] && $is_good) { ?><td class=mw_basic_list_good><?=$list[$i][wr_good]?></td><? } ?>
     <? if (!$mw_basic[cf_list_nogood] && $is_nogood) { ?><td class=mw_basic_list_nogood><?=$list[$i][wr_nogood]?></td><? } ?>
-    <? if (!$mw_basic[cf_post_hit]) { ?> <td class=mw_basic_list_hit><?=$list[$i][wr_hit]?></span></td> <?}?>
+    <? if (!$mw_basic[cf_post_hit]) { ?> <td class=mw_basic_list_hit><?=$list[$i][wr_hit]?></td> <?}?>
 </tr>
 <? if ($i<count($list)-1) { // 마지막 라인 출력 안함 ?>
 <!--<tr><td colspan=<?=$colspan?> height=1 bgcolor=#E7E7E7></td></tr>-->

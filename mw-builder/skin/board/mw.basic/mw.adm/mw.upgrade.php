@@ -444,6 +444,7 @@ if (is_null($write[wr_subject_font])) {
     sql_query("alter table $write_table add wr_subject_font varchar(10) not null", false);
     sql_query("alter table $write_table add wr_subject_color varchar(10) not null", false);
 }
+    sql_query("alter table $write_table add wr_subject_bold varchar(1) not null", false);
 
 //sql_query("alter table $mw[basic_config_table] change cf_uploader_point cf_uploader_point int not null", false);
 //sql_query("alter table $mw[basic_config_table] change cf_uploader_day cf_uploader_day int not null", false);
@@ -864,6 +865,7 @@ if (is_null($mw_basic[cf_good_point])) {
 if (is_null($mw_basic[cf_comment_best_limit])) {
     sql_query("alter table $mw[basic_config_table] add cf_comment_best_limit int not null", false);
 }
+    sql_query("alter table $mw[basic_config_table] add cf_comment_best_point int not null", false);
 
 // 추천,비추천한 사람 포인트
 if (is_null($mw_basic[cf_good_re_point])) {
@@ -1083,6 +1085,7 @@ $sql = "create table if not exists $mw[bomb_table] (
         ,primary key(bo_table, wr_id)) $default_charset";
 sql_query($sql, false);
 sql_query("alter table $mw[bomb_table] add bm_log varchar(1) not null", false);
+sql_query("alter table $mw[bomb_table] add bm_move_table varchar(20) not null", false);
 
 if (is_null($mw_basic[cf_age])) {
     sql_query("alter table $mw[basic_config_table] add cf_age varchar(5) not null", false);
@@ -1198,3 +1201,4 @@ if (is_null($mw_basic[cf_talent_market])) {
     sql_query("alter table $mw[basic_config_table] add cf_content_align varchar(1) not null", false);
     sql_query("alter table $write_table add wr_align varchar(6) default 'left' not null", false);
 
+    sql_query("alter table $mw[basic_config_table] add cf_comment_write_notice text not null", false);
