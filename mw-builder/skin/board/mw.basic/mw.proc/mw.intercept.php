@@ -23,8 +23,8 @@ include_once("_common.php");
 include_once("$board_skin_path/mw.lib/mw.skin.basic.lib.php");
 include_once("$g4[path]/head.sub.php");
 
-if ($is_admin != "super") 
-    alert_close("최고관리자만 접근 가능합니다.");
+if (!mw_singo_admin($member[mb_id]))
+    alert_close("접근 권한이 없습니다.");
 
 $mb = get_member($mb_id);
 if (!$mb)
@@ -50,6 +50,7 @@ set_session("ss_token", $token);
     width:95%;
     height:100px;
 }
+.options { text-align:center; margin:0 0 10px 0; }
 .buttons { text-align:center; }
 .btn1 { background-color:#efefef; cursor:pointer; }
 </style>
@@ -68,7 +69,7 @@ function is_all_del() {
 function is_all_moving() {
     if (!confirm("정말 접근차단하고 전체 게시물을 이동 하시겠습니까?")) return false;
 
-    var sub_win = window.open("<?=$board_skin_path?>/mw.proc/mw.intercept.table.php", "move", "left=50, top=50, width=500, height=550, scrollbars=1");
+    var sub_win = window.open("<?=$board_skin_path?>/mw.proc/mw.intercept.table.php?bo_table=<?=$bo_table?>", "move", "left=50, top=50, width=500, height=550, scrollbars=1");
     //fwrite.is_all_move.value = 1;
     //fwrite.submit();
 }
@@ -88,6 +89,10 @@ function is_all_moving() {
     <div class="content">
     <div> 관리자 메모 </div>
     <textarea name="mb_memo" class="text"><?=$mb[mb_memo]?></textarea>
+    </div>
+
+    <div class="options">
+        <input type="checkbox" name="intercept_ip" value="1"> IP 차단
     </div>
 
     <div class="buttons">

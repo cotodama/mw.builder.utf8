@@ -2169,10 +2169,16 @@ function mw_youtube_content($content)
     $pt3 = "/\[(http:\/\/youtu\.be\/[^\]]+)\]/ie";
     $pt4 = "/\[(http:\/\/www\.youtube\.com\/[^\]]+)\]/ie";
 
+    $pt5 = "/\[http[s]{0,1}:\/\/vimeo\.com\/([^]]+)\]/ie"; 
+    $pt6 = "/\[<a href=\"http[s]{0,1}:\/\/vimeo\.com\/([^\"]+)\"[^>]+>[^<]+<\/a>\]/ie"; 
+
     $content = preg_replace($pt1, "mw_youtube('\\1')", $content);
     $content = preg_replace($pt2, "mw_youtube('\\1')", $content);
     $content = preg_replace($pt3, "mw_youtube('\\1')", $content);
     $content = preg_replace($pt4, "mw_youtube('\\1')", $content);
+
+    $content = preg_replace($pt5, "mw_vimeo('\\1')", $content); 
+    $content = preg_replace($pt6, "mw_vimeo('\\1')", $content); 
 
     return $content;
 }
@@ -2210,3 +2216,56 @@ function mw_special_tag($con)
     $con = str_replace("&#115;&#99;", "sc", $con);
     return $con;
 }
+
+// Dae-Seok Kim님 제안
+function mw_vimeo($url) 
+{ 
+    global $board, $mw_basic; 
+
+    if (!$mw_basic['cf_youtube_size']) 
+    $mw_basic['cf_youtube_size'] = 360; 
+
+    switch ($mw_basic['cf_youtube_size']) { 
+        case "240": $width = 560; $height = 315; break; 
+        case "360": $width = 640; $height = 394; break; 
+        case "480": $width = 854; $height = 516; break; 
+        case "720": $width = 1280; $height = 759; break; 
+        case "1080": $width = 1920; $height = 1123; break; 
+        default: $width =640; $height = 394; break; 
+    } 
+
+    if ($width > $board['bo_image_width']) { 
+        $height = floor($board['bo_image_width']/$width*$height); 
+        $width = $board['bo_image_width']; 
+    } 
+
+    if (preg_match("/^http[s]{0,1}:\/\/vimeo\.com\/(.*)$/i", $url, $mat)) {
+        $v = $mat[1];
+    }
+
+    $vimeo = "<iframe src='//player.vimeo.com/video/{$v}' width='{$width}' height='{$height}' frameborder='0' webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>"; 
+
+    return $vimeo; 
+} 
+
+function mw_singo_admin($admin_id)
+{
+    global $g4, $mw_basic;
+
+    if (!$admin_id) return false;
+
+    $singo_id = array();
+
+    $tmp = explode(",", $mw_basic['cf_singo_id']);
+    foreach ((array)$tmp as $mb_id) {
+        $mb_id = trim($mb_id);
+        if (!$mb_id) continue;
+        $singo_id[] = $mb_id;
+    }
+
+    if (!in_array($admin_id, $singo_id)) return false;
+
+    return true;
+}
+
+

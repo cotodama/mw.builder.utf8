@@ -237,6 +237,11 @@ for ($i=1; $i<=$g4['link_count']; $i++) {
         $link_file_viewer .= mw_youtube($view['link'][$i])."<br><br>";
         $view['link'][$i] = '';
     }
+    elseif (strstr($mw_basic['cf_multimedia'], '/youtube/') && preg_match("/vimeo/i", $view['link'][$i])) {
+        //$link_file_viewer .= mw_jwplayer($view['link'][$i])."<br><br>";
+        $link_file_viewer .= mw_vimeo($view['link'][$i])."<br><br>";
+        $view['link'][$i] = '';
+    }
     elseif (strstr($mw_basic['cf_multimedia'], '/link_movie/') && preg_match("/\.($config[cf_movie_extension])$/i", $view['link'][$i])) {
         $link_file_viewer .= mw_jwplayer($view['link'][$i])."<br><br>";
         $view['link'][$i] = '';
@@ -458,7 +463,7 @@ if (!$prev_href || !$next_href)
     }
 }
 
-$view[rich_content] = preg_replace_callback("/\[code\](.*)\[\/code\]/iU", "_preg_callback", $view[rich_content]);
+$view[rich_content] = preg_replace_callback("/\[code\](.*)\[\/code\]/iUs", "_preg_callback", $view[rich_content]);
 
 // 리워드
 if ($mw_basic[cf_reward]) {

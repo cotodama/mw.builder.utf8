@@ -25,8 +25,8 @@ include_once("$board_skin_path/mw.lib/mw.skin.basic.lib.php");
 @ini_set('memory_limit', '-1');
 @set_time_limit(0);
 
-if ($is_admin != "super") 
-    alert_close("최고관리자만 접근 가능합니다.");
+if (!mw_singo_admin($member[mb_id]))
+    alert_close("접근 권한이 없습니다.");
 
 if (!strstr($_SERVER[HTTP_REFERER], "mw.proc/mw.intercept.php"))
     alert_close("잘못된 접근입니다.");
@@ -53,6 +53,10 @@ if ($is_all_delete or $is_all_move) {
             elseif ($is_all_move) {
                 if ($all_board_row['bo_table'] == $move_table) continue;
                 mw_move($all_board_row, $all_write_row[wr_id], $move_table, 'move');
+            }
+            if ($intercept_ip and !strstr($config[cf_intercept_ip], $all_write_row[wr_ip])) {
+                $config[cf_intercept_ip] = trim($config[cf_intercept_ip]) . "\n$all_write_row[wr_id]";
+                sql_query("update $g4[config_table] set cf_intercept_ip = '$config[cf_intercept_ip]'");
             }
         } // write row
     } // board row

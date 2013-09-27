@@ -770,6 +770,7 @@ for ($i=0; $i<$to_record; $i++) {
         <div id='edit_<?=$comment_id?>' style='display:none;'></div><!-- 수정 -->
         <div id='reply_<?=$comment_id?>' style='display:none;'></div><!-- 답변 -->
         <input type="hidden" id='secret_<?=$comment_id?>' value="<?=strstr($list[$i][wr_option], 'secret')?'1':'';?>"> <!-- 비밀글 -->
+        <input type="hidden" id='html_<?=$comment_id?>' value="<?=strstr($list[$i][wr_option], 'html2')?'1':'';?>"> <!-- html -->
 
         <textarea id='save_comment_<?=$comment_id?>' style='display:none;'><?=get_text($list[$i][content1], 0)?></textarea></td>
         <? } ?>
@@ -888,7 +889,7 @@ if ($is_comment_editor && $mw_basic[cf_editor] == "cheditor") {
     <span style="cursor: pointer;" onclick="textarea_decrease('wr_content', 10);"><img src="<?=$board_skin_path?>/img/btn_up.gif" align=absmiddle></span>
     <span style="cursor: pointer;" onclick="textarea_original('wr_content', 5);"><img src="<?=$board_skin_path?>/img/btn_init.gif" align=absmiddle></span>
     <span style="cursor: pointer;" onclick="textarea_increase('wr_content', 10);"><img src="<?=$board_skin_path?>/img/btn_down.gif" align=absmiddle></span>
-    <? if ($mw_basic[cf_comment_html]) echo "<input type=\"checkbox\" name=\"html\" value=\"html2\"> html"; ?>
+    <? if ($mw_basic[cf_comment_html]) echo "<input type=\"checkbox\" id=\"wr_html\" name=\"html\" value=\"html2\"> html"; ?>
     <? } ?>
 
     <? if (!$is_comment_editor && ($comment_min || $comment_max)) { ?>
@@ -1215,6 +1216,8 @@ function comment_box(comment_id, work)
             <? } ?>
             if ($("#secret_"+comment_id).val() == '1')
                 $("#wr_secret").attr("checked", "true");
+            if ($("#html_"+comment_id).val() == '1')
+                $("#wr_html").attr("checked", "true");
             
         }
 

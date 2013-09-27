@@ -108,7 +108,7 @@ function mw_get_list($write_row, $board, $skin_path, $subject_len=40)
     global $qstr, $page;
 
     //$t = get_microtime();
-    $g4[bbs_path] = "$g4[url]/$g4[bbs]";
+    $bbs_path = "$g4[url]/$g4[bbs]";
 
     // 배열전체를 복사
     $list = $write_row;
@@ -178,12 +178,12 @@ function mw_get_list($write_row, $board, $skin_path, $subject_len=40)
         $list['icon_link'] = "<img src='$skin_path/img/icon_link.gif' align='absmiddle'>";
 
     // 분류명 링크
-    $list['ca_name_href'] = "$g4[bbs_path]/board.php?bo_table=$board[bo_table]&sca=".urlencode($list['ca_name']);
+    $list['ca_name_href'] = "$bbs_path/board.php?bo_table=$board[bo_table]&sca=".urlencode($list['ca_name']);
 
-    $list['href'] = "$g4[bbs_path]/board.php?bo_table=$board[bo_table]&wr_id=$list[wr_id]" . $qstr;
-    //$list['href'] = "$g4[bbs_path]/board.php?bo_table=$board[bo_table]&wr_id=$list[wr_id]";
+    $list['href'] = "$bbs_path/board.php?bo_table=$board[bo_table]&wr_id=$list[wr_id]" . $qstr;
+    //$list['href'] = "$bbs_path/board.php?bo_table=$board[bo_table]&wr_id=$list[wr_id]";
     if ($board['bo_use_comment'])
-        $list['comment_href'] = "javascript:win_comment('$g4[bbs_path]/board.php?bo_table=$board[bo_table]&wr_id=$list[wr_id]&cwin=1');";
+        $list['comment_href'] = "javascript:win_comment('$bbs_path/board.php?bo_table=$board[bo_table]&wr_id=$list[wr_id]&cwin=1');";
     else
         $list['comment_href'] = $list['href'];
 
@@ -203,7 +203,7 @@ function mw_get_list($write_row, $board, $skin_path, $subject_len=40)
     for ($i=1; $i<=$g4['link_count']; $i++) 
     {
         $list['link'][$i] = set_http(get_text($list["wr_link{$i}"]));
-        $list['link_href'][$i] = "$g4[bbs_path]/link.php?bo_table=$board[bo_table]&wr_id=$list[wr_id]&no=$i" . $qstr;
+        $list['link_href'][$i] = "$bbs_path/link.php?bo_table=$board[bo_table]&wr_id=$list[wr_id]&no=$i" . $qstr;
         $list['link_hit'][$i] = (int)$list["wr_link{$i}_hit"];
     }
 

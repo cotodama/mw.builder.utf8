@@ -1,3 +1,18 @@
+ver 2.2.4 (13.09.27)
+    : vimeo 자동 재생 (Dae-Seok Kim님 제안)
+    : cheditor 에서 code 사용 (재아님 제안)
+    : 회원 차단시 ip 차단 추가 (슬프다님 제안) 
+    : 신고 통보 아이디에 원클릭 스팸삭제 권한 부여 (슬프다님 제안)
+    : 코멘트 html 수정시 옵션 풀리는 문제 (csacsa님 제안)
+
+    mw.basic/HISTORY
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/mw.proc/mw.intercept.php
+    mw.basic/mw.proc/mw.intercept.table.php
+    mw.basic/mw.proc/mw.intercept.update.php
+    mw.basic/view.skin.php
+    mw.basic/view_comment.skin.php
+ 
 ver 2.2.3 (13.09.13)
     : 자동폭파 후 이동 게시판 게시물별로 설정, 관리자전용 (브라운아이즈님 제안)
     : 베플선정시 추가 포인트 지급 (브라운아이즈님 제안)
