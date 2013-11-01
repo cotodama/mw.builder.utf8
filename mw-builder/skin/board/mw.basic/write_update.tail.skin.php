@@ -40,3 +40,10 @@ if ($mw_basic[cf_content_align] && $wr_align) {
     sql_query(" update $write_table set wr_align = '$wr_align' where wr_id = '$wr_id' ");
 }
 
+if ($is_admin && $mw_basic[cf_attribute] == "1:1" && $wr_to_id) {
+    $tmp = sql_fetch("select * from $g4[member_table] where mb_id = '$wr_to_id'");
+    if ($tmp) {
+        sql_query("update $write_table set wr_to_id = '$wr_to_id' where wr_id = '$wr_id'");
+    }
+}
+

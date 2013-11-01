@@ -54,7 +54,7 @@ set_session("ss_token", $token);
 .buttons { text-align:center; }
 .btn1 { background-color:#efefef; cursor:pointer; }
 </style>
-
+<script src="<?=$g4[path]?>/js/sideview.js"></script>
 <script type="text/javascript">
 function form_check() {
     if (!confirm("정말 접근차단 하시겠습니까?")) return false;

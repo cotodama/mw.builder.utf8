@@ -34,6 +34,7 @@ if (!@file_exists($img)) $img = "$latest_skin_path/img/noimage.gif";
 if (!$list[$i][wr_id]) $img = "$latest_skin_path/img/noimage.gif";
 if (@is_dir($img)) $img = "$latest_skin_path/img/noimage.gif";
 $list[$i][subject] = mw_builder_reg_str($list[$i][subject]);
+$list[$i][href] = "$g4[bbs_path]/board.php?bo_table=$bo_table&wr_id=".$list[$i][wr_id];
 ?>
 <td align=center valign=top class=file>
     <div class="post-img"><a href="<?=$list[$i][href]?>"><img src="<?=$img?>" class="file-img"></a></div>

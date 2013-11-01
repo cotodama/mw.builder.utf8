@@ -90,6 +90,8 @@ while ($write = sql_fetch_array($qry)) {
     if (!file_exists("{$thumb_path}/{$wr_id}")) {
         if (preg_match("/youtu/i", $write['wr_link1'])) mw_get_youtube_thumb($wr_id, $write['wr_link1'], $write['wr_datetime']);
         else if (preg_match("/youtu/i", $write['wr_link2'])) mw_get_youtube_thumb($wr_id, $write['wr_link2'], $write['wr_datetime']);
+        else if (preg_match("/vimeo/i", $write['wr_link1'])) mw_get_vimeo_thumb($wr_id, $write['wr_link1'], $write['wr_datetime']);
+        else if (preg_match("/vimeo/i", $write['wr_link2'])) mw_get_vimeo_thumb($wr_id, $write['wr_link2'], $write['wr_datetime']);
     }
 }
 

@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Bechu-Basic Skin for Gnuboard4
  *
@@ -192,6 +192,7 @@ if ($board[bo_use_signature] && $view[mb_id])
 }
 
 include_once("$board_skin_path/mw.lib/mw.skin.basic.lib.php");
+include_once("$board_skin_path/view_head.skin.php");
 
 // 파일 출력
 ob_start();
@@ -230,11 +231,14 @@ if ($mw_basic[cf_comma]) {
     $view[wr_nogood] = number_format($view[wr_nogood]);
 }
 
+
 $this_url = "$g4[url]/$g4[bbs]/board.php?bo_table=$bo_table&wr_id=$wr_id";
 
+if ($mw_basic[cf_umz]) 
+    $this_url = $view[wr_umz];
+else if ($mw_basic[cf_shorten]) 
+    $this_url = $shorten;
 ?>
-
-
 <style type="text/css">
 body { padding:10px; margin:0; }
 div#mw_print { border:1px solid #d9d9d9; padding:20px; }
@@ -261,7 +265,6 @@ $(document).ready(function () {
 	<?=cut_hangul_last(get_text($view[wr_subject]))?> <?=$view[icon_secret]?>
     </div>
 
-
     <div class="mw_name"><span class="mw_label">글쓴이</span> : <? if ($mw_basic[cf_attribute] != "anonymous") { ?><?=$view[wr_name]?> <? } ?></div>
     <div class="mw_date"><span class="mw_label">작성일</span> : <?=substr($view[wr_datetime],2,14)?></div>
     <div class="mw_url"><span class="mw_label">글주소</span> : <?=$this_url?></div>
@@ -280,4 +283,3 @@ $(document).ready(function () {
 
 <?
 include_once("$g4[path]/tail.sub.php");
-?>

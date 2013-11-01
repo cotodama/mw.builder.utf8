@@ -38,6 +38,7 @@ if ($member[mb_id]) {
 } else {
     $list[$i][subject] = str_replace("{닉네임}", "회원", $list[$i][subject]);
 }
+$list[$i][href] = "$g4[bbs_path]/board.php?bo_table=$bo_table&wr_id=".$list[$i][wr_id];
 ?>
 <div id="<?=$style_name.$i?>" class="item">
     <div class="file"><a href="<?=$list[$i][href]?>"><img src="<?=$img?>" class="file-img"></a></div>

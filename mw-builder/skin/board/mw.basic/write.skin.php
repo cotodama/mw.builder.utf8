@@ -453,6 +453,13 @@ if ($is_category && $mw_basic[cf_category_tab]) {
 <tr><td colspan=2 height=1 bgcolor=#e7e7e7></td></tr>
 <? } ?>
 
+<? if ($is_admin && $mw_basic[cf_attribute] == "1:1") { ?>
+<tr>
+<td class=mw_basic_write_title>· 지정회원ID</td>
+<td><input maxlength=20 size=15 name=wr_to_id itemname="지정회원" required value="<?=$write[wr_to_id]?>" class=mw_basic_text></td></tr>
+<tr><td colspan=2 height=1 bgcolor=#e7e7e7></td></tr>
+<? } ?>
+
 <? if ($is_name) { ?>
 <tr>
 <td class=mw_basic_write_title>· 이름</td>

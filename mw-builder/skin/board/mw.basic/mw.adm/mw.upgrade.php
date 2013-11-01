@@ -1077,6 +1077,8 @@ if (is_null($mw_basic[cf_bomb_level])) {
     sql_query("alter table $mw[basic_config_table] add cf_bomb_days_min int default '1' not null", false);
     sql_query("alter table $mw[basic_config_table] add cf_bomb_time int default '24' not null", false);
     sql_query("alter table $mw[basic_config_table] add cf_bomb_move_table varchar(20) not null", false);
+    sql_query("alter table $mw[basic_config_table] add cf_bomb_move_time varchar(1) not null", false);
+    sql_query("alter table $mw[basic_config_table] add cf_bomb_move_cate varchar(1) not null", false);
 
 $sql = "create table if not exists $mw[bomb_table] (
         bo_table varchar(20) not null
@@ -1125,6 +1127,8 @@ if (is_null($mw_basic[cf_talent_market])) {
     sql_query("alter table $mw[basic_config_table] add cf_talent_market_max_point int not null default '10000'", false);
 
     sql_query("alter table $mw[basic_config_table] add cf_talent_market_app varchar(1) not null default ''", false);
+    sql_query("alter table $mw[basic_config_table] add cf_talent_market_hp varchar(1) not null default ''", false);
+    sql_query("alter table $mw[basic_config_table] add cf_talent_market_auto int not null default 7", false);
 
 
     sql_query("alter table $mw[basic_config_table] add cf_good_count int not null default '0'", false);
@@ -1202,3 +1206,5 @@ if (is_null($mw_basic[cf_talent_market])) {
     sql_query("alter table $write_table add wr_align varchar(6) default 'left' not null", false);
 
     sql_query("alter table $mw[basic_config_table] add cf_comment_write_notice text not null", false);
+
+    sql_query("alter table $write_table add wr_to_id varchar(20) default '' not null", false);

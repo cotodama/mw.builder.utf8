@@ -252,6 +252,8 @@ if ($mw_basic[cf_watermark_use] && file_exists($mw_basic[cf_watermark_path]))
 if (!file_exists("$thumb_path/{$wr_id}")) {
     if (preg_match("/youtu/i", $wr_link1)) mw_get_youtube_thumb($wr_id, $wr_link1);
     else if (preg_match("/youtu/i", $wr_link2)) mw_get_youtube_thumb($wr_id, $wr_link2);
+    else if (preg_match("/vimeo/i", $wr_link1)) mw_get_vimeo_thumb($wr_id, $wr_link1);
+    else if (preg_match("/vimeo/i", $wr_link2)) mw_get_vimeo_thumb($wr_id, $wr_link2);
 }
 
 // 메일발송 사용 (수정글은 발송하지 않음)

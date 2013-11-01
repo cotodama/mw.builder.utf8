@@ -190,8 +190,7 @@ if ($mw_basic[cf_download_log]) { // 다운로드 기록
 
 $g4[title] = "$group[gr_subject] > $board[bo_subject] > " . conv_subject($write[wr_subject], 255) . " > 다운로드";
 
-include_once ("{$g4['path']}/lib/visit.lib.php"); 
-if (preg_match("/^utf/i", $g4[charset]) && get_brow($_SERVER[HTTP_USER_AGENT]) != "FireFox")
+if (preg_match("/^utf/i", $g4[charset]) && preg_match("/msie/i", $_SERVER[HTTP_USER_AGENT]))
     $original = urlencode($file[bf_source]);
 else
     $original = $file[bf_source];

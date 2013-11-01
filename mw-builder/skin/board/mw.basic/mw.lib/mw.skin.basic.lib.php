@@ -96,7 +96,7 @@ if ($mw_basic[cf_board_member] == '1' && !$is_admin) {
         array_push($mw_board_member, $row[mb_id]);
     }
     $mw_is_board_member = false;
-    if (!in_array($member[mb_id], $mw_board_member)) {
+    if (!in_array($member[mb_id], $mw_board_member) && !in_array($_SERVER[REMOTE_ADDR], $mw_board_member)) {
         if ($mw_basic[cf_board_member_list] && $mw_is_list) {
             ;
         }
@@ -123,11 +123,14 @@ if ($mw_basic[cf_board_member] == '2' && !$is_admin) {
         array_push($mw_board_member, $row[mb_id]);
     }
     $mw_is_board_member = false;
-    if (in_array($member[mb_id], $mw_board_member)) {
+    if (in_array($member[mb_id], $mw_board_member) || in_array($_SERVER[REMOTE_ADDR], $mw_board_member)) {
         if ($mw_basic[cf_board_member_list] && $mw_is_list) {
             ;
         }
         elseif ($mw_basic[cf_board_member_view] && $mw_is_view) {
+            ;
+        }
+        elseif ($mw_basic[cf_board_member_view] && $mw_is_comment) {
             ;
         }
         else
@@ -244,7 +247,7 @@ $view[wr_ccl] = $write[wr_ccl] = mw_get_ccl_info($write[wr_ccl]);
 // 1:1 게시판
 if ($mw_basic[cf_attribute] == "1:1" && !$is_admin && $wr_id && $w != "u")
 {
-    if (!strstr($board[bo_notice], "$wr_id") && $is_admin != 'super' && $member[mb_id] != $write[mb_id]) {
+    if (!strstr($board[bo_notice], "$wr_id") && $is_admin != 'super' && $member[mb_id] != $write[mb_id] && $member[mb_id] != $write[wr_to_id]) {
         goto_url("board.php?bo_table=$board[bo_table]");
     }
 
@@ -332,3 +335,11 @@ if ($mw_basic[cf_sns] == '1') {
 $bo_table_width = $board[bo_table_width];
 $bo_table_width = $bo_table_width . ($bo_table_width > 100 ? "px" : "%");
 $width = $bo_table_width;
+
+if (!defined("_MW_MOBILE_")) {
+    $pc_skin_path = $board_skin_path;
+}
+
+if (!$pc_skin_path)
+    $pc_skin_path = $board_skin_path;
+

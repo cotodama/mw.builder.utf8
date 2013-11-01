@@ -21,6 +21,14 @@
 
 if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가 
 
+if ($member[mb_level] < 2)
+{
+    if ($member[mb_id])
+        alert("목록을 볼 권한이 없습니다.", $g4[path]);
+    else
+        alert("목록을 볼 권한이 없습니다.\\n\\n회원이시라면 로그인 후 이용해 보십시오.", "./login.php?wr_id=$wr_id{$qstr}&url=".urlencode("board.php?bo_table=$bo_table&wr_id=$wr_id"));
+}
+ 
 $sop = strtolower($sop);
 if ($sop != "and" && $sop != "or")
     $sop = "and";
@@ -40,7 +48,7 @@ if ($sca || $stx)
     $sql_search .= " and (wr_num between '".$spt."' and '".($spt + $config[cf_search_part])."') ";
 
     // 원글만 얻는다. (코멘트의 내용도 검색하기 위함)
-    $sql = " select distinct wr_parent from $write_table where mb_id = '$member[mb_id]' and $sql_search ";
+    $sql = " select distinct wr_parent from $write_table where (mb_id = '$member[mb_id]' or wr_to_id = '$member[mb_id]') and $sql_search ";
     $result = sql_query($sql);
     $total_count = mysql_num_rows($result);
 } 
@@ -49,7 +57,7 @@ else
     $sql_search = "";
 
     // 원글만 얻는다. (코멘트의 내용도 검색하기 위함)
-    $sql = " select distinct wr_parent from $write_table where mb_id = '$member[mb_id]'";
+    $sql = " select distinct wr_parent from $write_table where (mb_id = '$member[mb_id]' or wr_to_id = '$member[mb_id]')";
     $result = sql_query($sql);
     $total_count = mysql_num_rows($result);
 }
@@ -84,11 +92,11 @@ $sql_order = " order by $sst $sod ";
 
 if ($sca || $stx) 
 {
-    $sql = " select distinct wr_parent from $write_table where mb_id = '$member[mb_id]' and $sql_search $sql_order limit $from_record, $board[bo_page_rows] ";
+    $sql = " select distinct wr_parent from $write_table where (mb_id = '$member[mb_id]' or wr_to_id = '$member[mb_id]') and $sql_search $sql_order limit $from_record, $board[bo_page_rows] ";
 } 
 else
 {
-    $sql = " select * from $write_table where wr_is_comment = 0 and mb_id = '$member[mb_id]' $sql_order limit $from_record, $board[bo_page_rows] ";
+    $sql = " select * from $write_table where wr_is_comment = 0 and (mb_id = '$member[mb_id]' or wr_to_id = '$member[mb_id]') $sql_order limit $from_record, $board[bo_page_rows] ";
 }
 
 $result = sql_query($sql);

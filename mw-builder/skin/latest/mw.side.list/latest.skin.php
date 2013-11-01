@@ -25,7 +25,7 @@ $style_name = "mw-latest-side-$bo_table-$rows-$subject_len";
 <? if (function_exists('bc_code')) { $list[$i][subject] = bc_code($list[$i][wr_subject]); }?>
 <? $list[$i][subject] = mw_builder_reg_str($list[$i][subject]); ?>
 <? $list[$i][comment_cnt] = $list[$i][wr_comment] ? "+{$list[$i][wr_comment]}" : ''; ?>
-<li><a href="<?=$list[$i][href]?>"><?=cut_str($list[$i][subject], $subject_len)?> <span class="comment"><?=$list[$i][comment_cnt]?></span></a></li>
+<li><a href="<?=$g4[bbs_path]?>/board.php?bo_table=<?=$bo_table?>&wr_id=<?=$list[$i][wr_id]?>"><?=cut_str($list[$i][subject], $subject_len)?> <span class="comment"><?=$list[$i][comment_cnt]?></span></a></li>
 <? } ?>
 </ul>
 </div>

@@ -1557,6 +1557,9 @@ function mw_move($board, $wr_id_list, $chk_bo_table, $sw)
                 sql_query(" update $move_write_table set wr_link1_target = '$row2[wr_link1_target]' where wr_id = '$insert_id' ", false);
                 sql_query(" update $move_write_table set wr_link2_target = '$row2[wr_link2_target]' where wr_id = '$insert_id' ", false);
                 sql_query(" update $move_write_table set wr_contents_preview = '".addslashes($row2[wr_contents_preview])."' where wr_id = '$insert_id' ", false);
+                sql_query(" update $move_write_table set wr_lightbox = '".addslashes($row2[wr_lightbox])."' where wr_id = '$insert_id' ", false);
+                sql_query(" update $move_write_table set wr_align = '".addslashes($row2[wr_align])."' where wr_id = '$insert_id' ", false);
+                sql_query(" update $move_write_table set wr_to_id = '".addslashes($row2[wr_to_id])."' where wr_id = '$insert_id' ", false);
 
                 // 첨부파일 복사
                 $sql3 = " select * from $g4[board_file_table] where bo_table = '$bo_table' and wr_id = '$row2[wr_id]' order by bf_no ";
@@ -1922,17 +1925,23 @@ function mw_move($board, $wr_id_list, $chk_bo_table, $sw)
     }
     $sql = " update $g4[board_table] set bo_notice = '$bo_notice' where bo_table = '$bo_table' ";
     sql_query($sql);
+
+    return $insert_id;
 }
 
 function mw_bomb()
 {
-    global $board, $g4, $mw, $mw_basic, $config;
+    global $g4, $mw, $mw_basic, $config;
 
     $is_bomb = false;
-    $sql = " select * from $mw[bomb_table] where bo_table = '$board[bo_table]' and bm_datetime <= '$g4[time_ymdhis]' ";
+    //$sql = " select * from $mw[bomb_table] where bo_table = '$board[bo_table]' and bm_datetime <= '$g4[time_ymdhis]' ";
+    $sql = " select * from $mw[bomb_table] where bm_datetime <= '$g4[time_ymdhis]' ";
     $qry = sql_query($sql, false);
     while ($row = sql_fetch_array($qry)) {
-        $tmp = sql_fetch("select * from $g4[write_prefix]$board[bo_table] where wr_id = '$row[wr_id]'");
+        //$tmp = sql_fetch("select * from $g4[write_prefix]$board[bo_table] where wr_id = '$row[wr_id]'");
+        $tmp = sql_fetch("select * from $g4[write_prefix]$row[bo_table] where wr_id = '$row[wr_id]'");
+
+        $board = sql_fetch("select * from $g4[board_table] where bo_table = '$row[bo_table]'");
 
         $move_table = $row[bm_move_table];
         if (!$move_table)
@@ -1940,11 +1949,18 @@ function mw_bomb()
 
         if ($move_table) {
             if ($row[bm_log]) {
-                mw_move($board, $row[wr_id], $move_table, 'copy');
+                $wr_id = mw_move($board, $row[wr_id], $move_table, 'copy');
                 mw_delete_row($board, $tmp, $row[bm_log], '폭파되었습니다.');
             }
             else
-                mw_move($board, $row[wr_id], $move_table, 'move');
+                $wr_id = mw_move($board, $row[wr_id], $move_table, 'move');
+
+            if ($mw_basic['cf_bomb_move_time'] && $wr_id) {
+                sql_query("update $g4[write_prefix]$move_table set wr_datetime = '$row[bm_datetime]' where wr_id = '$wr_id'");
+            }
+            if ($mw_basic['cf_bomb_move_cate'] && $wr_id) {
+                sql_query("update $g4[write_prefix]$move_table set ca_name = '".addslashes($board[bo_subject])."' where wr_id = '$wr_id'");
+            }
         } else {
             mw_delete_row($board, $tmp, $row[bm_log], '폭파되었습니다.');
         }
@@ -2079,12 +2095,75 @@ function mw_get_youtube_thumb($wr_id, $url, $datetime='')
     elseif (preg_match("/^http:\/\/www\.youtube\.com\/watch\?v=([^&]+)&/i", $url.'&', $mat)) {
         $v = $mat[1];
     }
+    elseif (preg_match('/player.vimeo.com\/video\/(\d+)$/', $url, $mat)) {
+        mw_get_vimeo_thumb($wr_id, $url, $datetime);
+        return;
+    }
+
     if (!$v) return;
 
     $fp = fsockopen ("img.youtube.com", 80, $errno, $errstr, 10);
     if (!$fp) return false;
     fputs($fp, "GET /vi/{$v}/hqdefault.jpg HTTP/1.0\r\n");
     fputs($fp, "Host: img.youtube.com:80\r\n");
+    fputs($fp, "\r\n");
+    while (trim($buffer = fgets($fp,1024)) != "") $header .= $buffer;
+    while (!feof($fp)) $buffer .= fgets($fp,1024);
+    fclose($fp);
+
+    $file = "$thumb_path/{$wr_id}";
+    if ($buffer) {
+        $fw = fopen ($file, "wb");
+        fwrite($fw, trim($buffer));
+        chmod ($file, 0777);
+        fclose($fw);
+
+        // 이미지가 아니면 삭제
+        $size = getimagesize($file);
+        if ($size[2] != 2) unlink($file);
+    }
+
+    mw_make_thumbnail($mw_basic[cf_thumb_width], $mw_basic[cf_thumb_height], $file, $file, true);
+
+    if (!$datetime) {
+        global $write;
+        if ($write['wr_datetime'])
+            @touch($file, strtotime($write['wr_datetime']));
+    }
+    else if ($datetime) {
+        @touch($file, strtotime($datetime));
+    }
+}
+
+function mw_get_vimeo_thumb($wr_id, $url, $datetime='')
+{
+    global $g4, $mw_basic, $thumb_path;
+
+    preg_match('/vimeo.com\/(\d+)$/', $url, $mat);
+    $v = $mat[1];
+
+    if (!$v) return;
+
+    $fp = fsockopen ("vimeo.com", 80, $errno, $errstr, 10);
+    if (!$fp) return false;
+    fputs($fp, "GET /api/v2/video/{$v}.php HTTP/1.0\r\n");
+    fputs($fp, "Host: vimeo.com\r\n");
+    fputs($fp, "\r\n");
+    while (trim($buffer = fgets($fp,1024)) != "") $header .= $buffer;
+    while (!feof($fp)) $buffer .= fgets($fp,1024);
+    fclose($fp);
+
+    $dat = unserialize(trim($buffer)); 
+    $dat = $dat[0];
+
+    if (!trim($dat[thumbnail_large])) return;
+
+    $url = parse_url(trim($dat[thumbnail_large]));
+
+    $fp = fsockopen ("$url[host]", 80, $errno, $errstr, 10);
+    if (!$fp) return false;
+    fputs($fp, "GET $url[path] HTTP/1.0\r\n");
+    fputs($fp, "Host: $url[host]\r\n");
     fputs($fp, "\r\n");
     while (trim($buffer = fgets($fp,1024)) != "") $header .= $buffer;
     while (!feof($fp)) $buffer .= fgets($fp,1024);
@@ -2250,8 +2329,9 @@ function mw_vimeo($url)
 
 function mw_singo_admin($admin_id)
 {
-    global $g4, $mw_basic;
+    global $g4, $mw_basic, $is_admin;
 
+    if ($is_admin) return true;
     if (!$admin_id) return false;
 
     $singo_id = array();

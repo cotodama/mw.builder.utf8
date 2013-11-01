@@ -47,57 +47,59 @@ $row = sql_fetch($sql);
 if ($row && !$is_admin)
     alert_close("이미 신고하셨습니다.");
 
-$me_recv_mb_id = $mw_basic[cf_singo_id];
+if ($mw_basic[cf_singo] == '1') {
+    $me_recv_mb_id = $mw_basic[cf_singo_id];
 
-$comment = "";
-if ($wr_id != $parent_id)
-    $comment = "&_c={$wr_id}#c_{$wr_id}";
+    $comment = "";
+    if ($wr_id != $parent_id)
+        $comment = "&_c={$wr_id}#c_{$wr_id}";
 
-$me_memo = "게시물 신고가 접수되었습니다.\n
-분류 : {$category}
-내용 : {$content}
+    $me_memo = "게시물 신고가 접수되었습니다.\n
+    분류 : {$category}
+    내용 : {$content}
 
-주소 : {$g4[url]}/{$g4[bbs]}/board.php?bo_table=$bo_table&wr_id=$parent_id$comment";
+    주소 : {$g4[url]}/{$g4[bbs]}/board.php?bo_table=$bo_table&wr_id=$parent_id$comment";
 
-$tmp_list = explode(",", $me_recv_mb_id);
-$me_recv_mb_id_list = "";
-$msg = "";
-$comma1 = $comma2 = "";
-$mb_list = array();
-$mb_array = array();
-for ($i=0; $i<count($tmp_list); $i++) {
-    $tmp_list[$i] = trim($tmp_list[$i]);
-    if (!$tmp_list[$i]) continue;
-    $row = get_member($tmp_list[$i]);
-    if ($row[mb_id]) {
-        $me_recv_mb_id_list .= "$comma2$row[mb_nick]";
-        $mb_list[] = $tmp_list[$i];
-        $mb_array[] = $row;
-        $comma2 = ",";
+    $tmp_list = explode(",", $me_recv_mb_id);
+    $me_recv_mb_id_list = "";
+    $msg = "";
+    $comma1 = $comma2 = "";
+    $mb_list = array();
+    $mb_array = array();
+    for ($i=0; $i<count($tmp_list); $i++) {
+        $tmp_list[$i] = trim($tmp_list[$i]);
+        if (!$tmp_list[$i]) continue;
+        $row = get_member($tmp_list[$i]);
+        if ($row[mb_id]) {
+            $me_recv_mb_id_list .= "$comma2$row[mb_nick]";
+            $mb_list[] = $tmp_list[$i];
+            $mb_array[] = $row;
+            $comma2 = ",";
+        }
     }
-}
 
-for ($i=0; $i<count($mb_list); $i++)
-{
-    if (trim($mb_list[$i])) {
-        $tmp_row = sql_fetch(" select max(me_id) as max_me_id from $g4[memo_table] ");
-        $me_id = $tmp_row[max_me_id] + 1;
+    for ($i=0; $i<count($mb_list); $i++)
+    {
+        if (trim($mb_list[$i])) {
+            $tmp_row = sql_fetch(" select max(me_id) as max_me_id from $g4[memo_table] ");
+            $me_id = $tmp_row[max_me_id] + 1;
 
-        // 쪽지 INSERT
-        $sql = " insert into $g4[memo_table]
-                        ( me_id, me_recv_mb_id, me_send_mb_id, me_send_datetime, me_memo )
-                 values ( '$me_id', '{$mb_list[$i]}', '$member[mb_id]', '$g4[time_ymdhis]', '$me_memo' ) ";
-        sql_query($sql);
+            // 쪽지 INSERT
+            $sql = " insert into $g4[memo_table]
+                            ( me_id, me_recv_mb_id, me_send_mb_id, me_send_datetime, me_memo )
+                     values ( '$me_id', '{$mb_list[$i]}', '$member[mb_id]', '$g4[time_ymdhis]', '$me_memo' ) ";
+            sql_query($sql);
 
-        // 실시간 쪽지 알림 기능
-        $sql = " update $g4[member_table]
-                    set mb_memo_call = '$member[mb_id]'
-                  where mb_id = '$mb_list[$i]' ";
-        sql_query($sql);
+            // 실시간 쪽지 알림 기능
+            $sql = " update $g4[member_table]
+                        set mb_memo_call = '$member[mb_id]'
+                      where mb_id = '$mb_list[$i]' ";
+            sql_query($sql);
 
-        if (!$is_admin) {
-            $recv_mb_nick = get_text($mb_array[$i][mb_nick]);
-            $recv_mb_id = $mb_array[$i][mb_id];
+            if (!$is_admin) {
+                $recv_mb_nick = get_text($mb_array[$i][mb_nick]);
+                $recv_mb_id = $mb_array[$i][mb_id];
+            }
         }
     }
 }

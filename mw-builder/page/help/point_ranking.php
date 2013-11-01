@@ -2,6 +2,9 @@
 include_once("_common.php");
 include_once("$g4[path]/lib/mw.builder.lib.php");
 
+$g4[title] = "포인트 순위";
+include_once("_head.php");
+
 $sql_common = " from $g4[member_table] ";
 $sql_where = " where mb_id <> '$config[cf_admin]' and mb_level > 1 and mb_leave_date = '' and mb_intercept_date = '' ";
 $sql_order = " order by mb_point desc";
@@ -49,9 +52,6 @@ for ($i=0; $row=sql_fetch_array($qry); $i++) {
 $list_count = sizeof($list);
 
 //$paging = get_paging($rows, $page, $total_page, "?page=");
- 
-$g4[title] = "포인트 순위";
-include_once("_head.php");
 ?>
 
 <script type="text/javascript" src="<?=$g4[path]?>/js/sideview.js"></script>

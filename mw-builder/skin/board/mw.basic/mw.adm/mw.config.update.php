@@ -223,6 +223,8 @@ bo_table = '$bo_table'
 ,cf_bomb_days_min = '$cf_bomb_days_min'
 ,cf_bomb_time = '$cf_bomb_time'
 ,cf_bomb_move_table = '$cf_bomb_move_table'
+,cf_bomb_move_time = '$cf_bomb_move_time'
+,cf_bomb_move_cate = '$cf_bomb_move_cate'
 ,cf_move_level = '$cf_move_level'
 ,cf_download_date = '$cf_download_date'
 ,cf_auto_move = '$cf_auto_move'
@@ -356,6 +358,8 @@ bo_table = '$bo_table'
 ,cf_talent_market_min_point = '$cf_talent_market_min_point'
 ,cf_talent_market_max_point = '$cf_talent_market_max_point'
 ,cf_talent_market_app = '$cf_talent_market_app'
+,cf_talent_market_hp = '$cf_talent_market_hp'
+,cf_talent_market_auto = '$cf_talent_market_auto'
 ,cf_read_level = '$cf_read_level'
 ,cf_read_level_own = '$cf_read_level_own'
 ,cf_reward = '$cf_reward'
@@ -540,6 +544,8 @@ if ($chk[cf_bomb_level]) {
     $sql .= ", cf_bomb_days_max = '$cf_bomb_days_max' ";
     $sql .= ", cf_bomb_days_min = '$cf_bomb_days_min' ";
     $sql .= ", cf_bomb_move_table = '$cf_bomb_move_table' ";
+    $sql .= ", cf_bomb_move_time = '$cf_bomb_move_time' ";
+    $sql .= ", cf_bomb_move_cate = '$cf_bomb_move_cate' ";
 }
 if ($chk[cf_move_level]) $sql .= ", cf_move_level = '$cf_move_level' ";
 if ($chk[cf_download_date]) $sql .= ", cf_download_date = '$cf_download_date' ";
@@ -691,6 +697,8 @@ if ($chk[cf_talent_market]) {
     $sql .= ", cf_talent_market_max = '$cf_talent_market_max' ";
     $sql .= ", cf_talent_market_max_point = '$cf_talent_market_max_point' ";
     $sql .= ", cf_talent_market_app = '$cf_talent_market_app' ";
+    $sql .= ", cf_talent_market_hp = '$cf_talent_market_hp' ";
+    $sql .= ", cf_talent_market_auto = '$cf_talent_market_auto' ";
 }
 /*if ($chk[cf_preview_level]) {
     $sql .= ", cf_preview_level = '$cf_preview_level' ";

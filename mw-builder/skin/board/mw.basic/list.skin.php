@@ -187,7 +187,11 @@ $new_count = $row[cnt];
 
 <link rel="stylesheet" href="<?=$board_skin_path?>/style.common.css?<?=filemtime("$board_skin_path/style.common.css")?>" type="text/css">
 <? if ($mw_basic[cf_social_commerce]) { ?>
-<link rel="stylesheet" href="<?=$social_commerce_path?>/style.css" type="text/css">
+    <? if ($mw_basic[cf_type] == 'gall') { ?>
+    <link rel="stylesheet" href="<?=$social_commerce_path?>/style-gall.css" type="text/css">
+    <? } else { ?>
+    <link rel="stylesheet" href="<?=$social_commerce_path?>/style.css" type="text/css">
+    <? } ?>
 <? } ?>
 
 <!--
@@ -231,6 +235,9 @@ $new_count = $row[cnt];
     <td align="right">
         <? if ($mw_basic[cf_social_commerce]) { ?>
         <span class=mw_basic_total style="cursor:pointer;" onclick="win_open('<?=$social_commerce_path?>/order_list.php?bo_table=<?=$bo_table?>', 'order_list', 'width=800,height=600,scrollbars=1');">[주문내역]</span>
+        <? } ?>
+        <? if ($mw_basic[cf_talent_market] && $is_admin) { ?>
+        <span class=mw_basic_total style="cursor:pointer;" onclick="win_open('<?=$talent_market_path?>/order_list.php?bo_table=<?=$bo_table?>', 'order_list', 'width=800,height=600,scrollbars=1');">[주문내역]</span>
         <? } ?>
 
         <? include("$board_skin_path/mw.proc/mw.smart-alarm-config.php") ?>
@@ -576,12 +583,15 @@ if (!file_exists($thumb_file))
     if (!file_exists("$thumb_path/{$list[$i]['wr_id']}")) {
         if (preg_match("/youtu/i", $list[$i]['link'][1])) mw_get_youtube_thumb($list[$i]['wr_id'], $list[$i]['link'][1]);
         else if (preg_match("/youtu/i", $list[$i]['link'][2])) mw_get_youtube_thumb($list[$i]['wr_id'], $list[$i]['link'][2]);
+        else if (preg_match("/vimeo/i", $list[$i]['link'][1])) mw_get_vimeo_thumb($list[$i]['wr_id'], $list[$i]['link'][1]);
+        else if (preg_match("/vimeo/i", $list[$i]['link'][2])) mw_get_vimeo_thumb($list[$i]['wr_id'], $list[$i]['link'][2]);
     }
 }
 
 if ($mw_basic[cf_social_commerce])
 {
-    include("$social_commerce_path/list.skin.php");    
+    $a = include("$social_commerce_path/list.skin.php");    
+    if (!$a) continue;
 }
 else if ($mw_basic[cf_type] == "gall")
 {
