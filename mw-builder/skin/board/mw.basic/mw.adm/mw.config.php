@@ -1491,7 +1491,7 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 	<div class="cf_title"> <input type=checkbox name=chk[cf_sns] value=1>&nbsp; SNS 퍼가기 </div>
 	<div class="cf_content">
 	    <input type=checkbox name=cf_sns_twitter value=1> 트위터
-	    <input type=checkbox name=cf_sns_me2day value=1> 미투데이 
+	    <!--<input type=checkbox name=cf_sns_me2day value=1> 미투데이 -->
 	    <!--<input type=checkbox name=cf_sns_yozm value=1> 요즘-->
 	    <input type=checkbox name=cf_sns_cyworld value=1> 싸이월드
 	    <input type=checkbox name=cf_sns_naver value=1> 네이버 북마크
@@ -1504,7 +1504,7 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 	    <input type=checkbox name=cf_sns_kakaostory value=1> 카카오스토리 <span class="cf_info">(모바일에서만)</span>
 	    <script>
             document.cf_form.cf_sns_twitter.checked = '<? echo strstr($mw_basic[cf_sns], '/twitter/')?'1':''; ?>';
-            document.cf_form.cf_sns_me2day.checked = '<? echo strstr($mw_basic[cf_sns], '/me2day/')?'1':''; ?>';
+            //document.cf_form.cf_sns_me2day.checked = '<? echo strstr($mw_basic[cf_sns], '/me2day/')?'1':''; ?>';
             //document.cf_form.cf_sns_yozm.checked = '<? echo strstr($mw_basic[cf_sns], '/yozm/')?'1':''; ?>';
             document.cf_form.cf_sns_cyworld.checked = '<? echo strstr($mw_basic[cf_sns], '/cyworld/')?'1':''; ?>';
             document.cf_form.cf_sns_naver.checked = '<? echo strstr($mw_basic[cf_sns], '/naver/')?'1':''; ?>';
@@ -2285,6 +2285,15 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 	</div>
     </div>
 
+    <div class="cf_item">
+	<div class="cf_title"> <input type=checkbox name=chk[cf_thumb_jpg] value=1>&nbsp; 썸네일 확장자 </div>
+	<div class="cf_content">
+	    <input type=checkbox name=cf_thumb_jpg value=1> .jpg 확장자 사용
+	    <span class="cf_info">(기본:확장자 없음)</span>
+	    <script> document.cf_form.cf_thumb_jpg.checked = '<?=$mw_basic[cf_thumb_jpg]?>'; </script>
+	</div>
+    </div>
+
     <div class="block"></div>
 </div> <!-- tabs-5-2 -->
 
@@ -2555,6 +2564,29 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
                 <script> document.cf_form.cf_talent_market_hp.checked = "<?=$mw_basic[cf_talent_market_hp]?>"; </script>
             </div>
             <script> document.cf_form.cf_talent_market.value = "<?=$mw_basic[cf_talent_market]?>"; </script>
+
+
+        </div>
+    </div>
+
+    <div class="cf_item">
+        <div class="cf_title">  <input type=checkbox name=chk[cf_marketdb] value=1>&nbsp; 마케팅DB </div>
+	<div class="cf_content">
+	    <!--<input type=checkbox name=cf_marketdb value=1> 사용-->
+            <select name="cf_marketdb">
+            <option value="0"> 사용안함 </option>
+            <? for ($i=2; $i<=10; $i++) { ?>
+            <option value="<?=$i?>"> <?=$i?> 레벨 이상 </option>
+            <? } ?>
+            </select>
+
+                <span class="cf_info">(<a href="http://g4.miwit.com/plugin/product/pr_marketdb.php" target="_blank">플러그인 설치 후 사용가능 ⇒ <u>다운로드 클릭!</u></a>)</span>  
+	    <br/><input type=checkbox name=cf_marketdb_hp value=1> 문자 사용
+                <span class="cf_info">(알림탭의 글등록 알림문자 옵션에서 ICODEKOREA 계정정보 입력시 사용가능)</span>
+	    <script>
+            document.cf_form.cf_marketdb.value = "<?=$mw_basic[cf_marketdb]?>";
+            document.cf_form.cf_marketdb_hp.checked = "<?=$mw_basic[cf_marketdb_hp]?>";
+            </script>
         </div>
     </div>
 

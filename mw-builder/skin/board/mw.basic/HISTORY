@@ -1,3 +1,60 @@
+ver 2.3.2 (13.11.22)
+    : 링크 바로이동 기능 글 읽기 권한 따르기 (데몬님 제안)
+    : 설문항목 길이조정 (csacsa님 제안)
+    : 1:1게시판 지정회원ID 필수아님.. (슬프다님 제안)
+    : [code] 기능 보완
+    : 썸네일에 확장자 .jpg 지원, 이미지탭에서 설정
+    : 코멘트 첨부 이미지 = 이미지 폭 크기 -200px
+    : 마케팅DB 솔루션 지원
+
+    mw.basic/HISTORY
+    mw.basic/mw.adm/mw.config.php
+    mw.basic/mw.adm/mw.config.update.php
+    mw.basic/mw.adm/mw.upgrade.php
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/mw.proc/mw.vote.php
+    mw.basic/mw.proc/mw.adm.thumb.remake.php
+    mw.basic/style.common.css
+    mw.basic/list.skin.php
+    mw.basic/view.skin.php
+    mw.basic/write_update.skin.php
+    mw.basic/write.skin.php
+    mw.basic/style.common.css
+ 
+ver 2.3.1 (13.11.15)
+    : 비메오 본문 삽입 오류 수정 (Dae-Seok Kim님 제안)
+    : 게시물 이동 후 게시물 존재하지 않는 다는 팝업 메시지 제거 (역지사지님 제안)
+    : 자동폭파 시간 재설정 오류 수정 (젬스박님 제안)
+    : 접근권한 아이피 대역 설정 가능 (csacsa님 제안)
+    : 회원사진등록 페이지 파일 css 적용 해제 (엑노님 제안)
+    : 본문에 외부+내부 링크된 이미지가 있으면 썸네일 생성이 안되는 문제 (oolloo님 제안)
+    : 본문에 이모티콘 삽입시 썸네일 생성 안함 - cheditor 추가
+    : 미투데이 사업종료로 퍼가기 아이콘 제거
+
+    mw.basic/HISTORY
+    mw.basic/mw.adm/mw.config.php
+    mw.basic/mw.adm/mw.config.update.php
+    mw.basic/mw.adm/mw.board.member.php
+    mw.basic/mw.adm/mw.board.member.update.php
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/mw.lib/mw.skin.basic.lib.php
+    mw.basic/mw.proc/mw.comment.image.php
+    mw.basic/mw.proc/mw.adm.thumb.remake.php
+    mw.basic/move_update.php
+    mw.basic/view_head.skin.php
+    mw.basic/write_update.skin.php
+ 
+ver 2.3.0 (13.11.08)
+    : 본문에 이모티콘 삽입시 썸네일 생성 안함 (슬프다님 제안)
+    : 자동복사 조건 and 로 변경 (북유럽님 제안)
+    : 프린트 페이지 첨부 이미지 두번 출력되는 문제 해결
+
+    mw.basic/HISTORY
+    mw.basic/mw.proc/mw.print.php
+    mw.basic/mw.proc/mw.adm.thumb.remake.php
+    mw.basic/write_update.skin.php
+    mw.basic/view_head.skin.php
+ 
 ver 2.2.9 (13.11.01)
     : 소셜커머스 이미지 출력 오류 수정 (라우터님 제안)
     : 1:1 게시판 목록보기 권한 무조건 2이상으로 강제 설정 (라우터님 제안)

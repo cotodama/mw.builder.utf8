@@ -1013,6 +1013,13 @@ if (is_null($mw_basic[cf_social_commerce])) {
 }
     sql_query("alter table $mw[basic_config_table] add cf_social_commerce_hp varchar(1) not null", false);
 
+// 마케팅DB
+if (is_null($mw_basic[cf_marketdb])) {
+    sql_query("alter table $mw[basic_config_table] add cf_marketdb tinyint not null", false);
+    sql_query("alter table $mw[basic_config_table] add cf_marketdb_hp varchar(1) not null", false);
+}
+    sql_query("alter table $mw[basic_config_table] change cf_marketdb cf_marketdb tinyint not null", false);
+
 // 구글맵
 if (is_null($mw_basic[cf_google_map])) {
     sql_query("alter table $mw[basic_config_table] add cf_google_map varchar(1) not null", false);
@@ -1208,3 +1215,9 @@ if (is_null($mw_basic[cf_talent_market])) {
     sql_query("alter table $mw[basic_config_table] add cf_comment_write_notice text not null", false);
 
     sql_query("alter table $write_table add wr_to_id varchar(20) default '' not null", false);
+
+    sql_query("alter table $write_table add wr_marketdb varchar(1) not null", false);
+    sql_query("alter table $write_table change wr_marketdb wr_marketdb varchar(1) not null", false);
+
+    sql_query("alter table {$mw[basic_config_table]} add cf_thumb_jpg varchar(1) not null", false);
+

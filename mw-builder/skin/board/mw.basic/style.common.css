@@ -1000,14 +1000,16 @@ img {
 }
 
 /* 설문 */
-#mw_basic .mw_basic_view_vote .mw_vote_result td {
+#mw_basic .mw_basic_view_vote .mw_vote_result div {
     padding:7px 7px 7px 10px;
 }
 
 /* 설문 */
-#mw_basic .mw_basic_view_vote .mw_vote_result td.item {
-    width:200px;
+#mw_basic .mw_basic_view_vote .mw_vote_result .item {
+    margin:0 10px 0 0;
     white-space:nowrap;
+    width:200px;
+    float:left;
 }
 
 /* 설문 */
@@ -1196,6 +1198,7 @@ img {
     word-break:break-all;
     line-height:150%;
     padding:7px;
+    overflow:hidden;
 }
 
 /* 댓글 본문 table */

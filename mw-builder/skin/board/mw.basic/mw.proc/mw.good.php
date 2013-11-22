@@ -37,7 +37,9 @@ $img_path = "$g4[url]/skin/board/$board[bo_skin]/img/";
 
 if ($mw_basic[cf_good_graph])
 {
-    $good_box_width = 270;
+    $good_box_width = $_GET['width'];
+    if (!$good_box_width)
+        $good_box_width = 270;
     $wgg = @(($good_box_width-20)/($write[wr_good]+$write[wr_nogood]))*$write[wr_good]+10;
     $wgn = @(($good_box_width-20)/($write[wr_good]+$write[wr_nogood]))*$write[wr_nogood]+10;
     if ($wgg == 10 && $wgn == 10) {

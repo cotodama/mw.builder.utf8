@@ -1,3 +1,20 @@
+1.3.7 (13.11.22)
+    : 최신글 썸네일 확장자 .jpg 지원
+    : 회원가입통계 2레벨 이상만 합계
+
+    HISTORY-MW-BUILDER
+    adm/mw.builder/mw.member.count.php
+    lib/mw.common.lib.php
+    skin/latest/mw.board.group.image/latest.skin.php
+    skin/latest/mw.board.group.list/latest.skin.php
+    skin/latest/mw.side2.list/latest.skin.php
+    skin/latest/mw.side.list/latest.skin.php
+    skin/latest/mw.side.img/latest.skin.php
+    skin/latest/mw.list/latest.skin.php
+    skin/latest/mw.list.img/latest.skin.php
+    skin/latest/mw.news/latest.skin.php
+    skin/latest/mw.tab/latest.skin.php
+
 1.3.6 (13.11.01)
     : 포인트 정책 및 랭킹 파일 오류 수정 (역지사지님 제안)
     : 최신글 일부 경로 오류 조정 (역지사지님 제안)

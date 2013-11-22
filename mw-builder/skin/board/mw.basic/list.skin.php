@@ -427,12 +427,14 @@ if ($mw_basic[cf_link_board] && $list[$i][link_href][1]) {
 if ($list[$i][wr_link_write] && $list[$i][link_href][1]) {
     if (!$list[$i][link][1] || $is_admin || ($list[$i][mb_id] && $list[$i][mb_id] == $member[mb_id]))
         ;
-    else {
+    else if ($member[mb_level] >= $board[bo_read_level]) {
         if ($list[$i][link_target][1] == '_blank')
             $list[$i][href] = "javascript:void(window.open('{$list[$i][link_href][1]}'))";    
         else
             $list[$i][href] = $list[$i][link_href][1];
     }
+    else
+        $list[$i][href] = "javascript:void(alert('권한이 없습니다.'))";
     $list[$i][wr_hit] = $list[$i][link_hit][1];
 }
 
@@ -507,7 +509,11 @@ else
 $write_icon = ob_get_contents();
 ob_end_clean();
 
-$thumb_file = "$thumb_path/{$list[$i][wr_id]}";
+$thumb_file = mw_thumb_jpg("$thumb_path/{$list[$i][wr_id]}");
+$thumb2_file = mw_thumb_jpg("$thumb2_path/{$list[$i][wr_id]}");
+$thumb3_file = mw_thumb_jpg("$thumb3_path/{$list[$i][wr_id]}");
+$thumb4_file = mw_thumb_jpg("$thumb4_path/{$list[$i][wr_id]}");
+$thumb5_file = mw_thumb_jpg("$thumb5_path/{$list[$i][wr_id]}");
 
 $set_width = $mw_basic[cf_thumb_width];
 $set_height = $mw_basic[cf_thumb_height];
@@ -541,16 +547,16 @@ if (!file_exists($thumb_file))
                 mw_make_thumbnail($mw_basic[cf_thumb_width], $mw_basic[cf_thumb_height], $source_file, $thumb_file, $mw_basic[cf_thumb_keep]);
                 if ($mw_basic[cf_thumb2_width])
                     @mw_make_thumbnail($mw_basic[cf_thumb2_width], $mw_basic[cf_thumb2_height], $source_file,
-                        "{$thumb2_path}/{$list[$i][wr_id]}", $mw_basic[cf_thumb2_keep]);
+                        "{$thumb2_file}", $mw_basic[cf_thumb2_keep]);
                 if ($mw_basic[cf_thumb3_width])
                     @mw_make_thumbnail($mw_basic[cf_thumb3_width], $mw_basic[cf_thumb3_height], $source_file,
-                        "{$thumb3_path}/{$list[$i][wr_id]}", $mw_basic[cf_thumb3_keep]);
+                        "{$thumb3_file}", $mw_basic[cf_thumb3_keep]);
                 if ($mw_basic[cf_thumb4_width])
                     @mw_make_thumbnail($mw_basic[cf_thumb4_width], $mw_basic[cf_thumb4_height], $source_file,
-                        "{$thumb4_path}/{$list[$i][wr_id]}", $mw_basic[cf_thumb4_keep]);
+                        "{$thumb4_file}", $mw_basic[cf_thumb4_keep]);
                 if ($mw_basic[cf_thumb5_width])
                     @mw_make_thumbnail($mw_basic[cf_thumb5_width], $mw_basic[cf_thumb5_height], $source_file,
-                        "{$thumb5_path}/{$list[$i][wr_id]}", $mw_basic[cf_thumb5_keep]);
+                        "{$thumb5_file}", $mw_basic[cf_thumb5_keep]);
             }
         //}
         }
@@ -565,16 +571,16 @@ if (!file_exists($thumb_file))
                         $thumb_file, $mw_basic[cf_thumb_keep]);
                     if ($mw_basic[cf_thumb2_width])
                         @mw_make_thumbnail($mw_basic[cf_thumb2_width], $mw_basic[cf_thumb2_height], $match[1],
-                            "{$thumb2_path}/{$list[$i][wr_id]}", $mw_basic[cf_thumb2_keep]);
+                            "{$thumb2_file}", $mw_basic[cf_thumb2_keep]);
                     if ($mw_basic[cf_thumb3_width])
                         @mw_make_thumbnail($mw_basic[cf_thumb3_width], $mw_basic[cf_thumb3_height], $match[1],
-                            "{$thumb3_path}/{$list[$i][wr_id]}", $mw_basic[cf_thumb3_keep]);
+                            "{$thumb3_file}", $mw_basic[cf_thumb3_keep]);
                     if ($mw_basic[cf_thumb4_width])
                         @mw_make_thumbnail($mw_basic[cf_thumb4_width], $mw_basic[cf_thumb4_height], $match[1],
-                            "{$thumb4_path}/{$list[$i][wr_id]}", $mw_basic[cf_thumb4_keep]);
+                            "{$thumb4_file}", $mw_basic[cf_thumb4_keep]);
                     if ($mw_basic[cf_thumb5_width])
                         @mw_make_thumbnail($mw_basic[cf_thumb5_width], $mw_basic[cf_thumb5_height], $match[1],
-                            "{$thumb5_path}/{$list[$i][wr_id]}", $mw_basic[cf_thumb5_keep]);   
+                            "{$thumb5_file}", $mw_basic[cf_thumb5_keep]);   
                 }
             }
         }

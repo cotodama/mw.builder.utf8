@@ -34,7 +34,7 @@ include_once("$g4[path]/head.sub.php");
 <style type="text/css">
 .ci_title { font-size:15px; font-weight:bold; background-color:#efefef; padding:10px; }
 .ci_info { margin:20px 0 0 20px; line-height:20px; font-size:13px; }
-.ci_file { border-top:1px solid #9a9a9a; border-left:1px solid #9a9a9a; border-right:1px solid #d8d8d8; border-bottom:1px solid #d8d8d8; height:20px; font-size:12px; padding:2px; }
+.ci_file {  }
 .ci_button { background-color:#efefef; cursor:pointer; }
 .ci_buttons { text-align:center; margin:50px 0 0 0; }
 </style>

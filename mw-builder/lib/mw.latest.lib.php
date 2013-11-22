@@ -44,26 +44,6 @@ function mw_latest($skin_dir="", $bo_table, $rows=10, $subject_len=40, $is_img=0
 
     if ($is_img && !$file) {
         $file = array();
-        /* $sql = "select * from $g4[board_file_table] where bo_table = '$bo_table' and bf_type > 0 and bf_type < 4 and bf_no = 0 ";
-        $sql.= "order by bf_datetime desc limit $is_img";
-        $qry = sql_query($sql);
-        for ($i=0; $row=sql_fetch_array($qry); $i++) {
-            $file[$i] = array();
-            $file[$i][wr_id] = $row[wr_id];
-            $file[$i][path] = "$g4[path]/data/file/$bo_table/thumbnail/$row[wr_id]";
-            //$file[$i][href] = "$g4[bbs_path]/board.php?bo_table=$row[bo_table]&wr_id=$row[wr_id]";
-            $file[$i][href] = "$g4[url]/$g4[bbs]/board.php?bo_table=$row[bo_table]&wr_id=$row[wr_id]";
-            if (!@file_exists($file[$i][path])) $file[$i][path] = "$g4[path]/data/file/$row[bo_table]/thumb/$row[wr_id]";
-            if (!@file_exists($file[$i][path])) $file[$i][path] = "$g4[path]/data/file/$row[bo_table]/$row[bf_file]";
-            if (!@file_exists($file[$i][path])) $file[$i][path] = "$latest_skin_path/img/noimage.gif";
-            if (!@file_exists($file[$i][path])) $file[$i] = null;
-            if (@is_dir($file[$i][path])) $file[$i] = null;
-            if ($file[$i]) {
-                $row2 = sql_fetch("select wr_subject, wr_comment from $g4[write_prefix]$row[bo_table] where wr_id = '$row[wr_id]'");
-                $file[$i][subject] = conv_subject($row2[wr_subject], $subject_len, "…");
-                $file[$i][wr_comment] = $row2[wr_comment];
-            }
-        } */
         $file = mw_get_last_thumb($bo_table, $is_img);
         for ($i=0, $m=count($file); $i<$m; ++$i) {
             $row = sql_fetch("select wr_subject, wr_comment, wr_link1 from {$g4[write_prefix]}{$file[$i]['bo_table']} where wr_id = '{$file[$i]['wr_id']}'");

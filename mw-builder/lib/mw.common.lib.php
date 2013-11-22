@@ -261,7 +261,9 @@ function mw_get_last_thumb($bo_tables, $cnt=1)
         $fnd = 0;
 
         do {
-            $file_path = $path.'/'.$max;
+            $file_path = "{$path}/{$max}.jpg";
+            if (!file_exists($file_path))
+                $file_path = "{$path}/{$max}";
 
             if (file_exists($file_path)) {
                 $file = array();
@@ -295,4 +297,51 @@ function mw_get_last_thumb($bo_tables, $cnt=1)
     return $list;
 }
 
+function mw_get_thumb_path($bo_table, $wr_id, $file=null)
+{
+    global $g4;
+
+    $thumb = null;
+
+    if (!$bo_table or !$wr_id) return $thumb;
+
+    $img1 = "{$g4['path']}/data/file/{$bo_table}/thumbnail/{$wr_id}";
+    $img2 = "{$g4['path']}/data/file/{$bo_table}/thumb/{$wr_id}";
+
+    $jpg1 = "{$img1}.jpg";
+    $jpg2 = "{$img2}.jpg";
+
+    $thumb = $jpg1;
+
+    if (!file_exists($thumb)) $thumb = $img1;
+    if (!file_exists($thumb)) $thumb = $jpg2;
+    if (!file_exists($thumb)) $thumb = $img2;
+    if (!file_exists($thumb)) {
+        if (!$file)
+            $file = mw_builder_get_first_file($bo_table, $wr_id, true);
+        $thumb = "{$g4['path']}/data/file/{$bo_table}}/{$file['bf_file']}";
+        if (!preg_match("/\.(jpg|gif|png)$/i", $thumb)) {
+            $thumb = null;
+        }
+    }
+    if (is_dir($thumb)) $thumb = null;
+
+    return $thumb;
+}
+
+function mw_builer_get_first_file($bo_table, $wr_id, $is_image=false)
+{
+    global $g4;
+
+    $sql = "select * from $g4[board_file_table] ";
+    $sql.= " where bo_table = '$bo_table' ";
+    $sql.= "   and wr_id = '$wr_id' ";
+    if ($is_image) 
+        $sql.= " and bf_width > 0 ";
+    $sql.= " order by bf_no ";
+    $sql.= " limit 1";
+    $row = sql_fetch($sql);
+
+    return $row;
+}
 

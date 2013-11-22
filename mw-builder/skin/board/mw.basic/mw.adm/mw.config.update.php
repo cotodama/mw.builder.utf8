@@ -72,7 +72,7 @@ if ($cf_board_week == '0,0,0,0,0,0,0' || $cf_board_week == '') {
 
 $cf_sns = '';
 if ($cf_sns_twitter) $cf_sns.= '/twitter/';
-if ($cf_sns_me2day) $cf_sns.= '/me2day/';
+//if ($cf_sns_me2day) $cf_sns.= '/me2day/';
 //if ($cf_sns_yozm) $cf_sns.= '/yozm/';
 if ($cf_sns_cyworld) $cf_sns.= '/cyworld/';
 if ($cf_sns_naver) $cf_sns.= '/naver/';
@@ -244,6 +244,7 @@ bo_table = '$bo_table'
 ,cf_list_nogood = '$cf_list_nogood'
 ,cf_post_num = '$cf_post_num'
 ,cf_img_1_noview = '$cf_img_1_noview'
+,cf_thumb_jpg = '$cf_thumb_jpg'
 ,cf_only_one = '$cf_only_one'
 ,cf_must_notice = '$cf_must_notice'
 ,cf_must_notice_read = '$cf_must_notice_read'
@@ -270,6 +271,8 @@ bo_table = '$bo_table'
 ,cf_good_cancel = '$cf_good_cancel'
 ,cf_social_commerce = '$cf_social_commerce'
 ,cf_social_commerce_hp = '$cf_social_commerce_hp'
+,cf_marketdb = '$cf_marketdb'
+,cf_marketdb_hp = '$cf_marketdb_hp'
 ,cf_google_map = '$cf_google_map'
 ,cf_ban_subject = '$cf_ban_subject'
 ,cf_comment_nogood_re_point = '$cf_comment_nogood_re_point'
@@ -571,6 +574,7 @@ if ($chk[cf_list_good]) $sql .= ", cf_list_good = '$cf_list_good' ";
 if ($chk[cf_list_nogood]) $sql .= ", cf_list_nogood = '$cf_list_nogood' ";
 if ($chk[cf_post_num]) $sql .= ", cf_post_num = '$cf_post_num' ";
 if ($chk[cf_img_1_noview]) $sql .= ", cf_img_1_noview = '$cf_img_1_noview' ";
+if ($chk[cf_thumb_jpg]) $sql .= ", cf_thumb_jpg = '$cf_thumb_jpg' ";
 if ($chk[cf_only_one]) $sql .= ", cf_only_one = '$cf_only_one' ";
 if ($chk[cf_must_notice]) {
     $sql .= ", cf_must_notice = '$cf_must_notice' ";
@@ -617,6 +621,10 @@ if ($chk[cf_good_cancel]) $sql .= ", cf_good_cancel = '$cf_good_cancel' ";
 if ($chk[cf_social_commerce]) {
     $sql .= ", cf_social_commerce = '$cf_social_commerce' ";
     $sql .= ", cf_social_commerce_hp = '$cf_social_commerce_hp' ";
+}
+if ($chk[cf_marketdb]) {
+    $sql .= ", cf_marketdb = '$cf_marketdb' ";
+    $sql .= ", cf_marketdb_hp = '$cf_marketdb_hp' ";
 }
 if ($chk[cf_google_map]) $sql .= ", cf_google_map = '$cf_google_map' ";
 if ($chk[cf_ban_subject]) $sql .= ", cf_ban_subject = '$cf_ban_subject' ";

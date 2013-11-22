@@ -361,7 +361,7 @@ if ($mw_basic[cf_comment_best]) {
         <!-- 이름, 아이피 -->
         <td>
             <img src="<?=$board_skin_path?>/img/comment_best.gif" align="absmiddle">
-            <? if ($mw_basic[cf_attribute] == 'qna' && $write[wr_qna_id] == $row[wr_id]) { ?> <img src="<?=$board_skin_path?>/img/icon_choose.png" align="absmiddle"> <? } ?>
+            <? if ($mw_basic[cf_attribute] == 'qna' && $view[wr_qna_status] && $write[wr_qna_id] == $row[wr_id]) { ?> <img src="<?=$board_skin_path?>/img/icon_choose.png" align="absmiddle"> <? } ?>
             <span class=mw_basic_comment_name><?=$row[name]?></span>
             <? if ($is_ip_view && $row[ip]) { ?> <span class=mw_basic_comment_ip>(<?=$row[ip]?>)</span> <?}?>
             <? if ($is_admin) { ?>

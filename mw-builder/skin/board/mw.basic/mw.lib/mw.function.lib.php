@@ -247,7 +247,7 @@ function mw_make_thumbnail($set_width, $set_height, $source_file, $thumbnail_fil
     }
 
     if (!$mw_basic[cf_resize_quality])
-        $mw_basic[cf_resize_quality] = 100;
+        $mw_basic[cf_resize_quality] = 80;
 
     @imagejpeg($target, $thumbnail_file, $mw_basic[cf_resize_quality]);
     @chmod($thumbnail_file, 0606);
@@ -514,12 +514,24 @@ function is_utf8($string) {
 function _preg_callback($m)
 {
     //$str = str_replace(array("<br/>", "&nbsp;"), array("\n", " "), $m[1]);
+
+    $trans = get_html_translation_table();
+    $trans = array_flip($trans);
+
     $str = $m[1];
-    $str = preg_replace("/<br[\/]{0,1}>/i", "\n", $str);
+    $str = preg_replace("/<br[^>]+>/i", "\n", $str);
     $str = preg_replace("/&nbsp;/i", " ", $str);
     $str = preg_replace("/<div>/i", "", $str);
     $str = preg_replace("/<\/div>/i", "\n", $str);
-    return "<pre class='brush:php;'>$str</pre>";
+
+    $str = strtr($str, $trans);
+    //$str = htmlspecialchars($str);
+    $str = preg_replace("/</", "&lt;", $str);
+    $str = preg_replace("/>/", "&gt;", $str);
+    
+    $str = preg_replace("/&lt;br\/&gt;/i", "\n", $str);
+
+    return "<pre class='brush:php;' style='width:300px;'>$str</pre>";
 }
 
 function mw_get_level($mb_id) {
@@ -1070,27 +1082,27 @@ function mw_delete_row($board, $write, $save_log=false, $save_message='삭제되
 
     // 썸네일 삭제
     if ($thumb_path) {
-        $thumb_file = "$thumb_path/$write[wr_id]";
+        $thumb_file = mw_thumb_jpg("$thumb_path/$write[wr_id]");
         if (file_exists($thumb_file)) @unlink($thumb_file);
     }
 
     if ($thumb2_path) {
-        $thumb_file = "$thumb2_path/$write[wr_id]";
+        $thumb_file = mw_thumb_jpg("$thumb2_path/$write[wr_id]");
         if (file_exists($thumb_file)) @unlink($thumb_file);
     }
 
     if ($thumb3_path) {
-        $thumb_file = "$thumb3_path/$write[wr_id]";
+        $thumb_file = mw_thumb_jpg("$thumb3_path/$write[wr_id]");
         if (file_exists($thumb_file)) @unlink($thumb_file);
     }
 
     if ($thumb4_path) {
-        $thumb_file = "$thumb4_path/$write[wr_id]";
+        $thumb_file = mw_thumb_jpg("$thumb4_path/$write[wr_id]");
         if (file_exists($thumb_file)) @unlink($thumb_file);
     }
 
     if ($thumb5_path) {
-        $thumb_file = "$thumb5_path/$write[wr_id]";
+        $thumb_file = mw_thumb_jpg("$thumb5_path/$write[wr_id]");
         if (file_exists($thumb_file)) @unlink($thumb_file);
     }
 
@@ -1298,6 +1310,9 @@ function mw_delete_row($board, $write, $save_log=false, $save_message='삭제되
 
         // 소셜커머스 삭제
         if (file_exists("$social_commerce_path/delete.skin.php")) include("$social_commerce_path/delete.skin.php");
+
+        // 마케팅DB 삭제
+        if (file_exists("$marketdb_path/delete.skin.php")) include("$marketdb_path/delete.skin.php");
 
         // 재능마켓 삭제
         if (file_exists("$talent_market_path/delete.skin.php")) include("$talent_market_path/delete.skin.php");
@@ -1775,11 +1790,11 @@ function mw_move($board, $wr_id_list, $chk_bo_table, $sw)
                     $save[$cnt][wr_id] = $row2[wr_parent];
 
                     // 썸네일 삭제
-                    @unlink("$thumb_path/$row2[wr_id]");
-                    @unlink("$thumb2_path/$row2[wr_id]");
-                    @unlink("$thumb3_path/$row2[wr_id]");
-                    @unlink("$thumb4_path/$row2[wr_id]");
-                    @unlink("$thumb5_path/$row2[wr_id]");
+                    @unlink(mw_thumb_jpg("$thumb_path/$row2[wr_id]"));
+                    @unlink(mw_thumb_jpg("$thumb2_path/$row2[wr_id]"));
+                    @unlink(mw_thumb_jpg("$thumb3_path/$row2[wr_id]"));
+                    @unlink(mw_thumb_jpg("$thumb4_path/$row2[wr_id]"));
+                    @unlink(mw_thumb_jpg("$thumb5_path/$row2[wr_id]"));
 
                     // 워터마크 삭제
                     $sql = "select * from $g4[board_file_table] where bo_table = '$bo_table' and wr_id = '$row2[wr_id]' and bf_width > 0  order by bf_no";
@@ -1864,6 +1879,11 @@ function mw_move($board, $wr_id_list, $chk_bo_table, $sw)
                     include("$social_commerce_path/move_update.skin.php");
                 }
 
+                // 마케팅DB
+                if (!$row2[wr_is_comment] && file_exists("$marketdb_path/move_update.skin.php")) {
+                    include("$marketdb_path/move_update.skin.php");
+                }
+
                 // 재능마켓
                 if (!$row2[wr_is_comment] && file_exists("$talent_market_path/move_update.skin.php")) {
                     include("$talent_market_path/move_update.skin.php");
@@ -1926,45 +1946,60 @@ function mw_move($board, $wr_id_list, $chk_bo_table, $sw)
     $sql = " update $g4[board_table] set bo_notice = '$bo_notice' where bo_table = '$bo_table' ";
     sql_query($sql);
 
-    return $insert_id;
+    return $save_parent;
 }
 
 function mw_bomb()
 {
-    global $g4, $mw, $mw_basic, $config;
+    global $g4, $mw, $config;
 
     $is_bomb = false;
+
+    sql_query("lock tables $mw[bomb_table] write", false);
     //$sql = " select * from $mw[bomb_table] where bo_table = '$board[bo_table]' and bm_datetime <= '$g4[time_ymdhis]' ";
     $sql = " select * from $mw[bomb_table] where bm_datetime <= '$g4[time_ymdhis]' ";
-    $qry = sql_query($sql, false);
+    $qry = sql_query(" select * from $mw[bomb_table] where bm_datetime <= '$g4[time_ymdhis]' ", false);
+    sql_query("delete from $mw[bomb_table] where bm_datetime <= '$g4[time_ymdhis]'");
+    sql_query("unlock tables", false);
+
     while ($row = sql_fetch_array($qry)) {
-        //$tmp = sql_fetch("select * from $g4[write_prefix]$board[bo_table] where wr_id = '$row[wr_id]'");
-        $tmp = sql_fetch("select * from $g4[write_prefix]$row[bo_table] where wr_id = '$row[wr_id]'");
-
+        $write_table = $g4[write_prefix].$row[bo_table];
+        $write = sql_fetch("select * from $write_table where wr_id = '$row[wr_id]'");
         $board = sql_fetch("select * from $g4[board_table] where bo_table = '$row[bo_table]'");
+        $mw_basic = sql_fetch("select cf_bomb_move_table, cf_bomb_move_time, cf_bomb_move_cate  from $mw[basic_config_table] where bo_table = '$row[bo_table]'");
 
-        $move_table = $row[bm_move_table];
+        $move_table = trim($row[bm_move_table]);
         if (!$move_table)
-            $move_table = $mw_basic[cf_bomb_move_table];
+            $move_table = trim($mw_basic[cf_bomb_move_table]);
 
         if ($move_table) {
             if ($row[bm_log]) {
                 $wr_id = mw_move($board, $row[wr_id], $move_table, 'copy');
-                mw_delete_row($board, $tmp, $row[bm_log], '폭파되었습니다.');
+                mw_delete_row($board, $write, $row[bm_log], '폭파되었습니다.');
             }
             else
                 $wr_id = mw_move($board, $row[wr_id], $move_table, 'move');
 
+            ob_start();
+            print_r($mw_basic);
+            $log = ob_get_contents();
+            ob_end_clean();
+
+
             if ($mw_basic['cf_bomb_move_time'] && $wr_id) {
-                sql_query("update $g4[write_prefix]$move_table set wr_datetime = '$row[bm_datetime]' where wr_id = '$wr_id'");
+                $sql = "update $g4[write_prefix]$move_table set wr_datetime = '$row[bm_datetime]' where wr_id = '$wr_id'";
+                sql_query($sql);
             }
             if ($mw_basic['cf_bomb_move_cate'] && $wr_id) {
-                sql_query("update $g4[write_prefix]$move_table set ca_name = '".addslashes($board[bo_subject])."' where wr_id = '$wr_id'");
+                $sql = "update $g4[write_prefix]$move_table set ca_name = '".addslashes($board[bo_subject])."' where wr_id = '$wr_id'";
+                sql_query($sql);
             }
         } else {
-            mw_delete_row($board, $tmp, $row[bm_log], '폭파되었습니다.');
+            mw_delete_row($board, $write, $row[bm_log], '폭파되었습니다.');
         }
-        sql_query("delete from $mw[bomb_table] where bo_table = '$board[bo_table]' and wr_id = '$row[wr_id]'", false);
+        //$sql = "delete from $mw[bomb_table] where bo_table = '$board[bo_table]' and wr_id = '$row[wr_id]'";
+        //sql_query($sql, false);
+
         $is_bomb = true;
     }
     if ($is_bomb) {
@@ -2111,16 +2146,18 @@ function mw_get_youtube_thumb($wr_id, $url, $datetime='')
     while (!feof($fp)) $buffer .= fgets($fp,1024);
     fclose($fp);
 
-    $file = "$thumb_path/{$wr_id}";
+    $file = mw_thumb_jpg("$thumb_path/{$wr_id}");
     if ($buffer) {
-        $fw = fopen ($file, "wb");
-        fwrite($fw, trim($buffer));
-        chmod ($file, 0777);
-        fclose($fw);
+        $fw = @fopen ($file, "wb");
+        if ($fw) {
+            fwrite($fw, trim($buffer));
+            chmod ($file, 0777);
+            fclose($fw);
+        }
 
         // 이미지가 아니면 삭제
-        $size = getimagesize($file);
-        if ($size[2] != 2) unlink($file);
+        $size = @getimagesize($file);
+        if ($size[2] != 2) @unlink($file);
     }
 
     mw_make_thumbnail($mw_basic[cf_thumb_width], $mw_basic[cf_thumb_height], $file, $file, true);
@@ -2169,16 +2206,18 @@ function mw_get_vimeo_thumb($wr_id, $url, $datetime='')
     while (!feof($fp)) $buffer .= fgets($fp,1024);
     fclose($fp);
 
-    $file = "$thumb_path/{$wr_id}";
+    $file = mw_thumb_jpg("$thumb_path/{$wr_id}");
     if ($buffer) {
-        $fw = fopen ($file, "wb");
-        fwrite($fw, trim($buffer));
-        chmod ($file, 0777);
-        fclose($fw);
+        $fw = @fopen ($file, "wb");
+        if ($fw) {
+            fwrite($fw, trim($buffer));
+            chmod ($file, 0777);
+            fclose($fw);
+        }
 
         // 이미지가 아니면 삭제
-        $size = getimagesize($file);
-        if ($size[2] != 2) unlink($file);
+        $size = @getimagesize($file);
+        if ($size[2] != 2) @unlink($file);
     }
 
     mw_make_thumbnail($mw_basic[cf_thumb_width], $mw_basic[cf_thumb_height], $file, $file, true);
@@ -2248,8 +2287,8 @@ function mw_youtube_content($content)
     $pt3 = "/\[(http:\/\/youtu\.be\/[^\]]+)\]/ie";
     $pt4 = "/\[(http:\/\/www\.youtube\.com\/[^\]]+)\]/ie";
 
-    $pt5 = "/\[http[s]{0,1}:\/\/vimeo\.com\/([^]]+)\]/ie"; 
-    $pt6 = "/\[<a href=\"http[s]{0,1}:\/\/vimeo\.com\/([^\"]+)\"[^>]+>[^<]+<\/a>\]/ie"; 
+    $pt5 = "/\[(http[s]{0,1}:\/\/vimeo\.com\/[^]]+)\]/ie"; 
+    $pt6 = "/\[<a href=\"(http[s]{0,1}:\/\/vimeo\.com\/[^\"]+)\"[^>]+>[^<]+<\/a>\]/ie"; 
 
     $content = preg_replace($pt1, "mw_youtube('\\1')", $content);
     $content = preg_replace($pt2, "mw_youtube('\\1')", $content);
@@ -2348,4 +2387,18 @@ function mw_singo_admin($admin_id)
     return true;
 }
 
+
+function mw_thumb_jpg($file)
+{
+    global $mw_basic;
+
+    $jpg = $file.".jpg";
+
+    if (!$mw_basic['cf_thumb_jpg']) return $file;
+    if (preg_match("/\.jpg$/i", $file)) return $file;
+    if (!file_exists($file)) return $jpg;
+
+    rename($file, $jpg);
+    return $jpg;
+}
 

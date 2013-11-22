@@ -56,6 +56,7 @@ if ($mw_basic[cf_vote]) {
             $row[vt_rate] = "<span class='zero'>0</span>";
 
         $row[vt_width] = @intval($width * ($row[vt_rate] / 100));
+        $row[vt_item] = cut_str(get_text(strip_tags($row[vt_item])), 50);
         $vote_list[$i] = $row;
     }
 
@@ -122,17 +123,16 @@ if ($mw_basic[cf_vote] && $vote && sizeof($vote_list)) {
         </div>
     <? } else { ?>
         <div class="mw_vote_list">
-            <table border="0" cellpadding="0" cellspacing="0" width="100%" class="mw_vote_result">
+            <div class="mw_vote_result">
             <? for ($i=0; $i<sizeof($vote_list); $i++) { ?>
-            <tr>
-                <td class="item"> <?=$vote_list[$i][vt_item]?> </td>
-                <td>
-                    <img src="<?=$img_path?>/vote_<?=$gr[abs($i%9)]?>.gif" width="<?=$vote_list[$i][vt_width]?>" height="5" align="absmiddle"/>
-                    <span class="rate"> <nobr><?=$vote_list[$i][vt_rate]?></nobr> </span>
-                </td>
-            </tr>
+            <div>
+                <span class="item"><?=$vote_list[$i][vt_item]?> </span>
+                <img src="<?=$img_path?>/vote_<?=$gr[abs($i%9)]?>.gif"
+                     width="<?=$vote_list[$i][vt_width]?>" height="5" align="absmiddle"/>
+                <span class="rate"> <nobr><?=$vote_list[$i][vt_rate]?></nobr> </span>
+            </div>
             <? } ?>
-            </table>
+            </div>
             <? if ($result_view) { ?>
             <div class="btns">
                 <input type="button" value="설문참여" class="btn" onclick="mw_vote_load()">

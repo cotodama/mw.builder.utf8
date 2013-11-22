@@ -92,7 +92,7 @@ $max = $sum = 0;
 
 $sql_select = " count(*) as cnt ";
 $sql_common = " from $g4[member_table] ";
-$sql_search = " where mb_datetime between '$fr_date 00:00:00' and '$to_date 23:59:59' ";
+$sql_search = " where mb_datetime between '$fr_date 00:00:00' and '$to_date 23:59:59' and mb_level > 1 ";
 $sql_group  = " group by day ";
 $sql_order = " order by mb_datetime desc ";
 

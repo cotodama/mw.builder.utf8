@@ -51,14 +51,17 @@ if ($sw == 'move' && $move_memo_use) {
 mw_move($board, $wr_id_list, $chk_bo_table, $sw);
 
 $msg = "해당 게시물을 선택한 게시판으로 $act 하였습니다.";
-$opener_href = "$g4[bbs_path]/board.php?bo_table=$bo_table&page=$page&$qstr";
+$opener_href = "$g4[bbs_path]/board.php?bo_table=$bo_table&$qstr";
+
+$script = "";
+if ($sw == 'move')
+    $script = "opener.document.location.href = \"{$opener_href}\"";
 
 echo <<<HEREDOC
 <meta http-equiv='content-type' content='text/html; charset={$g4['charset']}'> 
 <script type="text/javascript">
 alert("{$msg}");
-//opener.document.location.href = "{$opener_href}";
-opener.document.location.reload();
+{$script}
 window.close();
 </script>
 HEREDOC;

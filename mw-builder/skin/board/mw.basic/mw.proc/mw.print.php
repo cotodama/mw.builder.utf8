@@ -194,44 +194,6 @@ if ($board[bo_use_signature] && $view[mb_id])
 include_once("$board_skin_path/mw.lib/mw.skin.basic.lib.php");
 include_once("$board_skin_path/view_head.skin.php");
 
-// 파일 출력
-ob_start();
-for ($i=0; $i<=$view[file][count]; $i++) {
-    if ($mw_basic[cf_img_1_noview] && $i==0) continue;
-    if ($view[file][$i][view]) {
-        if ($board[bo_image_width] < $view[file][$i][image_width]) { // 이미지 크기 조절
-            $img_width = $board[bo_image_width];
-        } else {
-            $img_width = $view[file][$i][image_width];
-        }
-        $view[file][$i][view] = str_replace("<img", "<img width=\"{$img_width}\"", $view[file][$i][view]);
-
-	if ($mw_basic[cf_exif]) {
-	    $view[file][$i][view] = str_replace("image_window(this)", "show_exif($i, this, event)", $view[file][$i][view]);
-	    $view[file][$i][view] = str_replace("title=''", "title='클릭하면 메타데이터를 보실 수 있습니다.'", $view[file][$i][view]);
-	} else {
-	    $view[file][$i][view] = str_replace("onclick='image_window(this);'", 
-		"onclick='mw_image_window(this, {$view[file][$i][image_width]}, {$view[file][$i][image_height]});'", $view[file][$i][view]);
-	    // 제나빌더용 (그누보드 원본수정으로 인해 따옴표' 가 없음;)
-	    $view[file][$i][view] = str_replace("onclick=image_window(this);", 
-		"onclick='mw_image_window(this, {$view[file][$i][image_width]}, {$view[file][$i][image_height]});'", $view[file][$i][view]); 
-	}
-        echo $view[file][$i][view] . "<br/><br/>";
-    }
-}
-$file_viewer = ob_get_contents();
-ob_end_clean();
-
-$view[rich_content] = preg_replace("/{이미지\:([0-9]+)[:]?([^}]*)}/ie", "view_image(\$view, '\\1', '\\2')", $view[content]);
-
-// 조회수, 추천수, 비추천수 컴마
-if ($mw_basic[cf_comma]) {
-    $view[wr_hit] = number_format($view[wr_hit]);
-    $view[wr_good] = number_format($view[wr_good]);
-    $view[wr_nogood] = number_format($view[wr_nogood]);
-}
-
-
 $this_url = "$g4[url]/$g4[bbs]/board.php?bo_table=$bo_table&wr_id=$wr_id";
 
 if ($mw_basic[cf_umz]) 
@@ -272,7 +234,6 @@ $(document).ready(function () {
     <div><?=$mw_basic[cf_content_head]?></div>
 
     <div class="mw_content">
-	<? if (!$mw_basic[cf_zzal] && !strstr($view[content], "{이미지:0}")) echo $file_viewer; // 파일 출력  ?>
 	<?echo $view[rich_content]; // {이미지:0} 과 같은 코드를 사용할 경우?>
     </div>
 

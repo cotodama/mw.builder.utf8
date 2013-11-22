@@ -456,7 +456,7 @@ if ($is_category && $mw_basic[cf_category_tab]) {
 <? if ($is_admin && $mw_basic[cf_attribute] == "1:1") { ?>
 <tr>
 <td class=mw_basic_write_title>· 지정회원ID</td>
-<td><input maxlength=20 size=15 name=wr_to_id itemname="지정회원" required value="<?=$write[wr_to_id]?>" class=mw_basic_text></td></tr>
+<td><input maxlength=20 size=15 name=wr_to_id itemname="지정회원" value="<?=$write[wr_to_id]?>" class=mw_basic_text></td></tr>
 <tr><td colspan=2 height=1 bgcolor=#e7e7e7></td></tr>
 <? } ?>
 
@@ -530,6 +530,7 @@ if ($is_dhtml_editor) $mw_basic[cf_content_align] = false;
 
 <?  if ($mw_basic[cf_social_commerce]) include("$social_commerce_path/write.skin.php"); ?>
 <?  if ($mw_basic[cf_talent_market]) include("$talent_market_path/write.skin.php"); ?>
+<?  if ($mw_basic[cf_marketdb]) include("$marketdb_path/write.skin.php"); ?>
 
 <? if ($is_category) { ?>
 <tr>
@@ -1237,7 +1238,7 @@ if ($mw_basic[cf_vote] && $mw_basic[cf_vote_level] <= $member[mb_level]) {
 <script>
 function add_vote(val) {
     if (!val) val = "";
-    $("#mw_vote").append("<div style='margin:2px 0 2px 0;'><input type='text' size='50' name='vt_item[]' value=\""+val+"\" class=mw_basic_text></div>");
+    $("#mw_vote").append("<div style='margin:2px 0 2px 0;'><input type='text' size='50' maxlenth='20' name='vt_item[]' value=\""+val+"\" class=mw_basic_text></div>");
 }
 <?
 if ($w == "") { 

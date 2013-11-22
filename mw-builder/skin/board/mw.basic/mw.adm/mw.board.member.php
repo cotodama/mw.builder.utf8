@@ -87,7 +87,7 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 </style>
 
 <div style="height:30px; background-color:#fff;">
-    <form name="fwrite" method=post action="mw.board.member.update.php" style="margin:5px 0 5px 5px; float:left;">
+    <form name="fwrite" id="fwrite" onsubmit="return mw_send();" style="margin:5px 0 5px 5px; float:left;">
     <input type=hidden name=bo_table value="<?=$bo_table?>">
     회원ID, 닉네임, IP : <input type=text size=15 class=ed name=mb_id required itemname="회원ID">
     <input type=submit value="등록" class="bt">
@@ -133,9 +133,19 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 <div style="height:50px;"></div>
 
 <script type="text/javascript">
+function mw_send() {
+    $.post("mw.board.member.update.php", $("#fwrite").serialize(), function (str) {
+        if (str) { alert(str); }
+        location.reload();
+    }); 
+    return false;
+}
 function mw_del(mb_id) {
     if (confirm("정말 삭제하시겠습니까?")) {
-        location.href = "mw.board.member.update.php?w=d&bo_table=<?=$bo_table.$qstr?>&mb_id=" + mb_id;
+        $.post("mw.board.member.update.php", { "w" : "d", "bo_table" : "<?=$bo_table?>", "mb_id" : mb_id }, function (str) {
+            if (str) alert(str);
+            location.reload();
+        });
     }
 }
 </script>
