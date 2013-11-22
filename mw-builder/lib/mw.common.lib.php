@@ -329,7 +329,7 @@ function mw_get_thumb_path($bo_table, $wr_id, $file=null)
     return $thumb;
 }
 
-function mw_builer_get_first_file($bo_table, $wr_id, $is_image=false)
+function mw_builder_get_first_file($bo_table, $wr_id, $is_image=false)
 {
     global $g4;
 
