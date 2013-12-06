@@ -1220,4 +1220,16 @@ if (is_null($mw_basic[cf_talent_market])) {
     sql_query("alter table $write_table change wr_marketdb wr_marketdb varchar(1) not null", false);
 
     sql_query("alter table {$mw[basic_config_table]} add cf_thumb_jpg varchar(1) not null", false);
+    sql_query("alter table {$mw[basic_config_table]} add cf_image_save_close varchar(1) not null", false);
+
+    sql_query("alter table {$mw[basic_config_table]} add cf_link_point int not null", false);
+
+    sql_query("alter table {$mw[basic_config_table]} add cf_not_membership_msg varchar(255) not null", false);
+    sql_query("alter table {$mw[basic_config_table]} add cf_not_membership_url varchar(255) not null", false);
+
+    // 시험문제 플러그인 
+    sql_query("alter table $mw[basic_config_table] add cf_exam varchar(1) not null", false);
+    sql_query("alter table $mw[basic_config_table] add cf_exam_level tinyint not null default '2'", false);
+    sql_query("alter table $mw[basic_config_table] add cf_exam_notice varchar(1) not null default ''", false);
+
 

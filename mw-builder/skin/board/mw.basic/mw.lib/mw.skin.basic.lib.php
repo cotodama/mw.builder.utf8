@@ -189,6 +189,10 @@ if (file_exists("{$moa_path}/_config.php")) include_once("{$moa_path}/_config.ph
 $quiz_path = "{$g4['path']}/plugin/quiz";
 if (file_exists("{$quiz_path}/_config.php")) include_once("{$quiz_path}/_config.php");
 
+// 시험문제 
+$exam_path = "{$g4['path']}/plugin/exam";
+if (file_exists("{$exam_path}/_config.php")) include_once("{$exam_path}/_config.php");
+
 // 럭키라이팅
 $lucky_writing_path = "{$g4['path']}/plugin/lucky-writing";
 if (file_exists("{$lucky_writing_path}/_lib.php")) include_once("{$lucky_writing_path}/_lib.php");

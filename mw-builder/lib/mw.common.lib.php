@@ -272,8 +272,8 @@ function mw_get_last_thumb($bo_tables, $cnt=1)
                 $file['path'] = $file_path;
                 $file['href'] = "{$g4['url']}/{$g4['bbs']}/board.php?bo_table={$bo_table}&wr_id={$max}";
 
-                $filemtime = filemtime($file_path);
-                $files[$filemtime] = $file;
+                //$filemtime = filemtime($file_path);
+                $files[$max] = $file;
                 ++$fnd;
             }
             if ($fnd >= $cnt) break;
@@ -297,7 +297,7 @@ function mw_get_last_thumb($bo_tables, $cnt=1)
     return $list;
 }
 
-function mw_get_thumb_path($bo_table, $wr_id, $file=null)
+function mw_get_thumb_path($bo_table, $wr_id, $file=null, $thumb_number=null)
 {
     global $g4;
 
@@ -305,7 +305,7 @@ function mw_get_thumb_path($bo_table, $wr_id, $file=null)
 
     if (!$bo_table or !$wr_id) return $thumb;
 
-    $img1 = "{$g4['path']}/data/file/{$bo_table}/thumbnail/{$wr_id}";
+    $img1 = "{$g4['path']}/data/file/{$bo_table}/thumbnail{$thumb_number}/{$wr_id}";
     $img2 = "{$g4['path']}/data/file/{$bo_table}/thumb/{$wr_id}";
 
     $jpg1 = "{$img1}.jpg";

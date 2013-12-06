@@ -1623,3 +1623,12 @@ img {
     text-align:center;
 }
 
+#mw_basic #membership-info {
+    margin:10px 0 10px 0;
+    padding:10px;
+    border:1px solid #ddd;
+}
+
+#post_url_copy { 
+    cursor:pointer;
+}

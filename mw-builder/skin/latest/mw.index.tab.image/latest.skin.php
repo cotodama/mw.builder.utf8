@@ -15,7 +15,11 @@ $style_name = "mw-latest-list-img-$bo_table-$rows-$subject_len";
 <div class="<?php echo $style_name?>">
 <div style="clear:both"></div>
     <?php for ($i=0; $i<$rows; $i++) { 
-    $img = mw_get_thumb_path($bo_table, $list[$i]['wr_id'], $list[$i]['file'][0]);
+    $tmp_table = $bo_table;
+    if (!$bo_table)
+        $tmp_table = $list[$i]['bo_table'];
+
+    $img = mw_get_thumb_path($tmp_table, $list[$i]['wr_id'], $list[$i]['file'][0]);
     if (!$img)
         $img = "{$latest_skin_path}/img/noimage.gif";
 

@@ -25,4 +25,4 @@ $sop = strtolower($sop);
 if ($sop != "and" && $sop != "or")
     $sop = "and";
 
-?>
+

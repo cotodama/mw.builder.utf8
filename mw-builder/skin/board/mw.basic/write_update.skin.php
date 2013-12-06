@@ -401,6 +401,11 @@ if ($mw_basic[cf_quiz] && $mw_basic[cf_quiz_level] <= $member[mb_level] && $w ==
     sql_query(" update $mw_quiz[quiz_table] set wr_id = '$wr_id' where qz_id = '$qz_id' ");
 }
 
+// 시험문제
+if ($mw_basic['cf_exam'] && $mw_basic['cf_exam_level'] <= $member['mb_level'] && $w == '' && $ex_id) {
+    include("{$exam_path}/write_update.skin.php");
+}
+
 // 설문 
 if ($mw_basic[cf_vote] && $mw_basic[cf_vote_level] <= $member[mb_level])
 {

@@ -156,7 +156,7 @@ var char_max = parseInt(<?=$comment_max?>); // 최대
 <!-- 코멘트 리스트 -->
 <div id="commentContents">
 
-<? if ($mw_basic[cf_comment_notice]) { ?>
+<?php if ($mw_basic[cf_comment_notice]) { ?>
 
 <table width=100% cellpadding=0 cellspacing=0>
 <tr>
@@ -187,9 +187,8 @@ var char_max = parseInt(<?=$comment_max?>); // 최대
 </table>
 <br/>
 
-<? } ?>
+<?php }
 
-<?
 $is_comment_best = array();
 if ($mw_basic[cf_comment_best]) {
     $sql = " select * from $write_table where wr_parent = '$wr_id' and wr_is_comment = '1' and wr_good > 0 ";
@@ -198,40 +197,19 @@ if ($mw_basic[cf_comment_best]) {
     }
     $sql.= " order by wr_good desc, wr_datetime asc limit $mw_basic[cf_comment_best] ";
     $qry = sql_query($sql);
-    while ($row = sql_fetch_array($qry)) { // 베플 루프 시작
+    while ($row = sql_fetch_array($qry)) {
+    // ============================= 베플 루프 시작 =============================
+
+    $is_comment_best[] = $row[wr_id];
 
     if ($mw_basic[cf_comment_best_point])
         insert_point($row[mb_id], $mw_basic[cf_comment_best_point], '베플 선정', $bo_table, $row[wr_id], '베플');
-
-    $mb = get_member($row[mb_id], 'mb_level');
-
-    //$row = get_list($row, $board, $board_skin_path);
-    //if ($is_admin == "super") echo "[$row[content]]";
-    $is_comment_best[] = $row[wr_id];
 
     $tmp_name = get_text(cut_str($row[wr_name], $config[cf_cut_name])); // 설정된 자리수 만큼만 이름 출력
     if ($board[bo_use_sideview])
         $row[name] = get_sideview($row[mb_id], $tmp_name, $row[wr_email], $row[wr_homepage]);
     else
         $row[name] = "<span class='".($row[mb_id]?'member':'guest')."'>$tmp_name</span>";
-
-    if ($mw_basic[cf_attribute] == "anonymous") $row[name] = mw_anonymous_nick($row[mb_id], $row[wr_ip]); 
-    if ($row[wr_anonymous]) $row[name] = mw_anonymous_nick($row[mb_id], $row[wr_ip]); 
-
-    $html = 0;
-    if (strstr($row['wr_option'], "html1")) $html = 1;
-    if (strstr($row['wr_option'], "html2")) $html = 2;
-
-    $row[wr_content] = mw_tag_debug($row[wr_content]);
-    $row[content] = $row[content1] = SECRET_COMMENT;
-    if (!strstr($row[wr_option], "secret") ||
-        $is_admin ||
-        ($write[mb_id]==$member[mb_id] && $member[mb_id]) ||
-        ($row[mb_id]==$member[mb_id] && $member[mb_id])) {
-        $row[content1] = $row[wr_content];
-        $row[content] = conv_content($row[wr_content], $html, 'wr_content');
-        $row[content] = search_font($stx, $row[content]);
-    }
 
     $row[trackback] = url_auto_link($row[wr_trackback]);
     $row[datetime] = substr($row[wr_datetime],2,14);
@@ -242,93 +220,7 @@ if ($mw_basic[cf_comment_best]) {
     else if ($row[mb_id] == $config[cf_admin])
         $row[ip] = "";
 
-    $is_comment_image = false;
-    $comment_image = mw_get_noimage();
-    if ($mw_basic[cf_attribute] != "anonymous" && !$row[wr_anonymous] && $row[mb_id] && file_exists("$comment_image_path/{$row[mb_id]}")) {
-        $comment_image = "$comment_image_path/{$row[mb_id]}";
-        $is_comment_image = true;
-    }
-
-    // 멤버쉽 아이콘
-    if (function_exists("mw_cash_membership_icon") && $row[mb_id] != $config[cf_admin])
-    {
-        if (!in_array($row[mb_id], $mw_membership)) {
-            $mw_membership[] = $row[mb_id];
-            $mw_membership_icon[$row[mb_id]] = mw_cash_membership_icon($row[mb_id]);
-            $row[name] = $mw_membership_icon[$row[mb_id]].$row[name];
-        } else {
-            $row[name] = $mw_membership_icon[$row[mb_id]].$row[name];
-        }
-    }
-
-    // 코멘트 첨부파일
-    $file = get_comment_file($bo_table, $row[wr_id]);
-    if (preg_match("/\.($config[cf_movie_extension])$/i", $file[0][file])) {
-        $tmp = '';
-        ob_start();
-        echo mw_jwplayer("{$g4[path]}/data/file/{$board[bo_table]}/{$file[0][file]}");
-        if (trim($file[0][content])) echo $file[0][content];
-        $jwcontent = ob_get_contents();
-        ob_end_clean();
-
-        if ($row[content] != SECRET_COMMENT)
-            $row[content] = $jwcontent . "<br/><br/>" . $row[content];
-
-        $file[0][movie] = true;
-    } 
-    elseif ($file[0][view]) {
-        if ($board[bo_image_width] < $file[0][image_width]) { // 이미지 크기 조절
-            $img_width = $board[bo_image_width];
-        } else {
-            $img_width = $file[0][image_width];
-        }
-        $file[0][view] = str_replace("<img", "<img width=\"{$img_width}\"", $file[0][view]);
-
-	if ($mw_basic[cf_exif]) {
-	    $file[0][view] = str_replace("image_window(this)", "show_exif({$row[wr_id]}, this, event)", $file[0][view]);
-	    $file[0][view] = str_replace("title=''", "title='클릭하면 메타데이터를 보실 수 있습니다.'", $file[0][view]);
-	} else {
-	    $file[0][view] = str_replace("onclick='image_window(this);'", 
-		"onclick='mw_image_window(this, {$file[0][image_width]}, {$file[0][image_height]});'", $file[0][view]);
-	    // 제나빌더용 (그누보드 원본수정으로 인해 따옴표' 가 없음;)
-	    $file[0][view] = str_replace("onclick=image_window(this);", 
-		"onclick='mw_image_window(this, {$file[0][image_width]}, {$file[0][image_height]});'", $file[0][view]); 
-	}
-        if ($row[content] != SECRET_COMMENT)
-            $row[content] = $file[0][view] . "<br/><br/>" . $row[content];
-    }
-
-    // 가변 파일
-    if ($file[0][source] && !$file[0][view] && !$file[0][movie]) {
-        ob_start();
-        ?>
-        <div class="mw_basic_comment_download_file">
-                <a href="javascript:file_download('<?=$file[0][href]?>', '<?=addslashes($file[0][source])?>', '<?=$i?>');"
-                    title="<?=$file[0][content]?>"><img src="<?=$board_skin_path?>/img/icon_file_down.gif" align=absmiddle>&nbsp;<?=$file[0][source]?></a>
-                <span class=mw_basic_view_file_info> (<?=$file[0][size]?>), Down : <?=$file[0][download]?>, <?=$file[0][datetime]?></span>
-        </div>
-        <?
-        $comment_file = ob_get_contents();
-        ob_end_clean();
-        if ($row[content] != SECRET_COMMENT)
-            $row[content] = $comment_file . "<br/>" . $row[content];
-
-        $ss_name = "ss_view_{$bo_table}_{$row[wr_id]}";
-        set_session($ss_name, TRUE);
-    }
-
-    $row[content] = mw_reg_str($row[content]); // 자동치환
-    $row[name] = get_name_title($row[name], $row[wr_name]); // 호칭
-
-    // BC코드
-    $row[content] = bc_code($row[content]);
-    $row[content] = mw_tag_debug($row[content]); // 잘못된 태그교정
-    $row[content] = mw_set_sync_tag($row[content]); // 잘못된 태그교정
-    $row[content] = mw_youtube_content($row[content]); // 유투브 자동 재생
-
-    if ($mw_basic[cf_iframe_level] && $mw_basic[cf_iframe_level] <= $mb[mb_level]) {
-        $row[content] = mw_special_tag($row[content]);
-    }
+    include("{$board_skin_path}/view_comment_head.skin.php");
 ?>
 
 <div class="mw_basic_comment_best">
@@ -337,7 +229,7 @@ if ($mw_basic[cf_comment_best]) {
 <td valign="top" style="text-align:left;">
     <img src="<?=$comment_image?>" 
         style="width:58px; height:58px; border:3px solid #f2f2f2; margin:0 10px 5px 0;">
-    <?
+    <?php
     if ($mw_basic[cf_icon_level] && !$view[wr_anonymous] && $mw_basic[cf_attribute] != "anonymous" && $row[mb_id] && $row[mb_id] != $config[cf_admin]) { 
         $level = mw_get_level($row[mb_id]);
         echo "<div class=\"icon_level".($level+1)."\">&nbsp;</div>";
@@ -389,18 +281,7 @@ if ($mw_basic[cf_comment_best]) {
         <td valign="top" style="background-color:#ffecd7;">
             <!-- 코멘트 출력 -->
             <div id=view_<?=$row[wr_id]?>_best>
-            <?
-            $str = $row[content];
-            if (strstr($row[wr_option], "secret")) {
-                $str = "<span class='mw_basic_comment_secret'>* $str</span>";
-            }
-            $str = preg_replace("/\[\<a\s.*href\=\"(http|https|ftp|mms)\:\/\/([^[:space:]]+)\.(mp3|wma|wmv|asf|asx|mpg|mpeg)\".*\<\/a\>\]/i", "<script>doc_write(obj_movie('$1://$2.$3'));</script>", $str);
-            $str = preg_replace("/\[\<a\s.*href\=\"(http|https|ftp)\:\/\/([^[:space:]]+)\.(swf)\".*\<\/a\>\]/i", "<script>doc_write(flash_movie('$1://$2.$3'));</script>", $str);
-            $str = preg_replace("/\[\<a\s*href\=\"(http|https|ftp)\:\/\/([^[:space:]]+)\.(gif|png|jpg|jpeg|bmp)\"\s*[^\>]*\>[^\s]*\<\/a\>\]/i", "<img src='$1://$2.$3' id='target_resize_image[]' onclick='image_window(this);'>", $str);
-
-            $str = preg_replace_callback("/\[code\](.*)\[\/code\]/iU", "_preg_callback", $str);
-            echo $str;
-            ?>
+            <?php echo $row[content] ?>
             </div>
             <? if ($row[trackback]) { echo "<p>".$row[trackback]."</p>"; } ?>
             <? if ($mw_basic[cf_source_copy]) { // 출처 자동 복사 ?>
@@ -472,163 +353,9 @@ if ($mw_basic[cf_comment_page]) { // 코멘트 페이지
 }
 
 for ($i=0; $i<$to_record; $i++) {
-
-
-    $mb = get_member($list[$i][mb_id], 'mb_level');
-
-    $list[$i][name] = get_name_title($list[$i][name], $list[$i][wr_name]); // 호칭
-
-    // 멤버쉽 아이콘
-    if (function_exists("mw_cash_membership_icon") && $list[$i][mb_id] != $config[cf_admin])
-    {
-        if (!in_array($list[$i][mb_id], $mw_membership)) {
-            $mw_membership[] = $list[$i][mb_id];
-            $mw_membership_icon[$list[$i][mb_id]] = mw_cash_membership_icon($list[$i][mb_id]);
-            $list[$i][name] = $mw_membership_icon[$list[$i][mb_id]].$list[$i][name];
-        } else {
-            $list[$i][name] = $mw_membership_icon[$list[$i][mb_id]].$list[$i][name];
-        }
-    }
-
-    if ($mw_basic[cf_attribute] == "anonymous") $list[$i][name] = mw_anonymous_nick($list[$i][mb_id], $list[$i][wr_ip]); 
-    if ($list[$i][wr_anonymous]) $list[$i][name] = mw_anonymous_nick($list[$i][mb_id], $list[$i][wr_ip]); 
-
-    if ($i < $from_record) continue;
-
-    $html = 0;
-    if (strstr($list[$i]['wr_option'], "html1")) $html = 1;
-    if (strstr($list[$i]['wr_option'], "html2")) $html = 2;
-
-    if ($html > 0) {
-        $list[$i][wr_content] = mw_tag_debug($list[$i][wr_content]);
-        $list[$i][content] = $list[$i][content1] = SECRET_COMMENT;
-        if (!strstr($list[$i][wr_option], "secret") ||
-            $is_admin ||
-            ($write[mb_id]==$member[mb_id] && $member[mb_id]) ||
-            ($list[$i][mb_id]==$member[mb_id] && $member[mb_id])) {
-            $list[$i][content1] = $list[$i][wr_content];
-            $list[$i][content] = conv_content($list[$i][wr_content], $html, 'wr_content');
-            $list[$i][content] = search_font($stx, $list[$i][content]);
-        }
-    }
-
-    // 코멘트 첨부파일
-    $file = get_comment_file($bo_table, $list[$i][wr_id]);
-    if (preg_match("/\.($config[cf_movie_extension])$/i", $file[0][file])) {
-        $tmp = '';
-        ob_start();
-        echo mw_jwplayer("{$g4[path]}/data/file/{$board[bo_table]}/{$file[0][file]}");
-        if (trim($file[0][content])) echo $file[0][content];
-        $jwcontent = ob_get_contents();
-        ob_end_clean();
-
-        if ($list[$i][content] != SECRET_COMMENT)
-            $list[$i][content] = $jwcontent . "<br/><br/>" . $list[$i][content];
-
-        $file[0][movie] = true;
-    } 
-    elseif ($file[0][view]) {
-        if ($board[bo_image_width] < $file[0][image_width]) { // 이미지 크기 조절
-            $img_width = $board[bo_image_width];
-        } else {
-            $img_width = $file[0][image_width];
-        }
-        $file[0][view] = str_replace("<img", "<img width=\"{$img_width}\"", $file[0][view]);
-
-        if ($mw_basic[cf_exif]) {
-            $file[0][view] = str_replace("image_window(this)", "show_exif({$list[$i][wr_id]}, this, event)", $file[0][view]);
-            $file[0][view] = str_replace("title=''", "title='클릭하면 메타데이터를 보실 수 있습니다.'", $file[0][view]);
-        } else {
-            $file[0][view] = str_replace("onclick='image_window(this);'", 
-                "onclick='mw_image_window(this, {$file[0][image_width]}, {$file[0][image_height]});'", $file[0][view]);
-            // 제나빌더용 (그누보드 원본수정으로 인해 따옴표' 가 없음;)
-            $file[0][view] = str_replace("onclick=image_window(this);", 
-                "onclick='mw_image_window(this, {$file[0][image_width]}, {$file[0][image_height]});'", $file[0][view]); 
-        }
-        if ($list[$i][content] != SECRET_COMMENT)
-            $list[$i][content] = $file[0][view] . "<br/><br/>" . $list[$i][content];
-    }
-
-    // 가변 파일
-    if ($file[0][source] && !$file[0][view] && !$file[0][movie]) {
-        ob_start();
-        ?>
-        <div class="mw_basic_comment_download_file">
-                <a href="<?=$board_skin_path?>/mw.proc/mw.comment.download.php?bo_table=<?=$bo_table?>&wr_id=<?=$list[$i][wr_id]?>&bf_no=0"
-                    title="<?=$file[0][content]?>"><img src="<?=$board_skin_path?>/img/icon_file_down.gif" align=absmiddle>&nbsp;<?=$file[0][source]?></a>
-                <span class=mw_basic_view_file_info> (<?=$file[0][size]?>), Down : <?=$file[0][download]?>, <?=$file[0][datetime]?></span>
-        </div>
-        <?
-        $comment_file = ob_get_contents();
-        ob_end_clean();
-        if ($list[$i][content] != SECRET_COMMENT)
-            $list[$i][content] = $comment_file . "<br/>" . $list[$i][content];
-
-        $ss_name = "ss_view_{$bo_table}_{$list[$i][wr_id]}";
-        set_session($ss_name, TRUE);
-    }
-
-    if ($list[$i][wr_singo] && $list[$i][wr_singo] >= $mw_basic[cf_singo_number] && $mw_basic[cf_singo_write_block]) {
-        $content = " <div class='singo_info'> 신고가 접수된 게시물입니다. (신고수 : {$list[$i][wr_singo]}회)<br/>";
-        $content.= " <span onclick=\"btn_singo_view({$list[$i][wr_id]})\" class='btn_singo_block'>여기</span>를 클릭하시면 내용을 볼 수 있습니다.";
-        if ($is_admin == "super")
-            $content.= " <span class='btn_singo_block' onclick=\"btn_singo_clear({$list[$i][wr_id]})\">[신고 초기화]</span> ";
-        $content.= " </div>";
-        $content.= " <div id='singo_block_{$list[$i][wr_id]}' class='singo_block'> {$list[$i][content]} </div>";
-        $list[$i][content] = $content;
-    }
-
-    $comment_id = $list[$i][wr_id];
-    if ($mw_basic[cf_singo]) {
-        $list[$i][singo_href] = "javascript:btn_singo($comment_id, $write[wr_parent])";
-    }
-
-    // 코멘트 비밀 리플 보이기
-    if ($list[$i][content] == SECRET_COMMENT) {
-        for ($j=$i-1; $j>=0; $j--) {
-            if ($list[$j][wr_comment] == $list[$i][wr_comment] && $list[$j][wr_comment_reply] == substr($list[$i][wr_comment_reply], 0, strlen($list[$i][wr_comment_reply])-1)) {
-                if (trim($list[$j][mb_id]) && $list[$j][mb_id] == $member[mb_id]) {
-                    $list[$i][content] = conv_content($list[$i][wr_content], $html, 'wr_content');
-                    $list[$i][content] = search_font($stx, $list[$i][content]);
-                }
-                break;
-            }
-        }
-    }
-
-    // 로그버튼
-    $history_href = "";
-    if ($mw_basic[cf_post_history] && $member[mb_level] >= $mw_basic[cf_post_history_level]) {
-        $history_href = "javascript:btn_history({$list[$i][wr_id]})";
-    }
-
-    if (!$is_comment_write) {
-        $list[$i][is_edit] = false;
-        $list[$i][is_reply] = false;
-    }
-
-    $tmpsize = array(0, 0);
-    $is_comment_image = false;
-    $comment_image = mw_get_noimage();
-    if ($mw_basic[cf_attribute] != "anonymous" && !$list[$i][wr_anonymous] && $list[$i][mb_id] && file_exists("$comment_image_path/{$list[$i][mb_id]}")) {
-        $comment_image = "$comment_image_path/{$list[$i][mb_id]}";
-        $is_comment_image = true;
-        $tmpsize = @getImageSize($comment_image);
-    }
-
-    $list[$i][content] = mw_reg_str($list[$i][content]); // 자동치환
-
-    $list[$i][content] = bc_code($list[$i][content]);
-    $list[$i][content] = mw_tag_debug($list[$i][content]);
-    $list[$i][content] = mw_set_sync_tag($list[$i][content]); // 잘못된 태그교정
-    $list[$i][content] = mw_youtube_content($list[$i][content]); // 유투브 자동 재생
-
-    if ($mw_basic[cf_iframe_level] && $mw_basic[cf_iframe_level] <= $mb[mb_level]) {
-        $list[$i][content] = mw_special_tag($list[$i][content]);
-    }
-
-    // 관리자 게시물은 IP 주소를 보이지 않습니다
-    if ($list[$i][mb_id] == $config[cf_admin]) $list[$i][ip] = "";
+    $row = $list[$i];
+    include("{$board_skin_path}/view_comment_head.skin.php");
+    $list[$i] = $row;
 
     if ($mw_basic[cf_include_comment_main] && file_exists($mw_basic[cf_include_comment_main])) {
         include($mw_basic[cf_include_comment_main]);
@@ -726,21 +453,7 @@ for ($i=0; $i<$to_record; $i++) {
                 <? } ?>
                 <!-- 코멘트 출력 -->
                 <div id=view_<?=$list[$i][wr_id]?>>
-                <?
-                $str = $list[$i][content];
-                if (strstr($list[$i][wr_option], "secret")) {
-                    $str = "<span class='mw_basic_comment_secret'>* $str</span>";
-                }
-                $str = preg_replace("/\[\<a\s.*href\=\"(http|https|ftp|mms)\:\/\/([^[:space:]]+)\.(mp3|wma|wmv|asf|asx|mpg|mpeg)\".*\<\/a\>\]/i", "<script>doc_write(obj_movie('$1://$2.$3'));</script>", $str);
-                // FLASH XSS 공격에 의해 주석 처리
-                //$str = preg_replace("/\[\<a\s.*href\=\"(http|https|ftp)\:\/\/([^[:space:]]+)\.(swf)\".*\<\/a\>\]/i", "<script>doc_write(flash_movie('$1://$2.$3'));</script>", $str);
-                // 검색시 적용안되는 문제
-                //$str = preg_replace("/\[\<a\s*href\=\"(http|https|ftp)\:\/\/([^[:space:]]+)\.(gif|png|jpg|jpeg|bmp)\"\s*[^\>]*\>[^\s]*\<\/a\>\]/i", "<img src='$1://$2.$3' id='target_resize_image[]' onclick='image_window(this);'>", $str);
-                $str = preg_replace("/\[\<a\s*href\=\"(http|https|ftp)\:\/\/([^[:space:]]+)\.(gif|png|jpg|jpeg|bmp)\"\s*[^\>]*\>.*\<\/a\>\]/iUs", "<img src='$1://$2.$3' id='target_resize_image[]' onclick='image_window(this);'>", $str);
-
-                $str = preg_replace_callback("/\[code\](.*)\[\/code\]/iU", "_preg_callback", $str);
-                echo $str;
-                ?>
+                <?php echo $row[content] ?>
                 </div>
                 <? if ($list[$i][trackback]) { echo "<p>".$list[$i][trackback]."</p>"; } ?>
                 <? if ($mw_basic[cf_source_copy]) { // 출처 자동 복사 ?>
@@ -967,6 +680,34 @@ $(document).ready(function () {
     <? if ($mw_basic[cf_comment_emoticon] && !$is_comment_editor && !$write_error) {?>
     <span class=mw_basic_comment_emoticon><a href="javascript:win_open('<?=$board_skin_path?>/mw.proc/mw.emoticon.skin.php?bo_table=<?=$bo_table?>','emo','width=600,height=400,scrollbars=yes')">☞ 이모티콘</a></span>
     <? } ?>
+            <span class=mw_basic_comment_emoticon><a href="#;" onclick="specialchars()">☞특수문자</a></span>
+            <style>
+            #mw_basic_special_characters {
+                display:none;
+                border:1px solid #ddd;
+                background-color:#fff;
+                padding:10px;
+                position:absolute;
+                margin:0 0 0 100px;
+            }
+            #mw_basic_special_characters table td {
+                padding:3px;
+                cursor:pointer;
+            }
+            </style>
+            <div id="mw_basic_special_characters">hi</div>
+            <script>
+            function specialchars() {
+                $.get("<?=$board_skin_path?>/mw.proc/mw.special.characters.php", function (str) {
+                    $("#mw_basic_special_characters").html(str);
+                    $("#mw_basic_special_characters table td").click(function () {
+                        $("#wr_content").val($("#wr_content").val()+$(this).text());
+                        $("#mw_basic_special_characters").toggle();
+                    });
+                });
+                $("#mw_basic_special_characters").toggle();
+            }
+            </script>
     <? if ($mw_basic[cf_comment_file] && $mw_basic[cf_comment_file] <= $member['mb_level'] && !$write_error) { ?>
     <span class=mw_basic_comment_file onclick="$('#comment_file_layer').toggle('slow');">☞ 첨부파일</span>
     <? } ?>
@@ -974,7 +715,7 @@ $(document).ready(function () {
 
 <? if ($mw_basic[cf_comment_file] && $mw_basic[cf_comment_file] <= $member['mb_level']) { ?>
 <div id="comment_file_layer" style="padding:5px 0 5px 5px; display:none;">
-    <input type="file" name="bf_file" size="50" title='파일 용량 <?=$upload_max_filesize?> 이하만 업로드 가능' class="mw_basic_text">
+    <input type="file" name="bf_file" size="50" title='파일 용량 <?=$upload_max_filesize?> 이하만 업로드 가능'>
     <input type="checkbox" name="bf_file_del" value="1"> 첨부파일 삭제
 </div>
 <? } ?>

@@ -42,6 +42,9 @@ if (!($key && $key == $_POST[wr_key])) {
 }
 
 $mb_id = trim(strip_tags(mysql_real_escape_string($_POST[mb_id])));
+if (preg_match("/[^0-9a-z_]+/i", $mb_id)) {
+    alert("회원아이디는 영문자, 숫자, _ 만 사용할수 있습니다.");
+}
 $mb_password = trim(mysql_real_escape_string($_POST[mb_password]));
 $mb_name = trim(strip_tags(mysql_real_escape_string($_POST[mb_name])));
 $mb_nick = trim(strip_tags(mysql_real_escape_string($_POST[mb_nick])));

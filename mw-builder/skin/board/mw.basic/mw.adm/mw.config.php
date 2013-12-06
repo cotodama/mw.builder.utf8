@@ -628,6 +628,15 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
     </div>
  
     <div class="cf_item">
+	<div class="cf_title"> <input type=checkbox name=chk[cf_link_point] value=1>&nbsp; 링크 포인트  </div>
+	<div class="cf_content">
+            <input type="text" size="5" class="ed" name="cf_link_point" numeric value="<?=$mw_basic[cf_link_point]?>">
+            포인트
+	    <span class="cf_info">(게시물에 별도로 첨부된 링크 클릭시 포인트를 적용합니다. 플러스 마이너스 가능.)</span>
+	</div>
+    </div>
+ 
+    <div class="cf_item">
 	<div class="cf_title"> <input type=checkbox name=chk[cf_list_shuffle] value=1>&nbsp; 게시물 목록 셔플 </div>
 	<div class="cf_content">
 	    <input type=checkbox name=cf_list_shuffle value=1> 사용 <span class="cf_info">(페이지 내의 게시물 목록을 섞습니다.)</span>  
@@ -635,6 +644,7 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 	</div>
     </div>
 
+    <!--
     <div class="cf_item">
 	<div class="cf_title"> <input type=checkbox name=chk[cf_norobot_image] value=1>&nbsp; 이미지 방지코드 </div>
 	<div class="cf_content">
@@ -642,6 +652,7 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 	    <script> document.cf_form.cf_norobot_image.checked = <?=$mw_basic[cf_norobot_image]?>; </script>
 	</div>
     </div>
+    -->
 
     <div class="cf_item">
 	<div class="cf_title"> <input type=checkbox name=chk[cf_subject_link] value=1>&nbsp; 권한별 제목링크  </div>
@@ -2294,6 +2305,16 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 	</div>
     </div>
 
+    <div class="cf_item">
+	<div class="cf_title"> <input type=checkbox name=chk[cf_image_save_close] value=1>&nbsp; 이미지 저장방지 </div>
+	<div class="cf_content">
+	    <input type=checkbox name=cf_image_save_close value=1> 사용
+            <span class="cf_info">(마우스 오버, 스마트폰 클릭시 저장하는 것을 방지. 100% 막는것은 불가능)</span>
+	    <script> document.cf_form.cf_image_save_close.checked = '<?=$mw_basic[cf_image_save_close]?>'; </script>
+	</div>
+    </div>
+
+
     <div class="block"></div>
 </div> <!-- tabs-5-2 -->
 
@@ -2590,6 +2611,40 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
         </div>
     </div>
 
+    <div class="cf_item">
+        <div class="cf_title">  <input type=checkbox name=chk[cf_exam] value=1>&nbsp; 시험문제 </div>
+	<div class="cf_content">
+	    <input type=checkbox name=cf_exam value=1> 사용
+            <span class="cf_info">
+                (<a href="http://g4.miwit.com/plugin/product/pr_exam.php" target="_blank">플러그인 설치 후 사용가능 ⇒ <u>다운로드 클릭!</u></a>)</span>  
+            <div> 시험문제등록 가능레벨 
+                <select name=cf_exam_level>
+                <? for ($i=2; $i<=10; $i++) {?>
+                <option value="<?=$i?>"><?=$i?></option>
+                <? } ?>
+                </select>
+                <span class="cf_info">(시험문제를 등록할 수 있는 레벨)</span>
+            </div>
+	    <input type=checkbox name=cf_exam_notice value=1> 공지에 있는 시험문제를 모두 치뤄야 글 등록 가능
+
+            <!--<div> 시험문제참여 가능레벨
+                <select name=cf_exam_join_level>
+                <? for ($i=2; $i<=10; $i++) {?>
+                <option value="<?=$i?>"><?=$i?></option>
+                <? } ?>
+                </select>
+                <span class="cf_info">(시험문제에 참여할 수 있는 레벨)</span>
+            </div>-->
+            <script>
+            document.cf_form.cf_exam.checked = "<?=$mw_basic[cf_exam]?>";
+            document.cf_form.cf_exam_level.value = "<?=$mw_basic[cf_exam_level]?>";
+            document.cf_form.cf_exam_notice.checked = "<?=$mw_basic[cf_exam_notice]?>";
+            //document.cf_form.cf_exam_join_notice.value = "<?=$mw_basic[cf_exam_join_notice]?>";
+            </script>
+        </div>
+    </div>
+
+
     <div class="block"></div>
 </div> <!-- tabs-7 -->
 
@@ -2683,6 +2738,16 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
                 <?=$mw_cash[cf_cash_unit]?>
                 <script> document.cf_form.cf_contents_shop_write.checked = '<?=$mw_basic[cf_contents_shop_write]?>'; </script>
             </div>
+	</div>
+    </div>
+
+    <div class="cf_item">
+	<div class="cf_title"> <input type=checkbox name=chk[cf_not_membership_msg] value=1>&nbsp; <strong>멤버쉽 중지 대체 메시지</strong> </div>
+	<div class="cf_content">
+            안내 문구 :
+            <input type="text" size="50" name="cf_not_membership_msg" class="ed" value="<?=$mw_basic[cf_not_membership_msg]?>"><br>
+            이동 경로 :
+            <input type="text" size="50" name="cf_not_membership_url" class="ed" value="<?=$mw_basic[cf_not_membership_url]?>">
 	</div>
     </div>
 

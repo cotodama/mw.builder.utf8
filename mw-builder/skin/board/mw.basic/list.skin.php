@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Bechu-Basic Skin for Gnuboard4
  *
@@ -397,11 +397,11 @@ if ($mw_basic[cf_contents_shop]) {
 // 링크로그
 for ($j=1; $j<=$g4['link_count']; $j++)
 {
-    if ($mw_basic[cf_link_log])  {
+    //if ($mw_basic[cf_link_log])  {
         $list[$i]['link'][$j] = set_http(get_text($list[$i]["wr_link{$j}"]));
         $list[$i]['link_href'][$j] = "$board_skin_path/link.php?bo_table=$board[bo_table]&wr_id={$list[$i][wr_id]}&no=$j" . $qstr;
         $list[$i]['link_hit'][$j] = (int)$list[$i]["wr_link{$j}_hit"];
-    }
+    //}
 
     $list[$i]['link_target'][$j] = $list[$i]["wr_link{$j}_target"];
     if (!$list[$i]['link_target'][$j])
@@ -424,9 +424,20 @@ if ($mw_basic[cf_link_board] && $list[$i][link_href][1]) {
     $list[$i][wr_hit] = $list[$i][link_hit][1];
 }
 
-if ($list[$i][wr_link_write] && $list[$i][link_href][1]) {
+// 게시물별 링크이동
+else if ($list[$i][wr_link_write] && $list[$i][link_href][1]) {
     if (!$list[$i][link][1] || $is_admin || ($list[$i][mb_id] && $list[$i][mb_id] == $member[mb_id]))
         ;
+    else if ($mw_basic[cf_read_level] && $list[$i][wr_read_level]) {
+        if ($list[$i][wr_read_level] <= $member[mb_level]) {
+            if ($list[$i][link_target][1] == '_blank')
+                $list[$i][href] = "javascript:void(window.open('{$list[$i][link_href][1]}'))";    
+            else
+                $list[$i][href] = $list[$i][link_href][1];
+        }
+        else
+            $list[$i][href] = "javascript:void(alert('권한이 없습니다.'))";
+    }
     else if ($member[mb_level] >= $board[bo_read_level]) {
         if ($list[$i][link_target][1] == '_blank')
             $list[$i][href] = "javascript:void(window.open('{$list[$i][link_href][1]}'))";    
@@ -438,12 +449,23 @@ if ($list[$i][wr_link_write] && $list[$i][link_href][1]) {
     $list[$i][wr_hit] = $list[$i][link_hit][1];
 }
 
-if ($board[bo_read_point] < 0 && $list[$i][mb_id] != $member[mb_id] && $is_member && !$is_admin && $mw_basic[cf_read_point_message]) {
+// 글읽기 포인트 결제 안내
+else if ($board[bo_read_point] < 0 && $list[$i][mb_id] != $member[mb_id] && $is_member && !$is_admin && $mw_basic[cf_read_point_message]) {
     $tmp = sql_fetch(" select * from $g4[point_table] where mb_id = '$member[mb_id]' and po_rel_table = '$bo_table' and po_rel_id = '{$list[$i][wr_id]}' and po_rel_action = '읽기'");
     if (!$tmp) {
-        $list[$i][href] = "javascript:if (confirm('글을 읽으시면 $board[bo_read_point] 포인트 차감됩니다.\\n(현재포인트 : $member[mb_point])')) location.href = '{$list[$i][href]}&point=1'";
+        if (!$is_admin && $board[bo_read_point] && $board[bo_read_point] + $member[mb_point] < 0) {
+            $list[$i][href] = "javascript:alert('포인트가 부족합니다.\\n\\n";
+            $list[$i][href].= "(글읽기 포인트:$board[bo_read_point]\\n\\n현재포인트 : $member[mb_point])')";
+        }
+        else {
+            $list[$i][href] = "javascript:if (confirm('글을 읽으시면 $board[bo_read_point] 포인트 차감됩니다.";
+            $list[$i][href].= "\\n\\n(현재포인트 : $member[mb_point])')) location.href = '{$list[$i][href]}&point=1'";
+        }
     }
 } 
+else if ($mw_basic[cf_read_level] && $write[wr_read_level] && $write[wr_read_level] > $member[mb_level]) {
+    $list[$i][href] = "javascript:void(alert('권한이 없습니다.'))";
+}
 
 // sns식 날짜표시
 if ($mw_basic[cf_sns_datetime]) {

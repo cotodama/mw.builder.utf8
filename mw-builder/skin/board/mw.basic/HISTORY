@@ -1,3 +1,47 @@
+ver 2.3.4 (13.12.06)
+    : 포인트 부족해도 글작성되는 그누보드 버그 보완 (역지사지님 제안)
+    : 유투브 자동재생시 링크주소 출력 (세종대왕지존님 제안)
+    : 파일 업로드 가능용량 단위 변경 (csacsa님 제안)
+    : 코멘트에도 rich_content 적용
+    : BCCODE 링크지원. [경로 링크이름] 과 같은 형식, 경로에는 http: 빼고 // 부터시작
+    : 컨텐츠샵 연동 - 멤버쉽 가입중지 대체 메시지
+    : ZeroClipboard 1.1.7 로 업그레이드
+    : 링크 포인트
+    : 시험문제 솔루션 지원
+
+    mw.basic/HISTORY
+    mw.basic/mw.adm/mw.config.php
+    mw.basic/mw.adm/mw.config.update.php
+    mw.basic/mw.adm/mw.upgrade.php
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/mw.js/ZeroClipboard.js
+    mw.basic/mw.js/ZeroClipboard.swf
+    mw.basic/write_update.head.skin.php
+    mw.basic/list.skin.php
+    mw.basic/view.skin.php
+    mw.basic/view_head.skin.php
+    mw.basic/view_comment.skin.php
+    mw.basic/view_comment_head.skin.php (추가)
+ 
+ver 2.3.3 (13.11.29)
+    : code syntaxhighlight 테마 Midnight 로 변경 (재아님 제안)
+    : 유투브 링크 https 지원 (춤세상님 제안)
+    : 링크 바로이동 게시물별 읽기 권한 따르기 (데몬님 제안)
+    : 이미지 저장 방지 기능 (데몬님 제안, 마우스 오버-스마트폰 클릭시 저장하는 것을 방지. 100% 막는것은 불가능)
+    : 파일 첨부 css 조정 (엑노님 제안)
+    : 코멘트에 특수문자 링크 적용
+
+    mw.basic/HISTORY
+    mw.basic/mw.adm/mw.config.php
+    mw.basic/mw.adm/mw.config.update.php
+    mw.basic/mw.adm/mw.upgrade.php
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/list.skin.php
+    mw.basic/view.skin.php
+    mw.basic/view_head.skin.php
+    mw.basic/view_comment.skin.php
+    mw.basic/write.skin.php
+ 
 ver 2.3.2 (13.11.22)
     : 링크 바로이동 기능 글 읽기 권한 따르기 (데몬님 제안)
     : 설문항목 길이조정 (csacsa님 제안)
@@ -12,6 +56,7 @@ ver 2.3.2 (13.11.22)
     mw.basic/mw.adm/mw.config.update.php
     mw.basic/mw.adm/mw.upgrade.php
     mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/mw.lib/mw.skin.basic.lib.php
     mw.basic/mw.proc/mw.vote.php
     mw.basic/mw.proc/mw.adm.thumb.remake.php
     mw.basic/style.common.css

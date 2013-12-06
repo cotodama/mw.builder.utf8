@@ -23,6 +23,7 @@ if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
 
 // 업로드된 파일이 있다면 파일삭제
 $sql = " select * from $mw[comment_file_table] where bo_table = '$bo_table' and wr_id = '$comment_id' ";
+
 $qry = sql_query($sql);
 while ($row = sql_fetch_array($qry))
     @unlink("$g4[path]/data/file/$bo_table/$row[bf_file]");

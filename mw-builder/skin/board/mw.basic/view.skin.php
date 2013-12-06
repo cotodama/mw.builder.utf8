@@ -25,7 +25,6 @@ $mw_is_view = true;
 
 include_once("$board_skin_path/mw.lib/mw.skin.basic.lib.php");
 include("view_head.skin.php");
-
 ?>
 <script type="text/javascript">
 document.title = "<?=strip_tags(addslashes($view[wr_subject]))?>";
@@ -51,15 +50,20 @@ SyntaxHighlighter.all();
 <script type="text/javascript" src="<?=$board_skin_path?>/mw.js/ZeroClipboard.js"></script>
 <script type="text/javascript">
 function initClipboard() {
-    clipBoardView = new ZeroClipboard.Client();
-    ZeroClipboard.setMoviePath("<?=$board_skin_path?>/mw.js/ZeroClipboard.swf");
-    clipBoardView.addEventListener('mouseOver', function (client) {
-        clipBoardView.setText($("#post_url").text());
+    var clip = new ZeroClipboard(document.getElementById("post_url_copy"), {
+        moviePath: "<?=$board_skin_path?>/mw.js/ZeroClipboard.swf"
     });
-    clipBoardView.addEventListener('complete', function (client) {
-        alert("클립보드에 복사되었습니다. \'Ctrl+V\'를 눌러 붙여넣기 해주세요.");
-    });  
-    clipBoardView.glue("post_url_copy");
+
+    clip.on( "load", function(client) {
+        // alert( "movie is loaded" );
+        clip.setText($("#post_url").text());
+
+        client.on( "complete", function(client, args) {
+        // `this` is the element that was clicked
+            clip.setText($("#post_url").text());
+            alert("클립보드에 복사되었습니다. \'Ctrl+V\'를 눌러 붙여넣기 해주세요.");
+        });
+    });
 }
 $(document).ready(function () {
     if ($("#post_url").text()) {
@@ -579,6 +583,12 @@ if ($bomb) {
         <? } ?>
 
         <?php
+        if ($mw_basic['cf_exam']) {
+            if (file_exists("{$exam_path}/view.skin.php")) {
+                include("{$exam_path}/view.skin.php");
+            }
+        }
+
         if ($mw_basic['cf_marketdb'] and $write['wr_marketdb']) { 
             if (file_exists("{$marketdb_path}/view.skin.php")) {
                 include("{$marketdb_path}/view.skin.php");
@@ -1300,9 +1310,7 @@ function mw_move_cate_one() {
 </script>
 <? } ?>
 
-<script type="text/javascript">
-$(document).ready (function() { resizeBoardImage(<?=$board[bo_image_width]?>); });
-</script>
+<script> $(document).ready (function() { resizeBoardImage(<?=$board[bo_image_width]?>); }); </script>
 
 <style type="text/css">
 /* 본문 img */

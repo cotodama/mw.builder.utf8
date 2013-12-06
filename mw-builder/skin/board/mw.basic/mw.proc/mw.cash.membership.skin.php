@@ -35,7 +35,7 @@ if (function_exists("mw_cash_is_membership"))
 var mw_cash_path = "<?=$mw_cash[path]?>";
 </script>
 
-<div style="margin:10px 0 10px 0; padding:10px; border:1px solid #ddd;">
+<div id="membership-info">
     <?
     $edate = mw_cash_membership_end_date($bo_table, $member[mb_id]);
     if (!$edate) {

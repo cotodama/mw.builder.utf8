@@ -91,7 +91,7 @@ function mw_image_window(img, w, h)
 	win.document.write ("<style>.dragme{position:relative;}</style> \n"); 
 	win.document.write ("</head> \n\n"); 
 	win.document.write ("<body leftmargin=0 topmargin=0 bgcolor=#dddddd style='cursor:arrow;'> \n"); 
-	win.document.write ("<table width=100% height=100% cellpadding=0 cellspacing=0><tr><td align=center valign=middle><img src='"+img.src+"' width='"+w+"' height='"+h+"' border=0 class='dragme' "+click+"></td></tr></table>");
+	win.document.write ("<table width=100% height=100% cellpadding=0 cellspacing=0><tr><td align=center valign=middle><img src='"+img.src+"' width='"+w+"' height='"+h+"' border=0 oncontextmenu=\"return false\" style=\"-webkit-touch-callout:none\" class='dragme' "+click+"></td></tr></table>");
 	win.document.write ("</body></html>"); 
 	win.document.close(); 
 
