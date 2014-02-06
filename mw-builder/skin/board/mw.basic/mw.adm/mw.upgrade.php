@@ -1087,6 +1087,8 @@ if (is_null($mw_basic[cf_bomb_level])) {
     sql_query("alter table $mw[basic_config_table] add cf_bomb_move_time varchar(1) not null", false);
     sql_query("alter table $mw[basic_config_table] add cf_bomb_move_cate varchar(1) not null", false);
 
+    sql_query("alter table $mw[basic_config_table] add cf_bomb_item varchar(50) not null", false);
+
 $sql = "create table if not exists $mw[bomb_table] (
         bo_table varchar(20) not null
         ,wr_id int not null
@@ -1231,5 +1233,23 @@ if (is_null($mw_basic[cf_talent_market])) {
     sql_query("alter table $mw[basic_config_table] add cf_exam varchar(1) not null", false);
     sql_query("alter table $mw[basic_config_table] add cf_exam_level tinyint not null default '2'", false);
     sql_query("alter table $mw[basic_config_table] add cf_exam_notice varchar(1) not null default ''", false);
+
+    sql_query("alter table $mw[basic_config_table] add cf_player_size varchar(10) not null default ''", false);
+
+    sql_query("alter table $mw[basic_config_table] add cf_hot_print varchar(3) default 'lvw' not null", false);
+
+    // 2.3.8
+    sql_query("alter table $mw[basic_config_table] add cf_write_width varchar(6) default 'normal' not null", false);
+    sql_query("alter table $mw[basic_config_table] add cf_write_height int default '10' not null", false);
+
+    sql_query("alter table $mw[basic_config_table] add cf_youtube_only varchar(1) not null default ''", false);
+
+    sql_query("alter table $mw[basic_config_table] add cf_good_level tinyint not null default '2'", false);
+    sql_query("alter table $mw[basic_config_table] add cf_nogood_level tinyint not null default '2'", false);
+
+    sql_query("alter table $mw[basic_config_table] add cf_qna_enough varchar(1) not null", false);
+
+    sql_query("alter table $mw[basic_config_table] add cf_comment_head varchar(255)  not null", false);
+    sql_query("alter table $mw[basic_config_table] add cf_comment_tail varchar(255) not null", false);
 
 

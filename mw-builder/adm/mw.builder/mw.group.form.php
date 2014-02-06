@@ -197,6 +197,13 @@ include_once("$g4[admin_path]/admin.head.php");
     </td>
 </tr>
 <tr class='ht'>
+    <td>TITLE TAG</td>
+    <td>
+	<input type=text class=ed size=30 maxlength=50 name=gr_title value="<?=mw_html_entities($group[gr_title])?>">
+	<?=help("title 태그에 출력될 내용을 입력해주세요")?>
+    </td>
+</tr>
+<tr class='ht'>
     <td>외부링크 URL</td>
     <td>
 	<input type=text class=ed size=30 name=gr_url value="<?=$group[gr_url]?>">

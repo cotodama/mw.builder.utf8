@@ -93,7 +93,6 @@ $img_path = "$g4[url]/skin/board/$board[bo_skin]/img/";
 
 if ($mw_basic[cf_vote] && $vote && sizeof($vote_list)) {
 ?>
-
     <h3><img src="<?=$img_path?>/vote.png" align="absmiddle"> 설문조사 
         <span class="info">(<?
             if ($vote[vt_sdate] != "0000-00-00 00:00:00") echo substr($vote[vt_sdate], 0, 13)."시 시작, ";

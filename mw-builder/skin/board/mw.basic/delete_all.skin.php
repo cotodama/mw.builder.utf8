@@ -63,7 +63,9 @@ for ($i=count($tmp_array)-1; $i>=0; $i--)
     else
         continue;   // 나머지는 삭제 불가
 
-    mw_delete_row($board, $write, false);
-
+    mw_delete_row($board, $write, "no");
 }
 
+@include_once("$board_skin_path/delete_all.tail.skin.php");
+goto_url("./board.php?bo_table=$bo_table&page=$page" . $qstr);
+exit;

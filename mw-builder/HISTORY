@@ -1,3 +1,215 @@
+4.37.05 (2014.01.27)
+    :   도로명주소 보완
+        시군구에 "신안군 여수시" 로 나오는 버그가 있어 분리했습니다.
+
+        js/zip.js 
+            신안군 여수시 -> 신안군,여수시
+
+4.37.04 (2014.01.24)
+    :   도로명주소 보완
+        시군구에 "김제시 완주군" 으로 나오는 버그가 있어 분리했습니다.
+
+        js/zip.js 
+            김제시 완주군 -> 김제시,완주군
+
+4.37.03 (2014.01.07)
+    :   도로명주소 보완
+
+        회원테이블에 mb_addr3 필드가 생기지 않은 오류와 주소서버에 보안접속이 가능하게 하였습니다.
+
+        adm/member_form.php 에 지번주소, 도로명주소 참고항목 필드생성 코드를 위로 올려 주십시오.
+
+            $token = get_token();
+
+            // 지번주소 필드추가
+            if(!isset($mb['mb_addr_jibeon'])) {
+                sql_query(" ALTER TABLE {$g4['member_table']} ADD `mb_addr_jibeon` varchar(255) NOT NULL DEFAULT '' AFTER `mb_addr2` ", false);
+            }
+
+            // 도로명주소 참고항목 필드추가
+            if(!isset($mb['mb_addr3'])) {
+                sql_query(" ALTER TABLE {$g4['member_table']} ADD `mb_addr3` varchar(255) NOT NULL DEFAULT '' AFTER `mb_addr2` ", false);
+            }
+
+        js/zip.js 에 http://juso.sir.co.kr 에서 http: 을 삭제 하십시오.
+
+            $.getJSON("//juso.sir.co.kr/search.php?sido="+sido+"&gugun="+gugun+"&page="+page+"&q="+q+"&charset="+g4_charset+"&callback=?",
+
+4.37.02 (2014.01.03)
+    :   XSS 취약점을 해결 (한국인터넷진흥원에서 알려주셨습니다.)
+
+        bbs/new.php
+
+            $mb_id = preg_replace('/[^0-9a-z\-\_]/i', '', $_GET['mb_id']);
+
+    :   도로명주소 보완
+
+        도로명주소 표기방법에 맞게 도로명주소의 참고항목 필드를 하나 더 추가하게 되었습니다.
+        회원테이블에 도로명주소 참고항목 필드(mb_addr3) 추가를 위해 관리자 > 회원관리 > 수정을 한번 이상 실행해 주십시오.
+
+        예) http://www.juso.go.kr/street/StreetAbout4.htm
+        서울특별시 서초구 반포대로 58, 101동 501호 (서초동, 서초아트자이)
+        서울특별시 서초구 반포대로23길6 (서초동)
+
+        adm/member_form.php
+        adm/member_form_update.php
+        bbs/register_form_update.php
+        js/common.js
+        skin/member/basic/register_form.skin.php
+        skin/member/basic/zip.skin.php
+
+        === 수정사항 ===
+
+        adm/member_form.php
+
+            $mb[mb_addr3]       = get_text($mb[mb_addr3]);
+            $mb[mb_addr_jibeon] = get_text($mb[mb_addr_jibeon]);
+            ...
+            // 도로명주소 참고항목 필드추가
+            if(!isset($mb['mb_addr3'])) {
+                sql_query(" ALTER TABLE {$g4['member_table']} ADD `mb_addr3` varchar(255) NOT NULL DEFAULT '' AFTER `mb_addr2` ", false);
+            }
+            ...
+            <input type=text class=ed name='mb_zip1' size=4 maxlength=3 readonly itemname='우편번호 앞자리' value='<? echo $mb[mb_zip1] ?>'> -
+            <input type=text class=ed name='mb_zip2' size=4 maxlength=3 readonly itemname='우편번호 뒷자리' value='<? echo $mb[mb_zip2] ?>'>
+            <a href="javascript:;" onclick="win_zip('fmember', 'mb_zip1', 'mb_zip2', 'mb_addr1', 'mb_addr2', 'mb_addr3', 'mb_addr_jibeon');"><img src='<?=$g4[bbs_img_path]?>/btn_zip.gif' align=absmiddle border=0></a>
+            <br><input type=text class=ed name='mb_addr1' size=40 readonly value='<? echo $mb[mb_addr1] ?>'> 기본주소
+            <br><input type=text class=ed name='mb_addr2' size=40 itemname='상세주소' value='<? echo $mb[mb_addr2] ?>'> 상세주소
+            <br><input type=text class=ed name='mb_addr3' size=40 itemname='참고항목' value='<? echo $mb[mb_addr3] ?>'> 참고항목
+            <br><input type="hidden" name="mb_addr_jibeon" value="<?=$mb['mb_addr_jibeon']; ?>">
+                <span id="mb_addr_jibeon"><?=($mb['mb_addr_jibeon'] ? '지번주소 : '.$mb['mb_addr_jibeon'] : ''); ?></span>
+
+        adm/member_form_update.php
+
+            mb_addr3        = '$_POST[mb_addr3]',
+            
+        bbs/register_form_update.php
+
+            mb_addr3        = '$mb_addr3', // if ($w == "")
+            ...
+            mb_addr3        = '$mb_addr3', // if ($w == "u")
+
+        js/common.js
+
+            // 도로명 우편번호 창
+            function win_zip(frm_name, frm_zip1, frm_zip2, frm_addr1, frm_addr2, frm_addr3, frm_jibeon)
+            {
+                url = g4_path + "/" + g4_bbs + "/zip.php?frm_name="+frm_name+"&frm_zip1="+frm_zip1+"&frm_zip2="+frm_zip2+"&frm_addr1="+frm_addr1+"&frm_addr2="+frm_addr2+"&frm_addr3="+frm_addr3+"&frm_jibeon="+frm_jibeon;
+                win_open(url, "winZip", "left=50,top=50,width=616,height=460,scrollbars=1");
+            }
+
+        skin/member/basic/register_form.skin.php
+
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td height="25"><input class=ed type=text name='mb_zip1' size=4 maxlength=3 readonly <?=$config[cf_req_addr]?'required':'';?> itemname='우편번호 앞자리' value='<?=$member[mb_zip1]?>' style="vertical-align:middle">
+                     - 
+                    <input class=ed type=text name='mb_zip2' size=4 maxlength=3 readonly <?=$config[cf_req_addr]?'required':'';?> itemname='우편번호 뒷자리' value='<?=$member[mb_zip2]?>' style="vertical-align:middle">
+                    &nbsp;<a href="javascript:;" onclick="win_zip('fregisterform', 'mb_zip1', 'mb_zip2', 'mb_addr1', 'mb_addr2', 'mb_addr3', 'mb_addr_jibeon');" align=absmiddle><img width="74" height="20" src="<?=$member_skin_path?>/img/post_search_btn.gif" border=0 align=absmiddle></a></td>
+            </tr>
+            <tr>
+                <td height="25" colspan="2"><input class=ed type=text name='mb_addr1' size=60 readonly <?=$config[cf_req_addr]?'required':'';?> itemname='기본주소' value='<?=$member[mb_addr1]?>'> 기본주소</td>
+            </tr>
+            <tr>
+                <td height="25" colspan="2"><input class=ed type=text name='mb_addr2' size=60 <?=$config[cf_req_addr]?'required':'';?> itemname='상세주소' value='<?=$member[mb_addr2]?>'> 상세주소</td>
+            </tr>
+            <tr>
+                <td height="25" colspan="2"><input class=ed type=text name='mb_addr3' size=60 readonly itemname='참고항목' value='<?=$member[mb_addr3]?>'> 참고항목</td>
+            </tr>
+            <tr>
+                <td height="25" colspan="2">
+                    <input type="hidden" name="mb_addr_jibeon" value="<?=$member['mb_addr_jibeon']; ?>">
+                    <span id="mb_addr_jibeon"><?=($member['mb_addr_jibeon'] ? '지번주소 : '.$member['mb_addr_jibeon'] : ''); ?></span>
+                </td>
+            </tr>
+            </table>
+
+        skin/member/basic/zip.skin.php
+
+            function put_data(zip1, zip2, addr1, addr3, jibeon)
+            {
+                var of = window.opener.document.<?php echo $frm_name; ?>;
+
+                of.<?php echo $frm_zip1; ?>.value = zip1;
+                of.<?php echo $frm_zip2; ?>.value = zip2;
+                of.<?php echo $frm_addr1; ?>.value = addr1;
+                of.<?php echo $frm_addr2; ?>.value = "";
+                of.<?php echo $frm_addr3; ?>.value = addr3;
+
+                $('#<?php echo $frm_jibeon; ?>', opener.document).text("지번주소 : "+jibeon);
+
+                if(of.<?php echo $frm_jibeon; ?> !== undefined)
+                    of.<?php echo $frm_jibeon; ?>.value = jibeon;
+
+                window.close();
+            }
+
+4.37.01 (2013.12.24)
+    :   applet 태그를 이용한 취약점 해결 (i2sec 김동현님께서 알려 주셨습니다.)
+
+        lib/common.lib.php
+
+            return preg_replace("/\<([\/]?)(script|iframe|form|applet)([^\>]*)\>?/i", "&lt;$1$2$3&gt;", $code);
+
+    :   도로명주소 기능 추가
+
+        회원테이블에 지번주소 필드(mb_addr_jibeon) 추가를 위해 관리자 > 회원관리 > 수정을 한번 이상 실행해 주십시오.
+
+        adm/member_form.php
+        adm/member_form_update.php
+        skin/member/basic/register_form.skin.php
+        skin/member/basic/zip.skin.php
+        bbs/register_form_update.php
+        bbs/zip.php
+        js/common.js
+        js/zip.js
+
+        === 수정사항 ===
+
+        adm/member_form.php
+
+            // 지번주소 필드추가
+            if(!isset($mb['mb_addr_jibeon'])) {
+                sql_query(" ALTER TABLE {$g4['member_table']} ADD `mb_addr_jibeon` varchar(255) NOT NULL DEFAULT '' AFTER `mb_addr2` ", false);
+            }
+            ...
+            <a href="javascript:;" onclick="win_zip('fmember', 'mb_zip1', 'mb_zip2', 'mb_addr1', 'mb_addr2', 'mb_addr_jibeon');"><img src='<?=$g4[bbs_img_path]?>/btn_zip.gif' align=absmiddle border=0></a>
+            ...
+            <br><input type="hidden" name="mb_addr_jibeon" value="<?=$mb['mb_addr_jibeon']; ?>">
+                <span id="mb_addr_jibeon"><?=($mb['mb_addr_jibeon'] ? '지번주소 : '.$mb['mb_addr_jibeon'] : ''); ?></span>
+
+        adm/member_form_update.php
+
+            mb_addr_jibeon  = '$_POST[mb_addr_jibeon]',
+
+        skin/member/basic/register_form.skin.php
+
+            &nbsp;<a href="javascript:;" onclick="win_zip('fregisterform', 'mb_zip1', 'mb_zip2', 'mb_addr1', 'mb_addr2', 'mb_addr_jibeon');" align=absmiddle><img width="74" height="20" src="<?=$member_skin_path?>/img/post_search_btn.gif" border=0 align=absmiddle></a></td>
+            ...
+            <tr>
+                <td height="25" colspan="2">
+                    <input type="hidden" name="mb_addr_jibeon" value="<?=$member['mb_addr_jibeon']; ?>">
+                    <span id="mb_addr_jibeon"><?=($member['mb_addr_jibeon'] ? '지번주소 : '.$member['mb_addr_jibeon'] : ''); ?></span>
+                </td>
+            </tr>
+
+        skin/member/basic/zip.skin.php // 전체가 수정되었으니 교체하세요.
+
+        bbs/register_form_update.php
+
+            mb_addr_jibeon = '$mb_addr_jibeon', // 두군데
+
+        js/common.js
+
+            // 도로명 우편번호 창
+            function win_zip(frm_name, frm_zip1, frm_zip2, frm_addr1, frm_addr2, frm_jibeon)
+            {
+                url = g4_path + "/" + g4_bbs + "/zip.php?frm_name="+frm_name+"&frm_zip1="+frm_zip1+"&frm_zip2="+frm_zip2+"&frm_addr1="+frm_addr1+"&frm_addr2="+frm_addr2+"&frm_jibeon="+frm_jibeon;
+                win_open(url, "winZip", "left=50,top=50,width=616,height=460,scrollbars=1");
+            }
+
+        js/zip.js // 추가 되었습니다.
+
 4.36.28 (2013.11.14)
     :   회원아이콘 업로드 취약점 해결 (testtest2 님께서 알려주셨습니다.)
     :   XSS 취약점을 이용하여 관리자 이외의 패스워드를 변경할수 있는 오류를 수정 (testtest2 님께서 알려주셨습니다.)

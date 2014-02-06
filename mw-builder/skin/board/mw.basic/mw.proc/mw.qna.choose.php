@@ -62,6 +62,10 @@ if ($choose_id) { //채택
         die("{$mb[mb_nick]}은 채택하실 수 없습니다.");
     }
 
+    $row = sql_fetch("select wr_id from $write_table where wr_id = '$choose_id' and wr_parent = '$wr_id' and wr_is_comment = '1'");
+    if (!$row)
+        die("존재하지 않는 게시물입니다.");
+
     sql_query("update $write_table set wr_qna_status = '1', wr_qna_id = '$choose_id' where wr_id = '$wr_id'");
 
     $qna_save_point = round($write[wr_qna_point] * round($mw_basic[cf_qna_save]/100,2));

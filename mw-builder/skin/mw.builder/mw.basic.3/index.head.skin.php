@@ -4,6 +4,9 @@ if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
 @include_once("$mw_index_skin_head_path/menu.more.skin.php");
 
 $index_width = $mw[config][cf_index_width];
+
+if (!$mw[config][cf_index_skin_theme])
+    $mw[config][cf_index_skin_theme] = "basic";
 ?>
 
 <link rel="stylesheet" href="<?=$mw_index_skin_head_path?>/style.css" type="text/css"/>
@@ -31,16 +34,17 @@ body { text-align:center; }
 #head .new-name a { color:#004c7f; font-weight:bold; }
 #head .new-scroll { float:left; height:25px; text-align:left; }
 
-#head .mw-index-menu-bar { clear:both; height:36px; margin:10px 0 0 0; background:url(<?=$mw_index_skin_head_path?>/img/search_bar_bg.gif); }
+/*
+#head .mw-index-menu-bar { clear:both; height:36px; margin:10px 0 0 0; background:url(<?=$mw_index_skin_head_path?>/index/<?=$mw[config][cf_index_skin_theme]?>/mm.png); }
 #head .mw-index-menu-bar a:hover,
 #head .mw-index-menu-bar a:link,
 #head .mw-index-menu-bar a:active,
 #head .mw-index-menu-bar a:visited
 { color:#fff; text-decoration:none; }
-#head .mw-index-menu-left { height:36px; float:left; }
+#head .mw-index-menu-left { width:16px; height:36px; float:left; }
 #head .mw-index-menu-right { height:36px; float:right; }
 #head .mw-index-menu-item { float:left; padding:12px 7px 0 7px; font:bold 12px 'gulim'; }
-#head .mw-index-menu-div { width:10px; height:36px; float:left; background:url(<?=$mw_index_skin_head_path?>/img/search_bar_div.gif) center no-repeat; }
+#head .mw-index-menu-div { width:10px; height:36px; float:left; background:url(<?=$mw_index_skin_head_path?>/index/<?=$mw[config][cf_index_skin_theme]?>/md.png) center no-repeat; }
 #head .mw-index-menu-select1 { height:28px; float:left; padding:0; margin:4px 5px 0 5px; background:url(<?=$mw_index_skin_head_path?>/img/search_select_bg.gif); }
 #head .mw-index-menu-select2 { height:28px; float:left; background:url(<?=$mw_index_skin_head_path?>/img/search_select_left.gif) top left no-repeat; padding:0; margin:0; }
 #head .mw-index-menu-select3 { height:28px; float:right; padding:7px 10px 0 10px; margin:0; background:url(<?=$mw_index_skin_head_path?>/img/search_select_right.gif) top right no-repeat; }
@@ -49,6 +53,7 @@ body { text-align:center; }
 #head .mw-index-menu-select3 a:active,
 #head .mw-index-menu-select3 a:visited
 { color:#000; font-weight:bold; }
+*/
 #head .search-box { height:30px; margin-top:20px; clear:both; }
 #head .search-text {
     border:5px solid #5997D3; /*  total color */
@@ -83,8 +88,38 @@ body { text-align:center; }
 }
 #head .quick-link { float:left; padding:0 5px 0 5px; }
 #head .quick-link { font-family:dotum; color:#383D41; font-size:11px; }
-</style>
 
+.mw-index-menu-bar { clear:both; height:36px; margin:10px 0 0 0; }
+.mw-index-menu-bar a:hover,
+.mw-index-menu-bar a:link,
+.mw-index-menu-bar a:active,
+.mw-index-menu-bar a:visited
+{ color:#fff; text-decoration:none; font-size:12px; }
+.mw-index-menu-left { width:16px; height:36px; float:left; }
+.mw-index-menu-right { height:36px; float:right; }
+.mw-index-menu-item { float:left; padding:12px 7px 0 7px; font-weight:bold; }
+.mw-index-menu-div { width:10px; height:36px; float:left; }
+
+.mw-index-menu-select1 { float:left; }
+.mw-index-menu-select2 { float:left; }
+.mw-index-menu-select3 { float:left; padding:12px 7px 0 7px; font-weight:bold; }
+
+.mw-index-menu-select3 a:hover,
+.mw-index-menu-select3 a:link,
+.mw-index-menu-select3 a:active,
+.mw-index-menu-select3 a:visited { color:#fffc00; font-weight:bold; }
+/*.mw-index-menu-select3 a:visited { color:#000; font-weight:bold; }*/
+
+.mw-index-menu-bar { background:url(<?=$mw_index_skin_head_path?>/index/<?=$mw[config][cf_index_skin_theme]?>/mm.png); }
+.mw-index-menu-div { background:url(<?=$mw_index_skin_head_path?>/index/<?=$mw[config][cf_index_skin_theme]?>/md.png) center no-repeat; }
+
+.mw-index-menu-bar .mw-drop-menu { display:none; position:absolute; background-color:#fff; z-index:9999; border:1px solid #ddd; padding:10px; width:150px; }
+.mw-index-menu-bar .mw-drop-menu div { height:22px; color:#444; padding:0 0 0 12px; }
+.mw-index-menu-bar .mw-drop-menu div { background:url(<?=$mw_index_skin_head_path?>/img/dot.gif) no-repeat 3px 7px; }
+.mw-index-menu-bar .mw-drop-menu a:link,
+.mw-index-menu-bar .mw-drop-menu a:visited,
+.mw-index-menu-bar .mw-drop-menu a:active { color:#444; text-decoration:none; }
+.mw-index-menu-bar .mw-drop-menu a:hover { text-decoration:underline; }</style>
 <div id="mw-index">
 
 <!-- 헤더 시작 -->
@@ -118,18 +153,67 @@ body { text-align:center; }
 </tr>
 </table>
 
-<div class="mw-index-menu-bar">
-<div class="mw-index-menu-left"><img src="<?=$mw_index_skin_head_path?>/img/search_bar_left.gif"></div>
 <!-- 그룹 메뉴 -->
-<? for ($i=0; $i<$mw_groups_head_count; $i++) { ?>
-<? if ($i > 0) echo "<span class='mw-index-menu-div'></span>"; ?>
-<div class="mw-index-menu-item"><a href="<?=$mw_groups_head[$i][gr_url]?>" target="<?=$mw_groups_head[$i][gr_target]?>" style="<?=$mw_groups_head[$i][gr_more_css]?>"><?=$mw_groups_head[$i][gr_subject]?></a></div>
-<? } ?>
-<div class="mw-index-menu-right"><img src="<?=$mw_index_skin_head_path?>/img/search_bar_right.gif"></div>
-<div class="keyword-scroll"><!-- 인기검색어 스크롤 : 스킨, 갯수, 간격 --><?=mw_popular("mw.scroll.3", 10, 1, 60)?></div>
-<div class="keyword-name">인기검색어 : </div>
+<div class="mw-index-menu-bar">
+    <div class="mw-index-menu-left"><!--
+        --><img src="<?=$mw_index_skin_head_path?>/index/<?=$mw[config][cf_index_skin_theme]?>/ml.png"></div>
+
+    <?php
+    for ($i=0; $i<$mw_groups_head_count; $i++) { 
+        if ($i > 0) echo "<span class='mw-index-menu-div'></span>";
+        $group = mw_get_group($mw_groups_head[$i][gr_id]); 
+        ?>
+        <div class="mw-index-menu-item" gr_id="<?=$group[gr_id]?>"><a href="<?=$mw_groups_head[$i][gr_url]?>"
+            target="<?=$mw_groups_head[$i][gr_target]?>"
+            title="<?=mw_html_entities($mw_groups_head[$i][gr_title])?>"
+            style="<?=$mw_groups_head[$i][gr_more_css]?>"><?=$mw_groups_head[$i][gr_subject]?></a></div>
+
+        <?php ob_start(); // 드롭다운 ?>
+        <div id="mw-drop-menu-<?=$group[gr_id]?>" class="mw-drop-menu">
+        <?php
+        $mw_mmenus = mw_get_middle_menus($group[gr_id]);
+	for ($j=0; $j<sizeof($mw_mmenus); $j++) {
+            ?><div><a href="<?=$mw_mmenus[$j][mm_url]?>"
+                title="<?=mw_html_entities($mw_mmenus[$j][mm_title])?>"
+                target="<?=$mw_mmenus[$j][mm_target]?>"><?=$mw_mmenus[$j][mm_name]?></a></div><?
+        }
+        ?>
+        </div> <!-- mw-drop-menu -->
+        <?php
+        $drop_menu = ob_get_contents();
+        ob_end_clean();
+
+        if ($group[gr_id]) {
+            //echo $drop_menu;
+        }
+    }
+    ?>
+
+    <div class="mw-index-menu-right"><!--
+        --><img src="<?=$mw_index_skin_head_path?>/index/<?=$mw[config][cf_index_skin_theme]?>/mr.png"></div>
+
+    <div class="keyword-scroll"><!-- 인기검색어 스크롤 : 스킨, 갯수, 간격 --><?=mw_popular("mw.scroll.3", 10, 1, 60)?></div>
+    <div class="keyword-name">인기검색어 : </div>
 </div>
 
 </div><!-- head -->
 
+<!--
+<script>
+$(document).ready(function () {
+    $(".mw-index-menu-item").mouseenter(function () {
+        $(".mw-drop-menu").hide();
+        gr_id = $(this).attr("gr_id");
+        t = $(this).offset().top;
+        l = $(this).offset().left;
+        $("#mw-drop-menu-"+gr_id).css("top", t+30);
+        $("#mw-drop-menu-"+gr_id).css("left", l);
+        $("#mw-drop-menu-"+gr_id).show();
+    });
+    $(".mw-index-menu-bar").mouseleave(function () {
+        $(".mw-drop-menu").hide();
+    });
+});
+</script>
+-->
 

@@ -39,6 +39,7 @@ if ($mw_basic[cf_umz] && substr(trim($write[wr_umz]), 0, 10) != "http://umz") {
 else if ($mw_basic[cf_umz]) {
     $comment_url = $write[wr_umz];
 }
+$board_skin_path = substr($board_skin_path, 9, strlen($board_skin_path));
 ?>
 
 <table border="0" cellpadding="0" cellspacing="0">

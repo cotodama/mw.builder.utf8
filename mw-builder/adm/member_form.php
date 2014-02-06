@@ -6,6 +6,16 @@ auth_check($auth[$sub_menu], "w");
 
 $token = get_token();
 
+// 지번주소 필드추가
+if(!isset($mb['mb_addr_jibeon'])) {
+    sql_query(" ALTER TABLE {$g4['member_table']} ADD `mb_addr_jibeon` varchar(255) NOT NULL DEFAULT '' AFTER `mb_addr2` ", false);
+}
+
+// 도로명주소 참고항목 필드추가
+if(!isset($mb['mb_addr3'])) {
+    sql_query(" ALTER TABLE {$g4['member_table']} ADD `mb_addr3` varchar(255) NOT NULL DEFAULT '' AFTER `mb_addr2` ", false);
+}
+
 if ($w == "") 
 {
     $required_mb_id = "required minlength=3 alphanumericunderline itemname='회원아이디'";
@@ -38,6 +48,8 @@ else if ($w == "u")
     $mb[mb_hp]          = get_text($mb[mb_hp]);
     $mb[mb_addr1]       = get_text($mb[mb_addr1]);
     $mb[mb_addr2]       = get_text($mb[mb_addr2]);
+    $mb[mb_addr3]       = get_text($mb[mb_addr3]);
+    $mb[mb_addr_jibeon] = get_text($mb[mb_addr_jibeon]);
     $mb[mb_signature]   = get_text($mb[mb_signature]);
     $mb[mb_recommend]   = get_text($mb[mb_recommend]);
     $mb[mb_profile]     = get_text($mb[mb_profile]);
@@ -115,12 +127,18 @@ include_once("./admin.head.php");
 </tr>
 <tr class='ht'>
     <td>주소</td>
-    <td>
+    <td colspan=3>
         <input type=text class=ed name='mb_zip1' size=4 maxlength=3 readonly itemname='우편번호 앞자리' value='<? echo $mb[mb_zip1] ?>'> -
         <input type=text class=ed name='mb_zip2' size=4 maxlength=3 readonly itemname='우편번호 뒷자리' value='<? echo $mb[mb_zip2] ?>'>
-        <a href="javascript:;" onclick="win_zip('fmember', 'mb_zip1', 'mb_zip2', 'mb_addr1', 'mb_addr2');"><img src='<?=$g4[bbs_img_path]?>/btn_zip.gif' align=absmiddle border=0></a>
-        <br><input type=text class=ed name='mb_addr1' size=40 readonly value='<? echo $mb[mb_addr1] ?>'>
-        <br><input type=text class=ed name='mb_addr2' size=25 itemname='상세주소' value='<? echo $mb[mb_addr2] ?>'> 상세주소 입력</td>
+        <a href="javascript:;" onclick="win_zip('fmember', 'mb_zip1', 'mb_zip2', 'mb_addr1', 'mb_addr2', 'mb_addr3', 'mb_addr_jibeon');"><img src='<?=$g4[bbs_img_path]?>/btn_zip.gif' align=absmiddle border=0></a>
+        <br><input type=text class=ed name='mb_addr1' size=40 readonly value='<? echo $mb[mb_addr1] ?>'> 기본주소
+        <br><input type=text class=ed name='mb_addr2' size=40 itemname='상세주소' value='<? echo $mb[mb_addr2] ?>'> 상세주소
+        <br><input type=text class=ed name='mb_addr3' size=40 itemname='참고항목' value='<? echo $mb[mb_addr3] ?>'> 참고항목
+        <br><input type="hidden" name="mb_addr_jibeon" value="<?=$mb['mb_addr_jibeon']; ?>">
+            <span id="mb_addr_jibeon"><?=($mb['mb_addr_jibeon'] ? '지번주소 : '.$mb['mb_addr_jibeon'] : ''); ?></span>
+    </td>
+</tr>
+<tr class='ht'>
     <td>회원아이콘</td>
     <td colspan=3>
         <input type=file name='mb_icon' class=ed><br>이미지 크기는 <?=$config[cf_member_icon_width]?>x<?=$config[cf_member_icon_height]?>으로 해주세요.

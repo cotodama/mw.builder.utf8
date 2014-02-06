@@ -98,25 +98,33 @@ function fsearchbox_submit(f)
 </td>
 <td valign=top>
     <div class="menus-right">
-	<? for ($i=$mw_groups_head_count-1; $i>-1; $i--) { ?>
-	<div class="item"><a href="<?=$mw_groups_head[$i][gr_url]?>" target="<?=$mw_groups_head[$i][gr_target]?>" style="<?=$mw_groups_head[$i][gr_more_css]?>"><?=$mw_groups_head[$i][gr_subject]?></a></div>
+	<?php for ($i=$mw_groups_head_count-1; $i>-1; $i--) { ?>
+	<div class="item"><a href="<?=$mw_groups_head[$i][gr_url]?>"
+            target="<?=$mw_groups_head[$i][gr_target]?>"
+            title="<?=mw_html_entities($mw_groups_head[$i][gr_title])?>"
+            style="<?=$mw_groups_head[$i][gr_more_css]?>"><?=$mw_groups_head[$i][gr_subject]?></a></div>
 	<div class="item">|</div>
-	<? } ?>
+	<?php } ?>
 
-	<? if ($is_member) { // 회원 ?>
-	<? if ($is_admin) { //  관리자 ?>
-	<div class="item"><a href="<?=$g4[admin_path]?>/">관리자</a></div>
-	<? } else { ?>
-	<div class="item"><a href="<?=$g4[bbs_path]?>/member_confirm.php?url=register_form.php">정보수정</a></div>
-	<? } ?>
-	<div class="btn"><a href="<?=$g4[bbs_path]?>/logout.php?url=<?=$urlencode?>"><img src="<?=$mw_group_skin_head_path?>/img/btn_logout.gif" align=absmiddle></a></div>
-	<? } else { // 비회원 ?>
-	<div class="item"><a href="<?=$g4[bbs_path]?>/register.php">회원가입</a></div>
-	<div class="btn"><a href="<?=$g4[bbs_path]?>/login.php?url=<?=$urlencode?>"><img src="<?=$mw_group_skin_head_path?>/img/btn_login.gif" align=absmiddle></a></div>
-	<? } ?>
-    </div>
-
-    <!--
+	<?php
+        if ($is_member) { // 로그인한 회원
+            if ($is_admin) { //  관리자
+                echo "<div class=\"item\"><a href=\"{$g4['admin_path']}\">관리자</a></div>";
+            }
+            else {
+                echo "<div class=\"item\"><a href=\"{$g4['bbs_path']}/member_confirm.php?url=register_form.php\">";
+                echo "정보수정</a></div>";
+            }
+            echo "<div class=\"btn\"><a href=\"{$g4['bbs_path']}/logout.php?url={$urlencode}\">";
+            echo "<img src=\"{$mw_group_skin_head_path}/img/btn_logout.gif\" align=\"absmiddle\"></a></div>";
+	}
+        else { // 비회원
+            echo "<div class=\"item\"><a href=\"{$g4['bbs_path']}/register.php\">회원가입</a></div>";
+	    echo "<div class=\"btn\"><a href=\"{$g4['bbs_path']}/login.php?url={$urlencode}\">";
+            echo "<img src=\"{$mw_group_skin_head_path}/img/btn_login.gif\" align=\"absmiddle\"></a></div>";
+	}
+        ?>
+    </div>    <!--
     <form name=fsearch method=get action="javascript:fsearch_submit(document.fsearch);">
     <input type=hidden name=srows value=<?=$srows?>>
     <input type=hidden name=sop value=and>
@@ -157,10 +165,10 @@ function fsearchbox_submit(f)
 	    <? for ($i=0; $i<sizeof($mw_mmenus); $i++) { // 중메뉴 출력 ?>
 	    <? if ($mw_mmenus[$i][mm_id] == $mm_id) { // 중메뉴 선택 ?>
 	    <div class="mw-menus-middle-select1"><div class="mw-menus-middle-select2"><div class="mw-menus-middle-select3">
-	    <a href="<?=$mw_mmenus[$i][mm_url]?>" target="<?=$mw_mmenus[$i][mm_target]?>"><?=$mw_mmenus[$i][mm_name]?></a>
+	    <a href="<?=$mw_mmenus[$i][mm_url]?>" title="<?=mw_html_entities($mw_mmenus[$i][mm_title])?>" target="<?=$mw_mmenus[$i][mm_target]?>"><?=$mw_mmenus[$i][mm_name]?></a>
 	    </div></div></div>
 	    <? } else { ?>
-	    <div class="mw-menus-middle-item"><a href="<?=$mw_mmenus[$i][mm_url]?>" target="<?=$mw_mmenus[$i][mm_target]?>"><span style="<?=$mw_mmenus[$i][mm_css]?>"><?=$mw_mmenus[$i][mm_name]?></span></a></div>
+	    <div class="mw-menus-middle-item"><a href="<?=$mw_mmenus[$i][mm_url]?>" title="<?=mw_html_entities($mw_mmenus[$i][mm_title])?>" target="<?=$mw_mmenus[$i][mm_target]?>"><span style="<?=$mw_mmenus[$i][mm_css]?>"><?=$mw_mmenus[$i][mm_name]?></span></a></div>
 	    <? } ?>
 	    <? } ?>
 	</div>
@@ -170,9 +178,9 @@ function fsearchbox_submit(f)
 	    <? for ($i=0; $i<sizeof($mw_smenus); $i++) { // 소메뉴 출력 ?>
 	    <? if ($i > 0) echo "<div class='mw-menus-small-div'>|</div>"; ?>
 	    <? if ($mw_smenus[$i][ms_id] == $ms_id) { // 소메뉴 선택 ?>
-	    <div class="mw-menus-small-item"><a href="<?=$mw_smenus[$i][ms_url]?>" target="<?=$mw_smenus[$i][ms_target]?>"><span style="<?=$mw_smenus[$i][ms_css]?>"><b><?=$mw_smenus[$i][ms_name]?></b></span></a></div>
+	    <div class="mw-menus-small-item"><a href="<?=$mw_smenus[$i][ms_url]?>" title="<?=mw_html_entities($mw_smenus[$i][ms_title])?>" target="<?=$mw_smenus[$i][ms_target]?>"><span style="<?=$mw_smenus[$i][ms_css]?>"><b><?=$mw_smenus[$i][ms_name]?></b></span></a></div>
 	    <? } else { ?>
-	    <div class="mw-menus-small-item"><a href="<?=$mw_smenus[$i][ms_url]?>" target="<?=$mw_smenus[$i][ms_target]?>"><span style="<?=$mw_smenus[$i][ms_css]?>"><?=$mw_smenus[$i][ms_name]?></span></a></div>
+	    <div class="mw-menus-small-item"><a href="<?=$mw_smenus[$i][ms_url]?>" title="<?=mw_html_entities($mw_smenus[$i][ms_title])?>" target="<?=$mw_smenus[$i][ms_target]?>"><span style="<?=$mw_smenus[$i][ms_css]?>"><?=$mw_smenus[$i][ms_name]?></span></a></div>
 	    <? } ?> <? } ?> <? } ?> <? } ?>
 	</div>
     </td>
@@ -180,29 +188,35 @@ function fsearchbox_submit(f)
 </tr>
 </table>
 
-<? if ($mm_id) { ?>
+<?php if ($mm_id) { // 좌측 소메뉴 출력 ?>
 <table width=100% border=0 cellpadding=0 cellspacing=0 style="margin-top:10px;">
 <tr>
-    <? if (!$mw_mmenu[mm_lmenu] && !$mw_smenu[ms_lmenu]) { ?>
+    <?php if (!$mw_mmenu[mm_lmenu] && !$mw_smenu[ms_lmenu]) { ?>
     <td width=180 valign=top>
 	<div style="margin-bottom:10px;"><?=outlogin("mw.outlogin3")?></div>
 	<div class="mw-left-menus">
 	<div class="title"><?=$mw_mmenu[mm_name]?></div>
 	<ul>
-	<? for ($i=0; $i<sizeof($mw_smenus); $i++) { ?>
-	<? if ($mw_smenus[$i][ms_id] == $mw_smenu[ms_id]) $mw_smenus[$i][ms_name] = "<span class=select>{$mw_smenus[$i][ms_name]}</span>"; ?> 
-	<li> <a href="<?=$mw_smenus[$i][ms_url]?>" target="<?=$mw_smenus[$i][ms_target]?>"><span style="<?=$mw_smenus[$i][ms_css]?>"><?=$mw_smenus[$i][ms_name]?></span></a> </li>
-	<? } ?>
+	<?php
+        for ($i=0; $i<sizeof($mw_smenus); $i++) {
+	    if ($mw_smenus[$i][ms_id] == $mw_smenu[ms_id]) {
+                $mw_smenus[$i][ms_name] = "<span class=select>{$mw_smenus[$i][ms_name]}</span>";
+            }
+            ?>
+            <li><a href="<?=$mw_smenus[$i][ms_url]?>"
+                target="<?=$mw_smenus[$i][ms_target]?>"
+                title="<?=mw_html_entities($mw_smenus[$i][ms_title])?>"><span
+                style="<?=$mw_smenus[$i][ms_css]?>"><?=$mw_smenus[$i][ms_name]?></span></a></li><?php } ?>
 	</ul>
 	</div>
-	<div class="latest-block"><a href="http://bbs.miwit.com/bbs/board.php?bo_table=bbs_freelancer"><img src="<?=$mw_group_skin_head_path?>/img/freelancer.gif"></a></div>
-	<div class="latest-block"><a href="http://bbs.miwit.com/bbs/board.php?bo_table=bbs_lsy"><img src="<?=$mw_group_skin_head_path?>/img/lsy.gif"></a></div>
+        <div class="latest-block"><a href="http://bbs.miwit.com/bbs/board.php?bo_table=bbs_freelancer"><img
+            src="<?=$mw_group_skin_head_path?>/img/freelancer.gif"></a></div>
+        <div class="latest-block"><a href="http://bbs.miwit.com/bbs/board.php?bo_table=bbs_lsy"><img
+            src="<?=$mw_group_skin_head_path?>/img/lsy.gif"></a></div>
 	&nbsp;
     </td>
     <td width=10></td>
-    <? } ?>
+    <?php } ?>
     <td valign=top>
-
-<? } ?>
-
+<?php } // if ($mm_id) ?>
 

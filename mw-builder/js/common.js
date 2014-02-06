@@ -292,12 +292,21 @@ if (typeof(COMMON_JS) == 'undefined') { // 한번만 실행
         popup.focus();
     }
 
+    // 도로명 우편번호 창
+    function win_zip(frm_name, frm_zip1, frm_zip2, frm_addr1, frm_addr2, frm_addr3, frm_jibeon)
+    {
+        url = g4_path + "/" + g4_bbs + "/zip.php?frm_name="+frm_name+"&frm_zip1="+frm_zip1+"&frm_zip2="+frm_zip2+"&frm_addr1="+frm_addr1+"&frm_addr2="+frm_addr2+"&frm_addr3="+frm_addr3+"&frm_jibeon="+frm_jibeon;
+        win_open(url, "winZip", "left=50,top=50,width=616,height=460,scrollbars=1");
+    }
+
+    /*
     // 우편번호 창
     function win_zip(frm_name, frm_zip1, frm_zip2, frm_addr1, frm_addr2)
     {
         url = g4_path + "/" + g4_bbs + "/zip.php?frm_name="+frm_name+"&frm_zip1="+frm_zip1+"&frm_zip2="+frm_zip2+"&frm_addr1="+frm_addr1+"&frm_addr2="+frm_addr2;
         win_open(url, "winZip", "left=50,top=50,width=616,height=460,scrollbars=1");
     }
+    */
 
     // 쪽지 창
     function win_memo(url)

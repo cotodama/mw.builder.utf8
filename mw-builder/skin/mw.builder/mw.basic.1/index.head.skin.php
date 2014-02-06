@@ -56,7 +56,7 @@ body { text-align:center; }
     <!-- 그룹 메뉴 -->
     <? for ($i=0; $i<$mw_groups_head_count; $i++) { ?>
     <? if ($i > 0) echo "l&nbsp;"; ?>
-    <a href="<?=$mw_groups_head[$i][gr_url]?>" target="<?=$mw_groups_head[$i][gr_target]?>" style="<?=$mw_groups_head[$i][gr_more_css]?>"><?=$mw_groups_head[$i][gr_subject]?></a>
+    <a href="<?=$mw_groups_head[$i][gr_url]?>" title="<?=mw_html_entities($mw_groups_head[$i][gr_title])?>"  target="<?=$mw_groups_head[$i][gr_target]?>" style="<?=$mw_groups_head[$i][gr_more_css]?>"><?=$mw_groups_head[$i][gr_subject]?></a>
     <? } ?>
 </td>
 </tr>

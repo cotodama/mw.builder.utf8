@@ -22,6 +22,8 @@
 if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
 
 $mw_is_list = true;
+$mw_is_view = false;
+$mw_is_write = false;
 
 include_once("$board_skin_path/mw.lib/mw.skin.basic.lib.php");
 
@@ -413,6 +415,8 @@ if ($mw_basic[cf_link_board] && $list[$i][link_href][1]) {
     //if (!$is_admin && $member[mb_id] && $list[$i][mb_id] != $member[mb_id])
     if (!$list[$i][link][1] || $is_admin || ($list[$i][mb_id] && $list[$i][mb_id] == $member[mb_id]))
         ;
+    else if ($list[$i][icon_secret])
+        ;
     else if ($member[mb_level] >= $mw_basic[cf_link_board]) {
         if ($list[$i][link_target][1] == '_blank')
             $list[$i][href] = "javascript:void(window.open('{$list[$i][link_href][1]}'))";    
@@ -427,6 +431,8 @@ if ($mw_basic[cf_link_board] && $list[$i][link_href][1]) {
 // 게시물별 링크이동
 else if ($list[$i][wr_link_write] && $list[$i][link_href][1]) {
     if (!$list[$i][link][1] || $is_admin || ($list[$i][mb_id] && $list[$i][mb_id] == $member[mb_id]))
+        ;
+    else if ($list[$i][icon_secret])
         ;
     else if ($mw_basic[cf_read_level] && $list[$i][wr_read_level]) {
         if ($list[$i][wr_read_level] <= $member[mb_level]) {
@@ -454,12 +460,14 @@ else if ($board[bo_read_point] < 0 && $list[$i][mb_id] != $member[mb_id] && $is_
     $tmp = sql_fetch(" select * from $g4[point_table] where mb_id = '$member[mb_id]' and po_rel_table = '$bo_table' and po_rel_id = '{$list[$i][wr_id]}' and po_rel_action = '읽기'");
     if (!$tmp) {
         if (!$is_admin && $board[bo_read_point] && $board[bo_read_point] + $member[mb_point] < 0) {
-            $list[$i][href] = "javascript:alert('포인트가 부족합니다.\\n\\n";
-            $list[$i][href].= "(글읽기 포인트:$board[bo_read_point]\\n\\n현재포인트 : $member[mb_point])')";
+            $href = "javascript:alert('포인트가 부족합니다.\\n\\n";
+            $href.= "(글읽기 포인트:$board[bo_read_point]\\n\\n현재포인트 : $member[mb_point])')";
+            $list[$i][href] = $href;
         }
         else {
-            $list[$i][href] = "javascript:if (confirm('글을 읽으시면 $board[bo_read_point] 포인트 차감됩니다.";
-            $list[$i][href].= "\\n\\n(현재포인트 : $member[mb_point])')) location.href = '{$list[$i][href]}&point=1'";
+            $href = "javascript:if (confirm('글을 읽으시면 $board[bo_read_point] 포인트 차감됩니다.";
+            $href.= "\\n\\n(현재포인트 : $member[mb_point])')) location.href = '{$list[$i][href]}&point=1'";
+            $list[$i][href] = $href;
         }
     }
 } 
@@ -543,7 +551,6 @@ $set_height = $mw_basic[cf_thumb_height];
 //if ($mw_basic[cf_type] != "list")
 if (!file_exists($thumb_file))
 {
-    $thumb_file = "";
     $file = mw_get_first_file($bo_table, $list[$i][wr_id], true);
     if (!empty($file)) {
         $source_file = "$file_path/{$file[bf_file]}";
@@ -551,7 +558,6 @@ if (!file_exists($thumb_file))
         //if ($mw_basic[cf_img_1_noview])
         //    $thumb_file = "$file_path/{$file[bf_file]}";
         //else
-            $thumb_file = "$thumb_path/{$list[$i][wr_id]}";
 
         if (!file_exists($thumb_file)) {
             mw_make_thumbnail($set_width, $set_height, $source_file, $thumb_file, $mw_basic[cf_thumb_keep]);
@@ -583,7 +589,6 @@ if (!file_exists($thumb_file))
         //}
         }
     } else {
-        $thumb_file = "$thumb_path/{$list[$i][wr_id]}";
         if (!file_exists($thumb_file)) {
             preg_match("/<img.*src=\"(.*)\"/iU", $list[$i][wr_content], $match);
             if ($match[1]) {
@@ -613,6 +618,24 @@ if (!file_exists($thumb_file))
         else if (preg_match("/youtu/i", $list[$i]['link'][2])) mw_get_youtube_thumb($list[$i]['wr_id'], $list[$i]['link'][2]);
         else if (preg_match("/vimeo/i", $list[$i]['link'][1])) mw_get_vimeo_thumb($list[$i]['wr_id'], $list[$i]['link'][1]);
         else if (preg_match("/vimeo/i", $list[$i]['link'][2])) mw_get_vimeo_thumb($list[$i]['wr_id'], $list[$i]['link'][2]);
+    }
+}
+else {
+    $thumb_size = @getImageSize($thumb_file);
+
+    $set_width = $mw_basic[cf_thumb_width];
+    $set_height = $mw_basic[cf_thumb_height];
+
+    if ($mw_basic[cf_thumb_keep]) {
+        $size = @getImageSize($thumb_file);
+        $size = mw_thumbnail_keep($size, $set_width, $set_height);
+        $set_width = $size[0];
+        $set_height = $size[1];
+    }
+
+    if ($thumb_size[0] != $set_width || $thumb_size[1] != $set_height) {
+        mw_make_thumbnail($mw_basic[cf_thumb_width], $mw_basic[cf_thumb_height],
+            $thumb_file, $thumb_file, $mw_basic[cf_thumb_keep]);
     }
 }
 

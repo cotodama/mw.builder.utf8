@@ -171,6 +171,13 @@ include_once("$g4[admin_path]/admin.head.php");
     </td>
 </tr>
 <tr class='ht'>
+    <td>TITLE TAG</td>
+    <td>
+	<input type=text class=ed size=50 name=mm_title value="<?=$mm[mm_title]?>" maxlength=50>
+	<?=help("title 태그에 출력될 내용을 입력해주세요")?>
+    </td>
+</tr>
+<tr class='ht'>
     <td>외부 URL</td>
     <td>
 	<input type=text class=ed size=50 name=mm_out_url value="<?=$mm[mm_out_url]?>" maxlength=255>

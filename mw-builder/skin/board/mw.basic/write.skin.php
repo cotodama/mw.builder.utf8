@@ -21,6 +21,10 @@
 
 if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
 
+$mw_is_list = false;
+$mw_is_view = false;
+$mw_is_write = true;
+
 include_once("$board_skin_path/mw.lib/mw.skin.basic.lib.php");
 
 // 실명인증 & 성인인증
@@ -234,6 +238,10 @@ else
     $total_count = $board[bo_count_write];
 }
 
+$write_height = 10;
+if ($mw_basic[cf_write_height])
+    $write_height = $mw_basic[cf_write_height];
+
 if ($is_dhtml_editor && $mw_basic[cf_editor] == "cheditor") {
     /* $g4[cheditor4_path] = "$board_skin_path/cheditor";
     include_once("$board_skin_path/mw.lib/mw.cheditor.lib.php");
@@ -241,7 +249,7 @@ if ($is_dhtml_editor && $mw_basic[cf_editor] == "cheditor") {
     echo cheditor1('wr_content', '100%', '250'); */
     include_once("$g4[path]/lib/cheditor4.lib.php");
     echo "<script src='$g4[cheditor4_path]/cheditor.js'></script>";
-    echo cheditor1('wr_content', '100%', '250');
+    echo cheditor1('wr_content', '100%', $write_height*25);
 }
 
 if ($w == '' && trim($mw_basic[cf_insert_subject])) {
@@ -355,6 +363,8 @@ jQuery(function($){
 
 <?  if ($mw_basic['cf_include_head'] && file_exists($mw_basic['cf_include_head']) && strstr($mw_basic[cf_include_head_page], '/w/'))
     include_once($mw_basic[cf_include_head]); ?>
+
+<? include_once("$board_skin_path/mw.proc/mw.list.hot.skin.php"); ?>
 
 <script>
 // 글자수 제한
@@ -514,21 +524,31 @@ if ($is_dhtml_editor) $mw_basic[cf_content_align] = false;
 <? if ($is_notice || ($is_html && !$is_dhtml_editor) || $is_secret || $is_mail || $mw_basic[cf_anonymous] || $mw_basic[cf_content_align]) { ?>
 <tr>
 <td class=mw_basic_write_title>· 옵션</td>
-<td><? if ($is_notice) { ?><input type=checkbox name=notice value="1" <?=$notice_checked?>>공지&nbsp;<? } ?>
+<td>
+    <? if ($is_notice) { ?>
+    <input type="checkbox" name="notice" id="wr_notice" value="1" <?=$notice_checked?>>
+    <label for="wr_notice">공지</label>
+    <? } ?>
     <? if ($is_html) { ?>
     <input onclick="html_auto_br(this);" type=checkbox value="<?=$html_value?>"
-        name="html" <?=$html_checked?>><span class=w_title>html</span>&nbsp;
+        name="html" id="wr_html" <?=$html_checked?>>
+    <label for="wr_html">html</label>
     <? } ?>
     <? if ($is_secret) { ?>
         <? if ($is_admin || $is_secret==1) { ?>
-        <input type=checkbox value="secret" name="secret" <?=$secret_checked?>><span class=w_title>비밀글</span>&nbsp;
+        <input type=checkbox value="secret" id="wr_secret" name="secret" <?=$secret_checked?>>
+        <label for="wr_secret">비밀글</label>
         <? } else { ?>
         <input type=hidden value="secret" name="secret">
         <? } ?>
     <? } ?>
-    <? if ($is_mail) { ?><input type=checkbox value="mail" name="mail" <?=$recv_email_checked?>>답변메일받기&nbsp;<? } ?>
+    <? if ($is_mail) { ?>
+    <input type=checkbox value="mail" id="wr_mail" name="mail" <?=$recv_email_checked?>>
+    <label for="wr_mail">답변메일받기</label>
+    <? } ?>
     <? if ($mw_basic[cf_anonymous]) {?>
-    <input type="checkbox" name="wr_anonymous" value="1" <?if ($write[wr_anonymous]) echo 'checked';?>> 익명
+    <input type="checkbox" name="wr_anonymous" id="wr_anonymous" value="1" <?if ($write[wr_anonymous]) echo 'checked';?>>
+    <label for="wr_anonymous">익명</label>
     <? } ?>
     <? if ($mw_basic[cf_content_align]) { ?>
     <select name="wr_align" id="wr_align">
@@ -645,14 +665,18 @@ if ($mw_basic[cf_category_radio]) {
 <? } ?>
 
 <tr>
+<? if ($mw_basic[cf_write_width] == "large") {?>
+<td colspan="2" style='padding:5px 0 5px 20px;'>
+<? } else { ?>
 <td class=mw_basic_write_title>· 내용</td>
-<td style='padding:5 0 5 0;'>
+<td style='padding:5px 0 5px 0;'>
+<? } ?>
     <? if (!$is_dhtml_editor) { ?>
     <table width=100%>
     <tr>
         <td align=left valign=bottom>
             <span style="cursor: pointer;" onclick="textarea_decrease('wr_content', 10);"><img src="<?=$board_skin_path?>/img/btn_up.gif"></span>
-            <span style="cursor: pointer;" onclick="textarea_original('wr_content', 10);"><img src="<?=$board_skin_path?>/img/btn_init.gif"></span>
+            <span style="cursor: pointer;" onclick="textarea_original('wr_content', <?=$write_height?>);"><img src="<?=$board_skin_path?>/img/btn_init.gif"></span>
             <span style="cursor: pointer;" onclick="textarea_increase('wr_content', 10);"><img src="<?=$board_skin_path?>/img/btn_down.gif"></span>
             <? if ($mw_basic[cf_post_emoticon]) {?>
                 <span class=mw_basic_comment_emoticon><a 
@@ -693,7 +717,7 @@ if ($mw_basic[cf_category_radio]) {
     <? } ?>
 
     <? if (!$is_dhtml_editor || $mw_basic[cf_editor] != "cheditor") { ?>
-    <textarea id="wr_content" name="wr_content" style='width:98%; word-break:break-all;' rows=10 itemname="내용" required  class=mw_basic_textarea
+    <textarea id="wr_content" name="wr_content" style='width:98%; word-break:break-all;' rows="<?=$write_height?>" itemname="내용" class=mw_basic_textarea
     <? if ($is_dhtml_editor && $mw_basic[cf_editor] == "geditor") echo "geditor"; ?>
     <? if ($write_min || $write_max) { ?>onkeyup="check_byte('wr_content', 'char_count');"<?}?>><?=$content?></textarea>
     <? if (($write_min || $write_max) && !$is_dhtml_editor) { ?><script> check_byte('wr_content', 'char_count'); </script><?}?>
@@ -1644,7 +1668,8 @@ $(document).ready(function () {
                 document.getElementById('tx_wr_content').value = data[1];
                 ed_wr_content.resetDoc();
                 <? } else if ($is_dhtml_editor && $mw_basic[cf_editor] == "geditor") { ?>
-                geditor_wr_content.update();
+                geditor_wr_content.set_ge_code(data[1]);
+                geditor_wr_content.init();
                 <? } ?>
             }
         }
@@ -1737,6 +1762,12 @@ function fwrite_check(f) {
         if (!ed_wr_content.outputBodyHTML()) { 
             alert('내용을 입력하십시오.'); 
             ed_wr_content.returnFalse();
+            return false;
+        }
+    }
+    else if ($("#wr_content")) {
+        if (!trim($("#wr_content").val())) { 
+            alert('내용을 입력하십시오.'); 
             return false;
         }
     }
@@ -1877,7 +1908,7 @@ function mw_config() {
 
 <? if ($is_dhtml_editor && $mw_basic[cf_editor] == "geditor") { ?>
     <script> var g4_skin_path = "<?=$board_skin_path?>"; </script>
-    <script src="<?=$board_skin_path?>/mw.geditor/geditor.js"></script>
+    <script src="<?=$board_skin_path?>/mw.geditor/geditor.js?<?=time()?>"></script>
     <? if (strstr($write[wr_option], "html2")) { ?>
 	<script> geditor_wr_content.mode_change(); </script>
     <? } ?>

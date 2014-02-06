@@ -101,6 +101,10 @@ if ($mw_basic[cf_comment_write_count]) {
     }
 }
 
+if (!$write_error and $mw_basic[cf_qna_enough] and $write[wr_qna_status] > 0) {
+    $write_error = "readonly onclick=\"alert('답변이 종료되었습니다.'); return false;\"";
+}
+
 // 컨텐츠샵 멤버쉽
 if (function_exists("mw_cash_is_membership")) {
     $is_membership = @mw_cash_is_membership($member[mb_id], $bo_table, "mp_comment");
@@ -127,6 +131,9 @@ if ($mw_basic[cf_comment_period] > 0) {
     }
 }
 
+
+
+echo bc_code($mw_basic[cf_comment_head]);
 ?>
 
 <? if ($mw_basic[cf_source_copy] && $cwin) { // 출처 자동 복사 ?>
@@ -354,7 +361,8 @@ if ($mw_basic[cf_comment_page]) { // 코멘트 페이지
 
 for ($i=0; $i<$to_record; $i++) {
     $row = $list[$i];
-    include("{$board_skin_path}/view_comment_head.skin.php");
+    $res = include("{$board_skin_path}/view_comment_head.skin.php");
+    if (!$res) continue;
     $list[$i] = $row;
 
     if ($mw_basic[cf_include_comment_main] && file_exists($mw_basic[cf_include_comment_main])) {
@@ -537,6 +545,8 @@ if ($mw_basic[cf_attribute] == 'qna' && ($member[mb_id] == $write[mb_id] || $is_
 </div>
 <? } ?>
 
+<?php echo bc_code($mw_basic[cf_comment_tail]); ?>
+
 <!-- 코멘트 입력 -->
 
 <?
@@ -545,6 +555,11 @@ if (($mw_basic[cf_comment_editor] && $is_comment_write) || ($mw_basic[cf_admin_d
     $is_comment_editor = true;
 else
     $is_comment_editor = false;
+
+// 모바일 접근시 에디터 사용안함
+if (preg_match("/(iphone|samsung|lgte|mobile|BlackBerry|android|windows ce|mot|SonyEricsson)/i", $_SERVER[HTTP_USER_AGENT])) {
+    $is_comment_editor = false;
+}
 
 if (!$mw_basic[cf_comment_default])
     $mw_basic[cf_comment_default] = trim($mw_basic[cf_comment_write_notice]);
@@ -602,7 +617,7 @@ if ($is_comment_editor && $mw_basic[cf_editor] == "cheditor") {
     <span style="cursor: pointer;" onclick="textarea_decrease('wr_content', 10);"><img src="<?=$board_skin_path?>/img/btn_up.gif" align=absmiddle></span>
     <span style="cursor: pointer;" onclick="textarea_original('wr_content', 5);"><img src="<?=$board_skin_path?>/img/btn_init.gif" align=absmiddle></span>
     <span style="cursor: pointer;" onclick="textarea_increase('wr_content', 10);"><img src="<?=$board_skin_path?>/img/btn_down.gif" align=absmiddle></span>
-    <? if ($mw_basic[cf_comment_html]) echo "<input type=\"checkbox\" id=\"wr_html\" name=\"html\" value=\"html2\"> html"; ?>
+    <? if ($mw_basic[cf_comment_html]) echo "<input type=\"checkbox\" id=\"wr_html\" name=\"html\" value=\"html2\"> <label for='wr_html'>html</label"; ?>
     <? } ?>
 
     <? if (!$is_comment_editor && ($comment_min || $comment_max)) { ?>
@@ -638,7 +653,20 @@ if ($is_comment_editor && $mw_basic[cf_editor] == "cheditor") {
 </tr>
 </table>
 
-<? if (trim($mw_basic[cf_comment_write_notice])) { ?>
+<?php
+if (trim($mw_basic[cf_comment_write_notice])) { 
+    $comment_write_notice = $mw_basic[cf_comment_write_notice];
+    $comment_write_notice = addslashes($comment_write_notice);
+
+    $comment_write_notice_html = $comment_write_notice;
+    $comment_write_notice_html = nl2br($comment_write_notice_html);
+    $comment_write_notice_html = preg_replace("/\n/", "", $comment_write_notice_html);
+    $comment_write_notice_html = preg_replace("/\r/", "", $comment_write_notice_html);
+
+    $comment_write_notice = preg_replace("/\n/", "\\n", $comment_write_notice);
+    $comment_write_notice = preg_replace("/\r/", "", $comment_write_notice);
+
+?>
 <script>
 $(document).ready(function () {
 <? if ($is_comment_editor) { ?>
@@ -646,7 +674,7 @@ $(document).ready(function () {
     ed_wr_content.editArea.blur();
     ed_wr_content.editArea.onfocus = function () {
         var ed = ed_wr_content.outputBodyHTML();
-        if (ed == "<?=$mw_basic[cf_comment_write_notice]?>") {
+        if (ed == "<?=$comment_write_notice_html?>") {
             ed_wr_content.doc.body.innerHTML = '';
         }
     }
@@ -654,14 +682,14 @@ $(document).ready(function () {
     ged = document.getElementById("geditor_wr_content_frame").contentWindow.document.body;
     ged.onfocus = function () {
         var ed = document.getElementById('wr_content').value;
-        if (ed == "<?=$mw_basic[cf_comment_write_notice]?>") {
+        if (ed == "<?$comment_write_notice_html?>") {
             ged.innerHTML = '';
         }
     }
     <? } ?>
 <? } else { ?>
     $("#wr_content").focus(function () {
-        if ($("#wr_content").val() == "<?=$mw_basic[cf_comment_write_notice]?>") {
+        if ($("#wr_content").val() == "<?=$comment_write_notice?>") {
             $("#wr_content").val('');
         }
     });
@@ -674,7 +702,8 @@ $(document).ready(function () {
 
 <div style="padding:2px 0 2px 0;">
     <? if (!$write_error && !$mw_basic[cf_comment_secret_no]) { ?>
-    <input type=checkbox id="wr_secret" name="wr_secret" value="secret" <? if ($mw_basic[cf_comment_secret]) echo "checked" ?>>비밀글 (체크하면 글쓴이만 내용을 확인할 수 있습니다.)
+    <input type=checkbox id="wr_secret" name="wr_secret" value="secret" <? if ($mw_basic[cf_comment_secret]) echo "checked" ?>>
+    <label for="wr_secret">비밀글 (체크하면 글쓴이만 내용을 확인할 수 있습니다.)</label>
     <? } ?>
     <? if ($mw_basic[cf_anonymous]) {?> <input type="checkbox" name="wr_anonymous" value="1"> 익명 <? } ?>
     <? if ($mw_basic[cf_comment_emoticon] && !$is_comment_editor && !$write_error) {?>
@@ -1101,6 +1130,7 @@ $(document).ready(function () {
                 old_comment_id = comment_id;
 
                 $("#comment_url_loading").remove();
+                $("#comment_url_copy").css("cursor", "pointer");
 
                 var clipBoardComment = new ZeroClipboard.Client();
                 ZeroClipboard.setMoviePath("<?=$board_skin_path?>/mw.js/ZeroClipboard.swf");
@@ -1114,6 +1144,24 @@ $(document).ready(function () {
                     $("#comment_url_popup").css("display", "none");
                 });  
                 clipBoardComment.glue("comment_url_copy");
+/*
+                var clip_comment = new ZeroClipboard(document.getElementById("comment_url_copy"), {
+                    moviePath: "<?=$board_skin_path?>/mw.js/ZeroClipboard.swf"
+                });
+
+                clip_comment.on( "load", function(client) {
+                    // alert( "movie is loaded" );
+                    clip_comment.setText($("#comment_url_result").text());
+
+                    client.on( "complete", function(client, args) {
+                    // `this` is the element that was clicked
+                        clip_comment.setText($("#comment_url_result").text());
+                        alert("클립보드에 복사되었습니다. \'Ctrl+V\'를 눌러 붙여넣기 해주세요.");
+                        $("#comment_url").html("");
+                        $("#comment_url_popup").css("display", "none");
+                    });
+                });
+*/
             });
         } else {
             $("#comment_url").html("");

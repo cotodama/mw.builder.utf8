@@ -34,6 +34,8 @@ if ($w == "")
         $row = sql_fetch($sql);
         if (!$row)
             die("존재하지 않는 회원ID 입니다.");
+
+        $mb_id = $row['mb_id'];
     }
 
     $sql = "select * from $mw[board_member_table] where bo_table = '$bo_table' and mb_id = '$mb_id'";
