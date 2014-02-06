@@ -36,7 +36,8 @@ if ($mw_basic[cf_attribute] == 'qna')
     if ($w == '') {
         sql_query("update $write_table set wr_qna_point = '$wr_qna_point', wr_qna_status = '0' where wr_id = '$wr_id'");
         insert_point($mb_id, $wr_qna_point*-1, "질문 포인트", $bo_table, $wr_id, '@qna');
-    } else if ($is_admin && $w == 'u' && $write[wr_qna_point] != $wr_qna_point) {
+    }
+    else if ($is_admin && $w == 'u' && $write[wr_qna_point] != $wr_qna_point) {
         delete_point($mb_id, $bo_table, $wr_id, '@qna');
         sql_query("update $write_table set wr_qna_point = '$wr_qna_point', wr_qna_status = '0' where wr_id = '$wr_id'");
         insert_point($mb_id, $wr_qna_point*-1, "질문 포인트", $bo_table, $wr_id, '@qna');
@@ -44,7 +45,17 @@ if ($mw_basic[cf_attribute] == 'qna')
 
     if (!$wr_qna_status) $wr_qna_status = '0';
     if (!$wr_qna_status && $notice && $is_admin) $wr_qna_status = '1';
-    if ($is_admin) sql_query("update $write_table set wr_qna_status = '$wr_qna_status' where wr_id = '$wr_id'");
+    if ($is_admin)
+        sql_query("update $write_table set wr_qna_status = '$wr_qna_status' where wr_id = '$wr_id'");
+
+    if ($is_admin && $w == 'u' && $write[wr_qna_status] > 0 && $wr_qna_status == '0') {
+        delete_point($write[mb_id], $bo_table, $wr_id, '@qna-hold');
+        if ($write[wr_qna_id]) {
+            $tmp = sql_fetch("select mb_id from $write_table where wr_id = '$write[wr_qna_id]' ");
+            delete_point($tmp[mb_id], $bo_table, $wr_id, '@qna-choose');
+        }
+        sql_query("update $write_table set wr_qna_id = '0' where wr_id = '$wr_id'");
+    }
 }
 
 // 실명인증
@@ -137,8 +148,10 @@ if ($mw_basic['cf_image_auto_rotate'])
         mw_image_auto_rotate("$file_path/$row[bf_file]");
 }
 
+// 원본 강제 리사이징 (첨부파일)
 if ($mw_basic[cf_resize_original]) {
-    $sql = "select * from $g4[board_file_table] where bo_table = '$bo_table' and wr_id = '$wr_id' and bf_width > 0  order by bf_no";
+    $sql = " select * from $g4[board_file_table] ";
+    $sql.= " where bo_table = '$bo_table' and wr_id = '$wr_id' and bf_width > 0  order by bf_no";
     $qry = sql_query($sql);
     while ($row = sql_fetch_array($qry)) {
         $file = "$file_path/$row[bf_file]";
@@ -151,7 +164,28 @@ if ($mw_basic[cf_resize_original]) {
             bf_filesize = '".filesize($file)."'
             where bo_table = '$bo_table' and wr_id = '$wr_id' and bf_no = '$row[bf_no]'");
     }
+
+    // 원본 강제 리사이징 (에디터)
+    preg_match_all("/<img.*src=\\\"(.*)\\\"/iUs", stripslashes($wr_content), $matchs);
+    for ($i=0, $m=count($matchs[1]); $i<$m; ++$i) {
+        $mat = $matchs[1][$i];
+        if (strstr($mat, "mw.basic.comment.image")) $mat = '';
+        if (strstr($mat, "mw.emoticon")) $mat = '';
+        if (preg_match("/cheditor[0-9]\/icon/i", $mat)) $mat = '';
+        if ($mat) {
+            //$mat = str_replace($g4[url], "..", $mat);
+            $mat = preg_replace("/(http:\/\/.*)\/data\//i", "../data/", $mat);
+            if (file_exists($mat)) {
+                $file = $mat;
+                $size = getImageSize($file);
+                if ($size[0] > $mw_basic[cf_resize_original] || $mw_basic[cf_resize_original] < $size[1]) {
+                    mw_make_thumbnail($mw_basic[cf_resize_original], $mw_basic[cf_resize_original], $file, $file, true);
+                }
+            }
+        }
+    }
 }
+     
 
 // 첨부이미지 사이즈 사용자 변경
 if ($mw_basic[cf_change_image_size] && $member[mb_level] >= $mw_basic[cf_change_image_size_level] && $change_image_size) {
@@ -194,11 +228,9 @@ else
     if (file_exists($thumb4_file)) unlink($thumb4_file);
     if (file_exists($thumb5_file)) unlink($thumb5_file);
 
-    $thumb_file = "";
     $file = mw_get_first_file($bo_table, $wr_id, true);
     if (!empty($file)) {
         $source_file = "$file_path/{$file[bf_file]}";
-        $thumb_file = "$thumb_path/{$wr_id}";
         mw_make_thumbnail($mw_basic[cf_thumb_width], $mw_basic[cf_thumb_height], $source_file, $thumb_file, $mw_basic[cf_thumb_keep]);
         if ($mw_basic[cf_thumb2_width])
             @mw_make_thumbnail($mw_basic[cf_thumb2_width], $mw_basic[cf_thumb2_height], $source_file,
@@ -217,7 +249,6 @@ else
         }
     } else {
         $is_thumb = false;
-        $thumb_file = "$thumb_path/{$wr_id}";
         preg_match_all("/<img.*src=\\\"(.*)\\\"/iUs", stripslashes($wr_content), $matchs);
         for ($i=0, $m=count($matchs[1]); $i<$m; ++$i) {
             $mat = $matchs[1][$i];

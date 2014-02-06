@@ -974,7 +974,6 @@ img {
 
 /* 설문 */
 #mw_basic .mw_basic_view_vote .mw_vote_list div.item {
-    height:18px;
 }
 
 /* 설문 */
@@ -1007,7 +1006,6 @@ img {
 /* 설문 */
 #mw_basic .mw_basic_view_vote .mw_vote_result .item {
     margin:0 10px 0 0;
-    white-space:nowrap;
     width:200px;
     float:left;
 }
@@ -1632,3 +1630,5 @@ img {
 #post_url_copy { 
     cursor:pointer;
 }
+
+

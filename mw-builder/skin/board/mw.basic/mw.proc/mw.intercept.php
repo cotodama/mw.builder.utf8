@@ -26,11 +26,16 @@ include_once("$g4[path]/head.sub.php");
 if (!mw_singo_admin($member[mb_id]))
     alert_close("접근 권한이 없습니다.");
 
-$mb = get_member($mb_id);
-if (!$mb)
-    alert_close("존재하지 않는 회원ID 입니다.");
+if (preg_match("/^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/", $mb_id)) {
+    $mb_name = $mb_id;
+}
+else {
+    $mb = get_member($mb_id);
+    if (!$mb)
+        alert_close("존재하지 않는 회원ID 입니다.");
 
-$mb_name = get_sideview($mb[mb_id], $mb[mb_nick], $mb[mb_homepage], $mb[mb_email]);
+    $mb_name = get_sideview($mb[mb_id], $mb[mb_nick], $mb[mb_homepage], $mb[mb_email]);
+}
 
 $token = md5(session_id().$member[mb_today_login].$member[mb_login_ip]);
 set_session("ss_token", $token);

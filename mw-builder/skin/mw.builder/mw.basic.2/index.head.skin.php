@@ -122,7 +122,7 @@ body { text-align:center; }
 <!-- 그룹 메뉴 -->
 <? for ($i=0; $i<$mw_groups_head_count; $i++) { ?>
 <? if ($i > 0) echo "<span class='mw-index-menu-div'></span>"; ?>
-<div class="mw-index-menu-item"><a href="<?=$mw_groups_head[$i][gr_url]?>" target="<?=$mw_groups_head[$i][gr_target]?>" style="<?=$mw_groups_head[$i][gr_more_css]?>"><?=$mw_groups_head[$i][gr_subject]?></a></div>
+<div class="mw-index-menu-item"><a href="<?=$mw_groups_head[$i][gr_url]?>" title="<?=mw_html_entities($mw_groups_head[$i][gr_title])?>" target="<?=$mw_groups_head[$i][gr_target]?>" style="<?=$mw_groups_head[$i][gr_more_css]?>"><?=$mw_groups_head[$i][gr_subject]?></a></div>
 <? } ?>
 <div class="mw-index-menu-right"><img src="<?=$mw_index_skin_head_path?>/img/search_bar_right.gif"></div>
 <div class="keyword-scroll"><!-- 인기검색어 스크롤 : 스킨, 갯수, 간격 --><?=mw_popular("mw.scroll", 10, 1, 60)?></div>

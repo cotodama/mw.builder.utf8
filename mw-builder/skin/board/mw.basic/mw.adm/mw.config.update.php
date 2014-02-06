@@ -50,6 +50,14 @@ if ($cf_board_sdate and $cf_board_edate and $cf_board_sdate > $cf_board_edate) {
     alert("게시판 접근가능 시작날짜와 종료날짜가 바뀐것 같습니다.");
 }
 
+$cf_hot_print = '';
+if ($cf_hot_list)
+    $cf_hot_print .= 'l';
+if ($cf_hot_view)
+    $cf_hot_print .= 'v';
+if ($cf_hot_write)
+    $cf_hot_print .= 'w';
+
 $cf_board_stime = $cf_board_etime = "";
 
 if ($cf_board_stime_hour and $cf_board_stime_minute)
@@ -102,6 +110,11 @@ if ($cf_multimedia_link_movie) $cf_multimedia.= '/link_movie/';
 if ($cf_multimedia_link_image) $cf_multimedia.= '/link_image/';
 if ($cf_multimedia_link_flash) $cf_multimedia.= '/link_flash/';
 
+$cf_player_size = '';
+if ($cf_player_size_x or $cf_player_size_y) {
+    $cf_player_size = "{$cf_player_size_x}x{$cf_player_size_y}";
+}
+
 $cf_auto_move = array();
 $cf_auto_move['use'] = $cf_auto_move_use;
 $cf_auto_move['bo_table'] = $cf_auto_move_bo_table;
@@ -119,6 +132,11 @@ if ($cf_contents_shop) {
     sql_query("alter table $write_table add wr_contents_domain char(1) not null", false);
     sql_query("alter table $write_table add wr_contents_preview text not null", false);
 }
+
+if ($cf_bomb_item_select)
+    $cf_bomb_item = implode(",", $cf_bomb_item);
+else
+    $cf_bomb_item = "";
 
 $sql = "update $mw[basic_config_table] set
 bo_table = '$bo_table'
@@ -150,6 +168,7 @@ bo_table = '$bo_table'
 ,cf_hot_basis = '$cf_hot_basis'
 ,cf_hot_limit = '$cf_hot_limit'
 ,cf_hot_len = '$cf_hot_len'
+,cf_hot_print = '$cf_hot_print'
 ,cf_related = '$cf_related'
 ,cf_latest = '$cf_latest'
 ,cf_sns = '$cf_sns'
@@ -189,6 +208,8 @@ bo_table = '$bo_table'
 ,cf_content_head = '$cf_content_head'
 ,cf_content_add = '$cf_content_add'
 ,cf_content_tail = '$cf_content_tail'
+,cf_comment_head = '$cf_comment_head'
+,cf_comment_tail = '$cf_comment_tail'
 ,cf_comment_notice = '$cf_comment_notice'
 ,cf_comment_write_notice = '$cf_comment_write_notice'
 ,cf_download_comment = '$cf_download_comment'
@@ -220,6 +241,7 @@ bo_table = '$bo_table'
 ,cf_link_write = '$cf_link_write'
 ,cf_link_point = '$cf_link_point'
 ,cf_bomb_level = '$cf_bomb_level'
+,cf_bomb_item = '$cf_bomb_item'
 ,cf_bomb_days_max = '$cf_bomb_days_max'
 ,cf_bomb_days_min = '$cf_bomb_days_min'
 ,cf_bomb_time = '$cf_bomb_time'
@@ -232,6 +254,8 @@ bo_table = '$bo_table'
 ,cf_list_shuffle = '$cf_list_shuffle'
 ,cf_sns_datetime = '$cf_sns_datetime'
 ,cf_content_align = '$cf_content_align'
+,cf_write_width = '$cf_write_width'
+,cf_write_height = '$cf_write_height'
 ,cf_read_point_message = '$cf_read_point_message'
 ,cf_insert_subject = '$cf_insert_subject'
 ,cf_notice_name = '$cf_notice_name'
@@ -285,6 +309,8 @@ bo_table = '$bo_table'
 ,cf_lightbox_y = '$cf_lightbox_y'
 ,cf_replace_word = '$cf_replace_word'
 ,cf_view_good = '$cf_view_good'
+,cf_good_level = '$cf_good_level'
+,cf_nogood_level = '$cf_nogood_level'
 ,cf_name_title = '$cf_name_title'
 ,cf_attach_count = '$cf_attach_count'
 ,cf_related_table = '$cf_related_table'
@@ -384,7 +410,9 @@ bo_table = '$bo_table'
 ,cf_image_auto_rotate = '$cf_image_auto_rotate'
 ,cf_multimedia = '$cf_multimedia'
 ,cf_youtube_size = '$cf_youtube_size'
+,cf_youtube_only = '$cf_youtube_only'
 ,cf_jwplayer_version = '$cf_jwplayer_version'
+,cf_player_size = '$cf_player_size'
 ,cf_watermark_use = '$cf_watermark_use'
 ,cf_watermark_use_thumb = '$cf_watermark_use_thumb'
 ,cf_watermark_path = '$cf_watermark_path'
@@ -399,6 +427,7 @@ bo_table = '$bo_table'
 ,cf_kcb_post = '$cf_kcb_post'
 ,cf_kcb_post_level = '$cf_kcb_post_level'
 ,cf_qna_point_use = '$cf_qna_point_use'
+,cf_qna_enough = '$cf_qna_enough'
 ,cf_qna_point_min = '$cf_qna_point_min'
 ,cf_qna_point_max = '$cf_qna_point_max'
 ,cf_qna_point_add = '$cf_qna_point_add'
@@ -464,6 +493,7 @@ if ($chk[cf_qna_point_use]) {
     $sql .= ", cf_qna_save = '$cf_qna_save' ";
     $sql .= ", cf_qna_hold = '$cf_qna_hold' ";
     $sql .= ", cf_qna_count = '$cf_qna_count' ";
+    $sql .= ", cf_qna_enough = '$cf_qna_enough' ";
 }
 if ($chk[cf_ccl]) $sql .= ", cf_ccl = '$cf_ccl' ";
 if ($chk[cf_gender]) $sql .= ", cf_gender = '$cf_gender' ";
@@ -477,7 +507,13 @@ if ($chk[cf_board_time]) {
 }
 if ($chk[cf_board_week]) $sql .= ", cf_board_week = '$cf_board_week' ";
 if ($chk[cf_age]) $sql .= ", cf_age = '$cf_age' ";
-if ($chk[cf_hot]) $sql .= ", cf_hot = '$cf_hot', cf_hot_basis = '$cf_hot_basis', cf_hot_limit = '$cf_hot_limit', cf_hot_len = '$cf_hot_len'  ";
+if ($chk[cf_hot]) {
+    $sql .= ", cf_hot = '$cf_hot' ";
+    $sql .= ", cf_hot_basis = '$cf_hot_basis' ";
+    $sql .= ", cf_hot_limit = '$cf_hot_limit' ";
+    $sql .= ", cf_hot_len = '$cf_hot_len' ";
+    $sql .= ", cf_hot_print = '$cf_hot_print' ";
+}
 if ($chk[cf_related]) $sql .= ", cf_related = '$cf_related' ";
 if ($chk[cf_latest]) $sql .= ", cf_latest = '$cf_latest' ";
 if ($chk[cf_sns]) $sql .= ", cf_sns = '$cf_sns' ";
@@ -520,6 +556,8 @@ if ($chk[cf_file_tail]) $sql .= ", cf_file_tail = '$cf_file_tail' ";
 if ($chk[cf_content_head]) $sql .= ", cf_content_head = '$cf_content_head' ";
 if ($chk[cf_content_add]) $sql .= ", cf_content_add = '$cf_content_add' ";
 if ($chk[cf_content_tail]) $sql .= ", cf_content_tail = '$cf_content_tail' ";
+if ($chk[cf_comment_head]) $sql .= ", cf_comment_head = '$cf_comment_head' ";
+if ($chk[cf_comment_tail]) $sql .= ", cf_comment_tail = '$cf_comment_tail' ";
 if ($chk[cf_comment_notice]) $sql .= ", cf_comment_notice = '$cf_comment_notice' ";
 if ($chk[cf_comment_write_notice]) $sql .= ", cf_comment_write_notice = '$cf_comment_write_notice' ";
 if ($chk[cf_download_comment]) {
@@ -551,6 +589,7 @@ if ($chk[cf_link_write]) $sql .= ", cf_link_write = '$cf_link_write' ";
 if ($chk[cf_link_point]) $sql .= ", cf_link_point = '$cf_link_point' ";
 if ($chk[cf_bomb_level]) {
     $sql .= ", cf_bomb_level = '$cf_bomb_level' ";
+    $sql .= ", cf_bomb_item = '$cf_bomb_item' ";
     $sql .= ", cf_bomb_time = '$cf_bomb_time' ";
     $sql .= ", cf_bomb_days_max = '$cf_bomb_days_max' ";
     $sql .= ", cf_bomb_days_min = '$cf_bomb_days_min' ";
@@ -566,6 +605,10 @@ if ($chk[cf_default_category]) $sql .= ", cf_default_category = '$cf_default_cat
 if ($chk[cf_list_shuffle]) $sql .= ", cf_list_shuffle = '$cf_list_shuffle' ";
 if ($chk[cf_sns_datetime]) $sql .= ", cf_sns_datetime = '$cf_sns_datetime' ";
 if ($chk[cf_content_align]) $sql .= ", cf_content_align = '$cf_content_align' ";
+if ($chk[cf_write_width]) {
+    $sql .= ", cf_write_width = '$cf_write_width' ";
+    $sql .= ", cf_write_height = '$cf_write_height' ";
+}
 if ($chk[cf_read_point_message]) $sql .= ", cf_read_point_message = '$cf_read_point_message' ";
 if ($chk[cf_insert_subject]) $sql .= ", cf_insert_subject = '$cf_insert_subject' ";
 if ($chk[bo_insert_content]) {
@@ -663,6 +706,8 @@ if ($chk[cf_comment_secret]) $sql .= ", cf_comment_secret = '$cf_comment_secret'
 if ($chk[cf_comment_secret_no]) $sql .= ", cf_comment_secret_no = '$cf_comment_secret_no' ";
 if ($chk[cf_replace_word]) $sql .= ", cf_replace_word = '$cf_replace_word' ";
 if ($chk[cf_view_good]) $sql .= ", cf_view_good = '$cf_view_good' ";
+if ($chk[cf_good_level]) $sql .= ", cf_good_level = '$cf_good_level' ";
+if ($chk[cf_nogood_level]) $sql .= ", cf_nogood_level = '$cf_nogood_level' ";
 if ($chk[cf_name_title]) $sql .= ", cf_name_title = '$cf_name_title' ";
 if ($chk[cf_attach_count]) $sql .= ", cf_attach_count = '$cf_attach_count' ";
 if ($chk[cf_related_table]) $sql .= ", cf_related_table = '$cf_related_table' ";
@@ -767,7 +812,9 @@ if ($chk[cf_good_graph]) $sql .= ", cf_good_graph = '$cf_good_graph' ";
 if ($chk[cf_image_auto_rotate]) $sql .= ", cf_image_auto_rotate = '$cf_image_auto_rotate' ";
 if ($chk[cf_multimedia]) $sql .= ", cf_multimedia = '$cf_multimedia' ";
 if ($chk[cf_youtube_size]) $sql .= ", cf_youtube_size = '$cf_youtube_size' ";
+if ($chk[cf_youtube_only]) $sql .= ", cf_youtube_only = '$cf_youtube_only' ";
 if ($chk[cf_jwplayer_version]) $sql .= ", cf_jwplayer_version = '$cf_jwplayer_version' ";
+if ($chk[cf_player_size]) $sql .= ", cf_player_size = '$cf_player_size' ";
 if ($chk[cf_watermark_use]) {
     $sql .= ", cf_watermark_use = '$cf_watermark_use' ";
     $sql .= ", cf_watermark_use_thumb = '$cf_watermark_use_thumb' ";

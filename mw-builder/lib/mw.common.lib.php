@@ -345,3 +345,14 @@ function mw_builder_get_first_file($bo_table, $wr_id, $is_image=false)
     return $row;
 }
 
+function mw_html_entities($str)
+{
+    $str = str_replace("\"", "&quot;", $str);
+    //$str = str_replace("&", "&amp;", $str);
+    $str = str_replace("<", "&lt;", $str);
+    $str = str_replace(">", "&gt;", $str);
+    $str = str_replace("'", "&prime;", $str);
+
+    return $str;
+}
+

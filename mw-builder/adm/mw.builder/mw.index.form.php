@@ -26,6 +26,27 @@ auth_check($auth[$sub_menu], "r");
 
 $token = get_token();
 
+if ($w == "theme") {
+    if (!$skin || strstr($skin, "..")) exit;
+
+    $skin_options = "";
+    $arr = @get_skin_dir("mw.builder/$skin/index");
+    for ($k=0; $k<count($arr); $k++) 
+    {
+        $select = "";
+        $option = $arr[$k];
+        if (strlen($option) > 10)
+            $option = substr($arr[$k], 0, 18) . "…";
+        if ($arr[$k] == $theme)
+            $select = "selected";
+
+        $skin_options .= "<option value='{$arr[$k]}' $select>$option</option>";
+    }
+    if (!$skin_options) exit;
+    echo "테마 : <select id=cf_index_skin_theme name=cf_index_skin_theme><option></option>$skin_options</select>";
+    exit;
+}
+
 // 스킨디렉토리
 $skin_options = "";
 $arr = get_skin_dir("mw.builder");
@@ -35,7 +56,7 @@ for ($k=0; $k<count($arr); $k++)
     if (strlen($option) > 10)
         $option = substr($arr[$k], 0, 18) . "…";
 
-    $skin_options .= "<option value='$arr[$k]'>$option</option>";
+    $skin_options .= "<option value='{$arr[$k]}'>$option</option>";
 }
 
 $sql = "select * from $mw[config_table] limit 1";
@@ -53,9 +74,7 @@ include_once ("$g4[admin_path]/admin.head.php");
 
 <table width=100% cellpadding=0 cellspacing=0 border=0>
 <colgroup width=20% class='col1 pad1 bold right'>
-<colgroup width=30% class='col2 pad2'>
-<colgroup width=20% class='col1 pad1 bold right'>
-<colgroup width=30% class='col2 pad2'>
+<colgroup width=80% class='col2 pad2'>
 <tr class='ht'>
     <td colspan=4 align=left><?=subtitle($g4[title])?></td>
 </tr>
@@ -76,7 +95,8 @@ include_once ("$g4[admin_path]/admin.head.php");
 <tr class='ht'>
     <td> INDEX HEAD 스킨</td>
     <td>
-	<select id=cf_index_skin_head name=cf_index_skin_head><option value=''></option><?=$skin_options?></select>
+	<select id=cf_index_skin_head name=cf_index_skin_head onchange="get_theme(this.value)"><option value=''></option><?=$skin_options?></select>
+        <span id="index-theme"></span>
     </td>
 </tr>
 <tr class='ht'>
@@ -109,6 +129,19 @@ function findexform_submit(f)
     f.action = "./mw.index.update.php";
     return true;
 }
+
+function get_theme(skin, theme)
+{
+    $.get("<?php echo $_SERVER['PHP_SELF']?>", { "w": "theme", "skin": skin }, function (str) {
+        $("#index-theme").html(str);
+        if (theme != undefined) {
+            $("#cf_index_skin_theme").val(theme);
+        }
+    });
+}
+$(document).ready(function () {
+    get_theme($("#cf_index_skin_head").val(), "<?=$mw[config][cf_index_skin_theme]?>");
+});
 </script>
 
 <?

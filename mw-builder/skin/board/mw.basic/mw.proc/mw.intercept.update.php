@@ -35,20 +35,44 @@ $token = md5(session_id().$member[mb_today_login].$member[mb_login_ip]);
 if (($token != get_session("ss_token")) || ($token != $form_token))
     alert_close("잘못된 접근입니다.");
 
-$mb = get_member($mb_id);
+$is_ip = false;
 
-$mb_intercept_date = date("Ymd", $g4[server_time]);
-sql_query("update $g4[member_table] set mb_level = '1', mb_intercept_date = '$mb_intercept_date', mb_memo = '$mb_memo' where mb_id='$mb_id'");
+$mb = get_member($mb_id);
+if (!$mb) {
+    $name = $mb_id;
+    if (preg_match("/^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/", $mb_id)) {
+        $is_ip = true;
+    }
+    else {
+        alert_close("회원정보가 잘못되었습니다.");
+    }
+}
+else {
+    $name = $mb[mb_nick];
+}
+
+if (!$is_ip) {
+    $mb_intercept_date = date("Ymd", $g4[server_time]);
+    $sql = " update $g4[member_table] set ";
+    $sql.= " mb_level = '1', ";
+    $sql.= " mb_intercept_date = '$mb_intercept_date',  ";
+    $sql.= " mb_memo = '$mb_memo'  ";
+    $sql.= " where mb_id='$mb_id' ";
+    sql_query($sql);
+}
 
 if ($is_all_delete or $is_all_move) {
     $all_board_sql = "select * from $g4[board_table] ";
     $all_board_qry = sql_query($all_board_sql);
     while ($all_board_row = sql_fetch_array($all_board_qry)) {
-        $all_write_sql = "select * from $g4[write_prefix]$all_board_row[bo_table] where mb_id = '$mb_id' order by wr_num";
+        if ($is_ip)
+            $all_write_sql = "select * from $g4[write_prefix]$all_board_row[bo_table] where mb_id = '' and wr_ip = '$mb_id' order by wr_num";
+        else
+            $all_write_sql = "select * from $g4[write_prefix]$all_board_row[bo_table] where mb_id = '$mb_id' order by wr_num";
         $all_write_qry = sql_query($all_write_sql);
         while ($all_write_row = sql_fetch_array($all_write_qry)) {
             if ($is_all_delete or $all_write_row[wr_is_comment]) {
-                mw_delete_row($all_board_row, $all_write_row);
+                mw_delete_row($all_board_row, $all_write_row, "no");
             }
             elseif ($is_all_move) {
                 if ($all_board_row['bo_table'] == $move_table) continue;
@@ -62,5 +86,5 @@ if ($is_all_delete or $is_all_move) {
     } // board row
 }
 
-alert_close("$mb[mb_nick] 회원을 접근차단하였습니다.");
+alert_close("{$name} 회원을 접근차단하였습니다.");
 

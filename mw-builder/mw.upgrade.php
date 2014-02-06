@@ -29,6 +29,7 @@ if (preg_match("/^utf/i", $g4[charset]))
 @mysql_query("alter table $g4[group_table] add gr_check varchar(1) not null");
 @mysql_query("alter table $g4[group_table] add gr_age varchar(5) not null");
 @mysql_query("alter table $g4[group_table] add gr_gender varchar(1) not null");
+@mysql_query("alter table $g4[group_table] add gr_title varchar(50) not null");
 
 // 1.0.2 - group_table
 @mysql_query("alter table $g4[group_table] add `gr_sitemap_not` char(1) not null default '' after gr_use_not");
@@ -107,6 +108,7 @@ index (gr_id)
 @mysql_query("alter table $mw[menu_middle_table] add `mm_check` varchar(1)  not null");
 @mysql_query("alter table $mw[menu_middle_table] add `mm_gender` varchar(1)  not null");
 @mysql_query("alter table $mw[menu_middle_table] add `mm_age` varchar(5)  not null");
+@mysql_query("alter table $mw[menu_middle_table] add `mm_title` varchar(50)  not null");
 
 $sql = "create table $mw[menu_small_table] (
 mm_id varchar(20) not null,
@@ -140,6 +142,7 @@ index (mm_id)
 @mysql_query("alter table $mw[menu_small_table] add `ms_check` varchar(1)  not null");
 @mysql_query("alter table $mw[menu_small_table] add `ms_gender` varchar(1)  not null");
 @mysql_query("alter table $mw[menu_small_table] add `ms_age` varchar(5)  not null");
+@mysql_query("alter table $mw[menu_small_table] add `ms_title` varchar(50)  not null");
 
 /*$sql = "create table $mw[session_table] (
 id varchar(32) not null,
@@ -188,6 +191,7 @@ if (!$row)
 @mysql_query("alter table $mw[config_table] add cf_member char(1) not null default '' after cf_www");
 @mysql_query("alter table $mw[config_table] add cf_popular_cache int not null default '60' after cf_overlogin");
 @mysql_query("alter table $mw[config_table] add cf_default_group varchar(50) not null default ''");
+@mysql_query("alter table $mw[config_table] add cf_index_skin_theme varchar(50) not null default 'basic'");
 
 // 1.0.2 - config_table
 @mysql_query("alter table $mw[config_table] change `cf_www` `cf_www` char(1) not null default ''");

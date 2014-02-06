@@ -1,6 +1,8 @@
 <?
 include_once("./_common.php");
 
+$mb_id = preg_replace('/[^0-9a-z\-\_]/i', '', $_GET['mb_id']);
+
 $g4[title] = "최근 게시물";
 include_once("./_head.php");
 

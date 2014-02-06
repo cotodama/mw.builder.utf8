@@ -22,6 +22,8 @@
 if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
 
 $mw_is_view = true;
+$mw_is_list = false;
+$mw_is_write = false;
 
 include_once("$board_skin_path/mw.lib/mw.skin.basic.lib.php");
 include("view_head.skin.php");
@@ -47,7 +49,26 @@ SyntaxHighlighter.all();
 </script>
 <link rel="stylesheet" href="<?=$board_skin_path?>/style.common.css?<?=filemtime("$board_skin_path/style.common.css")?>" type="text/css">
 
-<script type="text/javascript" src="<?=$board_skin_path?>/mw.js/ZeroClipboard.js"></script>
+<script type="text/javascript" src="<?=$board_skin_path?>/mw.js/ZeroClipboard.js?time=<?=time()?>"></script>
+<script type="text/javascript">
+function initClipboard() {
+    clipBoardView = new ZeroClipboard.Client();
+    ZeroClipboard.setMoviePath("<?=$board_skin_path?>/mw.js/ZeroClipboard.swf");
+    clipBoardView.addEventListener('mouseOver', function (client) {
+        clipBoardView.setText($("#post_url").text());
+    });
+    clipBoardView.addEventListener('complete', function (client) {
+        alert("클립보드에 복사되었습니다. \'Ctrl+V\'를 눌러 붙여넣기 해주세요.");
+    });  
+    clipBoardView.glue("post_url_copy");
+}
+$(document).ready(function () {
+    if ($("#post_url").text()) {
+        initClipboard();
+    }
+});
+</script>
+<!--
 <script type="text/javascript">
 function initClipboard() {
     var clip = new ZeroClipboard(document.getElementById("post_url_copy"), {
@@ -71,6 +92,7 @@ $(document).ready(function () {
     }
 });
 </script>
+-->
 
 <? if ($mw_basic[cf_source_copy]) { // 출처 자동 복사 ?>
 <? $copy_url = $shorten ? $shorten : set_http("{$g4[url]}/{$g4[bbs]}/board.php?bo_table={$bo_table}&wr_id={$wr_id}"); ?>
@@ -374,7 +396,7 @@ $(document).ready(function () {
         <?
         ob_start();
         if ($is_singo_admin && $view[mb_id] != $member[mb_id]) { 
-            echo "<span><a href=\"javascript:btn_intercept('$view[mb_id]')\">";
+            echo "<span><a href=\"javascript:btn_intercept()\">";
             echo "<img src='$board_skin_path/img/btn_intercept.gif' border='0' align='absmiddle'></a></span>"; 
         }
         if ($history_href) {
@@ -505,7 +527,7 @@ if ($bomb) {
 
         <? @include_once($mw_basic[cf_include_view_head])?>
 
-        <?=bc_code($mw_basic[cf_content_head])?>
+        <?=bc_code($mw_basic[cf_content_head], 1, 1)?>
 
         <div id=view_content>
 
@@ -550,7 +572,7 @@ if ($bomb) {
 
         <?echo $view[rich_content]; // {이미지:0} 과 같은 코드를 사용할 경우?>
 
-        <?=bc_code($mw_basic[cf_content_add])?>
+        <?=bc_code($mw_basic[cf_content_add], 1, 1)?>
         <? @include_once($mw_basic[cf_include_view])?>
 
         </div>
@@ -583,17 +605,9 @@ if ($bomb) {
         <? } ?>
 
         <?php
-        if ($mw_basic['cf_exam']) {
-            if (file_exists("{$exam_path}/view.skin.php")) {
-                include("{$exam_path}/view.skin.php");
-            }
-        }
-
-        if ($mw_basic['cf_marketdb'] and $write['wr_marketdb']) { 
-            if (file_exists("{$marketdb_path}/view.skin.php")) {
-                include("{$marketdb_path}/view.skin.php");
-            }
-        } ?>
+        if (!$ob_exam_flag) echo $ob_exam;
+        if (!$ob_marketdb_flag) echo $ob_marketdb;
+        ?>
 
         <!-- 테러 태그 방지용 --></xml></xmp><a href=""></a><a href=''></a>
 
@@ -618,6 +632,23 @@ if ($bomb) {
                 });
             }
             function mw_good_act(good) {
+                if (good == "nogood") {
+                    flag = false;
+                    $.ajax({
+                        url: "<?=$board_skin_path?>/mw.proc/mw.good.confirm.php",
+                        type: "post",
+                        async: false,
+                        data: { 'bo_table':'<?=$bo_table?>', 'wr_id':'<?=$wr_id?>' },
+                        success: function (str) {
+                            if (str == 'true') {
+                                flag = true;
+                            }
+                        }
+                    });
+
+                    if (!flag && !confirm("정말 비추천하시겠습니까?")) return;
+                } 
+
                 $.get("<?=$board_skin_path?>/mw.proc/mw.good.act.php?bo_table=<?=$bo_table?>&wr_id=<?=$wr_id?>&good="+good, function (data) {
                     alert(data);
                     mw_good_load();
@@ -634,7 +665,7 @@ if ($bomb) {
             </script>
         <? } ?>
 
-        <?=bc_code($mw_basic[cf_content_tail])?>
+        <?=bc_code($mw_basic[cf_content_tail], 1, 1)?>
 
         <? @include_once($mw_basic[cf_include_view_tail])?>
 
@@ -1033,9 +1064,11 @@ function btn_nosecret() {
 <? } ?>
 
 
-<? if ($is_singo_admin && $view[mb_id] != $member[mb_id]) { ?>
-<script type="text/javascript">
+<? if ($is_singo_admin) { ?>
+<script>
 function btn_intercept(mb_id) {
+    if (mb_id == undefined)
+        mb_id = "<? echo $view[mb_id]?$view[mb_id]:$view[wr_ip]; ?>";
     win_open("<?=$board_skin_path?>/mw.proc/mw.intercept.php?bo_table=<?=$bo_table?>&mb_id=" + mb_id, "intercept", "width=500,height=300,scrollbars=yes");
 }
 </script>
@@ -1340,5 +1373,33 @@ while ($row = sql_fetch_array($qry)) {
     }
     $view = get_view($row2, $board, $board_skin_path, 255);
     mw_board_popup($view, $html);
+}
+
+// RSS 수집기
+if ($mw_basic[cf_collect] == 'rss' && $rss_collect_path && file_exists("$rss_collect_path/_config.php")) {
+    include_once("$rss_collect_path/_config.php");
+    if ($mw_rss_collect_config[cf_license]) {
+        ?>
+        <script type="text/javascript">
+        $(document).ready(function () {
+            $.get("<?=$rss_collect_path?>/ajax.php?bo_table=<?=$bo_table?>");
+        });
+        </script>
+        <?
+    }
+}
+
+// Youtube 수집기
+if ($mw_basic[cf_collect] == 'youtube' && $youtube_collect_path && file_exists("$youtube_collect_path/_config.php")) {
+    include_once("$youtube_collect_path/_config.php");
+    if ($mw_youtube_collect_config[cf_license]) {
+        ?>
+        <script type="text/javascript">
+        $(document).ready(function () {
+            $.get("<?=$youtube_collect_path?>/ajax.php?bo_table=<?=$bo_table?>");
+        });
+        </script>
+        <?
+    }
 }
 

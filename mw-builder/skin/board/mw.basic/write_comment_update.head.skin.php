@@ -118,6 +118,10 @@ if ($mw_basic[cf_must_notice_comment]) {
     }
 }
 
+if ($mw_basic[cf_qna_enough] and $write[wr_qna_status] > 0) {
+    alert('답변이 종료되었습니다.');
+}
+
 // 로그남김
 if ($w == "cu" && $mw_basic[cf_post_history]) {
     $write2 = sql_fetch("select * from $write_table where wr_id = '$comment_id'");

@@ -244,8 +244,8 @@ $view['wr_ccl'] = $write['wr_ccl'] = mw_get_ccl_info($write['wr_ccl']);
 // 1:1 게시판
 if ($mw_basic['cf_attribute'] == "1:1" && !$is_admin && $wr_id && $w != "u")
 {
-    if (!strstr($board['bo_notice'], "$wr_id") && $is_admin != 'super' && $member['mb_id'] != $write['mb_id'] && $member['mb_id'] != $write['wr_to_id']) {
-        goto_url("board.php?bo_table={$board['bo_table']}");
+    if (!strstr($board['bo_notice'], "$wr_id") && $is_admin != 'super' && $member['mb_id'] != $write['mb_id'] && $member['mb_id'] != $write['wr_to_id'] && $mw_is_view) {
+        goto_url("$g4[bbs_path]/board.php?bo_table={$board['bo_table']}");
     }
 
     if (!$board['bo_use_list_view']) {
