@@ -32,6 +32,7 @@ $sql = " update $mw[config_table]
             set	cf_index_skin_head  = '$cf_index_skin_head',
 		cf_index_skin_main  = '$cf_index_skin_main',
 		cf_index_skin_tail  = '$cf_index_skin_tail',
+		cf_index_skin_theme = '$cf_index_skin_theme',
 		cf_index_cache	    = '$cf_index_cache',
 		cf_index_width	    = '$cf_index_width' ";
 sql_query($sql);

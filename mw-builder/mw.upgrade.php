@@ -1,5 +1,5 @@
 <?php
-if (!$dblink) include("_common.php");
+if (!$dblink) @include("_common.php");
 
 $default_skin = $_POST[default_skin];
 if (!$default_skin) $default_skin = "mw.basic.3";

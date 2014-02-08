@@ -7,6 +7,8 @@
 
     HISTORY-MW-BUILDER
     adm/mw.builder/_common.php
+    adm/mw.builder/mw.index.form.php
+    adm/mw.builder/mw.index.update.php
     adm/mw.builder/mw.group.form.php
     adm/mw.builder/mw.group.update.php
     adm/mw.builder/mw.m.menu.form.php

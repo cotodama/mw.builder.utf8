@@ -5,7 +5,7 @@ if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
 
 $group_width = $group[gr_width];
 
-if (!$group[gr_theme]);
+if (!$group[gr_theme])
     $group[gr_theme] = "basic";
 ?>
 
