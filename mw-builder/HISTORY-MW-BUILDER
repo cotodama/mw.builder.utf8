@@ -1,3 +1,13 @@
+1.4.0 (14.02.14)
+    : 그누보드 최신버전 4.37.05 (14.01.27) 탑재
+    : 배추스킨 최신버전 2.4.3 (14.02.14) 탑재
+    : lite 스킨 소메뉴 버그 수정
+    : lite 테마 미선택시 기본스킨 (나도장관님 제안)
+
+    HISTORY-MW-BUILDER
+    skin/mw.builder/lite/index.head.skin.php
+    skin/mw.builder/lite/group.head.skin.php
+     
 1.3.9 (14.02.07)
     : 파일 교체 후 관리자-배추빌더-업그레이드 실행해주세요.
     : 그누보드 최신버전 4.37.05 (14.01.27) 탑재

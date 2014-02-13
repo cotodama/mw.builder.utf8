@@ -396,7 +396,7 @@ $(document).ready(function () {
         <?
         ob_start();
         if ($is_singo_admin && $view[mb_id] != $member[mb_id]) { 
-            echo "<span><a href=\"javascript:btn_intercept()\">";
+            echo "<span><a href=\"javascript:btn_intercept('{$write[mb_id]}', '{$write[wr_ip]}')\">";
             echo "<img src='$board_skin_path/img/btn_intercept.gif' border='0' align='absmiddle'></a></span>"; 
         }
         if ($history_href) {
@@ -1063,16 +1063,17 @@ function btn_nosecret() {
 </script>
 <? } ?>
 
-
 <? if ($is_singo_admin) { ?>
 <script>
-function btn_intercept(mb_id) {
-    if (mb_id == undefined)
-        mb_id = "<? echo $view[mb_id]?$view[mb_id]:$view[wr_ip]; ?>";
+function btn_intercept(mb_id, wr_ip) {
+    if (mb_id == undefined || mb_id == '') {
+        mb_id = wr_ip;
+    }
     win_open("<?=$board_skin_path?>/mw.proc/mw.intercept.php?bo_table=<?=$bo_table?>&mb_id=" + mb_id, "intercept", "width=500,height=300,scrollbars=yes");
 }
 </script>
 <? } ?>
+
 <? if ($is_admin) { ?>
 <script type="text/javascript">
 function btn_now() {

@@ -3,10 +3,14 @@ if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
 
 @include_once("$mw_index_skin_head_path/menu.more.skin.php");
 
-$index_width = $mw[config][cf_index_width];
+$index_width = $mw['config']['cf_index_width'];
 
-if (!$mw[config][cf_index_skin_theme])
-    $mw[config][cf_index_skin_theme] = "basic";
+if (!$mw['config']['cf_index_skin_theme']) {
+    $mw['config']['cf_index_skin_theme'] = "basic";
+}
+else if (!is_dir("{$mw_index_skin_head_path}/img/{$mw['config']['cf_index_skin_theme']}")) {
+    $mw['config']['cf_index_skin_theme'] = "basic";
+}
 ?>
 
 <link rel="stylesheet" href="<?=$mw_index_skin_head_path?>/style.css" type="text/css"/>

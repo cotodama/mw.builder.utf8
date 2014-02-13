@@ -264,7 +264,7 @@ if ($mw_basic[cf_comment_best]) {
             <span class=mw_basic_comment_name><?=$row[name]?></span>
             <? if ($is_ip_view && $row[ip]) { ?> <span class=mw_basic_comment_ip>(<?=$row[ip]?>)</span> <?}?>
             <? if ($is_admin) { ?>
-            <img src="<?=$board_skin_path?>/img/btn_intercept_small.gif" align=absmiddle title='접근차단' style="cursor:pointer" onclick="btn_intercept('<?=$row[mb_id]?>')">
+            <img src="<?=$board_skin_path?>/img/btn_intercept_small.gif" align=absmiddle title='접근차단' style="cursor:pointer" onclick="btn_intercept('<?=$row[mb_id]?>', '<?=$row[wr_ip]?>')">
             <img src="<?=$board_skin_path?>/img/btn_ip.gif" align=absmiddle title='IP조회' style="cursor:pointer" onclick="btn_ip('<?=$row[wr_ip]?>')">
             <img src="<?=$board_skin_path?>/img/btn_ip_search.gif" align=absmiddle title='IP검색' style="cursor:pointer" onclick="btn_ip_search('<?=$row[wr_ip]?>')">
             <? } ?>
@@ -427,7 +427,7 @@ for ($i=0; $i<$to_record; $i++) {
                 <? if ($list[$i][is_del])  { echo "<a href=\"javascript:comment_delete('{$list[$i][del_link]}');\"><img src='$board_skin_path/img/btn_comment_delete.gif' border=0 align=absmiddle title='삭제'></a> "; } ?>
                 <? if ($list[$i][singo_href]) { ?><a href="<?=$list[$i][singo_href]?>"><img src="<?=$board_skin_path?>/img/btn_singo.gif" align=absmiddle title='신고'></a><?}?>
 		<? if ($is_admin) { ?>
-		<img src="<?=$board_skin_path?>/img/btn_intercept_small.gif" align=absmiddle title='접근차단' style="cursor:pointer" onclick="btn_intercept('<?=$list[$i][mb_id]?>')">
+		<img src="<?=$board_skin_path?>/img/btn_intercept_small.gif" align=absmiddle title='접근차단' style="cursor:pointer" onclick="btn_intercept('<?=$list[$i][mb_id]?>', '<?=$list[$i][wr_ip]?>')">
 		<img src="<?=$board_skin_path?>/img/btn_ip.gif" align=absmiddle title='IP조회' style="cursor:pointer" onclick="btn_ip('<?=$list[$i][wr_ip]?>')">
 		<img src="<?=$board_skin_path?>/img/btn_ip_search.gif" align=absmiddle title='IP검색' style="cursor:pointer" onclick="btn_ip_search('<?=$list[$i][wr_ip]?>')">
 		<? } ?>
@@ -1221,10 +1221,24 @@ function btn_singo_clear(wr_id) {
         });
     }
 }
+
 </script>
 <? } ?>
 
+<?php
+$is_singo_admin = mw_singo_admin($member[mb_id]);
+if ($is_singo_admin) { ?>
+<script>
+function btn_intercept(mb_id, wr_ip) {
+    if (mb_id == undefined || mb_id == '') {
+        mb_id = wr_ip;
+    }
+    win_open("<?=$board_skin_path?>/mw.proc/mw.intercept.php?bo_table=<?=$bo_table?>&mb_id=" + mb_id, "intercept", "width=500,height=300,scrollbars=yes");
+}
+</script>
 <? } ?>
+
+<? } // if ($cwin) ?>
 
 <style type="text/css">
 /* 댓글 img */

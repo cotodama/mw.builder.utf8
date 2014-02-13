@@ -51,6 +51,9 @@ else {
     $name = $mb[mb_nick];
 }
 
+if ($config[cf_admin] == $mb_id)
+    alert_close("최고관리자는 접근 차단할 수 없습니다.");
+
 if (!$is_ip) {
     $mb_intercept_date = date("Ymd", $g4[server_time]);
     $sql = " update $g4[member_table] set ";

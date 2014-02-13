@@ -1,3 +1,15 @@
+ver 2.4.3 (14.02.14)
+    : 접근차단 최고관리자 제외 (슬프다님 제안)
+    : 코멘트 상단,하단 내용 db속성변경 (크레이티브님 제안)
+    : 비회원 접근차단 코멘트 적용 (보거스님 제안)
+
+    mw.basic/HISTORY
+    mw.basic/mw.adm/mw.upgrade.php
+    mw.basic/mw.proc/mw.intercept.php
+    mw.basic/mw.proc/mw.intercept.update.php
+    mw.basic/view.skin.php
+    mw.basic/view_comment.skin.php
+ 
 ver 2.4.2 (14.02.07)
     : 도메인 하위 디렉토리 사용시 댓글주소 아이콘 엑박 문제 해결 (나뭇잎님 제안)
     : 태그 자동 교정 html 옵션사용할때만 작동

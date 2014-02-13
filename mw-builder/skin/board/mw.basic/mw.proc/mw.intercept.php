@@ -35,7 +35,11 @@ else {
         alert_close("존재하지 않는 회원ID 입니다.");
 
     $mb_name = get_sideview($mb[mb_id], $mb[mb_nick], $mb[mb_homepage], $mb[mb_email]);
+    $mb_name.= " ($mb[mb_id]) ";
 }
+
+if ($config[cf_admin] == $mb_id)
+    alert_close("최고관리자는 접근 차단할 수 없습니다.");
 
 $token = md5(session_id().$member[mb_today_login].$member[mb_login_ip]);
 set_session("ss_token", $token);

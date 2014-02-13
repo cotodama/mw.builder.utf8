@@ -5,8 +5,12 @@ if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
 
 $group_width = $group[gr_width];
 
-if (!$group[gr_theme])
-    $group[gr_theme] = "basic";
+if (!$group['gr_theme']) {
+    $group['gr_theme'] = "basic";
+}
+else if (!is_dir("{$mw_group_skin_head_path}/img/{$group['gr_theme']}")) {
+    $group['gr_theme'] = "basic";
+}
 ?>
 
 <link rel="stylesheet" href="<?=$mw_group_skin_head_path?>/style.css" type="text/css"/>
@@ -211,6 +215,7 @@ $(document).ready(function () {
 	<div class="title"><?=$mw_mmenu[mm_name]?></div>
 	<ul>
 	<?php
+        $mw_smenus = mw_get_small_menus($mm_id);
         for ($i=0; $i<sizeof($mw_smenus); $i++) {
 	    if ($mw_smenus[$i][ms_id] == $mw_smenu[ms_id]) {
                 $mw_smenus[$i][ms_name] = "<span class=select>{$mw_smenus[$i][ms_name]}</span>";

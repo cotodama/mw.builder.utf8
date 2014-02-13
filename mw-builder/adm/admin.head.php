@@ -3,7 +3,7 @@ if (!defined("_GNUBOARD_")) exit;
 
 $begin_time = get_microtime();
 
-include_once("$g4[admin_path]/head.sub.php");
+include_once("$g4[path]/head.sub.php");
 
 function print_menu1($key, $no)
 {
@@ -121,7 +121,6 @@ function textarea_size(fld, size)
 }
 </script>
 
-<script type="text/javascript" src="<?=$g4['path']?>/js/common.js"></script>
 <script type="text/javascript" src="<?=$g4['path']?>/js/sideview.js"></script>
 <script type="text/javascript">
 var save_layer = null;
@@ -150,8 +149,8 @@ function layer_view(link_id, menu_id, opt, x, y)
     {
         x = parseInt(x);
         y = parseInt(y);
-        menu.style.left = get_left_pos(link) + x;
-        menu.style.top  = get_top_pos(link) + link.offsetHeight + y;
+        menu.style.left = get_left_pos(link) + x + 'px';
+        menu.style.top  = get_top_pos(link) + link.offsetHeight + y + 'px';
         menu.style.display = 'block';
     }
 
