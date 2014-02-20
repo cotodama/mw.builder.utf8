@@ -12,12 +12,9 @@ $main_banner[0][tar] = "_self";
 $main_banner[1][url] = "http://point.miwit.com/plugin/cybercash/";
 $main_banner[1][img] = "$mw_index_skin_main_path/img/main-banner-cash.gif";
 $main_banner[1][tar] = "_self";
-$main_banner[2][url] = "http://www.magictoday.co.kr";
-$main_banner[2][img] = "$mw_index_skin_main_path/img/main-banner-magictoday.gif";
+$main_banner[2][url] = "http://bbs.miwit.com/plugin/attendance/";
+$main_banner[2][img] = "$mw_index_skin_main_path/img/main-banner-attendance.gif";
 $main_banner[2][tar] = "_self";
-$main_banner[3][url] = "http://bbs.miwit.com/plugin/attendance/";
-$main_banner[3][img] = "$mw_index_skin_main_path/img/main-banner-attendance.gif";
-$main_banner[3][tar] = "_self";
 
 shuffle($main_banner);
 ?>

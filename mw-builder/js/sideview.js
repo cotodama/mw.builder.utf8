@@ -41,7 +41,7 @@ if (typeof(SIDEVIEW_JS) == 'undefined') // 한번만 실행
         if (!this.isVisible)
             return "";
         
-        var str = "<tr height='19'><td id='sideViewRow_"+this.name+"'>&nbsp;<font color=gray>&middot;</font>&nbsp;<span style='color: #A0A0A0;  font-family: 돋움; font-size: 11px;'>"+this.onclickEvent+"</span></td></tr>";
+        var str = "<tr height='19'><td id='sideViewRow_"+this.name+"' style='text-align:left;'>&nbsp;<font color=gray>&middot;</font>&nbsp;<span style='color: #A0A0A0;  font-family: 돋움; font-size: 11px;'>"+this.onclickEvent+"</span></td></tr>";
         return str;
     }
 
@@ -75,36 +75,36 @@ if (typeof(SIDEVIEW_JS) == 'undefined') // 한번만 실행
             // 쪽지보내기
             if (mb_id) 
                 // 불여우 자바스크립트창이 뜨는 오류를 수정
-                this.insertTail("memo", "<a href=\"javascript:win_memo('"+g4_path+"/" + g4_bbs + "/memo_form.php?me_recv_mb_id="+mb_id+"');\">쪽지보내기</a>");
+                this.insertTail("memo", "<a href=\"javascript:win_memo('"+g4_path+"/" + g4_bbs + "/memo_form.php?me_recv_mb_id="+mb_id+"');\"><img src=\""+g4_path+"/js/sideview_icon/memo.png\" align=absmiddle> 쪽지보내기</a>");
             // 메일보내기
             if (email) 
-                this.insertTail("mail", "<a href=\"javascript:;\" onclick=\"win_formmail('"+mb_id+"','"+name+"','"+email+"');\">메일보내기</a>");
+                this.insertTail("mail", "<a href=\"javascript:;\" onclick=\"win_formmail('"+mb_id+"','"+name+"','"+email+"');\"><img src=\""+g4_path+"/js/sideview_icon/email.png\" align=absmiddle> 메일보내기</a>");
             // 홈페이지
             if (homepage) 
-                this.insertTail("homepage", "<a href=\"javascript:;\" onclick=\"window.open('"+homepage+"');\">홈페이지</a>");
+                this.insertTail("homepage", "<a href=\"javascript:;\" onclick=\"window.open('"+homepage+"');\"><img src=\""+g4_path+"/js/sideview_icon/home.png\" align=absmiddle> 홈페이지</a>");
             // 자기소개
             if (mb_id) 
-                this.insertTail("info", "<a href=\"javascript:;\" onclick=\"win_profile('"+mb_id+"');\">자기소개</a>");
+                this.insertTail("info", "<a href=\"javascript:;\" onclick=\"win_profile('"+mb_id+"');\"><img src=\""+g4_path+"/js/sideview_icon/user.png\" align=absmiddle> 자기소개</a>");
         //}
 
         // 게시판테이블 아이디가 넘어왔을 경우
         if (g4_bo_table) {
             if (mb_id) // 회원일 경우 아이디로 검색
-                this.insertTail("mb_id", "<a href='"+g4_path+"/" + g4_bbs + "/board.php?bo_table="+g4_bo_table+"&sca="+g4_sca+"&sfl=mb_id,1&stx="+mb_id+"'>아이디로 검색</a>");
+                this.insertTail("mb_id", "<a href='"+g4_path+"/" + g4_bbs + "/board.php?bo_table="+g4_bo_table+"&sca="+g4_sca+"&sfl=mb_id,1&stx="+mb_id+"'><img src=\""+g4_path+"/js/sideview_icon/search.png\" align=absmiddle> 아이디로 검색</a>");
             else // 비회원일 경우 이름으로 검색
-                this.insertTail("name", "<a href='"+g4_path+"/" + g4_bbs + "/board.php?bo_table="+g4_bo_table+"&sca="+g4_sca+"&sfl=wr_name,1&stx="+name+"'>이름으로 검색</a>");
+                this.insertTail("name", "<a href='"+g4_path+"/" + g4_bbs + "/board.php?bo_table="+g4_bo_table+"&sca="+g4_sca+"&sfl=wr_name,1&stx="+name+"'><img src=\""+g4_path+"/js/sideview_icon/search.png\" align=absmiddle> 이름으로 검색</a>");
         }
         if (mb_id)
-            this.insertTail("new", "<a href='"+g4_path+"/" + g4_bbs + "/new.php?mb_id="+mb_id+"'>전체게시물</a>");
+            this.insertTail("new", "<a href='"+g4_path+"/" + g4_bbs + "/new.php?mb_id="+mb_id+"'><img src=\""+g4_path+"/js/sideview_icon/list.png\" align=absmiddle> 전체게시물</a>");
 
         // 최고관리자일 경우
         if (g4_is_admin == "super") {
             // 회원정보변경
             if (mb_id)
-                this.insertTail("modify", "<a href='"+g4_path+"/" + g4_admin + "/member_form.php?w=u&mb_id="+mb_id+"' target='_blank'>회원정보변경</a>");
+                this.insertTail("modify", "<a href='"+g4_path+"/" + g4_admin + "/member_form.php?w=u&mb_id="+mb_id+"' target='_blank'><img src=\""+g4_path+"/js/sideview_icon/config.png\" align=absmiddle> 회원정보변경</a>");
             // 포인트내역
             if (mb_id)
-                this.insertTail("point", "<a href='"+g4_path+"/" + g4_admin + "/point_list.php?sfl=mb_id&stx="+mb_id+"' target='_blank'>포인트내역</a>");
+                this.insertTail("point", "<a href='"+g4_path+"/" + g4_admin + "/point_list.php?sfl=mb_id&stx="+mb_id+"' target='_blank'><img src=\""+g4_path+"/js/sideview_icon/point.png\" align=absmiddle> 포인트내역</a>");
         }
     }
 
@@ -123,11 +123,11 @@ if (typeof(SIDEVIEW_JS) == 'undefined') // 한번만 실행
         oSideViewLayer.innerHTML = this.makeNameContextMenus();
         
         if (getAbsoluteTop(this.curObj) + this.curObj.offsetHeight + oSideViewLayer.scrollHeight + 5 > oBody.scrollHeight)
-            oSideViewLayer.style.top = (getAbsoluteTop(this.curObj) - oSideViewLayer.scrollHeight) + 'px';
+            oSideViewLayer.style.top = getAbsoluteTop(this.curObj) - oSideViewLayer.scrollHeight + 'px';
         else
-            oSideViewLayer.style.top = (getAbsoluteTop(this.curObj) + this.curObj.offsetHeight) + 'px';
+            oSideViewLayer.style.top = getAbsoluteTop(this.curObj) + this.curObj.offsetHeight + 'px';
 
-        oSideViewLayer.style.left = (getAbsoluteLeft(this.curObj) - this.curObj.offsetWidth + 14) + 'px';
+        oSideViewLayer.style.left = getAbsoluteLeft(this.curObj) - this.curObj.offsetWidth + 14 + 'px';
 
         divDisplay(this.targetObj, 'block');
 
@@ -160,7 +160,7 @@ if (typeof(SIDEVIEW_JS) == 'undefined') // 한번만 실행
 
     function makeNameContextMenus() 
     {
-        var str = "<table border='0' cellpadding='0' cellspacing='0' width='90' style='border:1px solid #E0E0E0;' bgcolor='#F9FBFB'>";
+        var str = "<table border='0' cellpadding='0' cellspacing='0' width='110' style='border:1px solid #E0E0E0;' bgcolor='#F9FBFB'>";
         
         var i=0;
         for (i=this.heads.length - 1; i >= 0; i--)
@@ -265,6 +265,31 @@ if (typeof(SIDEVIEW_JS) == 'undefined') // 한번만 실행
                     el.style.visibility = 'visible';
             }
         }
+    }
+
+
+    function getAbsoluteTop(oNode)
+    {
+        var oCurrentNode=oNode;
+        var iTop=0;
+        while(oCurrentNode.tagName!="BODY") {
+            iTop+=oCurrentNode.offsetTop - oCurrentNode.scrollTop;
+            oCurrentNode=oCurrentNode.offsetParent;
+        }
+        return iTop;
+    }
+
+
+    function getAbsoluteLeft(oNode)
+    {
+        var oCurrentNode=oNode;
+        var iLeft=0;
+        iLeft+=oCurrentNode.offsetWidth;
+        while(oCurrentNode.tagName!="BODY") {
+            iLeft+=oCurrentNode.offsetLeft;
+            oCurrentNode=oCurrentNode.offsetParent;
+        }
+        return iLeft;
     }
 
     function divDisplay(id, act) 

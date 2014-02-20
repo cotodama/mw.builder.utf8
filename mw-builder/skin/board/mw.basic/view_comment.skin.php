@@ -617,17 +617,18 @@ if ($is_comment_editor && $mw_basic[cf_editor] == "cheditor") {
     <span style="cursor: pointer;" onclick="textarea_decrease('wr_content', 10);"><img src="<?=$board_skin_path?>/img/btn_up.gif" align=absmiddle></span>
     <span style="cursor: pointer;" onclick="textarea_original('wr_content', 5);"><img src="<?=$board_skin_path?>/img/btn_init.gif" align=absmiddle></span>
     <span style="cursor: pointer;" onclick="textarea_increase('wr_content', 10);"><img src="<?=$board_skin_path?>/img/btn_down.gif" align=absmiddle></span>
-    <? if ($mw_basic[cf_comment_html]) echo "<input type=\"checkbox\" id=\"wr_html\" name=\"html\" value=\"html2\"> <label for='wr_html'>html</label"; ?>
+    <? if ($mw_basic[cf_comment_html]) echo "<input type=\"checkbox\" id=\"wr_html\" name=\"html\" value=\"html2\"> <label for='wr_html'>html</label>"; ?>
     <? } ?>
 
-    <? if (!$is_comment_editor && ($comment_min || $comment_max)) { ?>
-    <?
-    if ($comment_min > 0) { echo "$comment_min 글자 이상 "; }
-    if ($comment_max > 0) { echo "$comment_max 글자 까지 "; }
-    echo " 작성하실수 있습니다. ";
-    echo "(현재 <span id=char_count>0</span> 글자 작성하셨습니다.) ";
+    <?php
+    if (!$is_comment_editor && ($comment_min || $comment_max)) {
+        echo "(";
+        if ($comment_min > 0) { echo "$comment_min 글자 이상 "; }
+        if ($comment_max > 0) { echo "$comment_max 글자 까지 "; }
+        echo " 작성하실수 있습니다, ";
+        echo "현재 <span id=char_count>0</span> 글자 작성하셨습니다.) ";
+    }
     ?>
-    <?}?>
 </div>
 
 <table width=98% cellpadding=0 cellspacing=0 border=0>

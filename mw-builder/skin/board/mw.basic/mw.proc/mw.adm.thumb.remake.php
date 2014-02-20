@@ -44,6 +44,12 @@ while ($row = sql_fetch_array($qry)) {
     sql_query(" update $g4[board_file_table] set bf_width = '$size[0]', bf_height = '$size[1]', bf_type = '$size[2]' where bo_table = '$bo_table' and wr_id = '$row[wr_id]' and bf_no = '$row[bf_no]' ");
 }
 
+$files = glob("{$thumb_path}/*"); array_map('unlink', $files);
+$files = glob("{$thumb2_path}/*"); array_map('unlink', $files);
+$files = glob("{$thumb3_path}/*"); array_map('unlink', $files);
+$files = glob("{$thumb4_path}/*"); array_map('unlink', $files);
+$files = glob("{$thumb5_path}/*"); array_map('unlink', $files);
+
 $sql = "select wr_id, wr_content, wr_datetime, wr_link1, wr_link2 from $write_table where wr_is_comment = '0' order by wr_num";
 $qry = sql_query($sql);
 while ($write = sql_fetch_array($qry)) {

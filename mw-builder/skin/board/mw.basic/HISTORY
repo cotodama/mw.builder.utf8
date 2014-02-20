@@ -1,3 +1,20 @@
+ver 2.4.4 (14.02.21)
+    : 자동폭파 고정시간 0 설정 (나도장관님 제안)
+    : 관리자 에디터 코멘트 그룹 적용 오류 (크레이티브님 제안)
+    : 공지 필수 사용시 경고창 출력후 목록으로 이동 (l2zeo님 제안)
+    : 코멘트 글제 제한 오류 수정 (Hacurity님 제안)
+    : BCCODE 링크 사용시 새창으로 열림
+    : 썸네일 재생성시 썸네일 이미지 전부 삭제
+
+    mw.basic/HISTORY
+    mw.basic/mw.adm/mw.config.php
+    mw.basic/mw.adm/mw.config.update.php
+    mw.basic/mw.adm/mw.upgrade.php
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/mw.proc/mw.adm.thumb.remake.php
+    mw.basic/view_head.skin.php
+    mw.basic/view_comment.skin.php
+ 
 ver 2.4.3 (14.02.14)
     : 접근차단 최고관리자 제외 (슬프다님 제안)
     : 코멘트 상단,하단 내용 db속성변경 (크레이티브님 제안)
@@ -8,6 +25,7 @@ ver 2.4.3 (14.02.14)
     mw.basic/mw.proc/mw.intercept.php
     mw.basic/mw.proc/mw.intercept.update.php
     mw.basic/view.skin.php
+    mw.basic/view_head.skin.php
     mw.basic/view_comment.skin.php
  
 ver 2.4.2 (14.02.07)

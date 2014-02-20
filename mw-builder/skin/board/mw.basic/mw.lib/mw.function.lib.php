@@ -25,7 +25,7 @@ define("_MW_BOARD_", TRUE);
 
 // 디렉토리 생성
 function mw_mkdir($path, $permission=0707) {
-    if (is_dir($path)) return;
+    //if (is_dir($path)) return;
     if (file_exists($path)) @unlink($path);
 
     @mkdir($path, $permission);
@@ -997,7 +997,7 @@ function bc_code($str, $is_content=1, $only_admin=0) {
         $str = preg_replace("/\[file([0-9])\](.*)\[\/file[0-9]\]/iU", "<img src=\"$board_skin_path/img/icon_file_down.gif\" align=absmiddle> <span style='cursor:pointer; text-decoration:underline;' onclick=\"file_download('$g4[bbs_path]/download.php?bo_table=$bo_table&wr_id=$wr_id&no=$1', '', '$1');\">$2</span>", $str);
         $str = preg_replace("/\[red\](.*)\[\/red\]/iU", "<span style='color:#ff0000;'>$1</span>", $str);
         $str = preg_replace("/\[link([1-2])\](.*)\[\/link[1-2]\]/iU", "<a href=\"$g4[bbs_path]/link.php?bo_table=$bo_table&wr_id=$wr_id&no=$1\" target=\"_blank\">$2</a>", $str);
-        $str = preg_replace("/\[(\/\/[^\s]+)\s+([^\]]+)\]/iUs", "<a href=\"$1\">$2</a>", $str);
+        $str = preg_replace("/\[(\/\/[^\s]+)\s+([^\]]+)\]/iUs", "<a href=\"$1\" target=\"_blank\">$2</a>", $str);
 
         global $write, $config, $row;
         if ($write && $write[mb_id] == $config[cf_admin] && !$row[wr_is_comment]) {

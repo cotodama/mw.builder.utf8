@@ -700,8 +700,10 @@ if ($chk[cf_not_membership_msg]) {
     $sql .= ", cf_not_membership_msg = '$cf_not_membership_msg' ";
     $sql .= ", cf_not_membership_url = '$cf_not_membership_url' ";
 }
-if ($chk[cf_admin_dhtml]) $sql .= ", cf_admin_dhtml = '$cf_admin_dhtml' ";
-if ($chk[cf_admin_dhtml_comment]) $sql .= ", cf_admin_dhtml_comment = '$cf_admin_dhtml_comment' ";
+if ($chk[cf_admin_dhtml]) {
+    $sql .= ", cf_admin_dhtml = '$cf_admin_dhtml' ";
+    $sql .= ", cf_admin_dhtml_comment = '$cf_admin_dhtml_comment' ";
+}
 if ($chk[cf_comment_secret]) $sql .= ", cf_comment_secret = '$cf_comment_secret' ";
 if ($chk[cf_comment_secret_no]) $sql .= ", cf_comment_secret_no = '$cf_comment_secret_no' ";
 if ($chk[cf_replace_word]) $sql .= ", cf_replace_word = '$cf_replace_word' ";

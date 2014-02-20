@@ -179,7 +179,7 @@ else
             $sql = "select count(*) as cnt from $mw[must_notice_table] where bo_table = '$bo_table' and mb_id = '$member[mb_id]' and wr_id in ($tmp_notice)";
             $row = sql_fetch($sql);
             if ($row[cnt] != $cnt_notice)
-                alert("$board[bo_subject] 공지를 모두 읽으셔야 글읽기가 가능합니다.");
+                alert("$board[bo_subject] 공지를 모두 읽으셔야 글읽기가 가능합니다.", "$g4[bbs_path]/board.php?bo_table=$bo_table");
         }
     }
 }

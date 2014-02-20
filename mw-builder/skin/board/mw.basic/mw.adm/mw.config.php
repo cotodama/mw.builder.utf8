@@ -2461,8 +2461,6 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
     <div class="block"></div>
 </div> <!-- tabs-5-5 -->
 
-
-
 <div id="tabs-6" class="tabs"> <!-- 접근권한 -->
 
     <iframe width="900" height="300" style="margin:0 0 10px 0; border:1px solid #ccc;" src="mw.board.member.php?bo_table=<?=$bo_table?>"></iframe>
