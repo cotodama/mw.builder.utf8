@@ -82,7 +82,7 @@ if ($is_all_delete or $is_all_move) {
                 mw_move($all_board_row, $all_write_row[wr_id], $move_table, 'move');
             }
             if ($intercept_ip and !strstr($config[cf_intercept_ip], $all_write_row[wr_ip])) {
-                $config[cf_intercept_ip] = trim($config[cf_intercept_ip]) . "\n$all_write_row[wr_id]";
+                $config[cf_intercept_ip] = trim($config[cf_intercept_ip]) . "\n$all_write_row[wr_ip]";
                 sql_query("update $g4[config_table] set cf_intercept_ip = '$config[cf_intercept_ip]'");
             }
         } // write row

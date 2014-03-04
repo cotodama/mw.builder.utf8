@@ -1083,8 +1083,8 @@ if (is_null($mw_basic[cf_bomb_level])) {
     sql_query("alter table $mw[basic_config_table] change cf_bomb_days cf_bomb_days_max int default '0' not null", false);
     sql_query("alter table $mw[basic_config_table] add cf_bomb_days_min int default '0' not null", false);
     sql_query("alter table $mw[basic_config_table] change cf_bomb_days_min cf_bomb_days_min int default '0' not null", false);
-    sql_query("alter table $mw[basic_config_table] add cf_bomb_time int default '' not null", false);
-    sql_query("alter table $mw[basic_config_table] change cf_bomb_time cf_bomb_time int default '' not null", false);
+    sql_query("alter table $mw[basic_config_table] add cf_bomb_time int default '0' not null", false);
+    sql_query("alter table $mw[basic_config_table] change cf_bomb_time cf_bomb_time int default '0' not null", false);
     sql_query("alter table $mw[basic_config_table] add cf_bomb_move_table varchar(20) not null", false);
     sql_query("alter table $mw[basic_config_table] add cf_bomb_move_time varchar(1) not null", false);
     sql_query("alter table $mw[basic_config_table] add cf_bomb_move_cate varchar(1) not null", false);

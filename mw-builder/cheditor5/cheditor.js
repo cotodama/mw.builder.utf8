@@ -1,10 +1,10 @@
 // ================================================================
-//                       CHEditor 5.09.2
+//                       CHEditor 5.09.4
 // ----------------------------------------------------------------
 // Author: Na Chang Ho
-// Homepage: http://www.chcode.com
-// EMail: contact@chcode.com
-// Copyright (c) 1997-2012 CHSOFT
+// Website: http://www.chcode.com
+// EMail: support@chcode.com
+// Copyright (c) 1997-2014 CHSOFT
 // ================================================================
 var userAgent = navigator.userAgent.toLowerCase();
 var GB = {
@@ -30,8 +30,9 @@ var GB = {
 	cantHaveChildren : { area:1, base:1, basefont:1, col:1, frame:1, hr:1, img:1, br:1, input:1, isindex:1, link:1, meta:1, param:1, source:1 },
     XhtmlNewLineBefore : '|div|p|table|tbody|tr|td|th|title|head|body|script|comment|li|meta|h1|h2|h3|h4|h5|h6|hr|ul|ol|option|link|',
 
-	browser     : { msie    : /msie/.test(userAgent) && !/opera/.test(userAgent),
-					ver     : (userAgent.match( /.+(?:rv|it|ra|ie)[\/: ]([\d.]+)/ ) || [0,'0'])[1],
+	browser     : { msie    : /msie/.test(userAgent),
+                    iegecko :  /like gecko/i.test(userAgent) && /rv:/.test(userAgent),
+					ver     : (userAgent.match( /.+(?:rv|it|ra|ie|version)[\/: ]([\d.]+)/ ) || [0,'0'])[1],
 					gecko   : /gecko/.test(userAgent),
 					opera   : /opera/.test(userAgent),
 					safari  : /webkit/.test(userAgent),
@@ -41,8 +42,8 @@ var GB = {
 	popupWindow : {ImageUpload :    { tmpl : 'image.html',          width : 700, title : '내 PC 사진 넣기' },
 				   ImageUrl :       { tmpl : 'image_url.html',      width : 354, title : '웹 사진 넣기' },
 				   Embed :          { tmpl : 'media.html',          width : 430, title : '미디어' },
-				   Table :          { tmpl : 'table.html',          width : 430, title : '테이블 만들기' },
-				   ModifyTable :    { tmpl : 'table_modify.html',   width : 430, title : '테이블 고치기' },
+				   Table :          { tmpl : 'table.html',          width : 431, title : '표 만들기' },
+				   ModifyTable :    { tmpl : 'table_modify.html',   width : 431, title : '표 고치기' },
 				   Layout :         { tmpl : 'layout.html',         width : 430, title : '레이아웃' },
 				   Link :           { tmpl : 'link.html',           width : 420, title : '하이퍼링크' },
 				   EmotionIcon :    { tmpl : 'icon.html',           width : 300, title : '표정 아이콘' },
@@ -51,36 +52,35 @@ var GB = {
 				   ColorPicker :	{ tmpl : 'color_picker.html',	width : 460, title : '색상 선택' },
 				   FlashMovie :     { tmpl : 'flash.html',          width : 502, title : '플래쉬 동영상' }},
 
-	fontName    : { 'kr' : ['맑은 고딕', '굴림', '바탕', '돋움', '궁서'],
-					'en' : ['Arial', 'Arial Black', 'Arial Narrow', 'Comic Sans MS',
-							'Courier New', 'Georgia', 'Tahoma', 'Times New Roman', 'Verdana'] },
+	fontName    : { 'kr' : ['굴림', '돋움', '바탕', '궁서', '맑은 고딕'],
+					'en' : ['Arial', 'Comic Sans MS', 'Courier New', 'Georgia', 
+					        'Lucida Sans Unicode', 'Tahoma', 'Times New Roman', 'Verdana'] },
 
-	fontSize    : { '1' : '8pt',
-					'2' : '10pt',
-					'3' : '12pt',
-					'4' : '14pt',
-					'5' : '18pt',
-					'6' : '24pt',
-					'7' : '36pt',
-					'null' : null,
-					'10px' : '8pt',
-					'12px' : '9pt',
-					'13px' : '10pt',
-					'16px' : '12pt',
-					'18px' : '14pt',
-					'24px' : '18pt',
-					'32px' : '24pt',
-					'48px' : '36pt'},
+    fontSize    : { '1' : '8pt',
+                    '2' : '10pt',
+                    '3' : '12pt',
+                    '4' : '14pt',
+                    '5' : '18pt',
+                    '6' : '24pt',
+                    '7' : '36pt',
+                    'null' : null,
+                    '10px' : '8pt',
+                    '12px' : '9pt',
+                    '13px' : '10pt',
+                    '16px' : '12pt',
+                    '18px' : '14pt',
+                    '24px' : '18pt',
+                    '32px' : '24pt',
+                    '48px' : '36pt'},
 
-	paragraph   : { 'P' : '기본 문단 (P)',
-					'H1' : '제목 1',
-					'H2' : '제목 2',
-					'H3' : '제목 3',
-					'H4' : '제목 4',
-					'H5' : '제목 5',
-					'H6' : '제목 6',
-					'DIV': '기본 문단 (DIV)',
-					'ADDRESS' : '주소 (ADDRESS)',
+	paragraph   : { 'P' : 'Normal (P)',
+					'H1' : 'Heading 1',
+					'H2' : 'Heading 2',
+					'H3' : 'Heading 3',
+					'H4' : 'Heading 4',
+					'H5' : 'Heading 5',
+					'H6' : 'Heading 6',
+					'ADDRESS' : 'Address',
 					'PRE' : 'Preformatted (PRE)' },
 
    textBlock    : [['1px #dedfdf solid','#f7f7f7'],
@@ -108,7 +108,8 @@ var GB = {
 
 	selection   : { SELECTION_NONE              : 1,
 					SELECTION_TEXT              : 2,
-					SELECTION_ELEMENT           : 3 }
+					SELECTION_ELEMENT           : 3 },
+    readyState  : { 0 : 'uninitialized', 1 : 'loading', 2 : 'loaded', 3 : 'interactive', 4 : 'complete' }
 };
 
 function URI (uri) {
@@ -118,7 +119,7 @@ function URI (uri) {
 	this.query     = null;
 	this.fragment  = null;
 
-	this.parse = function (uri) {
+	this.parseUri = function (uri) {
 		var m = uri.match(/^(([A-Za-z][0-9A-Za-z+.-]*)(:))?((\/\/)([^\/?#]*))?([^?#]*)((\?)([^#]*))?((#)(.*))?/);
 		this.scheme    = m[3] ? m[2] : null;
 		this.authority = m[5] ? m[6] : null;
@@ -128,248 +129,250 @@ function URI (uri) {
 		return this;
 	};
 
-	this.toString = function () {
+	this.azToString = function () {
 		var result = '';
-		if(this.scheme    != null) result = result +      this.scheme + ':';
-		if(this.authority != null) result = result +'//'+ this.authority;
-		if(this.path      != null) result = result +      this.path;
-		if(this.query     != null) result = result + '?'+ this.query;
-		if(this.fragment  != null) result = result + '#'+ this.fragment;
+		if (this.scheme    !== null) result = result +      this.scheme + ':';
+		if (this.authority !== null) result = result +'//'+ this.authority;
+		if (this.path      !== null) result = result +      this.path;
+		if (this.query     !== null) result = result + '?'+ this.query;
+		if (this.fragment  !== null) result = result + '#'+ this.fragment;
 		return result;
 	};
 
 	this.toAbsolute = function (location) {
-		var base = new URI(location);
-		var r = this;
-		var t = new URI;
-
-		if (base.scheme == null) return false;
-
-		if (r.scheme != null && r.scheme.toLowerCase() == base.scheme.toLowerCase()) {
-			r.scheme = null;
-		}
-
-		if (r.scheme != null) {
-			t.scheme    = r.scheme;
-			t.authority = r.authority;
-			t.path      = removeDotSegments(r.path);
-			t.query     = r.query;
-		}
-		else {
-			if (r.authority != null) {
-				t.authority = r.authority;
-				t.path      = removeDotSegments(r.path);
-				t.query     = r.query;
-			}
-			else {
-				if (r.path == '') {
-					t.path = base.path;
-					t.query = r.query || base.query;
+		var baseUri = new URI(location);
+		var URIAbs = this;
+		var target = new URI();
+		var removeDotSegments = function (path) {
+			var result = '';
+			while (path) {
+				if (path.substr(0,3) === '../' || path.substr(0,2) === './') {
+					path = path.replace(/^\.+/,'').substr(1);
+				}
+				else if (path.substr(0,3) === '/./' || path === '/.') {
+					path = '/'+path.substr(3);
+				}
+				else if (path.substr(0,4) === '/../' || path === '/..') {
+					path = '/'+path.substr(4);
+					result = result.replace(/\/?[^\/]*$/, '');
+				}
+				else if (path === '.' || path === '..') {
+					path = '';
 				}
 				else {
-					if (r.path.substr(0,1) == '/') {
-						t.path = removeDotSegments(r.path);
-					}
-					else {
-						if (base.authority != null && base.path == '') {
-							t.path = '/'+r.path;
-						}
-						else {
-							t.path = base.path.replace(/[^\/]+$/,'')+r.path;
-						}
-						t.path = removeDotSegments(t.path);
-					}
-					t.query = r.query;
+					var rm = path.match(/^\/?[^\/]*/)[0];
+					path = path.substr(rm.length);
+					result = result + rm;
 				}
-				t.authority = base.authority;
 			}
-			t.scheme = base.scheme;
+			return result;
+		};
+		
+		if (baseUri.scheme === null) return false;
+		if (URIAbs.scheme !== null && URIAbs.scheme.toLowerCase() === baseUri.scheme.toLowerCase()) {
+			URIAbs.scheme = null;
 		}
 
-		t.fragment = r.fragment;
-		return t;
-	};
-
-	function removeDotSegments (path) {
-		var out = '';
-		while (path) {
-			if (path.substr(0,3)=='../' || path.substr(0,2)=='./') {
-				path = path.replace(/^\.+/,'').substr(1);
-			}
-			else if (path.substr(0,3)=='/./' || path=='/.') {
-				path = '/'+path.substr(3);
-			}
-			else if (path.substr(0,4)=='/../' || path=='/..') {
-				path = '/'+path.substr(4);
-				out = out.replace(/\/?[^\/]*$/, '');
-			}
-			else if (path=='.' || path=='..') {
-				path = '';
+		if (URIAbs.scheme !== null) {
+			target.scheme    = URIAbs.scheme;
+			target.authority = URIAbs.authority;
+			target.path      = removeDotSegments(URIAbs.path);
+			target.query     = URIAbs.query;
+		}
+		else {
+			if (URIAbs.authority !== null) {
+				target.authority = URIAbs.authority;
+				target.path      = removeDotSegments(URIAbs.path);
+				target.query     = URIAbs.query;
 			}
 			else {
-				var rm = path.match(/^\/?[^\/]*/)[0];
-				path = path.substr(rm.length);
-				out = out + rm;
+				if (URIAbs.path === '') {
+					target.path = baseUri.path;
+					target.query = URIAbs.query || baseUri.query;
+				}
+				else {
+					if (URIAbs.path.substr(0,1) === '/') {
+						target.path = removeDotSegments(URIAbs.path);
+					}
+					else {
+						if (baseUri.authority !== null && baseUri.path == '') {
+							target.path = '/' + URIAbs.path;
+						}
+						else {
+							target.path = baseUri.path.replace(/[^\/]+$/,'') + URIAbs.path;
+						}
+						target.path = removeDotSegments(target.path);
+					}
+					target.query = URIAbs.query;
+				}
+				target.authority = baseUri.authority;
 			}
+			target.scheme = baseUri.scheme;
 		}
-		return out;
-	}
+		target.fragment = URIAbs.fragment;
+		return target;
+	};
 
-	if (uri) this.parse(uri);
+	if (uri) this.parseUri(uri);
 }
 
 function setConfig () {
-	this.config = {
-			editorWidth     : '100%',
-			editorHeight    : '300px',
-			editorFontSize  : '9pt',
-			editorFontName  : '굴림',
-			editorFontColor : '#000',
-			editorBgColor   : '#fff',
-			lineHeight      : 1.5,
-			editAreaMargin  : '5px 10px',
-			tabIndex        : 0,
-			editorPath      : null,
-			fullHTMLSource  : false,
-			linkTarget      : '_blank',
-			showTagPath     : false,
-			imgMaxWidth     : 640,
-			imgBlockMargin  : '5px 0px',
-			imgReSize       : true,
-			includeHostname : true,
-			ieEnterMode     : 'div', // [css, div, br, default]
-      		outputXhtml     : true,
-			xhtmlLang		: 'utf-8',
-			xhtmlEncoding	: 'utf-8',
-			docTitle		: '내 문서',
+    var config = {
+        editorWidth     : '100%',
+        editorHeight    : '300px',
+        editorFontSize  : '9pt',
+        editorFontName  : '굴림',
+        editorFontColor : '#000',
+        editorBgColor   : '#fff',
+        imgCaptionText	: 'margin: 5px 0px; color: #333',
+        lineHeight      : 1.5,
+        editAreaMargin  : '5px 10px',
+        tabIndex        : 0,
+        editorPath      : null,
+        fullHTMLSource  : false,
+        linkTarget      : '_blank',
+        showTagPath     : false,
+        colorToHex		: true,
+        imgMaxWidth     : 640,
+        imgBlockMargin  : '5px 0px',
+        imgReSize       : true,
+        includeHostname : true,
+        ieEnterMode     : 'div', // [css, div, br, default(p)]
+        outputXhtml     : true,
+        xhtmlLang		: 'utf-8',
+        xhtmlEncoding	: 'utf-8',
+        docTitle		: '내 문서',
+        template        : 'template.xml',
 
-			// 버튼 사용 유무
-			useSource       : true,
-			usePreview      : true,
-			usePrint        : true,
-			useNewDocument  : true,
-			useUndo         : true,
-			useRedo         : true,
-			useCopy         : true,
-			useCut          : true,
-			usePaste        : true,
-			usePasteFromWord: true,
-			useSelectAll    : true,
-			useBold         : true,
-			useUnderline    : true,
-			useStrikethrough: true,
-			useItalic       : true,
-			useSuperscript  : false,
-			useSubscript    : false,
-			useJustifyLeft  : true,
-			useJustifyCenter: true,
-			useJustifyRight : true,
-			useJustifyFull  : true,
-			useOrderedList  : true,
-			useUnOrderedList: true,
-			useOutdent      : true,
-			useIndent       : true,
-			useFontName     : true,
-			useParagraph    : true,
-			useFontSize     : true,
-			useBackColor    : true,
-			useForeColor    : true,
-			useRemoveFormat : true,
-			useClearTag     : true,
-			useSymbol       : true,
-			useLink         : true,
-			useUnLink       : true,
-			useFlash        : true,
-			useMedia        : true,
-			useImage        : true,
-			useImageUrl     : true,
-			useSmileyIcon   : true,
-			useHR           : true,
-			useTable        : true,
-			useModifyTable  : true,
-			useMap          : false,
-			useTextBlock    : true,
-			useFullScreen   : false,
-			usePageBreak    : true,
-			allowedScript   : false,
-			allowedMaxImgSize : 0
-	};
+        // 버튼 사용 유무
+        useSource       : true,
+        usePreview      : true,
+        usePrint        : true,
+        useNewDocument  : true,
+        useUndo         : true,
+        useRedo         : true,
+        useCopy         : true,
+        useCut          : true,
+        usePaste        : true,
+        usePasteFromWord: true,
+        useSelectAll    : true,
+        useStrikethrough: true,
+        useUnderline    : true,
+        useItalic       : true,
+        useSuperscript  : false,
+        useSubscript    : false,
+        useJustifyLeft  : true,
+        useJustifyCenter: true,
+        useJustifyRight : true,
+        useJustifyFull  : true,
+        useBold         : true,
+        useOrderedList  : true,
+        useUnOrderedList: true,
+        useOutdent      : true,
+        useIndent       : true,
+        useFontName     : true,
+        useParagraph    : true,
+        useFontSize     : true,
+        useBackColor    : true,
+        useForeColor    : true,
+        useRemoveFormat : true,
+        useClearTag     : true,
+        useSymbol       : true,
+        useLink         : true,
+        useUnLink       : true,
+        useFlash        : true,
+        useMedia        : true,
+        useImage        : true,
+        useImageUrl     : true,
+        useSmileyIcon   : true,
+        useHR           : true,
+        useTable        : true,
+        useModifyTable  : true,
+        useMap          : false,
+        useTextBlock    : true,
+        useFullScreen   : true,
+        usePageBreak    : true,
+        allowedScript   : false,
+        allowedMaxImgSize : 0
+    };
 
-	if (this.config.editorPath == null) {
-		var base = location.href;
-		var e = document.getElementsByTagName('base');
-		for (var i=0; i<e.length; i++) {
-			if (e[i].href)
-				base = e[i].href;
-		}
+    if (config.editorPath === null) {
+        var base = location.href;
+        var e = document.getElementsByTagName('base'), i;
+        for (i=0; i<e.length; i++) {
+            if (e[i].href)
+                base = e[i].href;
+        }
+        e = document.getElementsByTagName('script');
+        for (i=0; i<e.length; i++) {
+            if (e[i].src) {
+                var editorUri = new URI(e[i].src);
+                if(/\/cheditor\.js$/.test(editorUri.path)) {
+                    var locationAbs = editorUri.toAbsolute(base).azToString();
+                    delete locationAbs.query;
+                    delete locationAbs.fragment;
+                    config.editorPath = locationAbs.replace(/[^\/]+$/, '');
+                }
+            }
+        }
 
-		var e = document.getElementsByTagName('script');
-		for (var i=0; i<e.length; i++) {
-			if (e[i].src) {
-				var src = new URI(e[i].src);
-				if(/\/cheditor\.js$/.test(src.path)) {
-					var srcAbs = src.toAbsolute(base).toString();
-					delete srcAbs.query;
-					delete srcAbs.fragment;
-					this.config.editorPath = srcAbs.replace(/[^\/]+$/, '');
-				}
-			}
-		}
-	}
+        if (config.editorPath === null) {
+            throw "CHEditor 경로가 바르지 않습니다.\nmyeditor.config.editorPath를 설정하여 주십시오.";
+        }
+    }
 
-	this.cheditor           = new Object();
+	this.cheditor           = {};
 	this.inputForm          = null;
 	this.range              = null;
-	this.images             = new Array();
-	this.editImages         = new Object();
+	this.images             = [];
+	this.editImages         = {};
 	this.setFullScreenMode  = false;
 	this._modalReSize       = null;
 	this.modalElementZIndex = 1001;
-	this.templateFile       = 'template.xml';
-	this.templatePath       = this.config.editorPath + this.templateFile;
 	this.xmlDoc             = null;
-	this.toolbar            = new Object();
-	this.pulldown           = new Object();
+	this.toolbar            = {};
+	this.pulldown           = {};
 	this.tempTimer          = null;
-	this.tmpObject          = null;
-	this.currentRS          = new Object();
-	this.resizeEditor       = new Object();
-	this.undoStack			= new Array();
-	this.undoStackIndex		= -1;
-	this.undoIsTypeing		= false;
-	this.undoLastTypeTime	= -1;
-	this.undoTypesCount		= 20;
-};
+	this.currentRS          = {};
+	this.resizeEditor       = {};
+    this.config             = config;
+    this.templateFile       = config.template;
+    this.templatePath       = config.editorPath + config.template;
+    this.storedSelections   = [];
+    this.W3CRange           = window.getSelection;
+}
 
 function cheditor () {
-	try {
-		if (typeof(document.execCommand) == 'undefined') {
-			throw "현재 브라우저가 execCommand를 지원하지 않습니다.\nCHEditor를 사용할 수 없습니다.";
-		}
-		if (GB.browser.msie && GB.browser.ver < 6) {
-			throw "CHEditor는 MSIE 5.x 이하 버전을 지원하지 않습니다.";
-		}
-		else if (GB.browser.gecko) {
-			if (navigator.productSub < 20030107)
-				throw "CHEditor는 현재 사용 중인 브라우저를 지원하지 않습니다.";
-		}
+    var msg = null;
+	if (typeof(document.execCommand) == 'undefined') {
+		msg = "현재 브라우저가 execCommand를 지원하지 않습니다.\nCHEditor를 사용할 수 없습니다.";
 	}
-	catch (e) {
-		alert(e);
-		return null;
+	if (GB.browser.msie && GB.browser.ver < 6) {
+		msg = "\nCHEditor는 MSIE 5.x 이하 버전을 지원하지 않습니다.";
+	}
+	if (GB.browser.gecko) {
+		if (navigator.productSub < 20030107) {
+			msg = "CHEditor는 현재 사용 중인 브라우저를 지원하지 않습니다.";
+        }
 	}
 
-	setConfig.call(this);
-
-	if (this.config.editorPath == null) {
-		alert('CHEditor 경로가 바르지 않습니다.\nmyeditor.config.editorPath를 설정하여 주십시오.');
+    if (msg !== null) {
+        alert(msg);
 		return null;
-	}
-};
+    }
+
+    try {
+	    setConfig.call(this);
+    } catch (e) {
+        alert(e.toString());
+        return null;
+    }
+
+    return this;
+}
 
 cheditor.prototype = {
 //----------------------------------------------------------------
-
 resetData : function () {
 	this.resetEditArea();
 	if (GB.browser.msie) {
@@ -383,9 +386,10 @@ appendContents : function (contents) {
 	var div = this.doc.createElement('div');
 	div.innerHTML = '' + this.trimSpace(contents);
 
-	while (div.hasChildNodes())
+    while (div.hasChildNodes()) {
 		this.doc.body.appendChild(div.firstChild);
-
+    }
+    
 	this.editArea.focus();
 },
 
@@ -404,7 +408,7 @@ replaceContents : function (contents) {
 loadContents : function (contents) {
 	if (typeof(contents) === 'string') {
 		contents = this.trimSpace(contents);
-		if (contents != '') {
+		if (contents !== '') {
 			this.cheditor.editArea.style.visibility = 'hidden';
 			this.doc.body.innerHTML = contents;
 			this.cheditor.editArea.style.visibility = 'visible';
@@ -422,8 +426,8 @@ loadScript : function (path) {
 	script.onload = script.onreadystatechange = function() {
 		if (!done && (!this.readyState || this.readyState == "loaded" || this.readyState == "complete"))
 		{
-			done = true;
-			head.removeChild(script);
+		    done = true;
+		    head.removeChild(script);
 		}
 	};
 
@@ -431,8 +435,9 @@ loadScript : function (path) {
 },
 
 setFolderPath : function () {
-	if (this.config.editorPath.charAt(this.config.editorPath.length-1) != '/')
+	if (this.config.editorPath.charAt(this.config.editorPath.length-1) !== '/') {
 		this.config.editorPath += '/';
+    }
 
 	this.config.iconPath  = this.config.editorPath + 'icons/';
 	this.config.cssPath   = this.config.editorPath + 'css/';
@@ -441,8 +446,9 @@ setFolderPath : function () {
 
 checkInputForm : function () {
 	var textarea = this.$(this.inputForm);
-	if (!textarea)
+	if (!textarea) {
 		throw("ID가 '"+this.inputForm+"'인 textarea 개체를 찾을 수 없습니다.");
+    }
 
 	textarea.style.display = 'none';
 	this.cheditor.textarea = textarea;
@@ -453,7 +459,7 @@ setDesignMode : function (designMode) {
 		this.doc.body.contentEditable = designMode;
 	}
 	else {
-		this.doc.designMode  = designMode ? "On" : "Off";
+		this.doc.designMode  = designMode ? "on" : "off";
 	}
 },
 
@@ -472,19 +478,19 @@ openDoc : function (doc, contents) {
 
 getWindowHandle : function (iframeObj) {
 	var iframeWin;
-
-	if (iframeObj.contentWindow)
+	if (iframeObj.contentWindow) {
 		iframeWin = iframeObj.contentWindow;
-	else
+    }
+	else {
 		throw '현재 브라우저에서 에디터를 실행할 수 없습니다.';
-
+    }
 	return iframeWin;
 },
 
 resetDoc : function () {
 	try {
 		this.editArea = this.getWindowHandle(this.cheditor.editArea);
-		this.doc = (GB.browser.msie) ? this.editArea.document : this.cheditor.editArea.contentDocument;
+		this.doc = GB.browser.msie ? this.editArea.document : this.cheditor.editArea.contentDocument;
 		this.resetData();
 		return true;
 	}
@@ -531,24 +537,26 @@ resizeGetY : function (ev) {
 },
 
 resizeStart : function (ev) {
-	this.currentRS.elNode = this.cheditor.editArea;
-	this.currentRS.cursorStartY = this.resizeGetY(ev);
-	this.currentRS.elStartTop = parseInt(this.currentRS.elNode.style.height);
+	var self = this;
+	self.currentRS.elNode = self.cheditor.editArea;
+	self.currentRS.cursorStartY = self.resizeGetY(ev);
+	self.currentRS.elStartTop = parseInt(self.currentRS.elNode.style.height);
 
-	if (isNaN(this.currentRS.elStartTop)) this.currentRS.elStartTop = 0;
+	if (isNaN(self.currentRS.elStartTop)) self.currentRS.elStartTop = 0;
 
-	var self = this;//, ev = null;
 	ev = ev || window.event;
 
 	self.resizeEditor.stopFunc = function() { self.resizeStop.call(self, ev); };
 	self.resizeEditor.moveFunc = function(event) { self.resizeMove.call(self, event); };
 
-	if (GB.browser.msie) this.setDesignMode(false);
+	if (GB.browser.msie) {
+        self.setDesignMode(false);
+    }
 
-	this.currentRS.elNode.style.visibility = 'hidden';
-	this.addEvent(document, "mousemove", self.resizeEditor.moveFunc);
-	this.addEvent(document, "mouseup", self.resizeEditor.stopFunc);
-	this.stopEvent(ev);
+	self.currentRS.elNode.style.visibility = 'hidden';
+	self.addEvent(document, "mousemove", self.resizeEditor.moveFunc);
+	self.addEvent(document, "mouseup", self.resizeEditor.stopFunc);
+	self.stopEvent(ev);
 },
 
 resizeMove : function (ev) {
@@ -567,9 +575,10 @@ resizeStop : function (ev) {
 	this.removeEvent(document, "mousemove", this.resizeEditor.moveFunc);
 	this.stopEvent(ev);
 	this.currentRS.elNode.style.visibility = 'visible';
+    if (GB.browser.msie) {
+        this.setDesignMode(true);
+    }    
 	this.editArea.focus();
-	this.restoreRange();
-	if (GB.browser.msie) this.setDesignMode(true);
 },
 
 switchEditorMode : function (changeMode) {
@@ -577,14 +586,16 @@ switchEditorMode : function (changeMode) {
 	if (this.cheditor.mode == changeMode) return;
 
 	for (var i in this.cheditor.modetab) {
-		var className = this.cheditor.modetab[i].className;
-		className = className.replace(/\-off/,'');
-		if (i != changeMode) {
-			this.cheditor.modetab[i].className = className + '-off';
-		}
-		else {
-			this.cheditor.modetab[i].className = className;
-		}
+        if (this.cheditor.modetab.hasOwnProperty(i)) {
+		    var className = this.cheditor.modetab[i].className;
+		    className = className.replace(/\-off/,'');
+		    if (i != changeMode) {
+			    this.cheditor.modetab[i].className = className + '-off';
+		    }
+		    else {
+			    this.cheditor.modetab[i].className = className;
+		    }
+        }
 	}
 
 	switch (changeMode) {
@@ -607,37 +618,50 @@ switchEditorMode : function (changeMode) {
 },
 
 initTemplate : function () {
-	var self = this;
-	var xmlDoc = null;
-	var outputError = function(msg) {
-		alert(self.templateFile + ' 파일 로딩 중 오류가 발생하였습니다.\n원인: ' + msg);
-	};
+    var self = this;
+    var xmlDoc = null;
+    var outputError = function(msg) {
+        alert(self.templateFile + ' 파일 로딩 중 오류가 발생하였습니다.\n원인: ' + msg);
+    };
 
-	if (window.ActiveXObject) {
-		xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
-		xmlDoc.async = false;
-		xmlDoc.onreadystatechange = function() {
-			if (xmlDoc.readyState == 4) {
-				try {
-					self.xmlDoc = xmlDoc;
-					self.loadTemplate.call(self, xmlDoc);
-				}
-				catch(e) {
-					outputError(e.toString());
-				}
-			}
-		};
+    if (window.ActiveXObject) {
+        xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
+        xmlDoc.async = "false";
+        xmlDoc.onreadystatechange = function() {
+            if (xmlDoc.readyState == 4) {
+                try {
+                    self.xmlDoc = xmlDoc;
+                    self.loadTemplate.call(self, xmlDoc);
+                }
+                catch(e) {
+                    outputError(e.toString());
+                }
+            }
+        };
 
-		xmlDoc.loadXML(TMPL);
-	}
-	else if (window.XMLHttpRequest) {
-		var domParser = new DOMParser();
-		xmlDoc = domParser.parseFromString(TMPL, "text/xml");
-		self.loadTemplate.call(self, xmlDoc);
-	}
-	else {
-		outputError("현재 브라우저에서 "+self.templateFile+" 파일을 사용할 수 없습니다.");
-	}
+        xmlDoc.load(self.templatePath);
+    }
+    else if (window.XMLHttpRequest) {
+        xmlDoc = new XMLHttpRequest();
+        if (xmlDoc.overrideMimeType)
+            xmlDoc.overrideMimeType('text/xml');
+
+        xmlDoc.onload = function() {
+            try {
+                self.xmlDoc = xmlDoc.responseXML;
+                self.loadTemplate.call(self, xmlDoc.responseXML);
+            }
+            catch(e) {
+                outputError(e.toString());
+            }
+        };
+
+        xmlDoc.open("GET", self.templatePath, false);
+        xmlDoc.send('');
+    }
+    else {
+        outputError("현재 브라우저에서 "+self.templateFile+" 파일을 사용할 수 없습니다.");
+    }
 },
 
 getCDATASection : function (node) {
@@ -650,7 +674,7 @@ getCDATASection : function (node) {
 		if (elem && elem.nodeType == GB.node.CDATA_SECTION_NODE) {
 			var data = elem.data;
 			data = data.replace(/\n/g, '');
-			data = data.replace(/(\s+?)\<([^\>]*)\>/g, "<$2>");
+			data = data.replace(/(\s+?)<([^>]*)>/g, "<$2>");
 			data = this.trimSpace(data);
 			return data;
 		}
@@ -682,7 +706,6 @@ toolbarPreviousChecked : function (elem) {
 	if (previousName && this.toolbar[previousName]['checked'] == true) {
 		return this.toolbar[previousName].button;
 	}
-
 	return false;
 },
 
@@ -740,72 +763,155 @@ toolbarButtonUnchecked : function (elem) {
 	this.setToolbarBgPosition(elem, "0 " + (~(this.getToolbarBgPosition(elem) * elem.getAttribute('btnHeight')) + 1) + 'px');
 },
 
-toolbarSetBackgroundImage : function (elem, disabled) {
-	if (GB.browser.msie || !elem.style.backgroundImage)
-		return;
-
-	elem.style.backgroundImage = 'url('+(disabled ? this.toolbar.iconDisable : this.toolbar.icon)+')';
+toolbarSetBackgroundImage : function (elem, disable) {
+    var css = elem.firstChild.className;
+    css = css.replace(/-disable$/i, "");
+    
+    if (disable) {
+        css = css + "-disable";
+        elem.style.cursor = 'default';
+    }
+    else {
+        elem.style.cursor = 'pointer';
+    }
+    
+    elem.firstChild.className = css;
 },
 
 toolbarDisable : function (elem, disable) {
 	if (disable) {
-		this.toolbarSetBackgroundImage(elem.firstChild, true);
-
-		elem.firstChild.style.KhtmlOpacity = elem.firstChild.style.opacity = elem.firstChild.style.MozOpacity = 0.5;
-		elem.firstChild.style.filter = 'Alpha(opacity=50) gray';
-		elem.style.cursor = 'default';
-
+		this.toolbarSetBackgroundImage(elem, true);
 		this.toolbarButtonUnchecked(elem);
 		this.toolbarMouseDownOut(elem);
-
-		if (GB.browser.msie) elem.disabled = true;
-		else this.toolbar[elem.getAttribute('name')]['disabled'] = true;
-
+		this.toolbar[elem.getAttribute('name')]['disabled'] = true;
 		return true;
 	}
-	else {
-		this.toolbarSetBackgroundImage(elem.firstChild, false);
-		elem.style.cursor = 'pointer';
-		elem.firstChild.style.KhtmlOpacity = elem.firstChild.style.opacity = elem.firstChild.style.MozOpacity = '';
-		elem.firstChild.style.filter = '';
 
-		if (GB.browser.msie) elem.disabled = false;
-		else this.toolbar[elem.getAttribute('name')]['disabled'] = false;
+	this.toolbarSetBackgroundImage(elem, false);
+	this.toolbar[elem.getAttribute('name')]['disabled'] = false;
+	return false;
+},
 
-		return false;
+colorConvert : function (color, which, opacity) {
+    if (!which) {
+        which = "rgba";
 	}
+    color = color.replace( /^\s*#|\s*$/g, "" );
+	if (color.length === 3) {
+        color = color.replace( /(.)/g, "$1$1" );
+	}
+	
+    color = color.toLowerCase();
+	which = which.toLowerCase();
+    
+	var colorDefs = [{
+        re: /^rgb\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})\)$/,
+            process: function (bits) {
+                return [
+                    parseInt(bits[1], 10),
+                    parseInt(bits[2], 10),
+                    parseInt(bits[3], 10),
+                    1
+                ];
+            }
+        },
+        {
+            re : /^rgba\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3}),\s*(\d+(?:\.\d+)?|\.\d+)\s*\)/,
+            process: function (bits) {
+                return [
+                    parseInt(bits[1], 10),
+                    parseInt(bits[2], 10),
+                    parseInt(bits[3], 10),
+                    parseFloat(bits[4])
+                ];
+            }
+        },
+        {
+            re: /^([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/,
+            process: function (bits) {
+                return [
+                    parseInt(bits[1], 16),
+                    parseInt(bits[2], 16),
+                    parseInt(bits[3], 16),
+                    1
+                ];
+            }
+        },
+        {
+            re: /^([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/,
+            process: function (bits) {
+                return [
+                    parseInt(bits[1] * 2, 16),
+                    parseInt(bits[2] * 2, 16),
+                    parseInt(bits[3] * 2, 16),
+                    1
+                ];
+            }
+        }
+    ];
+    var r, g, b, a, i, re, processor, bits, channels, min, rData;
+    r = g = b = a = rData = null;        
+    
+    for (i = 0; i < colorDefs.length; i++) {
+        re = colorDefs[i].re;
+        processor = colorDefs[i].process;
+        bits = re.exec(color);
+        if (bits) {
+            channels = processor(bits);
+            r = channels[0];
+            g = channels[1];
+            b = channels[2];
+            a = channels[3];
+        }
+    }
+    
+    r = (r < 0 || isNaN(r)) ? 0 : ((r > 255) ? 255 : r);
+    g = (g < 0 || isNaN(g)) ? 0 : ((g > 255) ? 255 : g);
+    b = (b < 0 || isNaN(b)) ? 0 : ((b > 255) ? 255 : b);
+    a = (a < 0 || isNaN(a)) ? 0 : ((a > 1) ? 1 : a);
+    
+    function hex(x) {
+        return ("0" + parseInt(x).toString(16)).slice(-2);
+    }
+    
+    switch (which) {
+        case "rgba":
+            if (opacity) {
+                a = (255 - (min = Math.min(r, g, b))) / 255;
+                r = (0 || (r - min) / a).toFixed(0);
+                g = (0 || (g - min) / a).toFixed(0);
+                b = (0 || (b - min) / a).toFixed(0);
+                a = a.toFixed(4);
+            }
+            rData = "rgba(" + r + "," + g + "," + b + "," + a + ")";
+            break;
+        case "rgb":
+            rData = "rgb(" + r + "," + g + "," + b + ")";
+            break;
+        case "hex":
+            rData = "#" + hex(r) + hex(g) + hex(b);
+            break;
+    }
+    return rData;
 },
-
-number2rgb : function (value) {
-	if (typeof value != "number")
-		return value;
-
-	var r = value & 0xFF;
-	var g = (value >> 8) & 0xFF;
-	var b = (value >> 16) & 0xFF;
-
-	return "rgb(" + r + "," + g + "," + b + ")";
-},
-
+        
 toolbarUpdate : function () {
 	var toolbar = this.toolbar;
 	var rng = this.getRange();
 	var nodeType = this.getSelectionType(rng);
-	var pNode, ancestors = new Array(), ancestorsLen = 0;
-	var rngtext = (GB.browser.msie) ? rng.text == '' : rng.toString() == '';
+	var pNode, ancestors = [], ancestorsLen = 0;
+	var rngtext = this.W3CRange ? rng.toString() === '' : rng.text === '';
 
-	if (GB.browser.msie) {
-		switch (nodeType) {
-		case GB.selection.SELECTION_TEXT :
-		case GB.selection.SELECTION_NONE :
+    if (!this.W3CRange) {
+        if (nodeType === GB.selection.SELECTION_TEXT || nodeType === GB.selection.SELECTION_NONE) {
 			pNode = rng.parentElement();
-			break;
-		case GB.selection.SELECTION_ELEMENT :
+        }
+        else if (nodeType === GB.selection.SELECTION_ELEMENT) {
 			pNode = rng.item(0);
-			break;
-		default :
+        }
+        else {
 			pNode = this.doc;
-		}
+        }
 	}
 	else {
 		try {
@@ -817,12 +923,12 @@ toolbarUpdate : function () {
 			{
 				pNode = rng.startContainer.childNodes[rng.startOffset];
 			}
-
-			if (nodeType == GB.selection.SELECTION_TEXT)
+			if (nodeType == GB.selection.SELECTION_TEXT) {
 				pNode = pNode.parentNode;
-
-			if (rngtext)
+            }
+			if (rngtext) {
 				rngtext = GB.offElements[pNode.nodeName] ? false : true;
+            }
 		}
 		catch (e) { pNode= this.doc; }
 	}
@@ -830,12 +936,14 @@ toolbarUpdate : function () {
 	var isControl = false, isTable = false;
 
 	if (nodeType == GB.selection.SELECTION_ELEMENT) {
-		isControl = GB.browser.msie ? true : GB.offElements[pNode.nodeName];
+		isControl = this.W3CRange ? GB.offElements[pNode.nodeName] : true;
 	}
 	else {
-		while (pNode && pNode.nodeType == GB.node.ELEMENT_NODE && pNode.nodeName != 'BODY') {
+		while (pNode && pNode.nodeType === GB.node.ELEMENT_NODE && pNode.nodeName !== 'BODY') {
 			ancestors.push(pNode);
-			if (pNode.nodeName == 'TD') isTable = true;
+			if (pNode.nodeName === 'TD' || pNode.nodeName === 'TH') {
+                isTable = true;
+            }
 			pNode = pNode.parentNode;
 		}
 		ancestorsLen = ancestors.length;
@@ -843,130 +951,147 @@ toolbarUpdate : function () {
 
 	var isNoOff = { 'ImageUpload':1, 'ImageUrl':1, 'EmotionIcon':1, 'Link':1, 'GoogleMap':1 };
 
-	if (!isTable && nodeType== GB.selection.SELECTION_ELEMENT &&
-			(pNode.nodeName == 'TABLE' || pNode.nodeName == 'TD'))
+	if (!isTable && nodeType === GB.selection.SELECTION_ELEMENT && 
+        (pNode.nodeName === 'TABLE' || pNode.nodeName === 'TD' || pNode.nodeName === 'TH'))
 	{
 		isTable = true;
 	}
 
 	for (var i in toolbar) {
-		var cmd = toolbar[i].cmd;
-		if (cmd == null)
-			continue;
+        var btn, cmd;
+        
+        if (toolbar.hasOwnProperty(i) !== true) {
+            continue;
+        }
+
+        btn = toolbar[i];
+        
+        cmd = btn.cmd;
+		if (!cmd) {
+            continue;
+        }
 
 		var autoOff = false;
-
-		if (isControl && nodeType == GB.selection.SELECTION_ELEMENT) {
-			if (toolbar[i].group != 'Alignment') {
-				autoOff = (pNode.nodeName == 'IMG' && isNoOff[cmd]) ? false : true;
+		if (isControl && nodeType === GB.selection.SELECTION_ELEMENT) {
+			if (btn.btnGroup !== 'Alignment') {
+				autoOff = !(pNode.nodeName === 'IMG' && isNoOff[cmd]);
 			}
 		}
 
-		if (toolbar[i].name == 'ModifyTable') {
-			autoOff = isTable ? false : true;
+		if (btn.name === 'ModifyTable') {
+			autoOff = !isTable;
+		}
+        
+		var isDisable = this.toolbarDisable(btn.button, autoOff);
+
+		if (btn.name === 'ForeColor' || btn.name === 'BackColor') {
+            btn.button.lastChild.style.display = isDisable ? 'none' : 'block';
 		}
 
-		var isDisable = this.toolbarDisable(toolbar[i].button, autoOff);
+		if (btn.autocheck === null) {
+            continue;
+        }
 
-		if (toolbar[i].name == 'ForeColor' || toolbar[i].name == 'BackColor') {
-			toolbar[i].button.lastChild.style.display = isDisable ? 'none' : 'block';
-		}
+        var el, wrapper, fontAttr, oldName, span;
 
-		if (toolbar[i].autocheck == null)
-			continue;
+        switch (cmd) {
+        case 'Copy' :
+        case 'Cut'  :
+            this.toolbarDisable(btn.button, rngtext);
+            break;
+        case 'UnLink' :
+            el = true;
+            for (var j=0; j < ancestorsLen; j++) {
+                if (ancestors[j].nodeName === 'A') {
+                    el = false;
+                    break;
+                }
+            }
 
-		switch (cmd) {
-		case 'Copy' :
-		case 'Cut' :
-			this.toolbarDisable(toolbar[i].button, rngtext);
-			break;
-		case 'UnLink' :
-			var el = true;
-
-			for (var j=0; j < ancestorsLen; j++) {
-				if (ancestors[j].nodeName == 'A') {
-					el = false;
-					break;
-				}
-			}
-
-			this.toolbarDisable(toolbar[i].button, el);
-			break;
-		case 'Paragraph' :
-			var wrapper = toolbar[i].button.firstChild;
-			var oldName = wrapper.firstChild;
-			var el = false;
-
-			for (var j=0; j < ancestorsLen; j++) {
+            this.toolbarDisable(btn.button, el);
+            break;
+        case 'Paragraph' :
+			wrapper = btn.button.firstChild;
+			oldName = wrapper.firstChild;
+			el = false;
+            span = document.createElement('span');
+            
+			for (j=0; j < ancestorsLen; j++) {
 				if (GB.paragraph[ancestors[j].nodeName]) {
-					wrapper.replaceChild(document.createTextNode(GB.paragraph[ancestors[j].nodeName]), oldName);
+                    span.appendChild(document.createTextNode(GB.paragraph[ancestors[j].nodeName]));
+					wrapper.replaceChild(span, oldName);
 					el = true;
 					break;
 				}
 			}
 
 			if (!el) {
-				wrapper.replaceChild(document.createTextNode('스타일'), oldName);
+                span.appendChild(document.createTextNode('스타일'));
+				wrapper.replaceChild(span, oldName);
 			}
-			break;
-		case 'ForeColor' :
-		case 'BackColor' :
-			if (cmd == 'BackColor' && !GB.browser.msie)
-				cmd = 'HiliteColor';
-
+            this.unselectionElement(span);
+            break;
+        case 'ForeColor' :
+        case 'BackColor' :
+			if (cmd === 'BackColor' && !GB.browser.msie) cmd = 'HiliteColor';
 			try {
-				var wrapper = toolbar[i].button.lastChild;
-				var fontAttr = this.number2rgb(this.doc.queryCommandValue(cmd));
-				if (!fontAttr)
-					fontAttr = (cmd == 'ForeColor') ? this.config.editorFontColor : this.config.editorBgColor;
-
+                wrapper = btn.button.lastChild;
+                fontAttr = this.doc.queryCommandValue(cmd);
+				if (!fontAttr) {
+                    fontAttr = (cmd == 'ForeColor') ? this.config.editorFontColor : this.config.editorBgColor;
+                }
+                else if (!/^[rgb|\#]/.test(fontAttr)) {
+                    fontAttr = (((fontAttr & 0x0000ff) << 16) | (fontAttr & 0x00ff00) | ((fontAttr & 0xff0000) >>> 16)).toString(16);
+                    fontAttr = this.colorConvert("#000000".slice(0, 7-fontAttr.length)+fontAttr, 'rgb');
+                }
 				wrapper.style.backgroundColor = fontAttr;
 			}
-			catch(e) {}
-			break;
-		case 'FontName' :
-		case 'FontSize' :
-			try {
-				var wrapper = toolbar[i].button.firstChild;
-				var el = false;
-				var fontAttr = this.doc.queryCommandValue(cmd);
+            catch(e) {}
+            break;
+        case 'FontName' :
+        case 'FontSize' :
+            span = document.createElement('span');
+            try {
+                wrapper = toolbar[i].button.firstChild;
+                el = false;
+                fontAttr = this.doc.queryCommandValue(cmd);
 
-				if (fontAttr) {
-					var newAttr = (cmd == 'FontSize') ?
-						(GB.fontSize[fontAttr] ? GB.fontSize[fontAttr] : fontAttr) :
-							fontAttr;
+                if (fontAttr) {
+                    var newAttr = (cmd === 'FontSize') ?
+                        (GB.fontSize[fontAttr] ? GB.fontSize[fontAttr] : fontAttr) :
+                            fontAttr;
 
-					wrapper.replaceChild(document.createTextNode(newAttr), wrapper.firstChild);
-					el = true;
-				}
+                    span.appendChild(document.createTextNode(newAttr));
+                    wrapper.replaceChild(span, wrapper.firstChild);
+                    el = true;
+                }
 
-				if (!el) {
-					var defaultAttr = (cmd == 'FontSize') ? this.config.editorFontSize : this.config.editorFontName;
-					if (wrapper.hasChildNodes()) {
-						wrapper.removeChild(wrapper.firstChild);
-					}
-					wrapper.appendChild(document.createTextNode(defaultAttr));
-				}
-			}
-			catch(e) {}
-			break;
-		case 'TextBlock':
-			break;
-		default:
+                if (!el) {
+                    var defaultAttr = (cmd === 'FontSize') ? this.config.editorFontSize : this.config.editorFontName;
+                    if (wrapper.hasChildNodes()) {
+                        wrapper.removeChild(wrapper.firstChild);
+                    }
+                    span.appendChild(document.createTextNode(defaultAttr));
+                    wrapper.appendChild(span);
+                }
+                this.unselectionElement(span);
+            }
+            catch(e) {}
+            break;
+		default :
 			try {
 				var state = this.doc.queryCommandState(cmd);
-				if (state && (nodeType == GB.selection.SELECTION_TEXT || nodeType == GB.selection.SELECTION_NONE)) {
-					this.toolbarButtonChecked(toolbar[i].button);
-					toolbar[i].checked = true;
+				if (state && (nodeType === GB.selection.SELECTION_TEXT || nodeType === GB.selection.SELECTION_NONE)) {
+					this.toolbarButtonChecked(btn.button);
+                    btn.checked = true;
 				}
 				else {
-					this.toolbarButtonUnchecked(toolbar[i].button);
-					toolbar[i].checked = false;
+					this.toolbarButtonUnchecked(btn.button);
+                    btn.checked = false;
 				}
-
 			}
 			catch(e) {}
-		}
+        }
 	}
 },
 
@@ -997,35 +1122,40 @@ createButton : function (name, attr, group) {
 			'method'    : method,
 			'cmd'       : cmd,
 			'checked'   : false,
-			'group'     : group,
+			'btnGroup'  : group,
 			'autocheck' : check
 	};
 
 	self.toolbar[name] = obj;
 	self.addEvent(elem, 'mouseover', function() {
-		if ((obj.checked == false && obj.disabled == false))
+		if ((obj.checked === false && obj.disabled === false)) {
 			self.toolbarMouseOverUp(elem);
+        }
 	});
+    
 	self.addEvent(elem, 'mouseup', function(ev) {
-		if (obj.checked == false && obj.disabled == false) {
+		if (obj.checked === false && obj.disabled === false) {
 			self.toolbarMouseOverUp(elem);
-			self.stopEvent(GB.browser.msie ? window.event : ev);
 		}
+        self.stopEvent(ev || window.event);
 	});
+    
 	self.addEvent(elem, 'mousedown', function(ev) {
-		if (obj.checked == false && obj.disabled == false) {
+		if (obj.checked === false && obj.disabled === false) {
 			self.toolbarButtonChecked(elem);
 			self.toolbarMouseDownOut(elem);
-			self.stopEvent(GB.browser.msie ? window.event : ev);
-		}
-
+        }
+        self.stopEvent(ev || window.event);
 	});
+    
 	self.addEvent(elem, 'click', function(ev) {
-		if (obj.disabled) return false;
-
+		if (obj.disabled) {
+            return false;
+        }
 		switch (obj.method) {
 		case 'doCmd' :
-			self.doCmd(obj.cmd, '');
+            self.setRange(self.getRange());
+			self.doCmd(obj.cmd, null);
 			break;
 		case 'windowOpen' :
 			self.windowOpen(obj.cmd);
@@ -1040,18 +1170,19 @@ createButton : function (name, attr, group) {
 				self.showPulldown(obj.cmd, obj.button);
 			}
 
-			if (obj.checked == true) {
+			if (obj.checked) {
 				self.toolbarButtonChecked(elem);
 				self.toolbarMouseDownOut(elem);
-				self.stopEvent(GB.browser.msie ? window.event : ev);
 			}
 			break;
 		default :
-			break;
+            alert('지원하지 않는 명령입니다.');
 		}
+        self.stopEvent(ev || window.event);
 	});
+    
 	self.addEvent(elem, 'mouseout', function() {
-		if (obj.checked == false) {
+		if (obj.checked === false) {
 			self.toolbarButtonUnchecked(elem);
 			self.toolbarMouseDownOut(elem);
 		}
@@ -1102,20 +1233,22 @@ showToolbar : function (toolbar, toolbarWrapper) {
 
 			btnIcon.className = icon.getAttribute('class');
 
-			if (btn[j].getAttribute('tooltip') != null) {
+			if (btn[j].getAttribute('tooltip') !== null) {
 				btnElem.setAttribute('title', btn[j].getAttribute('tooltip'));
 			}
 
 			var pos = icon.getAttribute('position');
-			if (pos != null) {
+			if (pos !== null) {
 				btnIcon.style.backgroundImage = 'url('+self.toolbar.icon+')';
 				btnIcon.style.backgroundRepeat = 'no-repeat';
 				self.setToolbarBgPosition(btnIcon, (~pos + 1) + 'px center');
 			}
 			else {
 				var txt = icon.getAttribute('alt');
-				if (txt != null) {
-					btnIcon.appendChild(document.createTextNode(txt));
+				if (txt !== null) {
+                    var span = document.createElement('span');
+                    span.appendChild(document.createTextNode(txt));
+					btnIcon.appendChild(span);
 				}
 			}
 
@@ -1158,11 +1291,9 @@ showToolbar : function (toolbar, toolbarWrapper) {
 	if (GB.browser.msie) {
 		var child = toolbarWrapper.getElementsByTagName('div');
 		var len = child.length;
-
-		for (var i=0; i < len; i++) {
+		for (i=0; i < len; i++) {
 			self.unselectionElement(child[i]);
 		}
-
 		self.unselectionElement(toolbarWrapper);
 	}
 	else {
@@ -1172,8 +1303,8 @@ showToolbar : function (toolbar, toolbarWrapper) {
 
 unselectionElement : function (elem) {
 	if (GB.browser.msie) {
-		elem.setAttribute('unselectable', 'On');
-		elem.setAttribute('contentEditable', false);
+		elem.setAttribute('unselectable', 'on');
+		elem.setAttribute('contentEditable', 'false');
 	}
 	else {
 		elem.onselectstart = new Function('return false');
@@ -1199,7 +1330,7 @@ createEditorElement : function (container, toolbar) {
 			this.cheditor.mode = 'rich';
 			if (child.hasChildNodes()) {
 				var tab = child.childNodes;
-				this.cheditor.modetab = new Object();
+				this.cheditor.modetab = {};
 
 				for (var i=0; i<tab.length; i++) {
 					var tabId = tab[i].getAttribute('id');
@@ -1232,7 +1363,7 @@ createEditorElement : function (container, toolbar) {
 			editArea.style.height = this.config.editorHeight;
 
 			if (isNaN(this.config.tagIndex) == false) {
-				editArea.setAttribute('tabIndex', this.config.tabIndex);
+				editArea.tabIndex = this.config.tabIndex;
 			}
 
 			this.cheditor.editArea = editArea;
@@ -1248,7 +1379,6 @@ createEditorElement : function (container, toolbar) {
 			}
 			break;
 		case 'resizeBar' :
-			var self = this;
 			this.cheditor.resizeBar = child;
 			child.onmousedown = function(ev) { self.resizeStart(ev); };
 			this.unselectionElement(child);
@@ -1267,24 +1397,48 @@ createEditorElement : function (container, toolbar) {
 	if (!nNode) pNode.appendChild(container);
 	else pNode.insertBefore(container, nNode);
 
+    var done = false;
+    self = this;
+    function ready() {
+        if (done) return;
+        done = true;
+        self.cheditor.toolbarWrapperHeight = self.cheditor.toolbarWrapper.offsetHeight;
+    }
+
 	if (GB.browser.msie) {
-		self = this;
+		var isFrame = false;
+        try {
+            isFrame = window.frameElement != null;
+        } catch(e) {}
+
+        if (document.documentElement.doScroll && !isFrame) {
+            function tryScroll() {
+                if (done) return;
+                try {
+                    document.documentElement.doScroll("left");
+                    ready();
+                } catch(e) {
+                    setTimeout(tryScroll, 10);
+                }
+            }
+            tryScroll();
+        }
+
 		self.addEvent(document, 'readystatechange', function() {
-			if (/loaded|complete/.test(document.readyState)) {
-				self.cheditor.toolbarWrapperHeight = self.cheditor.toolbarWrapper.offsetHeight;
+            if (document.readyState === "complete") {
+				ready();
 			}
 		});
 	}
 	else {
-		self = this;
 		self.addEvent(document, 'DOMContentLoaded', function() {
-			self.cheditor.toolbarWrapperHeight = self.cheditor.toolbarWrapper.offsetHeight;
+            ready();
 		});
 	}
 
-	if (isNaN(self.cheditor.toolbarWrapperHeight) || self.cheditor.toolbarWrapperHeight == 0) {
+/*	if (isNaN(self.cheditor.toolbarWrapperHeight) || self.cheditor.toolbarWrapperHeight == 0) {
 		self.cheditor.toolbarWrapperHeight = 58;
-	}
+	}*/
 	
 	container.style.width = this.config.editorWidth;
 	this.cheditor.container = container;
@@ -1317,10 +1471,8 @@ loadTemplate : function (xmlDoc) {
 	var dragHandle = popupWindow.firstChild;
 	self.cheditor.dragHandle = dragHandle;
 
-	var label = dragHandle.getElementsByTagName('label')[0];
-	self.cheditor.popupTitle = label;
-	var popupIFrame = popupWindow.lastChild;
-	self.cheditor.popupFrameWrapper = popupIFrame;
+	self.cheditor.popupTitle = dragHandle.getElementsByTagName('label')[0];
+	self.cheditor.popupFrameWrapper = popupWindow.lastChild;
 
 	container.appendChild(popupWindow);
 
@@ -1383,13 +1535,13 @@ run : function () {
 		return;
 	}
 
-	this.setDefaultCss({cssName: 'default.css', doc: window.document});
+	this.setDefaultCss({cssName: 'ui.css', doc: window.document});
 	this.initTemplate();
 
 	if (!(this.resetDoc()))
-		return;
+        return;
 
-	this.editArea.focus();
+	//this.editArea.focus();
 	this.setEditorEvent();
 	this.setDefaultCss();
 	this.toolbarUpdate();
@@ -1433,7 +1585,6 @@ fullScreenMode : function () {
 	}
 	else {
 		window.onresize = null;
-
 		container.removeAttribute('style');
 		container.className = 'cheditor-container';
 		container.style.width = self.config.editorWidth;
@@ -1469,6 +1620,8 @@ showPulldown : function (menu, pNode) {
 		this.showParagraphMenu(pNode);
 		break;
 	case 'BackColor' :
+        this.showColorMenu(pNode);
+        break;
 	case 'ForeColor' :
 		this.showColorMenu(pNode);
 		break;
@@ -1481,7 +1634,7 @@ showPulldown : function (menu, pNode) {
 
 setPulldownClassName : function (labels, pNode) {
 	for (var i=0; i < labels.length; i++) {
-		if (labels[i].getAttribute('name') == pNode.firstChild.firstChild.nodeValue) {
+		if (labels[i].getAttribute('name') === pNode.firstChild.firstChild.firstChild.nodeValue) {
 			labels[i].parentNode.style.backgroundImage = 'url('+this.config.editorPath+'icons/checked.png)';
 			labels[i].parentNode.style.backgroundPosition = '0 center';
 			labels[i].parentNode.style.backgroundRepeat = 'no-repeat';
@@ -1515,33 +1668,30 @@ showFontTypeMenu : function (pNode) {
 	var elem = self.pulldown[menu];
 
 	if (!elem) {
-		var outputHtml = document.createElement('div');
+        var fonts = null;
+		var outputHtml = self.doc.createElement('div');
 		for (var type in GB.fontName) {
-			var fonts = GB.fontName[type];
-			for (var i=0; i < fonts.length; i++) {
-				var div = document.createElement('div');
-				var label = document.createElement('label');
-				div.id = fonts[i];
-				div.onclick = function() { self.doCmdPopup("FontName", this.id); };
-				div.onmouseover = function() { self.pulldownMouseOver(this); };
-				div.onmouseout = function() { self.pulldownMouseOut(this); };
-				label.style.fontFamily = fonts[i];
-
-				if (type != 'kr')
-					label.style.top = 0;
-
-				label.appendChild(document.createTextNode(fonts[i]));
-				label.setAttribute('name', fonts[i]);
-				div.appendChild(label);
-				outputHtml.appendChild(div);
-			}
+            if (GB.fontName.hasOwnProperty(type)) {
+                fonts = GB.fontName[type];
+			    for (var i=0; i < fonts.length; i++) {
+				    var div = self.doc.createElement('div');
+				    var label = self.doc.createElement('label');
+				    div.id = fonts[i];
+				    div.onclick = function() { self.doCmdPopup("FontName", this.id); };
+				    div.onmouseover = function() { self.pulldownMouseOver(this); };
+				    div.onmouseout = function() { self.pulldownMouseOut(this); };
+				    label.style.fontFamily = fonts[i];//(type !== 'kr') ? fonts[i] : this.config.editorFontName;
+				    label.appendChild(self.doc.createTextNode(fonts[i]));
+				    label.setAttribute('name', fonts[i]);
+				    div.appendChild(label);
+				    outputHtml.appendChild(div);
+			    }
+            }
 		}
-
-		self.createWindow(130, outputHtml);
+		self.createWindow(150, outputHtml);
 		self.createPulldownFrame(outputHtml, menu);
 		elem = self.pulldown[menu];
 	}
-
 	self.setPulldownClassName(elem.firstChild.getElementsByTagName('LABEL'), pNode);
 	self.windowPos(pNode, menu);
 	self.displayWindow(pNode, menu);
@@ -1554,74 +1704,73 @@ showParagraphMenu : function (pNode) {
 
 	if (!elem) {
 		var outputHtml = document.createElement('div');
-
 		for (var para in GB.paragraph) {
-			var div = document.createElement('div');
-			div.id = para;
-			div.onclick = function() { self.doCmdPopup("FormatBlock", '<' + this.id + '>'); };
-			div.onmouseover = function() { self.pulldownMouseOver(this); };
-			div.onmouseout = function() { self.pulldownMouseOut(this); };
+            if (GB.paragraph.hasOwnProperty(para)) {
+			    var div = document.createElement('div');
+			    div.id = para;
+			    div.onclick = function() { self.doCmdPopup("FormatBlock", '<' + this.id + '>'); };
+			    div.onmouseover = function() { self.pulldownMouseOver(this); };
+			    div.onmouseout = function() { self.pulldownMouseOut(this); };
 
-			var label = document.createElement('label');
-			if (para.match(/H[123456]/)) {
-				var fontSize = {'H1':'24pt','H2':'18pt','H3':'14pt','H4':'12pt','H5':'10pt','H6':'8pt'};
-				label.style.fontWeight = 'bold';
-				label.style.fontSize = fontSize[para];
-			}
-			else if (para == 'ADDRESS')
-				label.style.fontStyle = 'italic';
+			    var label = document.createElement('label');
+			    if (para.match(/H[123456]/)) {
+			    	var fontSize = {'H1':'2em','H2':'1.5em','H3':'1.17em','H4':'1em','H5':'0.83em','H6':'0.75em'};
+			    	label.style.fontWeight = 'bold';
+			    	label.style.fontSize = fontSize[para];
+                    label.style.lineHeight = 1.4;
+			    }
+			    else if (para === 'ADDRESS') {
+			    	label.style.fontStyle = 'italic';
+                }
 
-			label.appendChild(document.createTextNode(GB.paragraph[para]));
-			div.appendChild(label);
+			    label.appendChild(document.createTextNode(GB.paragraph[para]));
+			    div.appendChild(label);
 
-			label.setAttribute('name', GB.paragraph[para]);
-			outputHtml.appendChild(div);
+			    label.setAttribute('name', GB.paragraph[para]);
+			    outputHtml.appendChild(div);
+            }
 		}
-
 		self.createWindow(150, outputHtml);
 		self.createPulldownFrame(outputHtml, menu);
 		elem = self.pulldown[menu];
 	}
-
 	self.setPulldownClassName(elem.firstChild.getElementsByTagName('LABEL'), pNode);
 	self.windowPos(pNode, menu);
 	self.displayWindow(pNode, menu);
 },
 
 showFontSizeMenu : function (pNode) {
-	var self = this;
-	var menu = pNode.getAttribute('name');
-	var elem = self.pulldown[menu];
+    var self = this;
+    var menu = pNode.getAttribute('name');
+    var elem = self.pulldown[menu];
 
-	if (!elem) {
-		var outputHtml = document.createElement('div');
+    if (!elem) {
+        var outputHtml = document.createElement('div');
+        for (var size in GB.fontSize) {
+            if (GB.fontSize[size] == null) break;
+            var div = document.createElement('div');
+            var label = document.createElement('label');
+            var text = size == 7 ? '가나다' : '가나다라';
+            
+            div.id = size;
+            div.onclick = function() { self.doCmdPopup("FontSize", this.id); };
+            div.onmouseover = function() { self.pulldownMouseOver(this); };
+            div.onmouseout = function() { self.pulldownMouseOut(this); };
+            div.style.fontSize = GB.fontSize[size];
 
-		for (var size in GB.fontSize) {
-			if (GB.fontSize[size] == null) break;
-			var div = document.createElement('div');
-			var label = document.createElement('label');
-			var text = size == 7 ? '가나다' : '가나다라';
-			div.id = size;
-			div.onclick = function() { self.doCmdPopup("FontSize", this.id); };
-			div.onmouseover = function() { self.pulldownMouseOver(this); };
-			div.onmouseout = function() { self.pulldownMouseOut(this); };
-			div.style.fontSize = GB.fontSize[size];
-
-			label.style.fontFamily = this.config.editorFontName;
-			label.setAttribute('name', GB.fontSize[size]);
-			label.appendChild(document.createTextNode(text+'('+GB.fontSize[size] +')'));
-			div.appendChild(label);
-			outputHtml.appendChild(div);
-		}
-
-		self.createWindow(320, outputHtml);
-		self.createPulldownFrame(outputHtml, menu);
-		elem = self.pulldown[menu];
-	}
-
-	self.setPulldownClassName(elem.firstChild.getElementsByTagName('LABEL'), pNode);
-	self.windowPos(pNode, menu);
-	self.displayWindow(pNode, menu);
+            label.style.fontFamily = this.config.editorFontName;
+            label.setAttribute('name', GB.fontSize[size]);
+            label.appendChild(document.createTextNode(text+'('+GB.fontSize[size] +')'));
+            div.appendChild(label);
+            outputHtml.appendChild(div);
+        }
+        self.createWindow(320, outputHtml);
+        self.createPulldownFrame(outputHtml, menu);
+        elem = self.pulldown[menu];
+    }
+    self.setPulldownClassName(elem.firstChild.getElementsByTagName('LABEL'), pNode);
+    self.windowPos(pNode, menu);
+    self.displayWindow(pNode, menu);
 },
 
 showTextBlockMenu : function (pNode) {
@@ -1651,13 +1800,11 @@ showTextBlockMenu : function (pNode) {
 			outputHtml.appendChild(wrapper);
 
 		}
-
 		self.createWindow(160, outputHtml);
 		self.createPulldownFrame(outputHtml, menu);
 		elem = self.pulldown[menu];
 		elem.firstChild.className = 'cheditor-pulldown-textblock-container';
 	}
-
 	self.windowPos(pNode, menu);
 	self.displayWindow(pNode, menu);
 },
@@ -1672,10 +1819,10 @@ createPulldownFrame : function (contents, id) {
 
 setDefaultCss : function (ar) {
 	if (arguments.length == 0) {
-		ar = {cssName: 'default.css', doc: this.doc};
-		if (GB.browser.msie || GB.browser.opera) {
-			ar = {cssName: 'p.css', doc: this.doc};
-		}
+		ar = {cssName: 'ui.css', doc: this.doc};
+		//if (GB.browser.msie || GB.browser.opera) {
+			ar = {cssName: 'editarea.css', doc: this.doc};
+		//}
 	}
 
 	var cssFile = this.config.cssPath + ar.cssName,
@@ -1709,9 +1856,10 @@ setDefaultCss : function (ar) {
 
 setEditorEvent : function () {
 	var self = this;
-	var keyArrow = function(event) { self.doOnArrowKeyPress(event); };
-	self.addEvent(self.doc, "keydown", keyArrow);
-
+    
+    var keyArrow = function(event) { self.doOnArrowKeyPress(event); };
+    self.addEvent(self.doc, "keydown", keyArrow);    
+    
 	var keyPress = function(event) { self.doOnKeyPress(event); };
 	self.addEvent(self.doc, "keypress", keyPress);
 
@@ -1722,29 +1870,34 @@ setEditorEvent : function () {
 	self.addEvent(self.doc, "mousedown", hideBox);
 },
 
-addEvent : function (elem, ev, func) {
-	if (GB.browser.msie)
-		elem.attachEvent("on"+ev, func);
-	else
-		elem.addEventListener(ev, func, false);
+addEvent : function (evTarget, evType, evHandler) {
+    if (evTarget.addEventListener) {
+        evTarget.addEventListener(evType, evHandler, false);
+    }
+    else {
+        evTarget.attachEvent("on"+evType, evHandler);
+    }
+        
 },
 
 removeEvent : function (elem, ev, func) {
-	if (GB.browser.msie)
-		elem.detachEvent("on"+ev, func);
-	else
+	if (elem.removeEventListener) {
 		elem.removeEventListener(ev, func, false);
+    }
+	else {
+        elem.detachEvent("on"+ev, func);
+    }
 },
 
 stopEvent : function (ev) {
-	if (GB.browser.msie) {
-		ev.cancelBubble = true;
-		ev.returnValue = false;
-	}
-	else {
-		ev.preventDefault();
-		ev.stopPropagation();
-	}
+    if (ev.preventDefault) {
+        ev.preventDefault();
+        ev.stopPropagation();
+    }
+    else {
+        ev.cancelBubble = true;
+        ev.returnValue = false;
+    }
 },
 
 toolbarButtonOut : function (elemButton, nTop) {
@@ -1760,48 +1913,104 @@ changeFontColor : function (color, type) {
 	if (type == 'BackColor' && !GB.browser.msie) {
 		type = 'HiliteColor';
 	}
-	this.doCmdPopup(type, color);
+	this.doCmdPopup(type, this.colorConvert(color, 'hex'));
 },
 
 getElement : function (elem, tag) {
-	while (elem != null && elem.tagName != tag) {
-		if (elem.nodeName == 'BODY') break;
+    if (!elem || !tag)
+        return null;
+    
+	while (elem !== null && elem.nodeName.toLowerCase() !== tag.toLowerCase()) {
+		if (elem.nodeName.toLowerCase() === 'body') break;
 		elem = elem.parentNode;
 	}
 	return elem;
 },
 
-hyperLink: function (url, target, title) {
-	this.editArea.focus();
-	var rng = this.range;
-	var pNode = null;
-	
-    if (GB.browser.msie) {
-        rng.select();
-        rng.execCommand("UnLink", false);
-        rng.execCommand("CreateLink", false, url);
-
-        switch (this.getSelectionType(rng)) {
-        case GB.selection.SELECTION_TEXT :
-            pNode = rng.parentElement();
-            break;
-        case GB.selection.SELECTION_ELEMENT :
-            pNode = rng.item(0).parentNode;
-            break;
-        default : pNode = null;
-        }    
+hyperLink: function (href, target, title) {
+    var self = this;
+	self.editArea.focus();
+    var links = null;
+    var createLinks = function() {
+        var range = null, selectedLinks = [], selection = null;
+        var container = null, sType = null, i=0, k=0;
+        
+        range = self.restoreRange();
+        linkRange = self.createRange();
+        
+        if (self.W3CRange) {
+            self.doc.execCommand("CreateLink", false, href);
+            
+            selection = self.getSelection();
+            for (; i<selection.rangeCount; ++i) {
+                range = selection.getRangeAt(i);
+                container = range.commonAncestorContainer;
+                sType = self.getSelectionType(range);
+                if (sType === GB.selection.SELECTION_TEXT) {
+                    container = container.parentNode;
+                }
+                if (container.nodeName.toLowerCase() === 'a') {
+                    selectedLinks.push(container);
+                }
+                else {
+                    links = container.getElementsByTagName('a');
+                    for (; k<links.length; ++k) {
+                        linkRange.selectNodeContents(links[k]);
+                        if (linkRange.compareBoundaryPoints(range.END_TO_START, range) < 1 && 
+                                linkRange.compareBoundaryPoints(range.START_TO_END, range) > -1)
+                        {
+                            selectedLinks.push(links[k]);
+                        }
+                    }
+                }
+            }
+            linkRange.detach();
+        }
+        else {
+            range = self.doc.selection.createRange();
+            range.execCommand("UnLink", false);
+            range.execCommand("CreateLink", false, href);
+            
+            sType = self.getSelectionType(range);
+            switch (sType) {
+            case GB.selection.SELECTION_TEXT :
+                container = range.parentElement();
+                break;
+            case GB.selection.SELECTION_ELEMENT :
+                container = range.item(0).parentNode;
+                break;
+            default : return null;
+            }
      
-        if (pNode && pNode.nodeName != 'A')  pNode = this.getElement(pNode, 'A');
-    }  
-	else {
-		this.doc.execCommand("CreateLink", false, url);
-		pNode = this.getRange().startContainer;
-	}
+            if (container.nodeName.toLowerCase() === 'a') {
+                selectedLinks.push(container);
+            }
+            else {
+                links = container.getElementsByTagName('a');
+                for (; i<links.length; ++i) {
+                    linkRange.moveToElementText(links[i]);
+                    if (linkRange.compareEndPoints("StartToEnd", range) > -1 &&
+                            linkRange.compareEndPoints("EndToStart", range) < 1)
+                    {
+                        selectedLinks.push(links[i]);
+                    }
+                }
+            }
+        }
+        return selectedLinks;
+    };
 
-	if (pNode) {
-		if (target) try { pNode.setAttribute("target", target); } catch(e) {};
-		if (title)  try { pNode.setAttribute("title",  title); } catch(e) {};
-	}
+    links = createLinks();
+    if (links) {
+        for (i=0; i<links.length; ++i) {
+            if (target) {
+                links[i].setAttribute("target", target);
+            }
+            if (title) {
+                links[i].setAttribute("title", title);
+            }
+        }
+    }
 },
 
 boxStyle: function (el) {
@@ -1860,7 +2069,8 @@ boxStyle: function (el) {
 
 insertFlash: function (elem) {
 	this.editArea.focus();
-
+    this.restoreRange();
+    
 	if (typeof elem === 'string') {
 		var embed = null;
 		var div = this.doc.createElement('DIV');
@@ -1881,7 +2091,7 @@ insertFlash: function (elem) {
 				var movieHeight, movieWidth;
 				movieWidth  = (isNaN(object.width) != true) ? object.width : 320;
 				movieHeight = (isNaN(object.height)!= true) ? object.height: 240;
-				var params = new Array();
+				var params = [];
 
 				do {
 					if ((child.nodeName == 'PARAM') &&  (typeof child.name != 'undefined') && (typeof child.value != 'undefined'))
@@ -1906,11 +2116,12 @@ insertFlash: function (elem) {
 		}
 
 		if (embed != null) {
-			if (GB.browser.msie) {
-				this.doCmdPaste(embed.outerHTML);
+			if (this.W3CRange) {
+                this.insertNodeAtSelection(embed);
+				
 			}
 			else {
-				this.insertNodeAtSelection(embed);
+				this.doCmdPaste(embed.outerHTML);
 			}
 		}
 	}
@@ -1918,34 +2129,40 @@ insertFlash: function (elem) {
 },
 
 insertHtmlPopup: function (elem) {
-	this.editArea.focus();
-	if (GB.browser.msie) {
-		if (typeof elem === 'string') {
-			this.doCmdPaste(elem);
-		}
-		else {
-			this.doCmdPaste(elem.outerHTML);
-		}
-	}
-	else {
-		if (typeof elem === 'string') {
-			var div = this.doc.createElement('DIV');
-			div.innerHTML = elem;
-			this.insertNodeAtSelection(div.firstChild);
-		}
-		else {
-			this.insertNodeAtSelection(elem);
-		}
-	}
-	this.editArea.focus();
+    this.editArea.focus();
+    this.restoreRange();
+    
+    if (!this.W3CRange) {
+        if (typeof elem === 'string') {
+            this.doCmdPaste(elem);
+        }
+        else {
+            this.doCmdPaste(elem.outerHTML);
+        }
+    }
+    else {
+        if (typeof elem === 'string') {
+            var div = this.doc.createElement('div');
+            div.innerHTML = elem;
+			if (div.hasChildNodes) {
+            	this.insertNodeAtSelection(div.firstChild);
+			}
+        }
+        else {
+            this.insertNodeAtSelection(elem);
+        }
+    }
+
+	this.clearStoredSelections();
+    this.editArea.focus();
 },
 
 insertHTML: function (html) {
-	if (GB.browser.msie) {
+	if (!this.W3CRange) {
 		this.getRange().pasteHTML((typeof(html) === 'string') ? html : html.outerHTML);
 	}
 	else {
-		var div = this.doc.createElement('DIV');
+		var div = this.doc.createElement('div');
 		if (typeof html === 'string') div.innerHTML = html;
 		else div.appendChild(html);
 		this.insertNodeAtSelection(div.firstChild);
@@ -1954,73 +2171,93 @@ insertHTML: function (html) {
 
 insertNodeAtSelection: function (insertNode) {
 	var selection = this.getSelection();
-	var rng = this.getRange();
+	var range = this.getRange();
 
 	selection.removeAllRanges();
-	rng.deleteContents();
+	range.deleteContents();
 
-	var container = rng.startContainer;
-	var pos = rng.startOffset;
+	var container = range.startContainer;
+	var pos = range.startOffset;
 
 	if (container.nodeType == GB.node.TEXT_NODE && insertNode.nodeType == GB.node.TEXT_NODE) {
 		container.insertData(pos, insertNode.data);
 		try {
-			rng = this.getRange();
-			rng.setEnd(container, pos + insertNode.length);
-			rng.setStart(container, pos + insertNode.length);
-			this.setRange();
+			range.setEnd(container, pos + insertNode.length);
+			range.setStart(container, pos + insertNode.length);
+			selection.addRange(range);
 		}
-		catch (e) {};
+		catch (e) {}
 	}
 	else {
-		var afterNode, beforeNode;
-		var isNode = insertNode;
+		var afterNode, beforeNode, isNode;
+		isNode = insertNode;
 
-		if (container.nodeType == GB.node.TEXT_NODE) {
+		if (container.nodeType === GB.node.TEXT_NODE) {
 			var textNode    = container;
 			var text        = textNode.nodeValue;
 			var textBefore  = text.substr(0, pos);
 			var textAfter   = text.substr(pos);
 
 			container   = textNode.parentNode;
-			beforeNode  = document.createTextNode(textBefore);
-			afterNode   = document.createTextNode(textAfter);
+			beforeNode  = this.doc.createTextNode(textBefore);
+			afterNode   = this.doc.createTextNode(textAfter);
 
 			container.insertBefore(afterNode, textNode);
 			container.insertBefore(insertNode, afterNode);
 			container.insertBefore(beforeNode, insertNode);
 			container.removeChild(textNode);
+            
 			this.toolbarUpdate();
 			this.selectNodeContents(isNode, 0);
 		}
 		else {
 			afterNode = container.childNodes[pos];
-			container.insertBefore(insertNode, afterNode);
-			this.toolbarUpdate();
-			this.selectNodeContents(isNode, 0);
+            if (typeof afterNode === 'undefined') {
+                container.appendChild(insertNode);
+            }
+            else {
+                container.insertBefore(insertNode, afterNode);
+            }
+			
+            this.toolbarUpdate();
+            
+			if (insertNode.nodeType == GB.node.TEXT_NODE) {
+				range.setEnd(container, pos + insertNode.length);
+				range.setStart(container, pos + insertNode.length);
+				selection.addRange(range);
+			}
+			else {
+				this.selectNodeContents(isNode, 0);
+			}
 		}
 	}
 },
 
 selectNodeContents : function (node, pos) {
-	var collapsed = (typeof pos != 'undefined');
-	var sel = this.getSelection();
-	var rng = this.getRange();
+	var collapsed = (typeof pos !== 'undefined');
+	var selection = this.getSelection();
+	var range = this.getRange();
 
-	if (node.nodeType == GB.node.ELEMENT_NODE) {
-		rng.selectNode(node);
-		(collapsed) && rng.collapse(pos);
+	if (node.nodeType === GB.node.ELEMENT_NODE) {
+		range.selectNode(node);
+        if (collapsed) {
+            range.collapse(pos);
+        }
 	}
 
-	sel.removeAllRanges();
-	sel.addRange(rng);
+	selection.removeAllRanges();
+	selection.addRange(range);
+	return range;
 },
 
 doInsertImage : function (images) {
 	this.editArea.focus();
-	var len = images.length;
+	var range = this.restoreRange();
+	var len = images.length, tmpWrapper, br;
 	if (len < 1)
 		return;
+
+	tmpWrapper = this.doc.createElement('div');
 
 	for (var i=0; i < images.length; i++) {
 		var attr = images[i];
@@ -2029,35 +2266,46 @@ doInsertImage : function (images) {
 		img.setAttribute('width', attr.width);
 		img.setAttribute('height', attr.height);
 		img.setAttribute('alt', attr.alt ? attr.alt : attr.info.origName);
-		img.style.border = 'none';
+		//img.style.border = 'none';
 
 		this.resizeImage(img);
 
-		if (attr.align) {
-			var div = document.createElement('div');
-			div.style.textAlign = attr.align;
-			div.appendChild(img);
+		var div = this.doc.createElement('div');
+		div.style.textAlign = attr.align;
+		div.appendChild(img);
 
-			if (attr.align == 'left' || attr.align == 'right') {
-				if (GB.browser.msie) {
-					img.style.styleFloat = attr.align;
-				}
-				else {
-					img.style.cssFloat = attr.align;
-				}
-			}
+		if (attr.align === 'left' || attr.align === 'right') {
+			var cssFloat = GB.browser.msie ? img.style.styleFloat : img.style.cssFloat;
+			if (cssFloat)
+				cssFloat = attr.align;
+		}
 
-			this.insertHtmlPopup(div);
-			this.insertHtmlPopup(this.doc.createElement('br'));
+		br = this.doc.createElement('div');
+		br.appendChild(this.doc.createTextNode('\u00a0'));
+
+		if (!this.W3CRange) {
+			tmpWrapper.appendChild(div);
+			tmpWrapper.appendChild(br);
 		}
 		else {
-			this.insertHtmlPopup(img);
+			range.insertNode(div);
+			range = this.selectNodeContents(div, 0);
+			div.parentNode.insertBefore(br, div);
+			div.parentNode.insertBefore(div, br);
 		}
 
-		if (typeof attr.info != 'undefined') {
+		if (typeof attr.info !== 'undefined') {
 			this.images.push(attr.info);
 		}
 	}
+
+	if (!this.W3CRange) {
+		range.pasteHTML(tmpWrapper.innerHTML);
+	}
+	else {
+		this.selectNodeContents(br, 0);
+	}
+
 	this.setImageEvent(true);
 },
 
@@ -2076,8 +2324,8 @@ resizeImageComplete : function (img) {
 	if (img.getAttribute('width') <= maxWidth)
 		return false;
 
-	img.setAttribute('height', Math.round((img.height * maxWidth) / img.width));
-	img.setAttribute('width', maxWidth);
+	img.setAttribute('height', ''+Math.round((img.height * maxWidth) / img.width));
+	img.setAttribute('width', ''+maxWidth);
 	return true;
 },
 
@@ -2114,11 +2362,10 @@ editMode : function () {
 	var key = GB.htmlKey.join ("|");
 	var reg1 = new RegExp ("(&lt;\/?)("+key+")( ?\/?)(&gt;)", "ig");
 	var reg2 = new RegExp ("(&lt;)("+key+") +([a-zA-Z]+)=(.+?)(\/?)(&gt;)", "ig");
-
 	content = content.replace(/</g,'&lt;').replace(/>/g,'&gt;');
 	content = content.replace(/&nbsp;/g, '&amp;nbsp;');
-	content = content.replace(reg2, "<font color=\"#0000c8\">$1$2</font> <font color=\"#b40000\">$3</font>=<font color=\"#248f00\">$4</font><font color=\"#0000c8\">$5$6</font>");
-	content = content.replace(reg1, "<font color=\"#0000cc\">$1$2$3$4</font>");
+	content = content.replace(reg2, "<span style=\"color:#0000c8\">$1$2</span> <span style=\"color:#b40000\">$3</span>=<span style=\"color:#248f00\">$4</span><span style=\"color:#0000c8\">$5$6</span>");
+	content = content.replace(reg1, "<span style=\"color:#0000cc\">$1$2$3$4</span>");
 	content = content.replace(/\n/g, '<br />');
 
 	this.doc.body.innerHTML = content;
@@ -2175,20 +2422,20 @@ putContents : function (content) {
     		content = content.substr(content.indexOf('>') + 1);
     		content = '<html>' + content;
 		}
-
+		
 		this.doc.open();
 		this.doc.write(content);
 		this.doc.close();
 	}
 	else {
-		this.doc.body.innerHTML = content;;
+		this.doc.body.innerHTML = content;
 	}
 },
 
 getImages : function () {
 	var img = this.doc.body.getElementsByTagName('img');
 	var imgNumber = this.images.length;
-	var imgArr = new Array();
+	var imgArr = [];
 
 	for (var i=0; i<img.length; i++) {
 		if (img[i].src) {
@@ -2237,8 +2484,8 @@ xhtmlParse : function (node, lang, encoding, needNewLine, inside_pre) {
 					}
 					
 					if (elemName == 'embed') {
-						var parameter = /align=("[^\"]*"|'[^\']*'|[^\"\'\s]*)(\s|\>)/i;
-						var align_code = new String(child.outerHTML).match(parameter);
+						var parameter = /align=("[^"]*"|'[^']*'|[^"'\s]*)(\s|>)/i;
+						var align_code = child.outerHTML.match(parameter);
 						if (align_code) {
 							align_code = align_code[1];
 							mediaAlign = align_code.replace(/("|')/g, "");
@@ -2312,7 +2559,10 @@ xhtmlParse : function (node, lang, encoding, needNewLine, inside_pre) {
 							break;
 						default:
 							try {
-								attrValue = child.getAttribute(attrName, 2);
+								//attrValue = child.getAttribute(attrName);
+								attrValue = (GB.browser.msie && GB.browser.ver < 9) ? 
+									child.getAttribute(attrName, 2) :
+										child.getAttribute(attrName);
 							}
 							catch (e) {
 								validAttr = false;
@@ -2390,7 +2640,7 @@ xhtmlParse : function (node, lang, encoding, needNewLine, inside_pre) {
 			}
 			case 3: {
 				var nodeText = child.nodeValue.replace(/^\n/g, '');
-				xhtmlText += nodeText.replace(/\n{2,}$/g, '\n').replace(/\&/g, "&amp;").replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\u00A0/g, "&nbsp;");
+				xhtmlText += nodeText.replace(/\n{2,}$/g, '\n').replace(/&/g, "&amp;").replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\u00A0/g, "&nbsp;");
 				break;
 			}
 			default:
@@ -2401,7 +2651,7 @@ xhtmlParse : function (node, lang, encoding, needNewLine, inside_pre) {
 },
 
 fix_attribute : function (text) {
-	return String(text).replace(/\&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\"/g, "&quot;");
+	return String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 },
 
 fixObjectSrc : function (text) {
@@ -2418,7 +2668,7 @@ fixObjectSrc : function (text) {
 },
 
 replaceObjectCode : function (text) {
-	var tmpTxt = new String(text);
+	var tmpTxt = ''+text;
 	tmpTxt = tmpTxt.replace(/ style=/gi, 	' style=');
 	tmpTxt = tmpTxt.replace(/ codeBase=/gi, ' codebase=');
 	tmpTxt = tmpTxt.replace(/ height=/gi, 	' height=');
@@ -2444,7 +2694,7 @@ checkDocLinks : function () {
 	var links = this.doc.links;
 	var len = links.length;
 	var host = location.host;
-	this.cheditor.links = new Array();
+	this.cheditor.links = [];
 
 	for (var i=0; i < len; i++) {
 		if (this.config.includeHostname == false) {
@@ -2496,14 +2746,12 @@ getContents : function (fullSource) {
 			if (para[i].style.cssText.toLowerCase().indexOf("margin") == -1) {
 				para[i].style.margin = '0px';
 			}
-			continue;
 		}
 	}
 
 	if (this.config.allowedScript == false) {
-		var script = this.doc.body.getElementsByTagName('SCRIPT');
-		var remove = new Array();
-		var i;
+		var script = this.doc.body.getElementsByTagName('script');
+		var remove = [];
 
 		for (i=0; i < script.length; i++) {
 			remove.push(script[i]);
@@ -2514,7 +2762,7 @@ getContents : function (fullSource) {
 		}
 	}
 
-	var mydoc = new String('');
+	var mydoc = '';
 	
 	if (GB.browser.msie) this.doc.body.removeAttribute('contentEditable');
 	
@@ -2524,7 +2772,7 @@ getContents : function (fullSource) {
        		mydoc = content.outerHTML;
        	}
        	else {
-       		var div = document.createElement('DIV');
+       		var div = document.createElement('div');
            	div.appendChild(content.cloneNode(true));
            	mydoc = div.innerHTML;
         }
@@ -2533,7 +2781,7 @@ getContents : function (fullSource) {
     	mydoc = this.doc.body.innerHTML;
     }
 
-	if (this.config.outputXhtml) {
+    if (this.config.outputXhtml) {
 	   	var tmpDoc = GB.browser.msie ? this.cheditor.htmlEditable.contentWindow.document : 
 	    		this.cheditor.htmlEditable.contentDocument;
 	    tmpDoc.open();
@@ -2543,13 +2791,20 @@ getContents : function (fullSource) {
 	}
 
 	if ((GB.browser.msie || GB.browser.opera) && this.config.ieEnterMode == 'div') {
-		mydoc = mydoc.replace(/<(\/?)P([^>]*)>/ig,
+		mydoc = mydoc.replace(/<(\/?)p([^>]*)>/ig,
 				function (a, b, c) {
 					if (/^\S/.test(c)) return a;
 					return '<' + b + 'div' + c + '>';
 				});
 	}
-
+	
+    if (!GB.browser.msie && this.config.colorToHex) {
+        mydoc = mydoc.replace(/([color|background\-color]\s*:)\s*rgba?\(\s*(\d+)\s*,\s*(\d+),\s*(\d+)\)/ig,
+                function (a, b, c, d, e) { 
+                    return b + ' #' + (1 << 24 | c << 16 | d << 8 | e).toString(16).substr(1);
+                });  
+    }
+    
 	return this.makeAmpTag(mydoc);
 },
 
@@ -2595,8 +2850,8 @@ returnFalse : function () {
 			}
 		}
 		else {
-			img[i].removeAttribute("onload", "", 0);
-			img[i].removeAttribute("className", "", 0);
+			img[i].removeAttribute("onload");
+			img[i].removeAttribute("className");
 		}
 	}
 	return false;
@@ -2607,6 +2862,18 @@ trimSpace : function (str) {
 	return str.replace(/^\s+|\s+$/g, '');
 },
 
+makeRandomString : function () {
+	var chars = "_-$@!#0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+	var len = 32;
+	var clen = chars.length;
+	var rData = '';
+	for (var i=0; i<len; i++) {
+		var rnum = Math.floor(Math.random() * clen);
+		rData += chars.substring(rnum,rnum+1);
+	}
+	return rData;
+},
+        
 strLength : function (str) {
 	var len = str.length;
 	var mbytes = 0;
@@ -2644,6 +2911,7 @@ inputLength : function () {
 
 displayWindow : function (pNode, id) {
 	this.editArea.focus();
+    this.setRange(this.getRange());
 	this.boxHideAll(id);
 
 	var pullDown = this.pulldown[id];
@@ -2671,16 +2939,17 @@ windowPos : function (pNode, id) {
 
 boxHideAll : function (showId) {
 	for (var menu in this.pulldown) {
-		var elem = this.pulldown[menu];
-		if (elem != null) {
-			elem.style.visibility = 'hidden';
-			var ishide = (typeof showId == 'undefined') ? true : menu != showId;
-
-			if (this.toolbar != null && ishide) {
-				this.toolbar[menu].checked = false;
-				this.toolbarButtonUnchecked(this.toolbar[menu].button);
-			}
-		}
+        if (this.pulldown.hasOwnProperty(menu)) {
+		    var elem = this.pulldown[menu];
+		    if (elem !== null) {
+		    	elem.style.visibility = 'hidden';
+		    	var ishide = (typeof showId === 'undefined') ? true : menu !== showId;
+		    	if (this.toolbar !== null && ishide) {
+		    		this.toolbar[menu].checked = false;
+		    		this.toolbarButtonUnchecked(this.toolbar[menu].button);
+		    	}
+		    }
+        }
 	}
 },
 
@@ -2747,60 +3016,57 @@ setColorTable : function (pNode, menu) {
 },
 
 onKeyPressToolbarUpdate : function () {
-	var self = this;
-	if (self.tempTimer) {
-		clearTimeout(self.tempTimer);
-	}
-
-	self.tempTimer = setTimeout(function() {
-		self.toolbarUpdate();
-		self.tempTimer = null;
-	}, 30);
-
-	if (self.config.showTagPath) self.doEditorEvent();
+    var self = this;
+    if (self.tempTimer) clearTimeout(self.tempTimer);
+    self.tempTimer = setTimeout(function() {
+        self.toolbarUpdate();
+        self.tempTimer = null;
+    }, 70);
+    if (self.config.showTagPath) self.doEditorEvent();
 },
 
 doOnArrowKeyPress : function (ev) {
-	var key = ev.keyCode;
-	if (key != 8 && (key < 33 || key > 40)) return;
-	this.onKeyPressToolbarUpdate();
+    var key = ev.keyCode;
+    if (key != 8 && (key < 33 || key > 40)) return;
+    this.onKeyPressToolbarUpdate();
 },
 
 doOnKeyPress : function (ev) {
-	if (GB.browser.msie && this.config.ieEnterMode == 'br') {
-		var key = this.editArea.event.keyCode;
-		if (key && key == 13) {
-			if (this.editArea.event.shiftKey == false) {
-				var rng = this.getRange();
-				this.editArea.event.returnValue = false;
-				this.editArea.event.cancelBubble = true;
-				rng.pasteHTML('<br />');
-				rng.select();
-				rng.moveEnd("character", 1);
-				rng.moveStart("character", 1);
-				rng.collapse(false);
-				return false;
-			}
-			else
-				return this.editArea.event.keyCode = 13;
-		}
-	}
-	this.onKeyPressToolbarUpdate();
+    if (GB.browser.msie && this.config.ieEnterMode == 'br') {
+        var key = this.editArea.event.keyCode;
+        if (key && key == 13) {
+            if (this.editArea.event.shiftKey == false) {
+                var rng = this.getRange();
+                this.editArea.event.returnValue = false;
+                this.editArea.event.cancelBubble = true;
+                rng.pasteHTML('<br>');
+                rng.select();
+                rng.moveEnd("character", 1);
+                rng.moveStart("character", 1);
+                rng.collapse(false);
+                return false;
+            }
+            else {
+                return this.editArea.event.keyCode = 13;
+            }
+        }
+    }
+    this.onKeyPressToolbarUpdate();
 },
 
 setWinPosition : function (oWin, oWinWidth) {
 	var obj = this.cheditor.container;
 	var L = 0;
 	var T = 0;
-
-	S = this.getWindowSize();
+	var S = this.getWindowSize();
 
 	if (obj.offsetParent) {
-		do {
-			T += obj.offsetTop;
-		} while (obj = obj.offsetParent);
-	}
-
+        while (obj) {
+            T += obj.offsetTop;
+            obj = obj.offsetParent;
+        }
+    }
+    
 	T += this.cheditor.toolbarWrapperHeight;
 
 	if (GB.browser.msie) L /= 2;
@@ -2833,7 +3099,7 @@ popupWinLoad : function (popupAttr) {
 	self.setWinPosition(self.cheditor.popupElem, popupAttr['width']);
 
 	var iframe = document.createElement("iframe");
-	iframe.setAttribute('frameBorder', 0);
+	iframe.setAttribute('frameBorder', "0");
 	iframe.setAttribute('name', popupAttr['tmpl']);
 	iframe.style.width  = '100%';
 	iframe.style.height = '100px';
@@ -2853,10 +3119,11 @@ popupWinLoad : function (popupAttr) {
 		iframe.contentWindow.init.call(self, iframe, popupAttr['argv'] ? popupAttr['argv'] : null);
 	};
 
+	//if (GB.browser.msie && iframe.onreadystatechange) {
 	if (GB.browser.msie) {
 		var done = false;
 		iframe.onreadystatechange = function() {
-			if (!done && (!this.readyState || this.readyState == "loaded" || this.readyState == "complete")) {
+			if (!done && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete")) {
 				done = true;
 				popWinResizeHeight();
 			}
@@ -2880,7 +3147,8 @@ popupWinLoad : function (popupAttr) {
 
 	if (GB.browser.msie) {
 		if (GB.browser.ver < 7) self.cheditor.modalBackground.style.height = modalSize.height + 'px';
-		self.cheditor.modalBackground.style.filter = 'alpha(opacity=50)';
+        if (GB.browser.ver < 10) self.cheditor.modalBackground.style.filter = 'alpha(opacity=50)';
+        else self.cheditor.modalBackground.style.opacity = .5;
 	}
 	else
 		self.cheditor.modalBackground.style.opacity = .5;
@@ -2891,35 +3159,144 @@ popupWinLoad : function (popupAttr) {
 	DragWindow.init(self.cheditor.dragHandle, self.cheditor.popupElem);
 },
 
-popupWinClose : function () {
-	if (this.cheditor.popupElem == null)
-		return;
+popupWinCancel : function () {
+    this.restoreRange();
+    this.popupWinClose();
+},
 
+popupWinClose : function () {
+	if (this.cheditor.popupElem == null) {
+		return;
+    }
 	this.cheditor.popupElem.style.display = 'none';
 	this.cheditor.popupElem.style.zIndex = -1;
 	this.cheditor.popupFrameWrapper.src = "";
+	
+	if (this.cheditor.popupFrameWrapper.hasChildNodes()) {
+		this.cheditor.popupFrameWrapper.removeChild(this.cheditor.popupFrameWrapper.firstChild);
+    }
+	
 	this.cheditor.modalBackground.style.display = 'none';
 	this.cheditor.modalBackground.style.zIndex = -1;
 
-	if (this.modalReSize != null) {
+	if (this.modalReSize !== null) {
 		if (GB.browser.opera) {
 			window.removeEventListener("resize", self.modaReSize, false);
 		}
 		this.modalReSize = null;
 	}
-
 	this.editArea.focus();
-	this.restoreRange();
+},
+
+clearStoredSelections : function () {
+    this.storedSelections.splice(0, this.storedSelections.length);
 },
 
 restoreRange : function () {
-	if (GB.browser.msie) {
-		var rng = this.range || this.getRange();
-		if (rng) {
-			rng.select();
-			this.range = null;
-		}
+    var range = null, selection = null;
+    if (this.storedSelections[0]) {
+        if (this.W3CRange) {
+            selection = this.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(this.storedSelections[0]);
+            range = selection.getRangeAt(0);
+
+        }
+        else {
+            range = this.getRange();
+            range.moveToBookmark(this.storedSelections[0]);
+            range.select();
+        }
+    }
+    return range;
+},
+
+setRange : function (range) {
+    var selection = null;
+    
+    if (this.W3CRange) {
+        selection = this.getSelection();
+		if (selection.rangeCount > 0) {
+			selection.removeAllRanges();
+			selection.addRange(range);
+            this.storedSelections[0] = selection.getRangeAt(0);
+		}    
+   }
+   else {
+        try {
+            if (range) {
+                this.storedSelections[0] = range.getBookmark();
+            }
+        } catch(e) {}
+   }
+},
+
+getSelection : function () {
+    return this.W3CRange ? this.editArea.getSelection() : this.doc.selection;
+},
+
+getRange : function () {
+   var selection = this.getSelection();
+   var range = null;
+
+    if (this.W3CRange) {
+        if (selection.getRangeAt) {
+            range = (selection.rangeCount > 0) ? selection.getRangeAt(0) : this.doc.createRange();
+        }
+        else {
+            range = this.doc.createRange();
+            range.setStart(selection.anchorNode, selection.anchorOffset);
+            range.setEnd(selection.focusNode, selection.focusOffset);
+        }
+    }
+    else {
+        range = (selection.createRange ? selection.createRange() : this.doc.createRange()) || this.doc.body.createTextRange();
+    }
+    
+    this.range = range;
+    return range;
+},
+
+createRange : function () {
+    var range = null;
+    
+    if (this.W3CRange) {
+        range = this.doc.createRange();
+    }
+    else {
+        range = this.doc.createRange ? this.doc.createRange() : this.doc.body.createTextRange();
+    }
+    
+    return range;
+},
+
+getSelectionType : function (range) {
+	if (!range) {
+        return null;
+    }
+	
+	var type = null;
+	if (this.W3CRange) {
+		type = GB.selection.SELECTION_TEXT;
+		if (range.startContainer === range.endContainer && range.startContainer.nodeType === GB.node.ELEMENT_NODE) {
+			type = GB.selection.SELECTION_ELEMENT;
+		}        
 	}
+	else {
+		type = GB.selection.SELECTION_NONE;
+		try {
+			var selectionType = this.doc.selection.type;
+			type = (selectionType === 'Text') ?
+					GB.selection.SELECTION_TEXT :
+						((selectionType === 'Control') ?
+							GB.selection.SELECTION_ELEMENT : GB.selection.SELECTION_NONE);
+
+			if (type === GB.selection.SELECTION_NONE && selectionType.createRange().parentElement()) {
+				type = GB.selection.SELECTION_TEXT;
+			}
+		} catch (e) {}
+	}
+	return type;
 },
 
 windowOpen : function (popupName) {
@@ -2933,94 +3310,19 @@ windowOpen : function (popupName) {
 		alert('사용할 수 없는 명령입니다.');
 },
 
-getSelection : function () {
-	return GB.browser.msie ? this.doc.selection : this.editArea.getSelection();
-},
-
-getRange : function () {
-	var self = this;
-	var sel = self.getSelection(), rng = null;
-
-	try {
-		if (sel) {
-			rng = GB.browser.msie ? (sel.createRange ? sel.createRange() : self.doc.createRange()) : sel.getRangeAt(0);
-		}
-	}
-	catch (e) {}
-
-	if (!rng) {
-		rng = GB.browser.msie ? self.doc.body.createTextRange() : self.doc.createRange();
-	}
-
-	return (this.range = rng);
-},
-
-setRange : function (rng) {
-	if (GB.browser.msie) {
-		try {
-			rng.select();
-		}
-		catch(e) {}
-	}
-	else {
-		var sel = this.getSelection();
-		if (sel) {
-			sel.removeAllRanges();
-			sel.addRange(rng);
-		}
-	}
-},
-
-getSelectionType : function (rng) {
-	if (!rng) return null;
-	var type = null;
-	
-	if (GB.browser.msie) {
-		type = GB.selection.SELECTION_NONE;
-
-		try {
-			var selectionType = this.doc.selection.type;
-			type = (selectionType == 'Text') ?
-					GB.selection.SELECTION_TEXT :
-						((selectionType == 'Control') ?
-							GB.selection.SELECTION_ELEMENT : GB.selection.SELECTION_NONE);
-
-			if (type == GB.selection.SELECTION_NONE && selectionType.createRange().parentElement()) {
-				type = GB.selection.SELECTION_TEXT;
-			}
-		}
-		catch (e) {}
-	}
-	else {
-		type = GB.selection.SELECTION_TEXT;
-		if (rng.startContainer == rng.endContainer && rng.startContainer.nodeType == GB.node.ELEMENT_NODE) {
-			type = GB.selection.SELECTION_ELEMENT;
-		}
-	}
-	return type;
-},
-
-saveUndo : function () {
-	if (this.config.customUndo == false) return;
-	
-	var html = this.getContents();
-	if (0 <= this.undoStackIndex && html == this.undoStack[this.undoStackIndex][0]) {
-		return;
-	}
-},
-
 doCmd : function (cmd, opt) {
-	var rng = null;
-	
-	this.editArea.focus();
+    this.editArea.focus();
 	this.boxHideAll();
 
-	if (cmd == 'NewDocument') {
+    var range = null;
+    range = this.range;
+
+    if (cmd == 'NewDocument') {
 		if (confirm('글 내용이 모두 사라집니다. 계속하시겠습니까?'))
 			this.doc.body.innerHTML = '';
 
-		this.images = new Array();
-		this.editImages = new Object;
+		this.images = [];
+		this.editImages = {};
 		this.editArea.focus();
 		this.toolbarUpdate();
 		return;
@@ -3053,18 +3355,13 @@ doCmd : function (cmd, opt) {
 		this.editArea.focus();
 		return;
 	}
-
-	if (GB.browser.msie) {
-		rng =  this.getRange();
-		if (this.getSelectionType(rng) == GB.selection.SELECTION_NONE)
-			rng = this.doc;
+    
+	if (this.W3CRange || (!this.W3CRange && (this.getSelectionType(range) === GB.selection.SELECTION_NONE))) {
+		range = this.doc;
 	}
-	else {
-		rng = this.doc;
-	}
-
+    
 	if (!GB.browser.msie && (cmd == 'Cut' || cmd == 'Copy' || cmd == 'Paste' || cmd == 'PasteFromWord')) {
-		try { rng.execCommand(cmd, false, opt); }
+		try { range.execCommand(cmd, false, opt); }
 		catch (e) {
 			var keyboard = '';
 			var command = '';
@@ -3086,44 +3383,45 @@ doCmd : function (cmd, opt) {
 		if (cmd == 'PasteFromWord') {
 			if (typeof this.cheditor.tmpdoc == 'undefined') {
 				var tmpframe = document.createElement('iframe');
-				tmpframe.setAttribute('contentEditable', true);
+				tmpframe.setAttribute('contentEditable', "true");
 				tmpframe.style.visibility = 'hidden';
 				tmpframe.style.height = tmpframe.style.width = '0px';
-				tmpframe.setAttribute('frameBorder', 0);
+				tmpframe.setAttribute('frameBorder', "0");
 				this.cheditor.editWrapper.appendChild(tmpframe);
 
 				var tmpdoc = tmpframe.contentWindow.document;
 				tmpdoc.designMode = 'On';
-				tmpdoc.open("text/html","replace");
+				tmpdoc.open();
 				tmpdoc.close();
 				this.cheditor.tmpdoc = tmpdoc;
 			}
 
-			rng = this.getRange();
+			range = this.getRange();
 			var tmpDoc = this.cheditor.tmpdoc;
 			tmpDoc.execCommand("SelectAll");
 			tmpDoc.execCommand("Paste");
 
-			rng.pasteHTML(this.cleanFromWord(tmpDoc));
-			rng.select();
+			range.pasteHTML(this.cleanFromWord(tmpDoc));
+			range.select();
 		}
 		else if (cmd == 'Paste') {
-			rng.execCommand(cmd);
+			range.execCommand(cmd);
 		}
 		else {
-			rng.execCommand(cmd, false, opt);
+            range.execCommand(cmd, false, opt);
 		}
 	}
 	catch (e) {
 		alert(cmd + ": 지원되지 않는 명령입니다.");
 	}
-
-	this.toolbarUpdate();
+    
+    this.editArea.focus();
+    this.toolbarUpdate();
 },
 
 cleanFromWord : function (tmpDoc) {
 	for (var i=0; i < tmpDoc.body.all.length; i++) {
-		tmpDoc.body.all[i].removeAttribute("className", "", 0);
+		tmpDoc.body.all[i].removeAttribute("className");
 	}
 
 	var doc = tmpDoc.body.innerHTML;
@@ -3143,12 +3441,12 @@ cleanFromWord : function (tmpDoc) {
 	doc = doc.replace(/<\/?st1:[^>]*>/g, "");
 	doc = doc.replace(/lang=.?[^" >]*/ig, "");
 	doc = doc.replace(/type=.?[^" >]*/g, "");
-	doc = doc.replace(/href=\'#[^\"]*\'/g, "");
-	doc = doc.replace(/href=\"#[^\"]*\"/g, "");
-	doc = doc.replace(/name=.?[^\" >]*/g, "");
-	doc = doc.replace(/ clear=\"all\"/g, "");
-	doc = doc.replace(/id=\"[^\"]*\"/g, "");
-	doc = doc.replace(/title=\"[^\"]*\"/g, "");
+	doc = doc.replace(/href='#[^"]*'/g, "");
+	doc = doc.replace(/href="#[^"]*"/g, "");
+	doc = doc.replace(/name=.?[^" >]*/g, "");
+	doc = doc.replace(/ clear="all"/g, "");
+	doc = doc.replace(/id="[^"]*"/g, "");
+	doc = doc.replace(/title="[^"]*"/g, "");
 	doc = doc.replace(/\n/g, "");
 	doc = doc.replace(/\r/g, "");
 	doc = doc.replace(/mso\-[^">;]*/g, "");
@@ -3167,60 +3465,58 @@ printPageBreak : function () {
 },
 
 doCmdPaste : function (html) {
-	this.editArea.focus();
-	if (GB.browser.msie) {
-		if (this.range.item) {
-			var rng = this.doc.body.createTextRange();
-			if (rng) {
-				rng.moveToElementText(this.range.item(0));
-				rng.collapse(false);
-				rng.select();
-				this.range.item(0).outerHTML = html;
-			}
-			this.toolbarUpdate();
-		}
-		else {
-			this.range.pasteHTML(html);
-			this.range.collapse(false);
-			this.range.select();
-		}
-	}
-	else {
-		this.insertNodeAtSelection(html);
-	}
+    this.editArea.focus();
+    if (!this.W3CRange) {
+        if (this.range.item) {
+            var rng = this.doc.body.createTextRange();
+            if (rng) {
+                rng.moveToElementText(this.range.item(0));
+                rng.collapse(false);
+                rng.select();
+                this.range.item(0).outerHTML = html;
+            }
+            this.toolbarUpdate();
+        }
+        else {
+            this.range.pasteHTML(html);
+            this.range.collapse(false);
+            this.range.select();
+        }
+    }
+    else {
+        this.insertNodeAtSelection(html);
+    }
 },
 
 doCmdPopup : function (cmd, opt) {
-	var self = this;
-	self.editArea.focus();
-	var rng, oRange;
+    var self = this, range = null, sType = null;
+    
+    self.editArea.focus();
+    range = self.restoreRange();
+    sType = self.getSelectionType(range);
+    
+    if (self.W3CRange) {
+        range = self.doc;
+    }
+    else {
+        range = (sType === GB.selection.SELECTION_NONE) ? self.doc : range;
+    }
 
-	if (GB.browser.msie) {
-		oRange = self.range || self.getRange();
-		oRange.select();
-		rng = (self.getSelectionType(oRange) == GB.selection.SELECTION_NONE) ? self.doc : oRange;
-	}
-	else {
-		rng = self.doc;
-	}
+    try {
+        range.execCommand(cmd, false, opt);
+    }
+    catch (e) { alert(e.toString()); }
 
-	try {
-		rng.execCommand(cmd, false, opt);
-	}
-	catch(e) {
-		alert(cmd + ": 지원되지 않는 명령입니다.");
-	}
+    if (self.tempTimer) {
+        clearTimeout(self.tempTimer);
+    }
 
-	if (self.tempTimer) {
-		clearTimeout(self.tempTimer);
-	}
+    self.tempTimer = setTimeout(function() {
+        self.toolbarUpdate();
+        self.tempTimer = null;
+    }, 50);
 
-	self.tempTimer = setTimeout(function() {
-		self.toolbarUpdate();
-		self.tempTimer = null;
-	}, 50);
-
-	self.boxHideAll();
+    self.boxHideAll();
 },
 
 modifyImage : function (img) {
@@ -3239,9 +3535,13 @@ modifyImage : function (img) {
 					  'right'       : '오른쪽'
 	};
 
+	if (img.id == '') img.id = 'image_' + Math.random();
+
 	var selectedWidth = document.createElement('select');
 	for (var idx in widthOptions) {
-		selectedWidth.options[selectedWidth.options.length] = new Option(widthOptions[idx].desc, idx);
+        if (widthOptions.hasOwnProperty(idx)) {
+		    selectedWidth.options[selectedWidth.options.length] = new Option(widthOptions[idx].desc, idx);
+        }
 	}
 
 	selectedWidth.onchange = function() {
@@ -3275,7 +3575,7 @@ modifyImage : function (img) {
 
 	selectedWidth.value = 'custom';
 
-	alignIco = new Image();
+	var alignIco = new Image();
 	alignIco.src = this.config.iconPath + 'image_align_left.png';
 	alignIco.className = 'cheditor-ico';
 	alignIco.style.marginLeft = '20px';
@@ -3286,8 +3586,10 @@ modifyImage : function (img) {
 
 	div.appendChild(selectedAlign);
 
-	for (var idx in imageAlign) {
-		selectedAlign.options[selectedAlign.options.length] = new Option(imageAlign[idx], idx);
+	for (idx in imageAlign) {
+        if (imageAlign.hasOwnProperty(idx)) {
+		    selectedAlign.options[selectedAlign.options.length] = new Option(imageAlign[idx], idx);
+        }
 	}
 
 	selectedAlign.onchange = function() {
@@ -3362,17 +3664,43 @@ modifyImage : function (img) {
 	}
 
 	var editImageSubmit = function() {
-		if (inputAlt.value != '' && inputAlt.value != null)
-			img.setAttribute('alt', inputAlt.value);
-		else
-			img.setAttribute('alt', '');
+		var alt = self.trimSpace(inputAlt.value);
+		if (alt != '') img.setAttribute('alt', alt);
+		else img.setAttribute('alt', '');
 
 		var setFloat = function(value) {
-			if (GB.browser.msie) img.style.styleFloat = value;
-			else img.style.cssFloat = value;
+			var pNode = img.parentNode;
+			if (GB.browser.msie) {
+				img.style.styleFloat = value;
+				if (pNode && pNode.id == img.id + '_caption') {
+					pNode.style.styleFloat = value;
+				}
+			}
+			else {
+				img.style.cssFloat = value;
+				if (pNode && pNode.id == img.id + '_caption') {
+					pNode.style.cssFloat = value;
+				}
+			}
 		};
+
 		var setWrapper = function(value) {
 			var pNode = img.parentNode;
+			if (pNode.id == img.id + '_caption') {
+				switch (value) {
+				case 'left' : 
+					pNode.style.margin = '';
+					break;
+				case 'right' : 
+					pNode.style.margin = '0px 0px auto auto';
+					break;
+				default:
+					pNode.style.margin = '0px auto';
+					break;
+				}
+				pNode = pNode.parentNode;
+			}
+
 			if (pNode.nodeName != 'DIV' && pNode.nodeName != 'P') {
 				var newNode = document.createElement('div');
 				img.parentNode.insertBefore(newNode, img);
@@ -3402,8 +3730,47 @@ modifyImage : function (img) {
 			img.style.margin = '';
 		}
 
-		img.removeAttribute('width');
-		img.removeAttribute('height');
+		var caption = self.trimSpace(fmInputCaption.value);
+        var pNode, captionText;
+		if (caption != '') {
+			pNode = img.parentNode;
+			var captionId = img.id + '_caption';
+			if (pNode && pNode.id == captionId) {
+				captionWrapper = pNode;
+				if (GB.browser.msie && img.style.styleFloat != '') {
+					captionWrapper.style.styleFloat = img.style.styleFloat;
+				}
+				if (!GB.browser.msie && img.style.cssFloat != '') {
+					captionWrapper.style.cssFloat = img.style.cssFloat;
+				}
+
+				captionText = getCaptionText();
+				captionText.innerHTML = '';
+				captionText.appendChild(document.createTextNode(caption));
+			}
+			else {
+				var captionWrapper = document.createElement('div');
+				captionWrapper.style.width = img.width + 'px';
+				captionWrapper.id = img.id + '_caption';
+				captionWrapper.style.textAlign = 'center';
+				captionWrapper.appendChild(img);
+
+				captionText = document.createElement('div');
+				captionText.setAttribute('style', self.config.imgCaptionText);
+				captionText.id = img.id + '_text';
+				captionText.appendChild(document.createTextNode(caption));
+				captionWrapper.appendChild(captionText);
+				pNode.appendChild(captionWrapper);
+			}
+		}
+		else {
+			pNode = img.parentNode;
+			if (pNode.id == img.id + '_caption') {
+				pNode.parentNode.appendChild(img);
+				pNode.parentNode.removeChild(pNode);
+			}
+		}
+
 		var width = null;
 		var height = null;
 
@@ -3462,7 +3829,7 @@ modifyImage : function (img) {
 	};
 
 	div.appendChild(document.createElement('br'));
-	div.appendChild(document.createTextNode('대체 텍스트(Alt):'));
+	div.appendChild(document.createTextNode('Alt:'));
 	var inputAlt = document.createElement('input');
 	inputAlt.setAttribute('type', 'text');
 	inputAlt.setAttribute('name', 'inputAlt');
@@ -3470,571 +3837,594 @@ modifyImage : function (img) {
 	inputAlt.className = 'user-input-alt';
 	div.appendChild(inputAlt);
 
+	div.appendChild(document.createTextNode('캡션:'));
+	var fmInputCaption = document.createElement('input');
+	fmInputCaption.setAttribute('type', 'text');
+	fmInputCaption.setAttribute('name', 'inputCaption');
+	fmInputCaption.setAttribute('value', '');
+	fmInputCaption.className = 'user-input-caption';
+    div.appendChild(fmInputCaption);
+
 	if (img.getAttribute('alt') != '' && img.getAttribute('alt') != null)
 		inputAlt.value = img.getAttribute('alt');
+
+	var getCaptionText = function() {
+		var ct = img.nextSibling;
+		var found = false;
+		while (ct) {
+			if (ct.id == (img.id + '_text')) {
+				found = true;
+				break;
+			}
+			ct = ct.nextSibling;
+		}
+		return (found) ? ct : null;
+	};
+	
+	var captionText = getCaptionText();
+	fmInputCaption.value = captionText ? captionText.innerHTML : '';
 
 	self.cheditor.editBlock.innerHTML = '';
 	self.cheditor.editBlock.appendChild(div);
 },
 
 modifyCell : function (ctd) {
-	var self = this;
-	var ctb = ctd;
-	var ctr = ctb;
-	//var editorPath = self.config.editorPath;
+    var self = this;
+    var ctb = ctd;
+    var ctr = ctb;
 
-	while (ctb != null && ctb.tagName.toLowerCase() != "table") ctb = ctb.parentNode;
-	while (ctr != null && ctr.tagName.toLowerCase() != "tr") ctr = ctr.parentNode;
+    while (ctb != null && ctb.tagName.toLowerCase() != "table") ctb = ctb.parentNode;
+    while (ctr != null && ctr.tagName.toLowerCase() != "tr") ctr = ctr.parentNode;
 
-	var getCellMatrix = function () {
-		var tm = new Array();
-   		var rows = (ctb.rows && ctb.rows.length > 0) ? ctb.rows : ctb.getElementsByTagName("TR");
+    var getCellMatrix = function () {
+        var tm = new Array();
+        var rows = (ctb.rows && ctb.rows.length > 0) ? ctb.rows : ctb.getElementsByTagName("TR");
 
-  		for (var i=0; i < rows.length; i++) {
-    		tm[i] = new Array();
-    	}
+        for (var i=0; i < rows.length; i++) {
+            tm[i] = new Array();
+        }
 
-  		for (var i=0; i < rows.length; i++) {
-    		var jr = 0;
-    		for (var j=0; j < rows[i].cells.length; j++) {
-      			while (typeof tm[i][jr] != 'undefined')
-      				jr++;
+        for (var i=0; i < rows.length; i++) {
+            var jr = 0;
+            for (var j=0; j < rows[i].cells.length; j++) {
+                while (typeof tm[i][jr] != 'undefined')
+                    jr++;
 
-      			for (var jh=jr; jh < jr + (rows[i].cells[j].colSpan ? rows[i].cells[j].colSpan : 1); jh++) {
-        			for (var jv=i; jv < i + (rows[i].cells[j].rowSpan ? rows[i].cells[j].rowSpan : 1); jv++) {
-          				tm[jv][jh] = (jv == i) ? rows[i].cells[j].cellIndex : -1;
-          			}
-      			}
-    		}
-  		}
-  		return tm;
-  	};
-
-	var insertColumn = function() {
-      	var tm = getCellMatrix();
-      	var rows = (ctb.rows && ctb.rows.length > 0) ? ctb.rows : ctb.getElementsByTagName("TR");
-      	var rowIndex = 0, realIndex = 0;
-      	
-      	if (ctr.rowIndex >= 0) {
-        	rowIndex = ctr.rowIndex;
-      	}
-      	else {
-        	for(var i=0; i < rows.length; i++) {
-        		if (rows[i] == ctr) {
-            		rowIndex = i;
-            		break;
-          		}
-        	}
-      	}
-
-      	for (var j=0; j < tm[rowIndex].length; j++) {
-        	if (tm[rowIndex][j] == ctd.cellIndex) {
-          		realIndex = j;
-          		break;
-        	}
-      	}
-
-      	for (var i=0; i < rows.length; i++) {
-        	if (tm[i][realIndex] != -1) {
-         		if (rows[i].cells[tm[i][realIndex]].colSpan > 1) {
-            		rows[i].cells[tm[i][realIndex]].colSpan++;
-          		}
-          		else {
-            		var newc = rows[i].insertCell(tm[i][realIndex]+1);
-            		var nc = rows[i].cells[tm[i][realIndex]].cloneNode(false);
-          			nc.innerHTML = '&nbsp;';
-            		rows[i].replaceChild(nc, newc);
-          		}
-        	}
-      	}
-	};
-
-	var insertRow = function(idx) {
-      	var newr = ctb.insertRow(ctr.rowIndex + 1);
-      	for (var i=0; i < ctr.cells.length; i++) {
-        	if (ctr.cells[i].rowSpan > 1) {
-          		ctr.cells[i].rowSpan++;
-        	}
-        	else {
-          		var newc = ctr.cells[i].cloneNode(false);
-          		newc.innerHTML = '&nbsp;';
-          		newr.appendChild(newc);
-        	}
-      	}
-
-      	for (var i=0; i < ctr.rowIndex; i++) {
-        	var tempr;
-        	if (ctb.rows && ctb.rows.length > 0) {
-          		tempr = ctb.rows[i];
-        	}
-        	else {
-          		tempr = ctb.getElementsByTagName("tr")[i];
-        	}
-        	for (var j=0; j < tempr.cells.length; j++) {
-          		if (tempr.cells[j].rowSpan > (ctr.rowIndex - i))
-            		tempr.cells[j].rowSpan++;
-        	}
-      	}
-	};
-
-	var deleteColumn = function () {
-      	var tm = getCellMatrix(ctb);
-      	var rows = (ctb.rows && ctb.rows.length>0) ? ctb.rows : ctb.getElementsByTagName("TR");
-      	var rowIndex = 0, realIndex = 0;
-
-      	if (ctr.rowIndex >= 0) {
-        	rowIndex = ctr.rowIndex;
-      	}
-      	else {
-        	for(var i=0; i < rows.length; i++) {
-          		if (rows[i] == ctr) {
-            		rowIndex = i;
-            		break;
-          		}
-        	}
-      	}
-
-      	if (tm[0].length <= 1) {
-        	ctb.parentNode.removeChild(ctb);
-      	}
-      	else {
-        	for (var j=0; j < tm[rowIndex].length; j++) {
-          		if (tm[rowIndex][j] == ctd.cellIndex) {
-            		realIndex = j;
-            		break;
-          		}
-        	}
-
-        	for (var i=0; i < rows.length; i++) {
-          		if (tm[i][realIndex] != -1) {
-            		if (rows[i].cells[tm[i][realIndex]].colSpan > 1) {
-              			rows[i].cells[tm[i][realIndex]].colSpan--;
-              		}
-            		else {
-              			rows[i].deleteCell(tm[i][realIndex]);
-              		}
-          		}
-        	}
-      	}
+                for (var jh=jr; jh < jr + (rows[i].cells[j].colSpan ? rows[i].cells[j].colSpan : 1); jh++) {
+                    for (var jv=i; jv < i + (rows[i].cells[j].rowSpan ? rows[i].cells[j].rowSpan : 1); jv++) {
+                        tm[jv][jh] = (jv == i) ? rows[i].cells[j].cellIndex : -1;
+                    }
+                }
+            }
+        }
+        return tm;
     };
 
-	var deleteRow = function () {
-      	var tm = getCellMatrix(ctb);
-      	var rows = (ctb.rows && ctb.rows.length>0) ? ctb.rows : ctb.getElementsByTagName("TR");
-      	var rowIndex = 0;
-      	
-      	if (ctr.rowIndex >= 0) {
-        	rowIndex = ctr.rowIndex;
-      	}
-      	else {
-        	for(var i=0; i < rows.length; i++) {
-          		if (rows[i] == ctr) {
-            		rowIndex = i;
-            		break;
-          		}
-        	}
-      	}
+    var insertColumn = function() {
+        var tm = getCellMatrix();
+        var rows = (ctb.rows && ctb.rows.length > 0) ? ctb.rows : ctb.getElementsByTagName("TR");
+        var rowIndex = 0, realIndex = 0;
 
-      	if (rows.length <= 1) {
-        	ctb.parentNode.removeChild(ctb);
-      	}
-      	else {
-        	for (var i=0; i < rowIndex; i++) {
-          		var tempr = rows[i];
-          		for (var j=0; j < tempr.cells.length; j++) {
-            		if (tempr.cells[j].rowSpan > (rowIndex - i))
-              			tempr.cells[j].rowSpan--;
-          		}
-        	}
+        if (ctr.rowIndex >= 0) {
+            rowIndex = ctr.rowIndex;
+        }
+        else {
+            for(var i=0; i < rows.length; i++) {
+                if (rows[i] == ctr) {
+                    rowIndex = i;
+                    break;
+                }
+            }
+        }
 
-        	var curCI = -1;
-        	for (var i=0; i < tm[rowIndex].length; i++) {
-          		var prevCI = curCI;
-          		curCI = tm[rowIndex][i];
+        for (var j=0; j < tm[rowIndex].length; j++) {
+            if (tm[rowIndex][j] == ctd.cellIndex) {
+                realIndex = j;
+                break;
+            }
+        }
 
-          		if (curCI != -1 && curCI != prevCI && ctr.cells[curCI].rowSpan>1 && (rowIndex+1) < rows.length) {
-            		var ni = i;
-            		var nrCI = tm[rowIndex+1][ni];
-            		while (nrCI == -1) {
-              			ni++;
-               			nrCI = (ni < rows[rowIndex+1].cells.length) ? tm[rowIndex+1][ni] : rows[rowIndex+1].cells.length;
-            		}
-
-            		var newc = rows[rowIndex+1].insertCell(nrCI);
-            		rows[rowIndex].cells[curCI].rowSpan--;
-            		var nc = rows[rowIndex].cells[curCI].cloneNode(false);
-            		rows[rowIndex+1].replaceChild(nc, newc);
-
-            		var cs = (ctr.cells[curCI].colSpan>1) ? ctr.cells[curCI].colSpan : 1;
-            		var nj = 0;
-
-            		for (var j=i; j < (i+cs); j++) {
-              			tm[rowIndex+1][j] = nrCI;
-              			nj = j;
-            		}
-            		for (var j=nj; j < tm[rowIndex+1].length; j++) {
-              			if (tm[rowIndex+1][j] != -1)
-                			tm[rowIndex+1][j]++;
-            		}
-          		}
-        	}
-
-        	if (ctb.rows && ctb.rows.length > 0) {
-          		ctb.deleteRow(rowIndex);
-        	}
-        	else {
-          		ctb.removeChild(rows[rowIndex]);
-        	}
-      	}
+        for (var i=0; i < rows.length; i++) {
+            if (tm[i][realIndex] != -1) {
+                if (rows[i].cells[tm[i][realIndex]].colSpan > 1) {
+                    rows[i].cells[tm[i][realIndex]].colSpan++;
+                }
+                else {
+                    var newc = rows[i].insertCell(tm[i][realIndex]+1);
+                    var nc = rows[i].cells[tm[i][realIndex]].cloneNode(false);
+                    nc.innerHTML = '&nbsp;';
+                    rows[i].replaceChild(nc, newc);
+                }
+            }
+        }
     };
 
-	var mergeCellRight = function () {
-      	var tm = getCellMatrix(ctb);
-      	var rows = (ctb.rows && ctb.rows.length>0) ? ctb.rows : ctb.getElementsByTagName("TR");
-      	var rowIndex = 0, realIndex = 0;
+    var insertRow = function(idx) {
+        var newr = ctb.insertRow(ctr.rowIndex + 1);
+        for (var i=0; i < ctr.cells.length; i++) {
+            if (ctr.cells[i].rowSpan > 1) {
+                ctr.cells[i].rowSpan++;
+            }
+            else {
+                var newc = ctr.cells[i].cloneNode(false);
+                newc.innerHTML = '&nbsp;';
+                newr.appendChild(newc);
+            }
+        }
 
-      	if (ctr.rowIndex >= 0) {
-        	rowIndex = ctr.rowIndex;
-      	}
-      	else {
-        	for(var i=0; i < rows.length; i++) {
-          		if (rows[i] == ctr) {
-            		rowIndex = i;
-            		break;
-          		}
-        	}
-      	}
-
-      	for (var j=0; j < tm[rowIndex].length; j++) {
-        	if (tm[rowIndex][j] == ctd.cellIndex) {
-          		realIndex = j;
-          		break;
-        	}
-      	}
-
-      	if (ctd.cellIndex + 1 < ctr.cells.length) {
-        	var ccrs = ctd.rowSpan ? ctd.rowSpan : 1;
-        	var cccs = ctd.colSpan ? ctd.colSpan : 1;
-        	var ncrs = ctr.cells[ctd.cellIndex+1].rowSpan ? ctr.cells[ctd.cellIndex+1].rowSpan : 1;
-        	var nccs = ctr.cells[ctd.cellIndex+1].colSpan ? ctr.cells[ctd.cellIndex+1].colSpan : 1;
-        	var j = realIndex;
-
-        	while (tm[rowIndex][j] == ctd.cellIndex)
-        		j++;
-
-        	if (tm[rowIndex][j] == ctd.cellIndex + 1) {
-          		if (ccrs == ncrs) {
-            		if (rows.length > 1) ctd.colSpan = cccs + nccs;
-          			var html = self.trimSpace(ctr.cells[ctd.cellIndex + 1].innerHTML);
-          			html = html.replace(/^&nbsp;/, '');
-            		ctd.innerHTML += html;
-            		ctr.deleteCell(ctd.cellIndex + 1);
-          		}
-        	}
-      	}
+        for (var i=0; i < ctr.rowIndex; i++) {
+            var tempr;
+            if (ctb.rows && ctb.rows.length > 0) {
+                tempr = ctb.rows[i];
+            }
+            else {
+                tempr = ctb.getElementsByTagName("tr")[i];
+            }
+            for (var j=0; j < tempr.cells.length; j++) {
+                if (tempr.cells[j].rowSpan > (ctr.rowIndex - i))
+                    tempr.cells[j].rowSpan++;
+            }
+        }
     };
 
-	var mergeCellDown = function () {
-      	var tm = getCellMatrix(ctb);
-      	var rows = (ctb.rows && ctb.rows.length > 0) ? ctb.rows : ctb.getElementsByTagName("TR");
-      	var rowIndex = 0, crealIndex = 0;
+    var deleteColumn = function () {
+        var tm = getCellMatrix(ctb);
+        var rows = (ctb.rows && ctb.rows.length>0) ? ctb.rows : ctb.getElementsByTagName("TR");
+        var rowIndex = 0, realIndex = 0;
 
-      	if (ctr.rowIndex >=0 ) {
-        	rowIndex = ctr.rowIndex;
-      	}
-      	else {
-        	for(var i=0; i < rows.length; i++) {
-          		if (rows[i] == ctr) {
-            		rowIndex = i;
-            		break;
-          		}
-        	}
-      	}
+        if (ctr.rowIndex >= 0) {
+            rowIndex = ctr.rowIndex;
+        }
+        else {
+            for(var i=0; i < rows.length; i++) {
+                if (rows[i] == ctr) {
+                    rowIndex = i;
+                    break;
+                }
+            }
+        }
 
-      	for (var i=0; i < tm[rowIndex].length; i++) {
-        	if (tm[rowIndex][i] == ctd.cellIndex) {
-          		crealIndex = i;
-          		break;
-        	}
-      	}
+        if (tm[0].length <= 1) {
+            ctb.parentNode.removeChild(ctb);
+        }
+        else {
+            for (var j=0; j < tm[rowIndex].length; j++) {
+                if (tm[rowIndex][j] == ctd.cellIndex) {
+                    realIndex = j;
+                    break;
+                }
+            }
 
-      	var ccrs = ctd.rowSpan ? ctd.rowSpan : 1;
-      	var cccs = ctd.colSpan ? ctd.colSpan : 1;
-
-      	if (rowIndex + ccrs < rows.length) {
-        	var ncellIndex = tm[rowIndex + ccrs][crealIndex];
-        	if (ncellIndex != -1 &&
-        		(crealIndex == 0 || (crealIndex > 0 && (tm[rowIndex + ccrs][crealIndex-1] != tm[rowIndex + ccrs][crealIndex]))))
-        	{
-
-          		var ncrs = rows[rowIndex + ccrs].cells[ncellIndex].rowSpan ? rows[rowIndex + ccrs].cells[ncellIndex].rowSpan : 1;
-          		var nccs = rows[rowIndex + ccrs].cells[ncellIndex].colSpan ? rows[rowIndex + ccrs].cells[ncellIndex].colSpan : 1;
-
-          		if (cccs == nccs) {
-          			var html = self.trimSpace(rows[rowIndex + ccrs].cells[ncellIndex].innerHTML);
-          			html = html.replace(/^&nbsp;/, '');
-            		ctd.innerHTML += html;
-            		rows[rowIndex + ccrs].deleteCell(ncellIndex);
-            		ctd.rowSpan = ccrs + ncrs;
-          		}
-        	}
-      	}
+            for (var i=0; i < rows.length; i++) {
+                if (tm[i][realIndex] != -1) {
+                    if (rows[i].cells[tm[i][realIndex]].colSpan > 1) {
+                        rows[i].cells[tm[i][realIndex]].colSpan--;
+                    }
+                    else {
+                        rows[i].deleteCell(tm[i][realIndex]);
+                    }
+                }
+            }
+        }
     };
 
- 	var splitCellVertical = function () {
-      	var tm = getCellMatrix();
-      	var rowIndex = 0, realIndex = 0;
+    var deleteRow = function () {
+        var tm = getCellMatrix(ctb);
+        var rows = (ctb.rows && ctb.rows.length>0) ? ctb.rows : ctb.getElementsByTagName("TR");
+        var rowIndex = 0;
+
+        if (ctr.rowIndex >= 0) {
+            rowIndex = ctr.rowIndex;
+        }
+        else {
+            for(var i=0; i < rows.length; i++) {
+                if (rows[i] == ctr) {
+                    rowIndex = i;
+                    break;
+                }
+            }
+        }
+
+        if (rows.length <= 1) {
+            ctb.parentNode.removeChild(ctb);
+        }
+        else {
+            for (var i=0; i < rowIndex; i++) {
+                var tempr = rows[i];
+                for (var j=0; j < tempr.cells.length; j++) {
+                    if (tempr.cells[j].rowSpan > (rowIndex - i))
+                        tempr.cells[j].rowSpan--;
+                }
+            }
+
+            var curCI = -1;
+            for (var i=0; i < tm[rowIndex].length; i++) {
+                var prevCI = curCI;
+                curCI = tm[rowIndex][i];
+
+                if (curCI != -1 && curCI != prevCI && ctr.cells[curCI].rowSpan>1 && (rowIndex+1) < rows.length) {
+                    var ni = i;
+                    var nrCI = tm[rowIndex+1][ni];
+                    while (nrCI == -1) {
+                        ni++;
+                        nrCI = (ni < rows[rowIndex+1].cells.length) ? tm[rowIndex+1][ni] : rows[rowIndex+1].cells.length;
+                    }
+
+                    var newc = rows[rowIndex+1].insertCell(nrCI);
+                    rows[rowIndex].cells[curCI].rowSpan--;
+                    var nc = rows[rowIndex].cells[curCI].cloneNode(false);
+                    rows[rowIndex+1].replaceChild(nc, newc);
+
+                    var cs = (ctr.cells[curCI].colSpan>1) ? ctr.cells[curCI].colSpan : 1;
+                    var nj = 0;
+
+                    for (var j=i; j < (i+cs); j++) {
+                        tm[rowIndex+1][j] = nrCI;
+                        nj = j;
+                    }
+                    for (var j=nj; j < tm[rowIndex+1].length; j++) {
+                        if (tm[rowIndex+1][j] != -1)
+                            tm[rowIndex+1][j]++;
+                    }
+                }
+            }
+
+            if (ctb.rows && ctb.rows.length > 0) {
+                ctb.deleteRow(rowIndex);
+            }
+            else {
+                ctb.removeChild(rows[rowIndex]);
+            }
+        }
+    };
+
+    var mergeCellRight = function () {
+        var tm = getCellMatrix(ctb);
+        var rows = (ctb.rows && ctb.rows.length>0) ? ctb.rows : ctb.getElementsByTagName("TR");
+        var rowIndex = 0, realIndex = 0;
+
+        if (ctr.rowIndex >= 0) {
+            rowIndex = ctr.rowIndex;
+        }
+        else {
+            for(var i=0; i < rows.length; i++) {
+                if (rows[i] == ctr) {
+                    rowIndex = i;
+                    break;
+                }
+            }
+        }
+
+        for (var j=0; j < tm[rowIndex].length; j++) {
+            if (tm[rowIndex][j] == ctd.cellIndex) {
+                realIndex = j;
+                break;
+            }
+        }
+
+        if (ctd.cellIndex + 1 < ctr.cells.length) {
+            var ccrs = ctd.rowSpan ? ctd.rowSpan : 1;
+            var cccs = ctd.colSpan ? ctd.colSpan : 1;
+            var ncrs = ctr.cells[ctd.cellIndex+1].rowSpan ? ctr.cells[ctd.cellIndex+1].rowSpan : 1;
+            var nccs = ctr.cells[ctd.cellIndex+1].colSpan ? ctr.cells[ctd.cellIndex+1].colSpan : 1;
+            var j = realIndex;
+
+            while (tm[rowIndex][j] == ctd.cellIndex)
+                j++;
+
+            if (tm[rowIndex][j] == ctd.cellIndex + 1) {
+                if (ccrs == ncrs) {
+                    if (rows.length > 1) ctd.colSpan = cccs + nccs;
+                    var html = self.trimSpace(ctr.cells[ctd.cellIndex + 1].innerHTML);
+                    html = html.replace(/^&nbsp;/, '');
+                    ctd.innerHTML += html;
+                    ctr.deleteCell(ctd.cellIndex + 1);
+                }
+            }
+        }
+    };
+
+    var mergeCellDown = function () {
+        var tm = getCellMatrix(ctb);
+        var rows = (ctb.rows && ctb.rows.length > 0) ? ctb.rows : ctb.getElementsByTagName("TR");
+        var rowIndex = 0, crealIndex = 0;
+
+        if (ctr.rowIndex >=0 ) {
+            rowIndex = ctr.rowIndex;
+        }
+        else {
+            for(var i=0; i < rows.length; i++) {
+                if (rows[i] == ctr) {
+                    rowIndex = i;
+                    break;
+                }
+            }
+        }
+
+        for (var i=0; i < tm[rowIndex].length; i++) {
+            if (tm[rowIndex][i] == ctd.cellIndex) {
+                crealIndex = i;
+                break;
+            }
+        }
+
+        var ccrs = ctd.rowSpan ? ctd.rowSpan : 1;
+        var cccs = ctd.colSpan ? ctd.colSpan : 1;
+
+        if (rowIndex + ccrs < rows.length) {
+            var ncellIndex = tm[rowIndex + ccrs][crealIndex];
+            if (ncellIndex != -1 &&
+                (crealIndex == 0 || (crealIndex > 0 && (tm[rowIndex + ccrs][crealIndex-1] != tm[rowIndex + ccrs][crealIndex]))))
+            {
+
+                var ncrs = rows[rowIndex + ccrs].cells[ncellIndex].rowSpan ? rows[rowIndex + ccrs].cells[ncellIndex].rowSpan : 1;
+                var nccs = rows[rowIndex + ccrs].cells[ncellIndex].colSpan ? rows[rowIndex + ccrs].cells[ncellIndex].colSpan : 1;
+
+                if (cccs == nccs) {
+                    var html = self.trimSpace(rows[rowIndex + ccrs].cells[ncellIndex].innerHTML);
+                    html = html.replace(/^&nbsp;/, '');
+                    ctd.innerHTML += html;
+                    rows[rowIndex + ccrs].deleteCell(ncellIndex);
+                    ctd.rowSpan = ccrs + ncrs;
+                }
+            }
+        }
+    };
+
+    var splitCellVertical = function () {
+        var tm = getCellMatrix();
+        var rowIndex = 0, realIndex = 0;
 
         rows = (ctb.rows && ctb.rows.length > 0) ? ctb.rows : ctb.getElementsByTagName("TR");
 
-      	if (ctr.rowIndex >= 0) {
-        	rowIndex = ctr.rowIndex;
-      	}
-      	else {
-        	for(var ri = 0; ri < rows.length; ri++) {
-          		if (rows[ri] == ctr) {
-            		rowIndex = ri;
-            		break;
-          		}
-        	}
-      	}
+        if (ctr.rowIndex >= 0) {
+            rowIndex = ctr.rowIndex;
+        }
+        else {
+            for(var ri = 0; ri < rows.length; ri++) {
+                if (rows[ri] == ctr) {
+                    rowIndex = ri;
+                    break;
+                }
+            }
+        }
 
-      	for (var j=0; j < tm[rowIndex].length; j++) {
-        	if (tm[rowIndex][j] == ctd.cellIndex) {
-          		realIndex = j;
-          		break;
-        	}
-      	}
+        for (var j=0; j < tm[rowIndex].length; j++) {
+            if (tm[rowIndex][j] == ctd.cellIndex) {
+                realIndex = j;
+                break;
+            }
+        }
 
-      	if (ctd.colSpan > 1) {
-        	var newc = rows[rowIndex].insertCell(ctd.cellIndex + 1);
-        	ctd.colSpan--;
-        	var nc = ctd.cloneNode(false);
-			nc.innerHTML = '&nbsp;';
-        	rows[rowIndex].replaceChild(nc, newc);
-        	ctd.colSpan = 1;
-        	ctd.removeAttribute('colSpan');
-      	}
-      	else {
-        	var newc = rows[rowIndex].insertCell(ctd.cellIndex + 1);
-        	var nc = ctd.cloneNode(false);
-        	nc.innerHTML = '&nbsp;';
-        	rows[rowIndex].replaceChild(nc, newc);
+        if (ctd.colSpan > 1) {
+            var newc = rows[rowIndex].insertCell(ctd.cellIndex + 1);
+            ctd.colSpan--;
+            var nc = ctd.cloneNode(false);
+            nc.innerHTML = '&nbsp;';
+            rows[rowIndex].replaceChild(nc, newc);
+            ctd.colSpan = 1;
+            ctd.removeAttribute('colSpan');
+        }
+        else {
+            var newc = rows[rowIndex].insertCell(ctd.cellIndex + 1);
+            var nc = ctd.cloneNode(false);
+            nc.innerHTML = '&nbsp;';
+            rows[rowIndex].replaceChild(nc, newc);
 
-        	for (var i=0; i < tm.length; i++) {
-          		if (i != rowIndex && tm[i][realIndex] != -1) {
-            		var cs = (rows[i].cells[tm[i][realIndex]].colSpan > 1) ? rows[i].cells[tm[i][realIndex]].colSpan : 1;
-            		rows[i].cells[tm[i][realIndex]].colSpan = cs + 1;
-          		}
-        	}
-      	}
-  	};
-
-	var splitCellHorizontal = function () {
-      	var tm = getCellMatrix();
-      	var rowIndex = 0, realIndex = 0;
-      	var rows = (ctb.rows && ctb.rows.length > 0) ? ctb.rows : ctb.getElementsByTagName("TR");
-
-      	if (ctr.rowIndex >= 0) {
-        	rowIndex = ctr.rowIndex;
-      	}
-      	else {
-        	for(var i=0; i < rows.length; i++) {
-          		if (rows[i] == ctr) {
-            		rowIndex = i;
-            		break;
-          		}
-        	}
-      	}
-
-      	for (var j=0; j < tm[rowIndex].length; j++) {
-        	if (tm[rowIndex][j] == ctd.cellIndex) {
-          		realIndex = j;
-          		break;
-        	}
-      	}
-
-      	if (ctd.rowSpan > 1) {
-        	var i = realIndex;
-        	var ni;
-
-        	while (tm[rowIndex + 1][i] == -1) {
-        		i++;
-        	}
-
-        	ni = (i == tm[rowIndex + 1].length) ? rows[rowIndex + 1].cells.length : tm[rowIndex + 1][i];
-
-        	var newc = rows[rowIndex + 1].insertCell(ni);
-        	ctd.rowSpan--;
-
-        	var nc = ctd.cloneNode(false);
-        	nc.innerHTML = '&nbsp;';
-        	rows[rowIndex + 1].replaceChild(nc, newc);
-        	ctd.rowSpan = 1;
-      	}
-      	else {
-        	if (ctb.rows && ctb.rows.length > 0) {
-          		ctb.insertRow(rowIndex+1);
-        	}
-        	else {
-          		if (rowIndex<(rows.length - 1)) {
-            		ctb.insertBefore(document.createElement("TR"), rows[rowIndex + 1]);
-          		}
-          		else {
-            		ctb.appendChild(document.createElement("TR"));
-          		}
-        	}
-
-        	var rs;
-        	for (var i=0; i < ctr.cells.length; i++) {
-          		if (i != ctd.cellIndex) {
-            		rs = ctr.cells[i].rowSpan > 1 ? ctr.cells[i].rowSpan : 1;
-            		ctr.cells[i].rowSpan = rs + 1;
-          		}
-        	}
-
-        	for (var i=0; i < rowIndex; i++) {
-          		var tempr = rows[i];
-          		for (var j=0; j < tempr.cells.length; j++) {
-            		if (tempr.cells[j].rowSpan > (rowIndex - i)) {
-              			tempr.cells[j].rowSpan++;
-          			}
-        		}
-        	}
-
-        	var newc = rows[rowIndex+1].insertCell(0);
-        	var nc = ctd.cloneNode(false);
-        	nc.innerHTML = '&nbsp;';
-        	rows[rowIndex+1].replaceChild(nc, newc);
-      	}
+            for (var i=0; i < tm.length; i++) {
+                if (i != rowIndex && tm[i][realIndex] != -1) {
+                    var cs = (rows[i].cells[tm[i][realIndex]].colSpan > 1) ? rows[i].cells[tm[i][realIndex]].colSpan : 1;
+                    rows[i].cells[tm[i][realIndex]].colSpan = cs + 1;
+                }
+            }
+        }
     };
 
-	var tblReflash = function() { self.editArea.focus(); self.doEditorEvent(); };
-	var funcs = {
-			'add_cols_after' : { 'icon' : 'table_insert_column.png', 'title' : '열 삽입',
-				'func' : function() { insertColumn(ctd.cellIndex); tblReflash(); }},
-			'add_rows_after': { 'icon' : 'table_insert_row.png', 'title' : '행 삽입',
-				'func' : function() { insertRow(ctr.rowIndex); tblReflash(); }},
-			'remove_cols': { 'icon' : 'table_delete_column.png', 'title' : '열 삭제',
-				'func' : function() { deleteColumn(ctd.cellIndex); tblReflash(); }},
-			'remove_rows': { 'icon' : 'table_delete_row.png', 'title' : '행 삭제',
-				'func' : function() { deleteRow(); tblReflash(); }},
-			'sp1' : { 'icon' : 'dot.gif' },
-			'merge_cell_right': { 'icon' : 'table_join_row.png', 'title' : '오른쪽 셀과 병합',
-				'func' : function() { mergeCellRight(); tblReflash(); }},
-			'merge_cell_down': { 'icon' : 'table_join_column.png', 'title' : '아래 셀과 병합',
-				'func' : function() { mergeCellDown(); tblReflash(); }},
-			'split_cell_v': { 'icon' : 'table_split_row.png', 'title' : '셀 열로 나누기',
-				'func' : function() { splitCellVertical(); tblReflash(); }},
-			'split_cell_h': { 'icon' : 'table_split_column.png', 'title' : '셀 행으로 나누기',
-				'func' : function() { splitCellHorizontal(); tblReflash(); }}
-	};
+    var splitCellHorizontal = function () {
+        var tm = getCellMatrix();
+        var rowIndex = 0, realIndex = 0;
+        var rows = (ctb.rows && ctb.rows.length > 0) ? ctb.rows : ctb.getElementsByTagName("TR");
 
-	self.cheditor.editBlock.innerHTML = '';
-	var div = document.createElement('div');
-	div.style.padding = '6px';
+        if (ctr.rowIndex >= 0) {
+            rowIndex = ctr.rowIndex;
+        }
+        else {
+            for(var i=0; i < rows.length; i++) {
+                if (rows[i] == ctr) {
+                    rowIndex = i;
+                    break;
+                }
+            }
+        }
 
-	for (var i in funcs) {
-		var span = document.createElement('span');
-		var icon = document.createElement('img');
-		icon.src = self.config.iconPath + funcs[i].icon;
-		if (i == 'sp1' || i == 'sp2') {
-			icon.className = 'edit-table-ico';
-		}
-		else {
-			icon.setAttribute('title', funcs[i].title);
-			icon.className = 'edit-table-ico';
-			icon.setAttribute('alt', '');
-			icon.onclick = funcs[i].func;
-		}
-		div.appendChild(span.appendChild(icon));
-	}
+        for (var j=0; j < tm[rowIndex].length; j++) {
+            if (tm[rowIndex][j] == ctd.cellIndex) {
+                realIndex = j;
+                break;
+            }
+        }
 
-	/*var deleteTable = function() {
-		ctb.parentNode.removeChild(ctb);
-		self.doEditorEvent();
-	};*/
+        if (ctd.rowSpan > 1) {
+            var i = realIndex;
+            var ni;
 
-	var deleteSubmit = new Image();
-	deleteSubmit.src = this.config.iconPath + 'delete_table.png';
-	deleteSubmit.style.marginLeft = "22px";
-	deleteSubmit.className = 'edit-table-ico';
-	deleteSubmit.setAttribute('title', '테이블 삭제');
-	deleteSubmit.onclick = function() {
-		ctb.parentNode.removeChild(ctb);
-		self.doEditorEvent();
-	};
+            while (tm[rowIndex + 1][i] == -1) {
+                i++;
+            }
 
-	div.appendChild(deleteSubmit);
+            ni = (i == tm[rowIndex + 1].length) ? rows[rowIndex + 1].cells.length : tm[rowIndex + 1][i];
 
-	var attrFuncs = {
-		'setWidth' : {
-			'txt': '가로폭',
-			'id' : 'fm_cell_width',
-			'marginRight' : '10px',
-			'value' : ctd.getAttribute('width')
-		},
-		'setHeight' : {
-			'txt': '세로폭',
-			'id' : 'fm_cell_height',
-			'marginRight' : '10px',
-			'value' : ctd.getAttribute('height')
-		},
-		'setBgcolor' : {
-			'txt': '배경색',
-			'id' : 'fm_cell_bgcolor',
-			'marginRight' : '2px',
-			'value' : ctd.getAttribute('bgcolor')
-		}
-	};
+            var newc = rows[rowIndex + 1].insertCell(ni);
+            ctd.rowSpan--;
 
-	var spliter = document.createElement('div');
-	spliter.style.padding = '10px 0px 0px 0px';
-	spliter.style.marginTop = '5px';
-	spliter.style.borderTop = '1px solid #ccc';
-	spliter.style.textAlign = 'center';
+            var nc = ctd.cloneNode(false);
+            nc.innerHTML = '&nbsp;';
+            rows[rowIndex + 1].replaceChild(nc, newc);
+            ctd.rowSpan = 1;
+        }
+        else {
+            if (ctb.rows && ctb.rows.length > 0) {
+                ctb.insertRow(rowIndex+1);
+            }
+            else {
+                if (rowIndex<(rows.length - 1)) {
+                    ctb.insertBefore(document.createElement("TR"), rows[rowIndex + 1]);
+                }
+                else {
+                    ctb.appendChild(document.createElement("TR"));
+                }
+            }
 
-	for (var i in attrFuncs) {
-		var txt = document.createTextNode(attrFuncs[i].txt + ' ');
-		spliter.appendChild(txt);
-		var input = document.createElement('input');
-		input.style.marginRight = attrFuncs[i].marginRight;
-		input.setAttribute('type', 'text');
-		input.setAttribute('name', i);
-		input.setAttribute('id', attrFuncs[i].id);
-		input.setAttribute('size', 7);
-		input.setAttribute('value', attrFuncs[i].value ? attrFuncs[i].value : '');
-		spliter.appendChild(input);
-	}
+            var rs;
+            for (var i=0; i < ctr.cells.length; i++) {
+                if (i != ctd.cellIndex) {
+                    rs = ctr.cells[i].rowSpan > 1 ? ctr.cells[i].rowSpan : 1;
+                    ctr.cells[i].rowSpan = rs + 1;
+                }
+            }
 
-	var colorPicker = new Image();
-	colorPicker.src = this.config.iconPath + 'button/color_picker.gif';
-	colorPicker.className = 'color-picker';
-	colorPicker.onclick = function() {
-		GB.popupWindow.ColorPicker.argv = { func :
-			function(color) {
-				ctd.setAttribute('bgColor', color);
-				self.$('fm_cell_bgcolor').value = color;
-			},
-			selectedCell : ctd
-		};
-		self.windowOpen('ColorPicker');
-	};
-	spliter.appendChild(colorPicker);
+            for (var i=0; i < rowIndex; i++) {
+                var tempr = rows[i];
+                for (var j=0; j < tempr.cells.length; j++) {
+                    if (tempr.cells[j].rowSpan > (rowIndex - i)) {
+                        tempr.cells[j].rowSpan++;
+                    }
+                }
+            }
 
-	var editSubmit = new Image();
-	editSubmit.src = this.config.iconPath + 'button/edit_cell.gif';
-	editSubmit.className = 'input-submit';
-	editSubmit.style.verticalAlign = 'top';
-	editSubmit.onclick = function() {
-		ctd.setAttribute('width', self.$('fm_cell_width').value);
-		ctd.setAttribute('height', self.$('fm_cell_height').value);
-		ctd.setAttribute('bgcolor', self.$('fm_cell_bgcolor').value);
-	};
+            var newc = rows[rowIndex+1].insertCell(0);
+            var nc = ctd.cloneNode(false);
+            nc.innerHTML = '&nbsp;';
+            rows[rowIndex+1].replaceChild(nc, newc);
+        }
+    };
 
-	spliter.appendChild(editSubmit);
-	div.appendChild(spliter);
-	self.cheditor.editBlock.appendChild(div);
+    var tblReflash = function() { self.editArea.focus(); self.doEditorEvent(); };
+    var funcs = {
+            'add_cols_after' : { 'icon' : 'table_insert_column.png', 'title' : '열 삽입',
+                'func' : function() { insertColumn(ctd.cellIndex); tblReflash(); }},
+            'add_rows_after': { 'icon' : 'table_insert_row.png', 'title' : '행 삽입',
+                'func' : function() { insertRow(ctr.rowIndex); tblReflash(); }},
+            'remove_cols': { 'icon' : 'table_delete_column.png', 'title' : '열 삭제',
+                'func' : function() { deleteColumn(ctd.cellIndex); tblReflash(); }},
+            'remove_rows': { 'icon' : 'table_delete_row.png', 'title' : '행 삭제',
+                'func' : function() { deleteRow(); tblReflash(); }},
+            'sp1' : { 'icon' : 'dot.gif' },
+            'merge_cell_right': { 'icon' : 'table_join_row.png', 'title' : '오른쪽 셀과 병합',
+                'func' : function() { mergeCellRight(); tblReflash(); }},
+            'merge_cell_down': { 'icon' : 'table_join_column.png', 'title' : '아래 셀과 병합',
+                'func' : function() { mergeCellDown(); tblReflash(); }},
+            'split_cell_v': { 'icon' : 'table_split_row.png', 'title' : '셀 열로 나누기',
+                'func' : function() { splitCellVertical(); tblReflash(); }},
+            'split_cell_h': { 'icon' : 'table_split_column.png', 'title' : '셀 행으로 나누기',
+                'func' : function() { splitCellHorizontal(); tblReflash(); }}
+    };
+
+    self.cheditor.editBlock.innerHTML = '';
+    var div = document.createElement('div');
+    div.style.padding = '6px';
+
+    for (var i in funcs) {
+        var span = document.createElement('span');
+        var icon = document.createElement('img');
+        icon.src = self.config.iconPath + funcs[i].icon;
+        if (i == 'sp1' || i == 'sp2') {
+            icon.className = 'edit-table-ico';
+        }
+        else {
+            icon.setAttribute('title', funcs[i].title);
+            icon.className = 'edit-table-ico';
+            icon.setAttribute('alt', '');
+            icon.onclick = funcs[i].func;
+        }
+        div.appendChild(span.appendChild(icon));
+    }
+
+    /*var deleteTable = function() {
+        ctb.parentNode.removeChild(ctb);
+        self.doEditorEvent();
+    };*/
+
+    var deleteSubmit = new Image();
+    deleteSubmit.src = this.config.iconPath + 'delete_table.png';
+    deleteSubmit.style.marginLeft = "22px";
+    deleteSubmit.className = 'edit-table-ico';
+    deleteSubmit.setAttribute('title', '테이블 삭제');
+    deleteSubmit.onclick = function() {
+        ctb.parentNode.removeChild(ctb);
+        self.doEditorEvent();
+    };
+
+    div.appendChild(deleteSubmit);
+
+    var attrFuncs = {
+        'setWidth' : {
+            'txt': '가로폭',
+            'id' : 'fm_cell_width',
+            'marginRight' : '10px',
+            'value' : ctd.getAttribute('width')
+        },
+        'setHeight' : {
+            'txt': '세로폭',
+            'id' : 'fm_cell_height',
+            'marginRight' : '10px',
+            'value' : ctd.getAttribute('height')
+        },
+        'setBgcolor' : {
+            'txt': '배경색',
+            'id' : 'fm_cell_bgcolor',
+            'marginRight' : '2px',
+            'value' : ctd.getAttribute('bgcolor')
+        }
+    };
+
+    var spliter = document.createElement('div');
+    spliter.style.padding = '10px 0px 0px 0px';
+    spliter.style.marginTop = '5px';
+    spliter.style.borderTop = '1px solid #ccc';
+    spliter.style.textAlign = 'center';
+
+    for (var i in attrFuncs) {
+        var txt = document.createTextNode(attrFuncs[i].txt + ' ');
+        spliter.appendChild(txt);
+        var input = document.createElement('input');
+        input.style.marginRight = attrFuncs[i].marginRight;
+        input.setAttribute('type', 'text');
+        input.setAttribute('name', i);
+        input.setAttribute('id', attrFuncs[i].id);
+        input.setAttribute('size', 7);
+        input.setAttribute('value', attrFuncs[i].value ? attrFuncs[i].value : '');
+        spliter.appendChild(input);
+    }
+
+    var colorPicker = new Image();
+    colorPicker.src = this.config.iconPath + 'button/color_picker.gif';
+    colorPicker.className = 'color-picker';
+    colorPicker.onclick = function() {
+        GB.popupWindow.ColorPicker.argv = { func :
+            function(color) {
+                ctd.setAttribute('bgColor', color);
+                self.$('fm_cell_bgcolor').value = color;
+            },
+            selectedCell : ctd
+        };
+        self.windowOpen('ColorPicker');
+    };
+    spliter.appendChild(colorPicker);
+
+    var editSubmit = new Image();
+    editSubmit.src = this.config.iconPath + 'button/edit_cell.gif';
+    editSubmit.className = 'input-submit';
+    editSubmit.style.verticalAlign = 'top';
+    editSubmit.onclick = function() {
+        ctd.setAttribute('width', self.$('fm_cell_width').value);
+        ctd.setAttribute('height', self.$('fm_cell_height').value);
+        ctd.setAttribute('bgcolor', self.$('fm_cell_bgcolor').value);
+    };
+
+    spliter.appendChild(editSubmit);
+    div.appendChild(spliter);
+    self.cheditor.editBlock.appendChild(div);
 },
 
 doEditorEvent : function () {
@@ -4042,11 +4432,11 @@ doEditorEvent : function () {
 	var statusBar   = self.cheditor.tagPath;
 	var modifyBlock = self.cheditor.editBlock;
 	var oEditor     = self.editArea;
-	var cmd = null, el, pNode, ancestors = new Array();
+	var cmd = null, el, pNode, ancestors = [];
 	var rng = self.getRange();
 	var nodeType = self.getSelectionType(rng);
 
-	if (GB.browser.msie) {
+	if (!self.W3CRange) {
 		switch (nodeType) {
 		case GB.selection.SELECTION_NONE :
 		case GB.selection.SELECTION_TEXT :
@@ -4083,50 +4473,43 @@ doEditorEvent : function () {
 			cmd = 'img';
 			break;
 		}
-		else if (pNode.tagName.toLowerCase() == 'td') {
-			cmd = 'td';
+		else if (pNode.tagName.toLowerCase() == 'td' || pNode.tagName.toLowerCase() == 'th') {
+			cmd = 'cell';
 			break;
 		}
 		pNode = pNode.parentNode;
 	}
 
-	ancestors.push(oEditor.document.body);
-
-	if (cmd == null) {
+	if (cmd === null) {
 		modifyBlock.style.display = "none";
 		modifyBlock.innerHTML = '';
 	}
 	else {
-		switch (cmd) {
-		 case "td" :
-			modifyBlock.style.display = "block";
-			self.modifyCell(pNode);
-			break;
-		default : break;
-		}
+        if (cmd == "cell") {
+            modifyBlock.style.display = "block";
+            self.modifyCell(pNode);
+        }
 	}
 
 	if (self.config.showTagPath) {
 		statusBar.innerHTML = '';
 		statusBar.appendChild(document.createTextNode('<html> <body> '));
-
-		while (el = ancestors.pop()) {
-			if (!el || el.tagName.toLowerCase() == 'html' || el.tagName.toLowerCase() == 'body')
-				continue;
-
-			var tag = el.tagName.toUpperCase();
-			var a = document.createElement("a");
-			a.el = el;
-			a.href = "javascript:void%200";
-			a.className = 'cheditor-tag-path-elem';
-			a.title = el.style.cssText;
-			a.onclick  = function () { self.$('removeSelected').style.display = 'inline'; self.tagSelector(this.el); };
-			a.appendChild(document.createTextNode(tag.toLowerCase()));
-			statusBar.appendChild(document.createTextNode('<'));
-			statusBar.appendChild(a);
-			statusBar.appendChild(document.createTextNode('> '));
-		}
-
+        el = ancestors.pop();
+        while (el) {
+            var tag = el.tagName.toUpperCase();
+            var a = document.createElement("a");
+            a.el = el;
+            a.href = "javascript:void%200";
+            a.className = 'cheditor-tag-path-elem';
+            a.title = el.style.cssText;
+            a.onclick  = function () { self.$('removeSelected').style.display = 'inline'; self.tagSelector(this.el); };
+            a.appendChild(document.createTextNode(tag.toLowerCase()));
+            statusBar.appendChild(document.createTextNode('<'));
+            statusBar.appendChild(a);
+            statusBar.appendChild(document.createTextNode('> '));
+            el = ancestors.pop();
+        }
+        
 		var remove = document.createElement("a");
 		remove.href = "javascript:void%200";
 		remove.id = "removeSelected";
@@ -4145,12 +4528,9 @@ doEditorEvent : function () {
 		self.cheditor.tagPath.appendChild(span);
 	}
 
-	if (self.tempTimer)
-		clearTimeout(self.tempTimer);
-
 	var interval = 50;
-	if (GB.browser.msie && rng.text != '' && nodeType != GB.selection.SELECTION_ELEMENT) {
-		interval = 300;
+	if (GB.browser.msie && rng.text !== '' && nodeType !== GB.selection.SELECTION_ELEMENT) {
+		interval = 100;
 	}
 	self.tempTimer = setTimeout(function() {
 		self.toolbarUpdate();
@@ -4171,12 +4551,12 @@ tagSelector : function (node) {
 	}
 	else {
 		var sel = this.editArea.getSelection();
-		if (typeof sel == 'undefined')
+		if (typeof sel == 'undefined') {
 			return;
+        }
 		try {
 			rng = sel.getRangeAt(0);
-		}
-		catch(e) { return; }
+		} catch(e) { return; }
 
 		rng.selectNodeContents(node);
 		sel.removeAllRanges();
@@ -4186,446 +4566,109 @@ tagSelector : function (node) {
 
 getBrowser : function () { return GB.browser; },
 
-$ : function (id) { return document.getElementById(id); }
+$ : function (id) { return document.getElementById(id); },
+_$ : function (id) { return this.doc.getElementById(id); }
 };
 
 var DragWindow = {
-	obj : null,
-	init : function (o, oRoot, minX, maxX, minY, maxY) {
-		o.onmousedown = DragWindow.start;
-		o.onmouseover = function () { this.style.cursor = 'move'; };
-		o.hmode = true ;
-		o.vmode = true ;
-		o.root = oRoot && oRoot != null ? oRoot : o;
-		o.transId = oRoot.id + '_Trans';
+	    obj : null,
+	    init : function (o, oRoot, minX, maxX, minY, maxY) {
+	        o.onmousedown = DragWindow.start;
+	        o.onmouseover = function () { this.style.cursor = 'move'; };
+	        o.hmode = true ;
+	        o.vmode = true ;
+	        o.root = oRoot && oRoot != null ? oRoot : o;
+	        o.transId = oRoot.id + '_Trans';
 
-		if (o.hmode  && isNaN(parseInt(o.root.style.left  ))) o.root.style.left   = "0px";
-		if (o.vmode  && isNaN(parseInt(o.root.style.top   ))) o.root.style.top    = "0px";
-		if (!o.hmode && isNaN(parseInt(o.root.style.right ))) o.root.style.right  = "0px";
-		if (!o.vmode && isNaN(parseInt(o.root.style.bottom))) o.root.style.bottom = "0px";
+	        if (o.hmode  && isNaN(parseInt(o.root.style.left  ))) o.root.style.left   = "0px";
+	        if (o.vmode  && isNaN(parseInt(o.root.style.top   ))) o.root.style.top    = "0px";
+	        if (!o.hmode && isNaN(parseInt(o.root.style.right ))) o.root.style.right  = "0px";
+	        if (!o.vmode && isNaN(parseInt(o.root.style.bottom))) o.root.style.bottom = "0px";
 
-		o.minX = typeof minX != 'undefined' ? minX : null;
-		o.minY = typeof minY != 'undefined' ? minY : null;
-		o.maxX = typeof maxX != 'undefined' ? maxX : null;
-		o.maxY = typeof maxY != 'undefined' ? maxY : null;
+	        o.minX = typeof minX != 'undefined' ? minX : null;
+	        o.minY = typeof minY != 'undefined' ? minY : null;
+	        o.maxX = typeof maxX != 'undefined' ? maxX : null;
+	        o.maxY = typeof maxY != 'undefined' ? maxY : null;
 
-		o.root.onDragStart  = new Function();
-		o.root.onDragEnd    = new Function();
-		o.root.onDrag       = new Function();
-	},
+	        o.root.onDragStart  = new Function();
+	        o.root.onDragEnd    = new Function();
+	        o.root.onDrag       = new Function();
+	    },
 
-	start : function (e) {
-		var o = DragWindow.obj = this;
-		e = DragWindow.fixE(e);
-		var y = parseInt(o.vmode ? o.root.style.top  : o.root.style.bottom);
-		var x = parseInt(o.hmode ? o.root.style.left : o.root.style.right );
-		o.root.onDragStart(x, y);
+	    start : function (e) {
+	        var o = DragWindow.obj = this;
+	        e = DragWindow.fixE(e);
+	        var y = parseInt(o.vmode ? o.root.style.top  : o.root.style.bottom);
+	        var x = parseInt(o.hmode ? o.root.style.left : o.root.style.right );
+	        o.root.onDragStart(x, y);
 
-		o.lastMouseX = e.clientX;
-		o.lastMouseY = e.clientY;
+	        o.lastMouseX = e.clientX;
+	        o.lastMouseY = e.clientY;
 
-		document.onmousemove = DragWindow.drag;
-		document.onmouseup   = DragWindow.end;
+	        document.onmousemove = DragWindow.drag;
+	        document.onmouseup   = DragWindow.end;
 
-		if (o.root.lastChild.id == o.transId) return false;
+	        if (o.root.lastChild.id == o.transId) return false;
 
-		var dragTransBg = document.createElement('div');
-		dragTransBg.className = 'cheditor-dragWindowTransparent';
+	        var dragTransBg = document.createElement('div');
+	        dragTransBg.className = 'cheditor-dragWindowTransparent';
 
-		if (GB.browser.msie) dragTransBg.style.filter = 'alpha(opacity=0)';
-		else dragTransBg.style.opacity = 0;
+	        if (GB.browser.msie && GB.browser.ver < 10) dragTransBg.style.filter = 'alpha(opacity=0)';
+	        else dragTransBg.style.opacity = 0;
 
-		dragTransBg.id = o.transId;
-		dragTransBg.style.width = o.root.lastChild.firstChild.style.width;
-		dragTransBg.style.height = o.root.lastChild.firstChild.style.height;
-		o.root.appendChild(dragTransBg);
+	        dragTransBg.id = o.transId;
+	        dragTransBg.style.width = o.root.lastChild.firstChild.style.width;
+	        dragTransBg.style.height = o.root.lastChild.firstChild.style.height;
+	        o.root.appendChild(dragTransBg);
 
-		return false;
-	},
+	        return false;
+	    },
 
-	drag : function (e) {
-		e = DragWindow.fixE(e);
-		var o = DragWindow.obj;
-		var ey = e.clientY;
-		var ex = e.clientX;
-		var y = parseInt(o.vmode ? o.root.style.top  : o.root.style.bottom);
-		var x = parseInt(o.hmode ? o.root.style.left : o.root.style.right );
-		var nx, ny;
+	    drag : function (e) {
+	        e = DragWindow.fixE(e);
+	        var o = DragWindow.obj;
+	        var ey = e.clientY;
+	        var ex = e.clientX;
+	        var y = parseInt(o.vmode ? o.root.style.top  : o.root.style.bottom);
+	        var x = parseInt(o.hmode ? o.root.style.left : o.root.style.right );
+	        var nx, ny;
 
-		nx = x + ((ex - o.lastMouseX) * (o.hmode ? 1 : -1));
-		ny = y + ((ey - o.lastMouseY) * (o.vmode ? 1 : -1));
+	        nx = x + ((ex - o.lastMouseX) * (o.hmode ? 1 : -1));
+	        ny = y + ((ey - o.lastMouseY) * (o.vmode ? 1 : -1));
 
-		DragWindow.obj.root.style.left = nx + "px";
-		DragWindow.obj.root.style.top = ny + "px";
-		DragWindow.obj.lastMouseX  = ex;
-		DragWindow.obj.lastMouseY  = ey;
-		DragWindow.obj.root.onDrag(nx, ny);
+	        DragWindow.obj.root.style.left = nx + "px";
+	        DragWindow.obj.root.style.top = ny + "px";
+	        DragWindow.obj.lastMouseX  = ex;
+	        DragWindow.obj.lastMouseY  = ey;
+	        DragWindow.obj.root.onDrag(nx, ny);
 
-		return false;
-	},
+	        return false;
+	    },
 
-	end : function () {
-		document.onmousemove = null;
-		document.onmouseup   = null;
-		DragWindow.obj.root.onDragEnd(parseInt(DragWindow.obj.root.style[DragWindow.obj.hmode ? "left" : "right"]),
-				parseInt(DragWindow.obj.root.style[DragWindow.obj.vmode ? "top" : "bottom"]));
+	    end : function () {
+	        document.onmousemove = null;
+	        document.onmouseup   = null;
+	        DragWindow.obj.root.onDragEnd(parseInt(DragWindow.obj.root.style[DragWindow.obj.hmode ? "left" : "right"]),
+	                parseInt(DragWindow.obj.root.style[DragWindow.obj.vmode ? "top" : "bottom"]));
 
-		if (DragWindow.obj.root.lastChild.id == DragWindow.obj.transId)
-			DragWindow.obj.root.removeChild(DragWindow.obj.root.lastChild);
-		DragWindow.obj = null;
-	},
+	        if (DragWindow.obj.root.lastChild.id == DragWindow.obj.transId) {
+	            DragWindow.obj.root.removeChild(DragWindow.obj.root.lastChild);
+            }
+	        DragWindow.obj = null;
+	    },
 
-	fixE : function (e) {
-		if (typeof e == 'undefined') e = window.event;
-		if (typeof e.layerX == 'undefined') e.layerX = e.offsetX;
-		if (typeof e.layerY == 'undefined') e.layerY = e.offsetY;
-		return e;
-	}
-};
-var TMPL = '<?xml version="1.0" encoding="utf-8"?>';
-TMPL += '<Template>';
-TMPL += '    <Container>';
-TMPL += '        <Html>';
-TMPL += '            <![CDATA[';
-TMPL += '                <div class="cheditor-container">';
-TMPL += '                    <div id="toolbar" style="padding:4px;height:50px"></div>';
-TMPL += '                    <div id="editWrapper" class="cheditor-editarea-wrapper">';
-TMPL += '                        <iframe frameborder="0" class="cheditor-editarea"></iframe>';
-TMPL += '                    </div>';
-TMPL += '                    <div id="modifyBlock" class="cheditor-modify-block"></div>';
-TMPL += '                    <div id="tagPath" class="cheditor-tag-path">';
-TMPL += '                        <span class="cheditor-status-bar">&lt;html&gt; &lt;body&gt;</span>';
-TMPL += '                    </div>';
-TMPL += '                    <div id="resizeBar" class="cheditor-resizebar"></div>';
-TMPL += '                    <div id="viewMode" class="cheditor-viewmode">';
-TMPL += '                        <div id="rich" class="cheditor-tab-rich" title="입력 모드" alt="">&#160;</div>';
-TMPL += '                        <div id="code" class="cheditor-tab-code-off" title="HTML 편집" alt="">&#160;</div>';
-TMPL += '                        <div id="preview" class="cheditor-tab-preview-off" title="미리 보기" alt="">&#160;</div>';
-TMPL += '                        <div id="fullscreen" class="cheditor-fullscreen" title="전체 화면" alt="">&#160;</div>';
-TMPL += '                    </div>';
-TMPL += '                </div>';
-TMPL += '            ]]>';
-TMPL += '        </Html>';
-TMPL += '    </Container>';
-TMPL += '    <PopupWindow>';
-TMPL += '        <Html>';
-TMPL += '            <![CDATA[';
-TMPL += '                <div class="cheditor-popup-window" onselectstart="return false">';
-TMPL += '                    <div class="cheditor-popup-drag-handle">';
-TMPL += '                        <div class="cheditor-popup-titlebar">';
-TMPL += '                            <label class="cheditor-popup-title"></label>';
-TMPL += '                        </div>';
-TMPL += '                    </div>';
-TMPL += '                    <div class="cheditor-popup-cframe"></div>';
-TMPL += '                </div>';
-TMPL += '            ]]>';
-TMPL += '        </Html>';
-TMPL += '    </PopupWindow>';
-TMPL += '    <Toolbar>';
-TMPL += '        <Image file="toolbar.png" />';
-TMPL += '        <Group name="Print">';
-TMPL += '            <Button name="Print" tooltip="인쇄">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23">';
-TMPL += '                    <Icon position="0" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="doCmd" value="Print" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '            <Button name="NewDocument" tooltip="새 문서">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23">';
-TMPL += '                    <Icon position="16" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="doCmd" value="NewDocument" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '        </Group>';
-TMPL += '        <Group name="Undo">';
-TMPL += '            <Button name="Undo" tooltip="되돌리기">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23">';
-TMPL += '                    <Icon position="32" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="doCmd" value="Undo" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '            <Button name="Redo" tooltip="다시 실행">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23">';
-TMPL += '                    <Icon position="48" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="doCmd" value="Redo" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '        </Group>';
-TMPL += '        <Group name="Edit">';
-TMPL += '            <Button name="Copy" tooltip="복사하기">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23" check="1">';
-TMPL += '                    <Icon position="64" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="doCmd" value="Copy" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '            <Button name="Cut" tooltip="오려두기">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23" check="1">';
-TMPL += '                    <Icon position="80" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="doCmd" value="Cut" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '            <Button name="Paste" tooltip="붙이기">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23">';
-TMPL += '                    <Icon position="96" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="doCmd" value="Paste" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '            <Button name="PasteFromWord" tooltip="MS 워드 붙이기">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23">';
-TMPL += '                    <Icon position="112" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="doCmd"  value="PasteFromWord" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '            <Button name="SelectAll" tooltip="전체 선택">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23">';
-TMPL += '                    <Icon position="128" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="doCmd" value="SelectAll" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '        </Group>';
-TMPL += '        <Group name="Format">';
-TMPL += '            <Button name="Bold" tooltip="진하게">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23" check="1">';
-TMPL += '                    <Icon position="144" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="doCmd" value="Bold" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '            <Button name="Italic" tooltip="기울임">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23" check="1">';
-TMPL += '                    <Icon position="160" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="doCmd" value="Italic" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '            <Button name="Underline" tooltip="밑줄">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23" check="1">';
-TMPL += '                    <Icon position="176" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="doCmd" value="Underline" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '            <Button name="Strikethrough" tooltip="취소선">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23" check="1">';
-TMPL += '                    <Icon position="192" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="doCmd" value="Strikethrough" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '            <Button name="Superscript" tooltip="위 첨자">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23" use="" check="1">';
-TMPL += '                    <Icon position="208" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="doCmd" value="Superscript" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '            <Button name="Subscript" tooltip="아래 첨자">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23" use="" check="1">';
-TMPL += '                    <Icon position="224" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="doCmd" value="Subscript" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '            <Button name="BackColor" tooltip="형광펜">';
-TMPL += '                <Attribute class="cheditor-tb-bg30" width="30" default="#fff" height="23" check="1">';
-TMPL += '                    <Icon position="240" width="23" class="cheditor-tb-icon23" />';
-TMPL += '                    <Execution method="showPulldown" value="BackColor" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '            <Button name="ForeColor" tooltip="글자색">';
-TMPL += '                <Attribute class="cheditor-tb-bg30" width="30" default="#000" height="23" check="1">';
-TMPL += '                    <Icon position="263" width="23" class="cheditor-tb-icon23" />';
-TMPL += '                    <Execution method="showPulldown" value="ForeColor" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '        </Group>';
-TMPL += '        <Group name="Alignment">';
-TMPL += '            <Button name="JustifyLeft" tooltip="왼쪽 정렬">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23" check="1">';
-TMPL += '                    <Icon position="286" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="doCmd" value="JustifyLeft" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '            <Button name="JustifyCenter" tooltip="가운데 정렬">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23" check="1">';
-TMPL += '                    <Icon position="302" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="doCmd" value="JustifyCenter" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '            <Button name="JustifyRight" tooltip="오른쪽 정렬">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23" check="1">';
-TMPL += '                    <Icon position="318" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="doCmd" value="JustifyRight" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '            <Button name="JustifyFull" tooltip="양쪽 정렬">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23" check="1">';
-TMPL += '                    <Icon position="334" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="doCmd" value="JustifyFull" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '        </Group>';
-TMPL += '        <Group name="OrderedList">';
-TMPL += '            <Button name="OrderedList" tooltip="문단 번호">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23" check="1">';
-TMPL += '                    <Icon position="350" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="doCmd" value="InsertOrderedList" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '            <Button name="UnOrderedList" tooltip="글 머리표">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23" check="1">';
-TMPL += '                    <Icon position="366" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="doCmd" value="InsertUnOrderedList" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '            <Button name="Outdent" tooltip="왼쪽 여백 줄이기">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23">';
-TMPL += '                    <Icon position="382" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="doCmd" value="Outdent" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '            <Button name="Indent" tooltip="왼쪽 여백 늘이기">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23">';
-TMPL += '                    <Icon position="398" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="doCmd" value="Indent" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '        </Group>';
-TMPL += '        <Group name="Split">';
-TMPL += '        </Group>';
-TMPL += '        <Group name="Paragraph">';
-TMPL += '            <Button name="Paragraph" tooltip="스타일">';
-TMPL += '                <Attribute class="cheditor-tb-bg55" width="55" height="23" check="1">';
-TMPL += '                    <Icon class="cheditor-tb-text" alt="스타일" />';
-TMPL += '                    <Execution method="showPulldown" value="Paragraph" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '        </Group>';
-TMPL += '        <Group name="FontName">';
-TMPL += '            <Button name="FontName" tooltip="글꼴">';
-TMPL += '                <Attribute class="cheditor-tb-bg55" width="55" height="23" check="1">';
-TMPL += '                    <Icon class="cheditor-tb-text" alt="굴림" />';
-TMPL += '                    <Execution method="showPulldown" value="FontName" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '        </Group>';
-TMPL += '        <Group name="FontSize">';
-TMPL += '            <Button name="FontSize" tooltip="글꼴 크기">';
-TMPL += '                <Attribute class="cheditor-tb-bg40" width="40" height="23" check="1">';
-TMPL += '                    <Icon class="cheditor-tb-text" alt="9pt" />';
-TMPL += '                    <Execution method="showPulldown" value="FontSize" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '        </Group>';
-TMPL += '        <Group name="RemoveFormat">';
-TMPL += '            <Button name="RemoveFormat" tooltip="서식 지우기">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23">';
-TMPL += '                    <Icon position="414" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="doCmd" value="RemoveFormat" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '            <Button name="ClearTag" tooltip="모든 HTML 태그 제거">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23">';
-TMPL += '                    <Icon position="430" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="doCmd" value="ClearTag" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '        </Group>';
-TMPL += '        <Group name="Insert">';
-TMPL += '            <Button name="TextBlock" tooltip="글 상자">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23" check="1">';
-TMPL += '                    <Icon position="446" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="showPulldown" value="TextBlock" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '            <Button name="Symbol" tooltip="특수 문자">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23">';
-TMPL += '                    <Icon position="462" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="windowOpen" value="Symbol" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '            <Button name="HR" tooltip="가로줄">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23">';
-TMPL += '                    <Icon position="478" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="doCmd" value="InsertHorizontalRule" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '            <Button name="SmileyIcon" tooltip="표정 아이콘">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23">';
-TMPL += '                    <Icon position="494" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="windowOpen" value="EmotionIcon" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '        </Group>';
-TMPL += '        <Group name="Table">';
-TMPL += '            <Button name="Table" tooltip="테이블">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23">';
-TMPL += '                    <Icon position="510" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="windowOpen" value="Table" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '            <Button name="ModifyTable" tooltip="테이블 고치기">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23">';
-TMPL += '                    <Icon position="526" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="windowOpen" value="ModifyTable" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '            <Button name="Layout" tooltip="레이아웃">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23">';
-TMPL += '                    <Icon position="542" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="windowOpen" value="Layout" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '        </Group>';
-TMPL += '        <Group name="Link">';
-TMPL += '            <Button name="Link" tooltip="하이퍼링크">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23">';
-TMPL += '                    <Icon position="558" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="windowOpen" value="Link" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '            <Button name="UnLink" tooltip="하이퍼링크 없애기">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23" check="1">';
-TMPL += '                    <Icon position="574" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="doCmd" value="UnLink" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '        </Group>';
-TMPL += '        <Group name="Image">';
-TMPL += '            <Button name="Image" tooltip="내 PC 사진 넣기">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23">';
-TMPL += '                    <Icon position="590" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="windowOpen" value="ImageUpload" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '            <Button name="ImageUrl" tooltip="웹 사진 넣기">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23">';
-TMPL += '                    <Icon position="606" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="windowOpen" value="ImageUrl" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '        </Group>';
-TMPL += '        <Group name="Media">';
-TMPL += '            <Button name="Flash" tooltip="플래쉬 동영상">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23">';
-TMPL += '                    <Icon position="622" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="windowOpen" value="FlashMovie" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '            <Button name="Media" tooltip="미디어">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23">';
-TMPL += '                    <Icon position="638" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="windowOpen" value="Embed" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '            <Button name="Map" tooltip="지도">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23">';
-TMPL += '                    <Icon position="654" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="windowOpen" value="GoogleMap" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '        </Group>';
-TMPL += '        <Group name="PageBreak">';
-TMPL += '            <Button name="PageBreak" tooltip="인쇄 쪽 나눔">';
-TMPL += '                <Attribute class="cheditor-tb-bg" width="23" height="23">';
-TMPL += '                    <Icon position="670" width="16" class="cheditor-tb-icon" />';
-TMPL += '                    <Execution method="doCmd" value="PageBreak" />';
-TMPL += '                </Attribute>';
-TMPL += '            </Button>';
-TMPL += '        </Group>';
-TMPL += '    </Toolbar>';
-TMPL += '</Template>';
+	    fixE : function (e) {
+	        if (typeof e == 'undefined') e = window.event;
+	        if (typeof e.layerX == 'undefined') e.layerX = e.offsetX;
+	        if (typeof e.layerY == 'undefined') e.layerY = e.offsetY;
+	        return e;
+	    }
+	};
+
+// --------------------------------------------------------------------------
+// TODO: W3C DOM Range
+//
+
+// --------------------------------------------------------------------------
+// TODO: Table
+//

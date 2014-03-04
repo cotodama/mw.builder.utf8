@@ -1,3 +1,19 @@
+ver 2.4.5 (14.02.28)
+    : 구글 지도 출력시 주소 함께 출력 (스타일디비님 제안)
+    : 컨텐츠 요약에 에디터 적용 (데몬님 제안)
+    : 접근차단시 ip 차단 오류 수정 (나도장관님 제안)
+    : 첨부파일명 인코딩 코드 있는경우 다운로드 안되는 문제 해결 (무지개빛님 제안)
+    : 목록에서 썸네일 생성시 이모티콘 제외
+
+    mw.basic/HISTORY
+    mw.basic/mw.adm/mw.upgrade.php
+    mw.basic/mw.js/mw.google.js
+    mw.basic/mw.proc/mw.intercept.update.php
+    mw.basic/view_head.skin.php
+    mw.basic/view.skin.php
+    mw.basic/list.skin.php
+    mw.basic/write.skin.php
+ 
 ver 2.4.4 (14.02.21)
     : 자동폭파 고정시간 0 설정 (나도장관님 제안)
     : 관리자 에디터 코멘트 그룹 적용 오류 (크레이티브님 제안)

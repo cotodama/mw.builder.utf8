@@ -809,10 +809,12 @@ if ($mw_basic[cf_contents_shop] == '2' and $write[wr_contents_price]) // 배추 
     if (!$con and $is_per) $is_per = false;
 
     if (!$is_per) {
+
+        $view[wr_contents_preview] = conv_content($view[wr_contents_preview], $html);
         ob_start();
         ?>
         <div class="contents_shop_view">
-            <?=get_text($write[wr_contents_preview], 1)?>
+            <?=conv_content($view[wr_contents_preview], $html)?>
             <div style="margin:20px 0 0 0;"><input type="button" class="btn1" value="내용보기" onclick="buy_contents('<?=$bo_table?>','<?=$wr_id?>', 0)"/></div>
         </div>
         <script type="text/javascript">

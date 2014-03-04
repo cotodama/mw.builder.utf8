@@ -589,28 +589,34 @@ if (!file_exists($thumb_file))
         //}
         }
     } else {
-        if (!file_exists($thumb_file)) {
-            preg_match("/<img.*src=\"(.*)\"/iU", $list[$i][wr_content], $match);
-            if ($match[1]) {
-                $match[1] = str_replace($g4[url], "..", $match[1]);
-                if (file_exists($match[1])) {
-                    mw_make_thumbnail($mw_basic[cf_thumb_width], $mw_basic[cf_thumb_height], $match[1],
-                        $thumb_file, $mw_basic[cf_thumb_keep]);
+        preg_match_all("/<img.*src=\\\"(.*)\\\"/iUs", stripslashes($list[$i][wr_content]), $matchs);
+        for ($j=0, $m=count($matchs[1]); $j<$m; ++$j) {
+            $mat = $matchs[1][$j];
+            if (strstr($mat, "mw.basic.comment.image")) $mat = '';
+            if (strstr($mat, "mw.emoticon")) $mat = '';
+            if (preg_match("/cheditor[0-9]\/icon/i", $mat)) $mat = '';
+            if ($mat) {
+                //$mat = str_replace($g4[url], "..", $mat);
+                $mat = preg_replace("/(http:\/\/.*)\/data\//i", "../data/", $mat);
+                if (file_exists($mat)) {
+                    mw_make_thumbnail($mw_basic[cf_thumb_width], $mw_basic[cf_thumb_height], $mat, $thumb_file, $mw_basic[cf_thumb_keep]);
                     if ($mw_basic[cf_thumb2_width])
-                        @mw_make_thumbnail($mw_basic[cf_thumb2_width], $mw_basic[cf_thumb2_height], $match[1],
+                        @mw_make_thumbnail($mw_basic[cf_thumb2_width], $mw_basic[cf_thumb2_height], $mat,
                             "{$thumb2_file}", $mw_basic[cf_thumb2_keep]);
                     if ($mw_basic[cf_thumb3_width])
-                        @mw_make_thumbnail($mw_basic[cf_thumb3_width], $mw_basic[cf_thumb3_height], $match[1],
+                        @mw_make_thumbnail($mw_basic[cf_thumb3_width], $mw_basic[cf_thumb3_height], $mat,
                             "{$thumb3_file}", $mw_basic[cf_thumb3_keep]);
                     if ($mw_basic[cf_thumb4_width])
-                        @mw_make_thumbnail($mw_basic[cf_thumb4_width], $mw_basic[cf_thumb4_height], $match[1],
+                        @mw_make_thumbnail($mw_basic[cf_thumb4_width], $mw_basic[cf_thumb4_height], $mat,
                             "{$thumb4_file}", $mw_basic[cf_thumb4_keep]);
                     if ($mw_basic[cf_thumb5_width])
-                        @mw_make_thumbnail($mw_basic[cf_thumb5_width], $mw_basic[cf_thumb5_height], $match[1],
-                            "{$thumb5_file}", $mw_basic[cf_thumb5_keep]);   
+                        @mw_make_thumbnail($mw_basic[cf_thumb5_width], $mw_basic[cf_thumb5_height], $mat,
+                            "{$thumb5_file}", $mw_basic[cf_thumb5_keep]);
+                    $is_thumb = true;
+                    break;
                 }
-            }
-        }
+            } // if 
+        } // for 
     }
 
     if (!file_exists("$thumb_path/{$list[$i]['wr_id']}")) {

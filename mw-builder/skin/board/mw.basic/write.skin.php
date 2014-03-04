@@ -250,6 +250,10 @@ if ($is_dhtml_editor && $mw_basic[cf_editor] == "cheditor") {
     include_once("$g4[path]/lib/cheditor4.lib.php");
     echo "<script src='$g4[cheditor4_path]/cheditor.js'></script>";
     echo cheditor1('wr_content', '100%', $write_height*25);
+
+    if ($mw_basic[cf_contents_shop] == '2') {
+        echo cheditor1('wr_contents_preview', '100%', $write_height*25);
+    }
 }
 
 if ($w == '' && trim($mw_basic[cf_insert_subject])) {
@@ -721,7 +725,7 @@ if ($mw_basic[cf_category_radio]) {
     <? if ($is_dhtml_editor && $mw_basic[cf_editor] == "geditor") echo "geditor"; ?>
     <? if ($write_min || $write_max) { ?>onkeyup="check_byte('wr_content', 'char_count');"<?}?>><?=$content?></textarea>
     <? if (($write_min || $write_max) && !$is_dhtml_editor) { ?><script> check_byte('wr_content', 'char_count'); </script><?}?>
-    <? } ?>
+    <? } // if (!$is_dhtml_editor || $mw_basic[cf_editor] != "cheditor") ?>
 
     <? if ($is_dhtml_editor && $mw_basic[cf_editor] == "cheditor") echo cheditor2('wr_content', $content); ?>
     <div><input type="button" class="btn1" value="임시저장" onclick="mw_save_temp('임시 저장 했습니다.')"/></div>
@@ -745,7 +749,12 @@ if ($mw_basic[cf_category_radio]) {
         <? } ?>
     </div>
 
-    <textarea id="wr_contents_preview" name="wr_contents_preview" style='width:98%; word-break:break-all;' rows=5 itemname="내용" class=mw_basic_textarea><?=$write[wr_contents_preview]?></textarea>
+    <? if (!$is_dhtml_editor || $mw_basic[cf_editor] != "cheditor") { ?>
+    <textarea id="wr_contents_preview" name="wr_contents_preview" style='width:98%; word-break:break-all;' rows=5 itemname="내용" class=mw_basic_textarea
+    <? if ($is_dhtml_editor && $mw_basic[cf_editor] == "geditor") echo "geditor"; ?>
+    ><?=$write[wr_contents_preview]?></textarea>
+    <? } // if (!$is_dhtml_editor || $mw_basic[cf_editor] != "cheditor") ?>
+    <? if ($is_dhtml_editor && $mw_basic[cf_editor] == "cheditor") echo cheditor2('wr_contents_preview', $write[wr_contents_preview]); ?>
     <div> ※ 유료컨텐츠 홍보 내용을 간략히 작성해주세요. 무료컨텐츠의 경우 입력하실 필요가 없습니다.</div>
 </td>
 </tr>
@@ -1772,7 +1781,15 @@ function fwrite_check(f) {
         }
     }
 
-    <? if ($is_dhtml_editor && $mw_basic[cf_editor] == "cheditor") echo cheditor3('wr_content'); ?>
+    <?php
+    if ($is_dhtml_editor && $mw_basic[cf_editor] == "cheditor") {
+        echo cheditor3('wr_content');
+
+        if ($mw_basic[cf_contents_shop] == '2') {
+            echo cheditor3('wr_contents_preview');
+        }
+    }
+    ?>
 
     var subject = "";
     var content = "";

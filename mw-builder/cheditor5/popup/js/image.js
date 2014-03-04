@@ -2,7 +2,7 @@
 //                       CHEditor 5
 // ----------------------------------------------------------------
 // Homepage: http://www.chcode.com
-// Copyright (c) 1997-2011 CHSOFT
+// Copyright (c) 1997-2014 CHSOFT
 // ================================================================
 var operaBrowser = false;
 if (navigator.userAgent.indexOf('Opera') >= 0)
@@ -10,8 +10,10 @@ if (navigator.userAgent.indexOf('Opera') >= 0)
 
 var MSIE = navigator.userAgent.indexOf('MSIE') >= 0;
 var navigatorVersion = navigator.appVersion.replace(/.*?MSIE (\d\.\d).*/g,'$1')/1;
+	
 var UploadScript = "";
 var DeleteScript = "";
+
 var AppID = "CHXImage";
 var AppSRC = "";
 var activeImage = false;
@@ -20,8 +22,10 @@ var moveTimer = -1;
 var dragDropDiv;
 var insertionMarker;
 var hideTimer = null;
+
 var offsetX_marker = 4;
 var offsetY_marker = -3;
+	
 var firefoxOffsetX_marker = 4;
 var firefoxOffsetY_marker = -2;
 	
@@ -31,14 +35,18 @@ if (navigatorVersion == 8 && MSIE) {
 }
 	
 var destinationObject = false;
+	
 var divXPositions = [];
 var divYPositions = [];
 var divWidth = [];
 var divHeight = [];
+		
 var tmpLeft = 0;
 var tmpTop = 0;
+	
 var eventDiff_x = 0;
 var eventDiff_y = 0;
+		
 var modifyImages = [];
 var uploadMaxNumber = 12;
 var imageCompleted = 0;
@@ -50,6 +58,7 @@ var button = [ { alt : "", img : 'imageUpload/submit.gif', cmd : doSubmit, hspac
                { alt : "", img : 'imageUpload/cancel.gif', cmd : closeWindow, hspace : 2 } ];
 
 var allowedMaxImgSize = 0;
+var browser = null;
 
 function init(dialog) {
 	oEditor = this;
@@ -72,6 +81,7 @@ function init(dialog) {
 	showUploadWindow();
 	initEvent();
 	createInsertionMaker();
+	browser = oEditor.getBrowser();
 }
 
 function createInsertionMaker() {
@@ -97,7 +107,7 @@ function createInsertionMaker() {
 
 function popupClose() {
 // ----------------------------------------------------------------------------------
-   	oEditor.popupWinClose();
+   	oEditor.popupWinCancel();
 }
 
 function showContents() {
@@ -144,7 +154,7 @@ function showContents() {
 
 function openFiles() {
 // ----------------------------------------------------------------------------------
-	var elem = MSIE ? document.getElementById(AppID) : document[AppID];
+	var elem = browser.msie ? document.getElementById(AppID) : document[AppID];
 	elem.AddFiles();
 }
 
@@ -224,7 +234,6 @@ function resetSelectedImageSize() {
 function startUpload(count) {
 // ----------------------------------------------------------------------------------
 	var el = document.getElementById('imageListWrapper').getElementsByTagName('DIV');
-
 	for (var i=0; i < el.length; i++) {
 		var imgBox = el[i];
 		if (imgBox.className != 'imageBox_theImage')
@@ -233,7 +242,7 @@ function startUpload(count) {
 		if (count == 0) break;
 
 		if (imgBox.firstChild == null || typeof(imgBox.firstChild.src) == 'undefined') {
-			imgBox.style.backgroundImage = "url('"+UploadImagePath+"/wait.gif')";
+			imgBox.style.backgroundImage = "url('"+UploadImagePath+"/loader.gif')";
 			count--;
 		}
 	}
@@ -249,7 +258,7 @@ function uploadComplete(fileData) {
 	fileData = fileData.replace(/^\s+/g, '').replace(/\s+$/g, '');
 	if (/^-ERR/.test(fileData)) {
 		alert(fileData);
-		popupClose();
+		oEditor.popupWinClose();
 	}
 
 	if (imageCompleted >= uploadMaxNumber)
@@ -261,7 +270,6 @@ function uploadComplete(fileData) {
 		return;
 
 	var el = document.getElementById('imageListWrapper').getElementsByTagName('DIV');
-
 	for (var i=0; i < el.length; i++) {
 		var imgBox = el[i];
 		if (imgBox.className != 'imageBox_theImage')
@@ -275,12 +283,12 @@ function uploadComplete(fileData) {
 
 		if (imgBox.firstChild == null || typeof(imgBox.firstChild.src) == 'undefined') {
 			var tmpImg = new Image();
+			tmpImg.onload = function() { imgComplete(this, imgBox.id, tmpData); };
 			tmpImg.src = tmpData.fileUrl;
-
 			imgBox.appendChild(tmpImg);
+
 			if (MSIE) tmpImg.style.display = "none";
 			else tmpImg.style.visibility = 'hidden';
-			imgComplete(tmpImg, imgBox.id, tmpData);
 			break;
 		}
 	}
@@ -288,8 +296,8 @@ function uploadComplete(fileData) {
 
 function imgComplete(img, boxId, dataObj) {
 	if (img.complete != true) {
-		var R = function() { imgComplete(img, boxId, dataObj);img=null;};
-		setTimeout(R, 100);
+		var R = function() { imgComplete(img, boxId, dataObj); };
+		setTimeout(R, 250);
 	}
 	else {
 		img.border = 0;
@@ -346,6 +354,7 @@ function imgComplete(img, boxId, dataObj) {
 		if (MSIE) img.style.display = "block";
 		else img.style.visibility = 'visible';
 		setImageCount();
+		img = img.onload = img.onabort = img.onerror = null;
 	}
 }
 
@@ -443,7 +452,7 @@ function closeWindow() {
 
 function removeImage() {
 // ----------------------------------------------------------------------------------
-	var images = [];
+	var images = new Array();
 
 	for (var i=0; i < uploadMaxNumber; i++) {
 		var theImage = document.getElementById('img_'+i);
@@ -478,31 +487,35 @@ function cancelEvent() {
 function getTopPos(inputObj) {		
 // ----------------------------------------------------------------------------------
 	var returnValue = inputObj.offsetTop;
-  	while ((inputObj = inputObj.offsetParent) != null) {
+    
+    inputObj = inputObj.offsetParent;
+  	while (inputObj) {
 	  	if (inputObj.tagName != 'HTML') {
 	  		returnValue += (inputObj.offsetTop - inputObj.scrollTop);
 			if (MSIE)
 				returnValue+=inputObj.clientTop;
 	  	}
-	} 
-
+        inputObj = inputObj.offsetParent;
+	}
 	return returnValue;
 }
 
 function getLeftPos(inputObj) {	  
 // ----------------------------------------------------------------------------------
 	var returnValue = inputObj.offsetLeft;
-  	while ((inputObj = inputObj.offsetParent) != null) {
+    
+    inputObj = inputObj.offsetParent;
+  	while (inputObj) {
 	  	if (inputObj.id != 'imageListWrapper') {
 	  		returnValue += inputObj.offsetLeft;
 			if (MSIE)
 				returnValue+=inputObj.clientLeft;
 	  	}
+        inputObj = inputObj.offsetParent;
 	}
-
 	return returnValue;
 }
-		
+
 function selectImage(e) {
 // ----------------------------------------------------------------------------------
 	if (MSIE)
@@ -834,5 +847,5 @@ function doSubmit() {
 	if (imageArray.length > 0)
 		oEditor.doInsertImage(imageArray);
 
-	popupClose();
+	oEditor.popupWinClose();
 }

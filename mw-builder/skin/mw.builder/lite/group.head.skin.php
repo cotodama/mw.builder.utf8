@@ -32,7 +32,7 @@ body { text-align:center; }
 .mw-left-menus .title { font-size:15px; font-weight:bold; color:#3f4ea1; letter-spacing:-2px; font-family:dotum; }
 .mw-left-menus ul { margin:0 2px 2px 2px; padding:5px 0 5px 0; border:1px solid #f0f0f0; background-color:#fff; list-style:none; }
 .mw-left-menus ul li { padding:7px 0 5px 15px; } 
-.mw-left-menus ul li { background:url(<?=$mw_group_skin_main_path?>/img/dot.gif) no-repeat 7px 12px; border-bottom:1px dotted #e7e7e7; } 
+.mw-left-menus ul li { background:url(<?=$mw_group_skin_head_path?>/img/dot.gif) no-repeat 7px 12px; border-bottom:1px dotted #e7e7e7; } 
 .mw-left-menus a:hover { text-decoration:underline; } 
 .mw-left-menus .select { color:#cc0000; color:#3f4ea1; font-weight:bold; } 
 

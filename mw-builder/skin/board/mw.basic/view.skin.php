@@ -321,7 +321,7 @@ for ($i=0; $i<count($view[file]); $i++) {
 <tr><td height=1 bgcolor=#E7E7E7></td></tr>
 <tr>
     <td class=mw_basic_view_file>
-        <a href="javascript:file_download('<?=$view[file][$i][href]?>', '<?=addslashes($view[file][$i][source])?>', '<?=$i?>');" title="<?=$view[file][$i][content]?>">
+        <a href="javascript:file_download('<?=$view[file][$i][href]?>', '<?=$i?>');" title="<?=$view[file][$i][content]?>">
         <img src="<?=$board_skin_path?>/img/icon_file_down.gif" align=absmiddle>
         <?=$view[file][$i][source]?></a>
         <span class=mw_basic_view_file_info> (<?=$view[file][$i][size]?>), Down : <?=$view[file][$i][download]?>, <?=$view[file][$i][datetime]?></span>
@@ -1215,7 +1215,7 @@ var mw_cash_path = "<?=$mw_cash[path]?>";
 
 
 <script type="text/javascript">
-function file_download(link, file, no) {
+function file_download(link, no) {
     <?
     if ($member[mb_level] < $board[bo_download_level]) {
         $alert_msg = "다운로드 권한이 없습니다.";
@@ -1229,7 +1229,7 @@ function file_download(link, file, no) {
     }
     ?>
 
-    <? if ($board[bo_download_point] < 0) { ?>if (confirm("'"+decodeURIComponent(file)+"' 파일을 다운로드 하시면 포인트가 차감(<?=number_format($board[bo_download_point])?>점)됩니다.\n\n포인트는 게시물당 한번만 차감되며 다음에 다시 다운로드 하셔도 중복하여 차감하지 않습니다.\n\n그래도 다운로드 하시겠습니까?"))<?}?>
+    <? if ($board[bo_download_point] < 0) { ?>if (confirm("파일을 다운로드 하시면 포인트가 차감(<?=number_format($board[bo_download_point])?>점)됩니다.\n\n포인트는 게시물당 한번만 차감되며 다음에 다시 다운로드 하셔도 중복하여 차감하지 않습니다.\n\n그래도 다운로드 하시겠습니까?"))<?}?>
 
     <? if ($mw_basic[cf_contents_shop] == "1" and !$is_per) { // 배추컨텐츠샵 다운로드 결제 ?>
     alert("<?=$is_per_msg?>");
