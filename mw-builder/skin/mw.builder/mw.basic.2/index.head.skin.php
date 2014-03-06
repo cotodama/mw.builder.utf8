@@ -121,6 +121,7 @@ body { text-align:center; }
 <div class="mw-index-menu-left"><img src="<?=$mw_index_skin_head_path?>/img/search_bar_left.gif"></div>
 <!-- 그룹 메뉴 -->
 <? for ($i=0; $i<$mw_groups_head_count; $i++) { ?>
+<? if ($mw_groups_head[$i][gr_level_view] > $member[mb_level]) continue; ?>
 <? if ($i > 0) echo "<span class='mw-index-menu-div'></span>"; ?>
 <div class="mw-index-menu-item"><a href="<?=$mw_groups_head[$i][gr_url]?>" title="<?=mw_html_entities($mw_groups_head[$i][gr_title])?>" target="<?=$mw_groups_head[$i][gr_target]?>" style="<?=$mw_groups_head[$i][gr_more_css]?>"><?=$mw_groups_head[$i][gr_subject]?></a></div>
 <? } ?>

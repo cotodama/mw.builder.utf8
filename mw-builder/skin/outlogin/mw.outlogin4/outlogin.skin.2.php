@@ -23,6 +23,10 @@ if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
 
 global $mw_cash;
 
+global $logout_url;
+if (!$logout_url)
+    $logout_url = $urlencode;
+
 // 회원가입후 몇일째인지? + 1 은 당일을 포함한다는 뜻
 $sql = " select (TO_DAYS('$g4[time_ymdhis]') - TO_DAYS('$member[mb_datetime]') + 1) as days ";
 $row = sql_fetch($sql);
@@ -48,7 +52,7 @@ $mb_reg_after = number_format($row[days]);
         <a href="<?=$g4[path]?>/plugin/attendance/"><b>출석부</b></a> <span>|</span>
         <a href="javascript:win_scrap();">스크랩</a> <span>|</span>
         <a href="<?=$g4[bbs_path]?>/member_confirm.php?url=register_form.php">정보수정</a> <span>|</span>
-        <a href="<?=$g4[bbs_path]?>/logout.php?url=<?=$urlencode?>">로그아웃</a>
+        <a href="<?=$g4[bbs_path]?>/logout.php?url=<?=$logout_url?>">로그아웃</a>
     </div>
 </div>
 </div>

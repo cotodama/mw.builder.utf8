@@ -26,6 +26,7 @@ if (preg_match("/^utf/i", $g4[charset]))
 @mysql_query("alter table $g4[group_table] add gr_skin_head varchar(50) not null default '{$default_skin}' after gr_use_access");
 @mysql_query("alter table $g4[group_table] add gr_sub_domain varchar(50) not null after gr_use_access");
 @mysql_query("alter table $g4[group_table] add gr_level tinyint not null after gr_theme");
+@mysql_query("alter table $g4[group_table] add gr_level_view tinyint not null after gr_level");
 @mysql_query("alter table $g4[group_table] add gr_check varchar(1) not null");
 @mysql_query("alter table $g4[group_table] add gr_age varchar(5) not null");
 @mysql_query("alter table $g4[group_table] add gr_gender varchar(1) not null");
@@ -104,6 +105,7 @@ index (gr_id)
 
 // 1.1.1
 @mysql_query("alter table $mw[menu_middle_table] add `mm_level` tinyint  not null");
+@mysql_query("alter table $mw[menu_middle_table] add `mm_level_view` tinyint  not null");
 
 @mysql_query("alter table $mw[menu_middle_table] add `mm_check` varchar(1)  not null");
 @mysql_query("alter table $mw[menu_middle_table] add `mm_gender` varchar(1)  not null");
@@ -137,6 +139,7 @@ index (mm_id)
 
 // 1.1.1
 @mysql_query("alter table $mw[menu_small_table] add `ms_level` tinyint  not null");
+@mysql_query("alter table $mw[menu_small_table] add `ms_level_view` tinyint  not null");
 @mysql_query("alter table $mw[menu_small_table] add `pg_id` int  not null");
  
 @mysql_query("alter table $mw[menu_small_table] add `ms_check` varchar(1)  not null");

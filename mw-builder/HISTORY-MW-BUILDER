@@ -1,3 +1,26 @@
+1.4.3 (14.03.07)
+    : 파일 교체 후 관리자-배추빌더-업그레이드 실행해주세요.
+    : 배추스킨 최신버전 2.4.6 (14.03.07) 탑재
+    : 권한별 메뉴출력 (jobdong님 제안)
+    : 로그아웃시 로그인 페이로 이동 (날으리님 제안)
+
+    HISTORY-MW-BUILDER
+    adm/mw.builder/mw.group.form.php
+    adm/mw.builder/mw.group.update.php
+    adm/mw.builder/mw.m.menu.form.php
+    adm/mw.builder/mw.m.menu.update.php
+    adm/mw.builder/mw.s.menu.form.php
+    adm/mw.builder/mw.s.menu.update.php
+    skin/mw.builder/mw.basic.1/index.head.skin.php
+    skin/mw.builder/mw.basic.1/group.head.skin.php
+    skin/mw.builder/mw.basic.2/index.head.skin.php
+    skin/mw.builder/mw.basic.2/group.head.skin.php
+    skin/mw.builder/mw.basic.3/index.head.skin.php
+    skin/mw.builder/mw.basic.3/group.head.skin.php
+    skin/mw.builder/lite/index.head.skin.php
+    skin/mw.builder/lite/group.head.skin.php
+    mw.upgrade.php
+ 
 1.4.2 (14.02.28)
     : 그누보드 최신버전 4.37.06 (14.02.28) 탑재
     : 배추스킨 최신버전 2.4.5 (14.02.28) 탑재

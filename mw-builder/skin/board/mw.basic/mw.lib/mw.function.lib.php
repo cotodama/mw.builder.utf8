@@ -2247,7 +2247,7 @@ function mw_get_youtube_thumb($wr_id, $url, $datetime='')
 
     $fp = fsockopen ("img.youtube.com", 80, $errno, $errstr, 10);
     if (!$fp) return false;
-    fputs($fp, "GET /vi/{$v}/hqdefault.jpg HTTP/1.0\r\n");
+    fputs($fp, "GET /vi/{$v}/mqdefault.jpg HTTP/1.0\r\n");
     fputs($fp, "Host: img.youtube.com:80\r\n");
     fputs($fp, "\r\n");
     while (trim($buffer = fgets($fp,1024)) != "") $header .= $buffer;

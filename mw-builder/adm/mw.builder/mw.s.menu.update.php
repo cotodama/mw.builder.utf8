@@ -64,6 +64,7 @@ $sql_common = " mm_id  		= '$_POST[mm_id]',
                 ms_lmenu        = '$_POST[ms_lmenu]',
                 ms_rmenu        = '$_POST[ms_rmenu]',
                 ms_level        = '$_POST[ms_level]',
+                ms_level_view   = '$_POST[ms_level_view]',
                 pg_id           = '$_POST[pg_id]',
                 ms_css	        = '$_POST[ms_css]'";
 if ($w == "") 

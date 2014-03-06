@@ -221,6 +221,13 @@ include_once("$g4[admin_path]/admin.head.php");
     </td>
 </tr>
 <tr class='ht'>
+    <td>메뉴출력 레벨</td>
+    <td>
+        <?=get_member_level_select("ms_level_view", 1, $member[mb_level], $ms[ms_level_view])?>
+	<?=help("소메뉴가 보이는 회원레벨")?>
+    </td>
+</tr>
+<tr class='ht'>
     <td>메뉴접근 성별</td>
     <td>
         <select name="ms_gender">

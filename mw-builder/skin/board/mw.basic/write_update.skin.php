@@ -545,7 +545,7 @@ if ($mw_basic[cf_read_level] && $mw_basic[cf_read_level_own] <= $member[mb_level
 }
 
 // 모바일
-if ($w == '') {
+if ($w == '' || $w == 'r') {
     if (preg_match("/(iphone|samsung|lgte|mobile|BlackBerry|android|windows ce|mot|SonyEricsson)/i", $_SERVER[HTTP_USER_AGENT])) {
         sql_query("update $write_table set wr_is_mobile = '1' where wr_id = '$wr_id'", false);
     }

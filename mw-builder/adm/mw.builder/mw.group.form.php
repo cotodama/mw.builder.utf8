@@ -225,8 +225,15 @@ include_once("$g4[admin_path]/admin.head.php");
 <tr class='ht'>
     <td>메뉴접근 레벨</td>
     <td>
-        <?=get_member_level_select("gr_level", 1, $member[mb_level], $group[gr_level])?>
+        <?=get_member_level_select("gr_level", 1, $member[mb_level], $group[gr_level])?> 레벨 이상
 	<?=help("그룹에 접근할 수 있는 회원레벨")?>
+    </td>
+</tr>
+<tr class='ht'>
+    <td>메뉴출력 레벨</td>
+    <td>
+        <?=get_member_level_select("gr_level_view", 1, $member[mb_level], $group[gr_level_view])?> 레벨 이상
+	<?=help("그룹 메뉴가 보이는 회원레벨")?>
     </td>
 </tr>
 <tr class='ht'>

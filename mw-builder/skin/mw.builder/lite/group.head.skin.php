@@ -96,6 +96,7 @@ body { text-align:center; }
 <td valign=top>
     <div class="menus-right">
 	<?php for ($i=$mw_groups_head_count-1; $i>-1; $i--) { ?>
+	<?php if ($mw_groups_head[$i][gr_level_view] > $member[mb_level]) continue; ?>
 	<div class="item"><a href="<?=$mw_groups_head[$i][gr_url]?>"
             target="<?=$mw_groups_head[$i][gr_target]?>"
             title="<?=mw_html_entities($mw_groups_head[$i][gr_title])?>"
@@ -112,7 +113,7 @@ body { text-align:center; }
                 echo "<div class=\"item\"><a href=\"{$g4['bbs_path']}/member_confirm.php?url=register_form.php\">";
                 echo "정보수정</a></div>";
             }
-            echo "<div class=\"btn\"><a href=\"{$g4['bbs_path']}/logout.php?url={$urlencode}\">";
+            echo "<div class=\"btn\"><a href=\"{$g4['bbs_path']}/logout.php?url={$logout_url}\">";
             echo "<img src=\"{$mw_group_skin_head_path}/img/btn_logout.gif\" align=\"absmiddle\"></a></div>";
 	}
         else { // 비회원
@@ -137,6 +138,7 @@ body { text-align:center; }
     $select_div_end = "</div></div></div>";
 
     for ($i=0, $m=count($mw_mmenus); $i<$m; $i++) { 
+        if ($mw_mmenus[$i][mm_level_view] > $member[mb_level]) continue;
         if ($i > 0) echo "<span class='mw-index-menu-div'></span>";
 
         if ($mw_mmenus[$i][mm_id] == $mm_id) {
@@ -160,6 +162,7 @@ body { text-align:center; }
         <?php
         $mw_smenus = mw_get_small_menus($mw_mmenus[$i][mm_id]);
 	for ($j=0; $j<sizeof($mw_smenus); $j++) {
+            if ($mw_smenus[$i][ms_level_view] > $member[mb_level]) continue;
             ?><div><a href="<?=$mw_smenus[$j][ms_url]?>"
                 target="<?=$mw_smenus[$j][ms_target]?>"
                 title="<?=mw_html_entities($mw_smenus[$j][ms_title])?>"><?=$mw_smenus[$j][ms_name]?></a></div><?
@@ -220,6 +223,7 @@ $(document).ready(function () {
 	    if ($mw_smenus[$i][ms_id] == $mw_smenu[ms_id]) {
                 $mw_smenus[$i][ms_name] = "<span class=select>{$mw_smenus[$i][ms_name]}</span>";
             }
+            if ($mw_smenus[$i][ms_level_view] > $member[mb_level]) continue;
             ?>
             <li><a href="<?=$mw_smenus[$i][ms_url]?>"
                 target="<?=$mw_smenus[$i][ms_target]?>"

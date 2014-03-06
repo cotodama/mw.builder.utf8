@@ -164,8 +164,9 @@ body { text-align:center; }
 
     <?php
     for ($i=0; $i<$mw_groups_head_count; $i++) { 
-        if ($i > 0) echo "<span class='mw-index-menu-div'></span>";
         $group = mw_get_group($mw_groups_head[$i][gr_id]); 
+        if ($mw_groups_head[$i][gr_level_view] > $member[mb_level]) continue;
+        if ($i > 0) echo "<span class='mw-index-menu-div'></span>";
         ?>
         <div class="mw-index-menu-item" gr_id="<?=$group[gr_id]?>"><a href="<?=$mw_groups_head[$i][gr_url]?>"
             target="<?=$mw_groups_head[$i][gr_target]?>"
@@ -177,6 +178,7 @@ body { text-align:center; }
         <?php
         $mw_mmenus = mw_get_middle_menus($group[gr_id]);
 	for ($j=0; $j<sizeof($mw_mmenus); $j++) {
+            if ($mw_mmenus[$i][mm_level_view] > $member[mb_level]) continue;
             ?><div><a href="<?=$mw_mmenus[$j][mm_url]?>"
                 title="<?=mw_html_entities($mw_mmenus[$j][mm_title])?>"
                 target="<?=$mw_mmenus[$j][mm_target]?>"><?=$mw_mmenus[$j][mm_name]?></a></div><?

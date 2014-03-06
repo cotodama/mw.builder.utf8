@@ -99,6 +99,7 @@ function fsearchbox_submit(f)
 <td valign=top>
     <div class="menus-right">
 	<?php for ($i=$mw_groups_head_count-1; $i>-1; $i--) { ?>
+	<?php if ($mw_groups_head[$i][gr_level_view] > $member[mb_level]) continue; ?>
 	<div class="item"><a href="<?=$mw_groups_head[$i][gr_url]?>"
             target="<?=$mw_groups_head[$i][gr_target]?>"
             title="<?=mw_html_entities($mw_groups_head[$i][gr_title])?>"
@@ -115,7 +116,7 @@ function fsearchbox_submit(f)
                 echo "<div class=\"item\"><a href=\"{$g4['bbs_path']}/member_confirm.php?url=register_form.php\">";
                 echo "정보수정</a></div>";
             }
-            echo "<div class=\"btn\"><a href=\"{$g4['bbs_path']}/logout.php?url={$urlencode}\">";
+            echo "<div class=\"btn\"><a href=\"{$g4['bbs_path']}/logout.php?url={$logout_url}\">";
             echo "<img src=\"{$mw_group_skin_head_path}/img/btn_logout.gif\" align=\"absmiddle\"></a></div>";
 	}
         else { // 비회원
@@ -163,6 +164,7 @@ function fsearchbox_submit(f)
 	    <? } ?>
 
 	    <? for ($i=0; $i<sizeof($mw_mmenus); $i++) { // 중메뉴 출력 ?>
+            <? if ($mw_mmenus[$i][mm_level_view] > $member[mb_level]) continue; ?>
 	    <? if ($mw_mmenus[$i][mm_id] == $mm_id) { // 중메뉴 선택 ?>
 	    <div class="mw-menus-middle-select1"><div class="mw-menus-middle-select2"><div class="mw-menus-middle-select3">
 	    <a href="<?=$mw_mmenus[$i][mm_url]?>" title="<?=mw_html_entities($mw_mmenus[$i][mm_title])?>" target="<?=$mw_mmenus[$i][mm_target]?>"><?=$mw_mmenus[$i][mm_name]?></a>
@@ -176,6 +178,7 @@ function fsearchbox_submit(f)
 	    <? if (!$mw_mmenu[mm_smenu]) { // 소메뉴 출력 여부 ?>
 	    <? if (!$mw_mmenu[mm_smove] || sizeof($mw_smenus) > 1) { // 중메뉴에서 소메뉴로 바로이동하지 않거나 소메뉴가 1개 초과일 경우에만 출력 ?>
 	    <? for ($i=0; $i<sizeof($mw_smenus); $i++) { // 소메뉴 출력 ?>
+            <? if ($mw_smenus[$i][ms_level_view] > $member[mb_level]) continue; ?>
 	    <? if ($i > 0) echo "<div class='mw-menus-small-div'>|</div>"; ?>
 	    <? if ($mw_smenus[$i][ms_id] == $ms_id) { // 소메뉴 선택 ?>
 	    <div class="mw-menus-small-item"><a href="<?=$mw_smenus[$i][ms_url]?>" title="<?=mw_html_entities($mw_smenus[$i][ms_title])?>" target="<?=$mw_smenus[$i][ms_target]?>"><span style="<?=$mw_smenus[$i][ms_css]?>"><b><?=$mw_smenus[$i][ms_name]?></b></span></a></div>
@@ -202,6 +205,7 @@ function fsearchbox_submit(f)
 	    if ($mw_smenus[$i][ms_id] == $mw_smenu[ms_id]) {
                 $mw_smenus[$i][ms_name] = "<span class=select>{$mw_smenus[$i][ms_name]}</span>";
             }
+            if ($mw_smenus[$i][ms_level_view] > $member[mb_level]) continue;
             ?>
             <li><a href="<?=$mw_smenus[$i][ms_url]?>"
                 target="<?=$mw_smenus[$i][ms_target]?>"

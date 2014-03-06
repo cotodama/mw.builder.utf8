@@ -60,6 +60,7 @@ $sql_common = " gr_id  		= '$_POST[gr_id]',
                 mm_use_not	= '$_POST[mm_use_not]',  
                 mm_css		= '$_POST[mm_css]',  
                 mm_level	= '$_POST[mm_level]',  
+                mm_level_view	= '$_POST[mm_level_view]',  
                 mm_skin		= '$_POST[mm_skin]'";
 if ($w == "") 
 {
