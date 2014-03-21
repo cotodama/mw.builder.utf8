@@ -59,9 +59,10 @@ for ($a=0; $a<$rows/5; $a++) {
             //if ($list[$i]['icon_new']) $list[$i]['subject'] .= "&nbsp;" . $list[$i]['icon_new'];
             //if ($list[$i]['icon_hot']) $list[$i]['subject'] .= "&nbsp;" . $list[$i]['icon_hot'];
             $list[$i]['subject'] = mw_builder_reg_str($list[$i]['subject']);
+            $list[$i]['title'] = mw_title_tag(mw_builder_reg_str($list[$i]['wr_subject']));
             $list[$i]['href'] = "{$g4['bbs_path']}/board.php?bo_table=$bo_table&wr_id=".$list[$i]['wr_id'];
             ?>
-            <li><a href="<?php echo $list[$i]['href']?>"><?php echo $list[$i]['subject']?></a>&nbsp;</li>
+            <li><a href="<?php echo $list[$i]['href']?>" title="<?=$list[$i]['title']?>"><?php echo $list[$i]['subject']?></a>&nbsp;</li>
         <?php }//for ?>
         </ul>
     </td>

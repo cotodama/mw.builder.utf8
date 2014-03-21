@@ -8,8 +8,9 @@ $style_name = "mw-board-group-list";
 <table border="0" cellpadding="0" cellspacing="0">
 <tr>
 <?php if ($is_img && $file[0]) { ?>
+<?php $file[0]['title'] = mw_title_tag(mw_builder_reg_str($file[0]['wr_subject'])); ?>
 <td width="120" align="center" class="file">
-    <a href="<?php echo $file[0]['href']?>"><!--
+    <a href="<?php echo $file[0]['href']?>" title="<?php echo $file[0]['title']?>"><!--
     --><div><img src="<?php echo $file[0]['path']?>" class="file-img"></div><!--
     --><div class="file-subject"><?php echo mw_builder_reg_str($file[0]['subject'])?><!--
     --><span class="comment"><?php echo $file[0]['wr_comment']?'+'.$file[0]['wr_comment']:''?></span></div></a>
@@ -30,9 +31,10 @@ $style_name = "mw-board-group-list";
         //if ($list[$i]['icon_hot']) $list[$i]['subject'] .= "&nbsp;" . $list[$i]['icon_hot'];
         $list[$i]['subject'] = mw_builder_reg_str($list[$i]['subject']);
         $list[$i]['href'] = $g4['bbs_path']."/board.php?bo_table={$tmp_table}&wr_id=".$list[$i]['wr_id'];
+        $list[$i]['title'] = mw_title_tag(mw_builder_reg_str($list[$i]['wr_subject']));
         ?>
         <li>
-            <a href="<?php echo $list[$i]['href']?>"><?php echo $list[$i]['subject']?></a>
+            <a href="<?php echo $list[$i]['href']?>" title="<?php echo $list[$i]['title']?>"><?php echo $list[$i]['subject']?></a>
             <span class="comment"><?php echo $list[$i]['wr_comment']?'+'.$list[$i]['wr_comment']:''?></span>
         </li>
     <?php } ?>

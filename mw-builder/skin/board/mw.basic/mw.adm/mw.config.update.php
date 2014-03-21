@@ -731,8 +731,10 @@ if ($chk[cf_include_file_head]) $sql .= ", cf_include_file_head = '$cf_include_f
 if ($chk[cf_include_file_tail]) $sql .= ", cf_include_file_tail = '$cf_include_file_tail' ";
 if ($chk[cf_include_head]) $sql .= ", cf_include_head = '$cf_include_head' ";
 if ($chk[cf_include_head_page]) $sql .= ", cf_include_head_page = '$cf_include_head_page' ";
-if ($chk[cf_include_tail]) $sql .= ", cf_include_tail = '$cf_include_tail' ";
-if ($chk[cf_include_tail_page]) $sql .= ", cf_include_tail_page = '$cf_include_tail_page' ";
+if ($chk[cf_include_tail]) {
+    $sql .= ", cf_include_tail = '$cf_include_tail' ";
+    $sql .= ", cf_include_tail_page = '$cf_include_tail_page' ";
+}
 if ($chk[cf_include_list_main]) $sql .= ", cf_include_list_main = '$cf_include_list_main' ";
 if ($chk[cf_include_comment_main]) $sql .= ", cf_include_comment_main = '$cf_include_comment_main' ";
 if ($chk[cf_subject_style]) {

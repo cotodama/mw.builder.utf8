@@ -34,10 +34,11 @@ if (!@file_exists($img)) $img = "$latest_skin_path/img/noimage.gif";
 if (!$list[$i][wr_id]) $img = "$latest_skin_path/img/noimage.gif";
 if (@is_dir($img)) $img = "$latest_skin_path/img/noimage.gif";
 $list[$i][subject] = mw_builder_reg_str($list[$i][subject]);
+$list[$i]['title'] = mw_title_tag(mw_builder_reg_str($list[$i]['wr_subject']));
 ?>
 <td align=center valign=top class=file>
-    <div class="post-img"><a href="<?=$list[$i][href]?>"><img src="<?=$img?>" class="file-img"></a></div>
-    <div class="post-subject"><a href="<?=$list[$i][href]?>"><?=$list[$i][subject]?></a>
+    <div class="post-img"><a href="<?=$list[$i][href]?>" title="<?=$list[$i][title]?>"><img src="<?=$img?>" class="file-img"></a></div>
+    <div class="post-subject"><a href="<?=$list[$i][href]?>" title="<?=$list[$i][title]?>"><?=$list[$i][subject]?></a>
     <span class='comment'><?=$list[$i][wr_comment]?'+'.$list[$i][wr_comment]:''?></div>
 </td>
 <? } ?>

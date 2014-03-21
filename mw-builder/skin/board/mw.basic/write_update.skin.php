@@ -641,3 +641,10 @@ if ($mw_basic['cf_lightbox'] && $mw_basic['cf_lightbox'] <= $member['mb_level'])
     }
 }
  
+// 비회원 이름 쿠키 저장
+if (!$is_member) {
+    set_cookie("mw_cookie_name", $wr_name, -1*$g4[server_time]);
+    set_cookie("mw_cookie_email", $wr_email, -1*$g4[server_time]);
+    set_cookie("mw_cookie_homepage", $wr_homepage, -1*$g4[server_time]);
+}
+

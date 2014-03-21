@@ -46,8 +46,9 @@ $style_name = "mw-latest-list-$bo_table-$rows-$subject_len";
     if ($list[$i][icon_new]) $list[$i][subject] .= "&nbsp;" . $list[$i][icon_new];
     //if ($list[$i][icon_hot]) $list[$i][subject] .= "&nbsp;" . $list[$i][icon_hot];
     $list[$i][subject] = mw_builder_reg_str($list[$i][subject]);
+    $list[$i]['title'] = mw_title_tag(mw_builder_reg_str($list[$i]['wr_subject']));
     ?>
-    <li><a href="<?=$list[$i][href]?>"><?=$list[$i][subject]?></a>
+    <li><a href="<?=$list[$i][href]?>" title="<?=$list[$i][title]?>"><?=$list[$i][subject]?></a>
         <span class='comment'><?=$list[$i][wr_comment]?'+'.$list[$i][wr_comment]:''?></span>
     </li>
     <? } ?>

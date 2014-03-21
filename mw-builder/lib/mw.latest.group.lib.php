@@ -81,6 +81,7 @@ function mw_latest_group($skin_dir="", $gr_id, $rows=10, $subject_len=40, $is_im
         $file = mw_get_last_thumb($tables, $is_img);
         for ($i=0, $m=count($file); $i<$m; ++$i) {
             $row = sql_fetch("select wr_subject, wr_comment, wr_link1 from {$g4['write_prefix']}{$file[$i]['bo_table']} where wr_id = '{$file[$i]['wr_id']}'");
+            $file[$i]['wr_subject'] = $row['wr_subject'];
             $file[$i]['subject'] = conv_subject($row['wr_subject'], $subject_len, "…");
             $file[$i]['wr_comment'] = $row['wr_comment'];
             $file[$i]['wr_link1'] = $row['wr_link1'];

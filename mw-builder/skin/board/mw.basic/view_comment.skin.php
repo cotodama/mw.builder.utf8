@@ -260,7 +260,7 @@ if ($mw_basic[cf_comment_best]) {
         <!-- 이름, 아이피 -->
         <td>
             <img src="<?=$board_skin_path?>/img/comment_best.gif" align="absmiddle">
-            <? if ($mw_basic[cf_attribute] == 'qna' && $view[wr_qna_status] && $write[wr_qna_id] == $row[wr_id]) { ?> <img src="<?=$board_skin_path?>/img/icon_choose.png" align="absmiddle"> <? } ?>
+            <? if ($mw_basic[cf_attribute] == 'qna' && $write[wr_qna_status] && $write[wr_qna_id] == $row[wr_id]) { ?> <img src="<?=$board_skin_path?>/img/icon_choose.png" align="absmiddle"> <? } ?>
             <span class=mw_basic_comment_name><?=$row[name]?></span>
             <? if ($is_ip_view && $row[ip]) { ?> <span class=mw_basic_comment_ip>(<?=$row[ip]?>)</span> <?}?>
             <? if ($is_admin) { ?>
@@ -419,7 +419,7 @@ for ($i=0; $i<$to_record; $i++) {
             <td>
                 <? if ($list[$i][wr_is_mobile]) echo "<img src='$board_skin_path/img/icon_mobile.png' align='absmiddle' class='comment_mobile_icon'>"; ?>
                 <? if ($is_admin) { ?> <input type="checkbox" name="chk_comment_id[]" class="chk_comment_id" value="<?=$list[$i][wr_id]?>"> <? } ?>
-                <? if ($mw_basic[cf_attribute] == 'qna' && $view[wr_qna_status] && $write[wr_qna_id] == $list[$i][wr_id]) { ?> <img src="<?=$board_skin_path?>/img/icon_choose.png" align="absmiddle"> <? } ?>
+                <? if ($mw_basic[cf_attribute] == 'qna' && $write[wr_qna_status] && $write[wr_qna_id] == $list[$i][wr_id]) { ?> <img src="<?=$board_skin_path?>/img/icon_choose.png" align="absmiddle"> <? } ?>
                 <span class=mw_basic_comment_name><?=$list[$i][name]?></span>
                 <? if ($is_ip_view && $list[$i][ip]) { ?> <span class=mw_basic_comment_ip>(<?=$list[$i][ip]?>)</span> <?}?>
                 <? if ($history_href) { echo "<a href=\"$history_href\"><img src=\"$board_skin_path/img/btn_comment_history.gif\" align=absmiddle title=\"변경기록\"></a>"; } ?>

@@ -10,7 +10,10 @@ if ($sw != "move" && $sw != "copy")
 
 include_once("$board_skin_path/mw.lib/mw.skin.basic.lib.php");
 
-if ($sw == 'move' && $move_memo_use) {
+if ($move_memo_use) {
+
+    $sw_msg = $sw == 'move' ? '이동' : '복사';
+
     $bo_list = '';
     $sql = "select bo_subject from $g4[board_table] where bo_table in ('".implode("','", (array)$chk_bo_table)."')";
     $qry = sql_query($sql);
@@ -19,7 +22,7 @@ if ($sw == 'move' && $move_memo_use) {
         $bo_list .= $row[bo_subject];
     }
     $memo = " 회원님의 아래 게시물이 [{$board[bo_subject]}] 게시판에서 ";
-    $memo.= " [{$bo_list}] 게시판으로 이동 조치 되었습니다.\n\n";
+    $memo.= " [{$bo_list}] 게시판으로 {$sw_msg} 조치 되었습니다.\n\n";
 
     $list = array();
     $sql = "select wr_subject, mb_id from $write_table where wr_id in ('".implode("','", explode(",",$wr_id_list))."')";

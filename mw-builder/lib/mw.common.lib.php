@@ -241,6 +241,12 @@ function mw_builder_reg_str($str)
     return $str;
 }
 
+// 자동치환
+function mw_title_tag($str)
+{
+    return str_replace("\"", "'", $str);
+}
+
 function mw_get_last_thumb($bo_tables, $cnt=1)
 {
     global $g4;

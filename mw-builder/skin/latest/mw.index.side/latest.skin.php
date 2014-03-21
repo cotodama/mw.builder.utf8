@@ -32,9 +32,10 @@ $style_name = "mw-latest-side-$bo_table-$rows-$subject_len";
 <? }  ?>
 <td valign=top>
 <ul>
-<?  for ($i=0; $i<$rows; $i++) { ?>
-<?  $list[$i][subject] = mw_builder_reg_str($list[$i][subject]); ?>
-<li><a href="<?=$list[$i][href]?>"><?=$list[$i][subject]?></a>
+<? for ($i=0; $i<$rows; $i++) { ?>
+<? $list[$i][subject] = mw_builder_reg_str($list[$i][subject]); ?>
+<? $list[$i]['title'] = mw_title_tag(mw_builder_reg_str($list[$i]['wr_subject'])); ?>
+<li><a href="<?=$list[$i][href]?>" title="<?=$list[$i][title]?>"><?=$list[$i][subject]?></a>
 <span class='comment'><?=$list[$i][wr_comment]?'+'.$list[$i][wr_comment]:''?>
 </li>
 <? } ?>

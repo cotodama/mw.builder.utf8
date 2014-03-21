@@ -29,12 +29,28 @@ if (!defined('_GNUBOARD_')) exit;
 // $date_cnt : 몇일 동안
 function mw_popular($skin_dir='basic', $pop_cnt=7, $date_cnt=3, $minute=0)
 {
-    global $config, $g4;
+    global $config, $g4, $mwp, $is_admin;
 
     if (!$skin_dir) $skin_dir = 'basic';
 
     $cache_file_list = "$g4[path]/data/mw.cache/popular-{$g4[time_ymd]}-{$pop_cnt}-{$date_cnt}";
-    $list = mw_cache_read($cache_file_list, $minute);
+    //$list = mw_cache_read($cache_file_list, $minute);
+
+    $popular_config = null;
+    if ($mwp[popular_config_table]) {
+        $popular_config = sql_fetch("select * from $mwp[popular_config_table]", false);
+    }
+
+    $sql_except = '';
+    if ($popular_config[cf_except_word]) {
+        $wrd = explode(",", $popular_config[cf_except_word]);
+        for ($i=0, $m=count($wrd); $i<$m; $i++) {
+            $key = trim($wrd[$i]);
+            if (!trim($key)) continue;
+            $key = addslashes($key);
+            $sql_except .= " and pp_word <> '$key' ";
+        }
+    }
 
     if (!$list) {
 	$date_gap = date("Y-m-d", $g4[server_time] - ($date_cnt * 86400));
@@ -43,6 +59,7 @@ function mw_popular($skin_dir='basic', $pop_cnt=7, $date_cnt=3, $minute=0)
 		  where pp_date between '$date_gap' and '$g4[time_ymd]'
                     and pp_word not in (select mb_id from $g4[member_table])
                     and trim(pp_word) <> ''
+                    $sql_except
 		  group by pp_word
 		  order by cnt desc, pp_word
 		  limit 0, $pop_cnt ";
@@ -51,6 +68,7 @@ function mw_popular($skin_dir='basic', $pop_cnt=7, $date_cnt=3, $minute=0)
             $sql = " select pp_word, count(*) as cnt from $g4[popular_table]
                       where pp_date between '$date_gap' and '$g4[time_ymd]'
                         and trim(pp_word) <> ''
+                        $sql_except
                       group by pp_word
                       order by cnt desc, pp_word
                       limit 0, $pop_cnt ";
@@ -60,6 +78,8 @@ function mw_popular($skin_dir='basic', $pop_cnt=7, $date_cnt=3, $minute=0)
 	$old = array();
 	$sql2 = " select pp_word, count(*) as cnt from $g4[popular_table]
 		  where pp_date between '$date_gap_old' and '$date_gap'
+                    and trim(pp_word) <> ''
+                    $sql_except
 		  group by pp_word
 		  order by cnt desc, pp_word
 		  limit 0, 100 ";

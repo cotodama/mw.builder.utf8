@@ -54,10 +54,11 @@ if ($count > 0) {
 <?php
 for ($i=0; $i<$rows; $i++) {
     $list[$i]['subject'] = mw_builder_reg_str($list[$i]['subject']);
+    $list[$i]['title'] = mw_title_tag(mw_builder_reg_str($list[$i]['wr_subject']));
     $list[$i]['comment_cnt'] = $list[$i]['wr_comment'] ? "+{$list[$i]['wr_comment']}" : '';
     $list[$i]['href'] = "{$g4['bbs_path']}/board.php?bo_table=$bo_table&wr_id=".$list[$i]['wr_id'];
     ?>
-    <li><a href="<?php echo $list[$i]['href']?>"><?php echo $list[$i]['subject']?><!--
+    <li><a href="<?php echo $list[$i]['href']?>" title="<?php echo $list[$i]['title']?>"><?php echo $list[$i]['subject']?><!--
         -->&nbsp;<span class="comment"><?php echo $list[$i]['comment_cnt']?></span></a></li> 
 <?php } ?> 
 </ul>

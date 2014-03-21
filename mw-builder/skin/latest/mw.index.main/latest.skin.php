@@ -67,9 +67,10 @@ $r = rand($s, $e-1);
 for ($j=$s; $j<$e; $j++) {
 if ($r == $j) $list[$j][subject] = "<strong>".$list[$j][subject]."</strong>";
 $list[$j][subject] = mw_builder_reg_str($list[$j][subject]);
+$list[$j]['title'] = mw_title_tag(mw_builder_reg_str($list[$j]['wr_subject']));
 ?>
 <li><span class="bo_subject">[<?=$list[$j][bo_subject]?>]</span>
-    <a href="<?=$list[$j][href]?>"><?=$list[$j][subject]?></a>&nbsp;
+    <a href="<?=$list[$j][href]?>" title="<?=$list[$j][title]?>"><?=$list[$j][subject]?></a>&nbsp;
     <span class='comment'><?=$list[$j][wr_comment]?'+'.$list[$j][wr_comment]:''?></span>
 </li>
 <? } ?>
@@ -79,10 +80,12 @@ $list[$j][subject] = mw_builder_reg_str($list[$j][subject]);
 <table border=0 cellpadding=0 cellspacing=0>
 <tr>
 <? if ($file) { ?>
+<? $file['title'] = mw_title_tag(mw_builder_reg_str($file['wr_subject']));
+<? $file['subject'] = mw_builder_reg_str($file['subject']);
 <td width=120 align=center class=file>
 <a href="<?=$file[href]?>"><div><img src="<?=$file[path]?>" class="file-img"></div>
 <div class="file-subject"><span class="bo_subject">[<?=$file[bo_subject]?>]</span>
-<?=$file[subject]?><span class='comment'><?=$file[wr_comment]?'+'.$file[wr_comment]:''?></span</div></a>
+<?=$file[subject]?><span class='comment'><?=$file[wr_comment]?'+'.$file[wr_comment]:''?></span></div></a>
 </td>
 <? }  ?>
 <td valign=top>
@@ -94,9 +97,10 @@ $r = rand($s, $e-1);
 for ($j=$s; $j<$e; $j++) {
 if ($r == $j) $list[$j][subject] = "<strong>".$list[$j][subject]."</strong>";
 $list[$j][subject] = mw_builder_reg_str($list[$j][subject]);
+$list[$j]['title'] = mw_title_tag(mw_builder_reg_str($list[$j]['wr_subject']));
 ?>
 <li><span class="bo_subject">[<?=$list[$j][bo_subject]?>]</span>
-    <a href="<?=$list[$j][href]?>"><?=$list[$j][subject]?></a>
+    <a href="<?=$list[$j][href]?>" title="<?=$list[$j][title]?>"><?=$list[$j][subject]?></a>
     <span class='comment'><?=$list[$j][wr_comment]?'+'.$list[$j][wr_comment]:''?></span>
 </li>
 <? } ?> 
@@ -125,8 +129,9 @@ $r = rand(0, $top_line-1);
 for ($i=0; $i<$top_line; $i++) {
 if ($r == $i) $list[$i][subject] = "<strong>".$list[$i][subject]."</strong>";
 $list[$i][subject] = mw_builder_reg_str($list[$i][subject]);
+$list[$i]['title'] = mw_title_tag(mw_builder_reg_str($list[$i]['wr_subject']));
 ?>
-<li><a href="<?=$list[$i][href]?>"><?=$list[$i][subject]?></a>
+<li><a href="<?=$list[$i][href]?>" title="<?=$list[$i][title]?>"><?=$list[$i][subject]?></a>
 <span class='comment'><?=$list[$i][wr_comment]?'+'.$list[$i][wr_comment]:''?></span></li><? } ?>
 </ul>
 <div class="line">&nbsp;</div>
@@ -145,8 +150,9 @@ $r = rand($top_line, $rows-1);
 for ($i=$top_line; $i<$rows; $i++) {
 if ($r == $i) $list[$i][subject] = "<strong>".$list[$i][subject]."</strong>";
 $list[$i][subject] = mw_builder_reg_str($list[$i][subject]);
+$list[$i]['title'] = mw_title_tag(mw_builder_reg_str($list[$i]['wr_subject']));
 ?>
-<li><a href="<?=$list[$i][href]?>"><?=$list[$i][subject]?></a></li>
+<li><a href="<?=$list[$i][href]?>" title="<?=$list[$i][title]?>"><?=$list[$i][subject]?></a></li>
 <? } ?> 
 </ul>
 </td>

@@ -1,3 +1,30 @@
+ver 2.4.8 (14.03.21)
+    : 게시물 복사시 쪽지 기능 (뒹굴보노님 제안)
+    : 게시판 하단 파일 옵션 그룹적용 오류 수정 (재아님 제안)
+    : 팝업공지 사용시 이미지 새창 오류 수정 (라님님 제안)
+    : 목록 글 파일 file_exists 검사 (꼬불꼬불차차님 제안)
+    : 트위터 공유 주소 변경 (금광님 제안)
+    : 코멘트 새창시 질문게시판 채택 아이콘 출력 오류 수정
+
+    mw.basic/HISTORY
+    mw.basic/mw.adm/mw.config.update.php
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/move_update.php
+    mw.basic/list.skin.php
+    mw.basic/view_head.skin.php
+    mw.basic/view_comment.skin.php
+
+ver 2.4.7 (14.03.14)
+    : 비회원 글작성시 이름 임시 저장 (보거스님 제안)
+    : 설문초기화
+
+    mw.basic/HISTORY
+    mw.basic/write.skin.php
+    mw.basic/write_update.skin.php
+    mw.basic/view.skin.php
+    mw.basic/mw.proc/mw.vote.php
+    mw.basic/mw.proc/mw.vote.init.php
+ 
 ver 2.4.6 (14.03.07)
     : 유투브 썸네일 여백없는 것으로 교체 (나동님 제안)
     : 답글 모바일 아이콘 표시 (oolloo님 제안)

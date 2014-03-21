@@ -728,6 +728,7 @@ function mw_board_popup($view, $html=0)
         $minHeight = 300;
     }
 
+    /*
     // 파일 출력
     ob_start();
     $cf_img_1_noview = $mw_basic[cf_img_1_noview];
@@ -774,6 +775,10 @@ function mw_board_popup($view, $html=0)
     $subject = mw_reg_str($subject);
     $subject = bc_code($subject);
     $content = $file_viewer.$view[rich_content];
+    */
+    global $write_table, $wr_id, $mw, $member;
+    $view[content] = conv_content($view[wr_content], $html);
+    include("$board_skin_path/view_head.skin.php");
 
     set_session("ss_popup_token", $token = uniqid(time()));
 
@@ -791,10 +796,10 @@ function mw_board_popup($view, $html=0)
 HEREDOC;
     }
     if ($_COOKIE[$dialog_id]) return false;
-    
+
     echo <<<HEREDOC
         <div id="dialog-message-$view[wr_id]" class="dialog-content" title="$subject">
-            <div>$content</div>
+            <div>$view[rich_content]</div>
         </div>
         <script type="text/javascript">
         $(function() {

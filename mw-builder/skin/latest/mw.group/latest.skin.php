@@ -38,8 +38,12 @@ for ($a=0; $a<$rows/5; $a++) {
 <table border=0 cellpadding=0 cellspacing=0>
 <tr>
 <? if ($is_img && $a==0 && $file[0]) { ?>
+<?
+$file[$a]['subject'] = mw_builder_reg_str($file[$a]['subject']);
+$file[$a]['title'] = mw_title_tag(mw_builder_reg_str($file[$a]['wr_subject']));
+?>
 <td width=140 align=center class=file>
-    <a href="<?=$file[$a][href]?>"><div><img src="<?=$file[$a][path]?>" class="file-img"></div>
+    <a href="<?=$file[$a][href]?>" title="<?=$file[$a][title]?>"><div><img src="<?=$file[$a][path]?>" class="file-img"></div>
     <div class="file-subject"><?=$file[$a][subject]?>
     <span class='comment'><?=$file[$a][wr_comment]?'+'.$file[$a][wr_comment]:''?></span></div>
     </a>
@@ -63,8 +67,9 @@ for ($a=0; $a<$rows/5; $a++) {
     if ($list[$i][icon_hot]) $list[$i][subject] .= "&nbsp;" . $list[$i][icon_hot];
     if ($i % 2) $cls = "class='bg'"; else $cls = "";
     $list[$i][subject] = mw_builder_reg_str($list[$i][subject]);
+    $list[$i]['title'] = mw_title_tag(mw_builder_reg_str($list[$i]['wr_subject']));
     ?>
-    <li><?//=$list[$i][name]?> <a href="<?=$list[$i][href]?>"><?=$list[$i][subject]?></a>
+    <li><?//=$list[$i][name]?> <a href="<?=$list[$i][href]?>" title="<?=$list[$i][title]?>"><?=$list[$i][subject]?></a>
         <span class='comment'><?=$list[$i][wr_comment]?'+'.$list[$i][wr_comment]:''?></span>
 	<span class="bo_table"> | <a href="<?=$g4[url]?>/<?=$g4[bbs]?>/board.php?bo_table=<?=$list[$i][bo_table]?>"><?=$list[$i][bo_subject]?></a></span></li>
     <? } ?>

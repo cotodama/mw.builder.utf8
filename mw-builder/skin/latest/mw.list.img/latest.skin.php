@@ -38,12 +38,14 @@ for ($i=0; $i<$rows; $i++) {
         $img = "{$latest_skin_path}/img/noimage.gif";
 
     $list[$i]['subject'] = mw_builder_reg_str($list[$i]['subject']);
-
+    $list[$i]['title'] = mw_title_tag(mw_builder_reg_str($list[$i]['wr_subject']));
     $list[$i]['href'] = "{$g4['bbs_path']}/board.php?bo_table={$tmp_table}&wr_id={$list[$i]['wr_id']}";
     ?>
     <td align=center valign=top class=file>
-        <div class="post-img"><a href="<?php echo $list[$i]['href']?>"><img src="<?php echo $img?>" class="file-img"></a></div>
-        <div class="post-subject"><a href="<?php echo $list[$i]['href']?>"><?php echo $list[$i]['subject']?></a></div>
+        <div class="post-img"><a href="<?php echo $list[$i]['href']?>" title="<?php
+            echo $list[$i]['title']?>"><img src="<?php echo $img?>" class="file-img"></a></div>
+        <div class="post-subject"><a href="<?php echo $list[$i]['href']?>" title="<?php
+            echo $list[$i]['title']?>"><?php echo $list[$i]['subject']?></a></div>
     </td>
 <?php }//for ?>
 </tr>

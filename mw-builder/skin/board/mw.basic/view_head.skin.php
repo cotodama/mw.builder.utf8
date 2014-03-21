@@ -669,7 +669,8 @@ if ($mw_basic[cf_sns])
 
     $me2day_url = '';//"http://me2day.net/posts/new?new_post[body]=".urlencode(set_utf8($view[wr_subject])." - \"$sns_url\":$sns_url");
     //$twitter_url = "http://twitter.com/home?status=".urlencode(set_utf8($view[wr_subject])." - $sns_url");
-    $twitter_url = "http://twitter.com/?status=".str_replace("+", " ", urlencode(set_utf8($view[wr_subject])." - $sns_url"));
+    //$twitter_url = "http://twitter.com/?status=".str_replace("+", " ", urlencode(set_utf8($view[wr_subject])." - $sns_url"));
+    $twitter_url = "https://twitter.com/intent/tweet?source=webclient&text=".str_replace("+", " ", urlencode(set_utf8($view[wr_subject])." - $sns_url"));
     $facebook_url = "http://www.facebook.com/share.php?u=".urlencode($view_url);
     $yozm_url = ''; //"http://yozm.daum.net/api/popup/prePost?sourceid=41&link={$sns_url}&prefix=".urlencode(set_utf8($view[wr_subject]));
     $cy_url = "javascript:window.open('http://csp.cyworld.com/bi/bi_recommend_pop.php?url={$sns_url}', ";

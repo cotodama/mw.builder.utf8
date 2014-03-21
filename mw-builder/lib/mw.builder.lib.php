@@ -254,5 +254,5 @@ if (!$g4['title']) {
     }
 }
 
-$logout_url = urlencode("$g4[bbs_path]/login.php");
+$logout_url = urlencode("./login.php");
 

@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * MW Builder for Gnuboard4
  *
@@ -72,6 +72,7 @@ function mw_latest_main($skin_dir="", $bo_tables, $rows=10, $subject_len=40, $mi
 	    if (@is_dir($file[$i][path])) $file[$i] = null;
 	    if ($file[$i]) {
 		$row = sql_fetch("select wr_subject, wr_comment from $g4[write_prefix]$row[bo_table] where wr_id = '$row[wr_id]'");
+                $file[$i]['wr_subject'] = $row['wr_subject'];
 		$file[$i][subject] = conv_subject($row[wr_subject], $subject_len, "…");
 		$file[$i][wr_comment] = $row[wr_comment];
 	    }
@@ -134,8 +135,10 @@ function mw_latest_main($skin_dir="", $bo_tables, $rows=10, $subject_len=40, $mi
 		if (!@file_exists($file[path])) $file[path] = "$latest_skin_path/img/noimage.gif";
 		if (!@file_exists($file[path])) $file = null;
 		if ($file) {
-		    $row = sql_fetch("select wr_subject from $g4[write_prefix]$bo_table where wr_id = '$row[wr_id]'");
+		    $row = sql_fetch("select wr_subject, wr_comment from $g4[write_prefix]$bo_table where wr_id = '$row[wr_id]'");
+                    $file['wr_subject'] = $row['wr_subject'];
                     $file[subject] = conv_subject($row[wr_subject], $subject_len, "…");
+                    $file[wr_comment] = $row[wr_comment];
 		}
 	    } else {
 		$file[href] = "#";
@@ -189,4 +192,3 @@ function mw_latest_main($skin_dir="", $bo_tables, $rows=10, $subject_len=40, $mi
 
     return $content;
 } 
-?>

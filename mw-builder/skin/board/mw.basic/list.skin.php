@@ -205,6 +205,7 @@ $new_count = $row[cnt];
 <? if (!$wr_id) { ?>
 <script type="text/javascript" src="<?=$board_skin_path?>/mw.js/tooltip.js"></script>
 <? } ?>
+<script type="text/javascript" src="<?="$board_skin_path/mw.js/mw_image_window.js"?>"></script>
 
 <!-- 게시판 목록 시작 -->
 <table width="<?=$bo_table_width?>" align="center" cellpadding="0" cellspacing="0"><tr><td id=mw_basic>
@@ -331,7 +332,9 @@ if ($is_category && $mw_basic[cf_category_tab]) {
 <? $line_number = 0; ?>
 <? for ($i=0; $i<count($list); $i++) { ?>
 <?
-@include("$mw_basic[cf_include_list_main]");
+if (file_exists($mw_basic[cf_include_list_main])) {
+    include($mw_basic[cf_include_list_main]);
+}
 
 mw_basic_move_cate($bo_table, $list[$i][wr_id]);
 

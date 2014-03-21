@@ -17,7 +17,8 @@ shuffle($list);
 <div id="mw-index-new-layer">
 <? for ($i=0; $i<$rows; $i++) { ?>
 <? $list[$i][subject] = mw_builder_reg_str($list[$i][subject]); ?>
-<div class="item"><div><a href="<?=$list[$i][href]?>">[<span><?=$list[$i][bo_subject]?></span>] <?=$list[$i][subject]?></a></div></div>
+<? $list[$i]['title'] = mw_title_tag(mw_builder_reg_str($list[$i]['wr_subject'])); ?>
+<div class="item"><div><a href="<?=$list[$i][href]?>" title="<?=$list[$i][title]?>">[<span><?=$list[$i][bo_subject]?></span>] <?=$list[$i][subject]?></a></div></div>
 <? } ?>
 </div>
 </div>

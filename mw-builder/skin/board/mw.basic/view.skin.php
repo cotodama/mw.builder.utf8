@@ -801,6 +801,20 @@ if ($is_signature && $signature && !$view[wr_anonymous] && $mw_basic[cf_attribut
                 mw_vote_load();
             });
         }
+        <? if ($is_admin or ($write[mb_id] && $member[mb_id] && $write[mb_id] == $member[mb_id])) { ?>
+        function mw_vote_init() {
+            if (!confirm("초기화한 데이터는 복구할 방법이 없습니다.\n\n정말 설문을 초기화 하시겠습니까?")) return;
+            $.get("<?=$board_skin_path?>/mw.proc/mw.vote.init.php?bo_table=<?=$bo_table?>&wr_id=<?=$wr_id?>", function (str) {
+                if (str) {
+                    alert(str);
+                    return;
+                }
+                alert("설문을 초기화 했습니다.");
+                location.reload();
+            });
+        }
+        <? } ?>
+   
         mw_vote_load();
         </script>
 

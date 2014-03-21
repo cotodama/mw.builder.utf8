@@ -74,6 +74,7 @@ function mw_latest_group_rand($skin_dir="", $gr_id, $rows=10, $subject_len=40, $
 	    if (@is_dir($file[$i][path])) $file[$i] = null;
 	    if ($file[$i]) {
 		$row2 = sql_fetch("select wr_subject,wr_comment, wr_link1 from $g4[write_prefix]$row[bo_table] where wr_id = '$row[wr_id]'");
+                $file[$i]['wr_subject'] = $row['wr_subject'];
                 $file[$i][subject] = conv_subject($row2[wr_subject], $subject_len, "…");
                 $file[$i][wr_comment] = $row2[wr_comment];
                 $file[$i][wr_link1] = $row2[wr_link1];

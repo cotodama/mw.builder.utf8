@@ -27,9 +27,10 @@ if (!@file_exists($img)) $img = "$g4[path]/data/file/$bo_table/thumbnail/{$list[
 if (!@file_exists($img)) $img = "$latest_skin_path/img/noimage.gif";
 if (!$list[$i][wr_id]) $img = "$latest_skin_path/img/noimage.gif";
 $list[$i][subject] = mw_builder_reg_str($list[$i][subject]);
+$list[$i]['title'] = mw_title_tag(mw_builder_reg_str($list[$i]['wr_subject']));
 ?>
 <div class="item">
-    <div class="file"><div><a href="<?=$list[$i][href]?>"><img src="<?=$img?>" class="file-img"></a></div></div>
+    <div class="file"><div><a href="<?=$list[$i][href]?>" title="<?=$list[$i][title]?>"><img src="<?=$img?>" class="file-img"></a></div></div>
     <div class="post-subject"><a href="<?=$list[$i][href]?>"><?=$list[$i][subject]?></a></div>
 </div>
 <? } ?>

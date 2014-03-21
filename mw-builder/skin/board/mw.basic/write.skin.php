@@ -271,6 +271,12 @@ if (($mw_basic[cf_attribute] == "anonymous" || ($w == 'u' && $write[wr_anonymous
     $is_email = false;
     $is_homepage = false;
 }
+
+if (!$is_member) {
+    if (!$name) $name = get_cookie("mw_cookie_name");
+    if (!$email) $email = get_cookie("mw_cookie_email");
+    if (!$homepage) $homepage = get_cookie("mw_cookie_homepage");
+}
 ?>
 
 <link rel="stylesheet" href="<?=$board_skin_path?>/style.common.css?<?=filemtime("$board_skin_path/style.common.css")?>" type="text/css">

@@ -37,9 +37,10 @@ $style_name = "mw-latest-side-$bo_table-$rows-$subject_len";
                 $tmp_table = $bo_table;
                 if (!$bo_table) $tmp_table = $list[$i]['bo_table'];
                 $list[$i]['subject'] = mw_builder_reg_str($list[$i]['subject']); 
+                $list[$i]['title'] = mw_title_tag(mw_builder_reg_str($list[$i]['wr_subject']));
                 $list[$i]['href'] = "{$g4['bbs_path']}/board.php?bo_table={$tmp_table}&wr_id={$list[$i]['wr_id']}";
                 ?>
-                <li><a href="<?php echo $list[$i]['href']?>"><?php echo $list[$i]['subject']?></a></li>
+                <li><a href="<?php echo $list[$i]['href']?>" title="<?php echo $list[$i]['title']?>"><?php echo $list[$i]['subject']?></a></li>
             <?php } ?>
             </ul>
         </td>
