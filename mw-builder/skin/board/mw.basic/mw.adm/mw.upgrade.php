@@ -1260,3 +1260,7 @@ if (is_null($mw_basic[cf_talent_market])) {
     sql_query("alter table $mw[basic_config_table] add cf_bbs_banner varchar(1) not null", false);
     sql_query("alter table $mw[basic_config_table] add cf_bbs_banner_page varchar(20) default '/l//v//w/' not null", false);
 
+    sql_query("alter table $mw[basic_config_table] add cf_key_level tinyint not null", false);
+    sql_query("alter table $write_table add wr_key_password varchar(50) not null", false);
+    sql_query("alter table $write_table change wr_key_password wr_key_password varchar(50) not null", false);
+

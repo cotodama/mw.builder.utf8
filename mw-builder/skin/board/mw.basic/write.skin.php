@@ -513,6 +513,17 @@ if ($is_category && $mw_basic[cf_category_tab]) {
 <tr><td colspan=2 height=1 bgcolor=#e7e7e7></td></tr>
 <? } ?>
 
+<?php if ($mw_basic['cf_key_level'] && $mw_basic['cf_key_level'] <= $member['mb_level']) { ?>
+<tr>
+<td class=mw_basic_write_title>· 열람 패스워드</td>
+<td>
+    <input type=password maxlength=20 size=15 name=wr_key_password itemname="열람 패스워드" class=mw_basic_text>
+    <input type="checkbox" name="wr_key_password_del" id="wr_key_password_key">
+    <label for="wr_key_password_key">삭제</label>
+</td></tr>
+<tr><td colspan=2 height=1 bgcolor=#e7e7e7></td></tr>
+<?php } ?>
+
 <? if ($is_email) { ?>
 <tr>
 <td class=mw_basic_write_title>· 이메일</td>
@@ -1954,4 +1965,10 @@ function mw_config() {
 
 <div id="loading"><img src="<?=$board_skin_path?>/img/icon_loading.gif"/></div>
 
+<script src="<?php echo $board_skin_path?>/mw.js/autogrow.js"></script>
+<script>
+$(document).ready(function () {
+    $("#wr_content").autogrow();
+});
+</script>
 <?  } // 실명인증 ?>

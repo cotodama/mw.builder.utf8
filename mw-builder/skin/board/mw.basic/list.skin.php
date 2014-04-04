@@ -331,9 +331,10 @@ if ($is_category && $mw_basic[cf_category_tab]) {
 <? $mw_membership = array(); ?>
 <? $mw_membership_icon = array(); ?>
 
-<? $line_number = 0; ?>
-<? for ($i=0; $i<count($list); $i++) { ?>
-<?
+<?php
+$line_number = 0;
+for ($i=0; $i<count($list); $i++) {
+
 if (file_exists($mw_basic[cf_include_list_main])) {
     include($mw_basic[cf_include_list_main]);
 }
@@ -539,6 +540,8 @@ elseif ($list[$i][wr_is_mobile])
     echo "<img src=\"$board_skin_path/img/icon_mobile.png\" align=absmiddle style=\"border-bottom:2px solid #fff;\" width=13 height=12>&nbsp;";
 elseif (strstr($list[$i]['wr_link1'], "youtu"))
     echo "<img src=\"$board_skin_path/img/icon_youtube.png\" align=absmiddle style=\"border-bottom:2px solid #fff;\" width=13 height=12>&nbsp;";
+elseif ($list[$i]['wr_key_password'])
+    echo "<img src=\"$board_skin_path/img/icon_key.png\" align=absmiddle style=\"border-bottom:2px solid #fff;\" width=13 height=12>&nbsp;";
 else
     echo "<img src=\"$board_skin_path/img/icon_subject.gif\" align=absmiddle style=\"border-bottom:2px solid #fff;\" width=13 height=12>&nbsp;";
 $write_icon = ob_get_contents();

@@ -655,3 +655,14 @@ if (!$is_member) {
     set_cookie("mw_cookie_homepage", $wr_homepage, -1*$g4[server_time]);
 }
 
+// 열람 패스워드
+if ($mw_basic['cf_key_level'] && $mw_basic['cf_key_level'] <= $member['mb_level']) {
+    if ($wr_key_password) {
+        $wr_key_password = sql_password($wr_key_password);
+        sql_query("update $write_table set wr_key_password = '$wr_key_password' where wr_id = '$wr_id' ");
+    }
+    else if ($wr_key_password_del) {
+        sql_query("update $write_table set wr_key_password = '' where wr_id = '$wr_id' ");
+    }
+}
+

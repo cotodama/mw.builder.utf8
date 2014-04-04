@@ -1258,5 +1258,12 @@ function btn_intercept(mb_id, wr_ip) {
 #loading { display:none; }
 </style>
 
+<script src="<?php echo $board_skin_path?>/mw.js/autogrow.js"></script>
+<script>
+$(document).ready(function () {
+    $("#wr_content").autogrow();
+});
+</script>
+
 <div id="loading"><img src="<?=$board_skin_path?>/img/icon_loading.gif"/></div>
 

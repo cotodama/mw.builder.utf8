@@ -306,6 +306,7 @@ bo_table = '$bo_table'
 ,cf_marketdb_hp = '$cf_marketdb_hp'
 ,cf_google_map = '$cf_google_map'
 ,cf_ban_subject = '$cf_ban_subject'
+,cf_key_level = '$cf_key_level'
 ,cf_comment_nogood_re_point = '$cf_comment_nogood_re_point'
 ,cf_change_image_size = '$cf_change_image_size'
 ,cf_change_image_size_level = '$cf_change_image_size_level'
@@ -687,6 +688,7 @@ if ($chk[cf_marketdb]) {
 }
 if ($chk[cf_google_map]) $sql .= ", cf_google_map = '$cf_google_map' ";
 if ($chk[cf_ban_subject]) $sql .= ", cf_ban_subject = '$cf_ban_subject' ";
+if ($chk[cf_key_level]) $sql .= ", cf_key_level = '$cf_key_level' ";
 if ($chk[cf_contents_shop]) {
     $sql .= ", cf_contents_shop = '$cf_contents_shop' ";
     $sql .= ", cf_contents_shop_download_count = '$cf_contents_shop_download_count' ";

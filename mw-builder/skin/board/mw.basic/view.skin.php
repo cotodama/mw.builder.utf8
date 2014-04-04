@@ -27,6 +27,11 @@ $mw_is_write = false;
 
 include_once("$board_skin_path/mw.lib/mw.skin.basic.lib.php");
 include("view_head.skin.php");
+
+if ($write['wr_key_password'] && !get_session($ss_key_name."_".$write['wr_id'])) {
+    include("{$pc_skin_path}/mw.proc/mw.key.php");
+    return;
+}
 ?>
 <script type="text/javascript">
 document.title = "<?=strip_tags(addslashes($view[wr_subject]))?>";

@@ -1941,6 +1941,20 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 	</div>
     </div>
 
+    <div class="cf_item">
+	<div class="cf_title"> <input type=checkbox name=chk[cf_key_level] value=1>&nbsp; 게시물별 비밀번호</div>
+	<div class="cf_content">
+            <select name="cf_key_level" id="cf_key_level">
+            <option value="0">사용안함</option>
+            <?php for ($i=1; $i<=10; $i++) { ?>
+            <option value="<?php echo $i?>"><?php echo $i?> 레벨</option>
+            <?php } ?>
+            </select>
+	    <span class="cf_info">(비밀번호를 입력해야 게시물을 확인할 수 있습니다.)</span>
+	    <script> document.cf_form.cf_key_level.value = '<?php echo $mw_basic['cf_key_level']?>'; </script>
+	</div>
+    </div>
+
     <div class="block"></div>
 
 </div> <!-- tabs-3 -->

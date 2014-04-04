@@ -349,3 +349,5 @@ if (!defined("_MW_MOBILE_")) {
 if (!$pc_skin_path)
     $pc_skin_path = $board_skin_path;
 
+$ss_key_name = "ss_key_{$bo_table}";
+

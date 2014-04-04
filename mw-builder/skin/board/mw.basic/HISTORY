@@ -1,3 +1,23 @@
+ver 2.5.0 (14.04.04)
+    : 게시물별 열람 비밀번호 설정 (재아님 제안)
+    : 글작성 자동 창크기 조절 auto grouw 적용 
+
+    mw.basic/HISTORY
+    mw.adm/mw.config.php
+    mw.adm/mw.config.update.php
+    mw.adm/mw.upgrade.php
+    mw.basic/mw.lib/mw.skin.basic.lib.php
+    mw.basic/mw.proc/mw.key.php
+    mw.basic/mw.proc/mw.key.update.php
+    mw.basic/mw.js/autogrow.js
+    mw.basic/img/title_key.png
+    mw.basic/img/icon_key.png
+    mw.basic/list.skin.php
+    mw.basic/view.skin.php
+    mw.basic/write.skin.php
+    mw.basic/write_update.skin.php
+    mw.basic/view_comment.skin.php
+
 ver 2.4.9 (14.03.28)
     : 애드보드 솔루션 지원
     : 게시판 상단 파일 그룹적용 오류 (금광님 제안)
