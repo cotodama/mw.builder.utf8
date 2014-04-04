@@ -374,7 +374,11 @@ jQuery(function($){
 <?  if ($mw_basic['cf_include_head'] && file_exists($mw_basic['cf_include_head']) && strstr($mw_basic[cf_include_head_page], '/w/'))
     include_once($mw_basic[cf_include_head]); ?>
 
-<? include_once("$board_skin_path/mw.proc/mw.list.hot.skin.php"); ?>
+<?php
+if ($mw_basic['cf_bbs_banner']) include_once("$bbs_banner_path/list.skin.php"); // 게시판 배너
+
+include_once("$board_skin_path/mw.proc/mw.list.hot.skin.php");
+?>
 
 <script>
 // 글자수 제한
@@ -1562,6 +1566,12 @@ if ($w == "") {
 <tr><td colspan=2 height=1 bgcolor=#e7e7e7></td></tr>
 <? } ?>
 
+<?php
+// 게시판 배너
+if ($mw_basic['cf_bbs_banner']) {
+    include("$bbs_banner_path/write.skin.php");
+}
+?>
 
 <? if ($is_norobot) { ?>
 <tr>

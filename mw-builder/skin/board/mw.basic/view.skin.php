@@ -120,7 +120,11 @@ AutoSourcing.init( 'view_%id%' , true);
 <?  if ($mw_basic['cf_include_head'] && file_exists($mw_basic['cf_include_head']) && strstr($mw_basic[cf_include_head_page], '/v/'))
     include_once($mw_basic[cf_include_head]); ?>
 
-<? include_once("$board_skin_path/mw.proc/mw.list.hot.skin.php"); ?>
+<?php
+if ($mw_basic['cf_bbs_banner']) include_once("$bbs_banner_path/list.skin.php"); // 게시판 배너
+
+include_once("$board_skin_path/mw.proc/mw.list.hot.skin.php");
+?>
 
 <!-- 분류 셀렉트 박스, 게시물 몇건, 관리자화면 링크 -->
 <table width="100%">

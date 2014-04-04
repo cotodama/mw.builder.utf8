@@ -25,6 +25,8 @@ include_once("$board_skin_path/mw.lib/mw.skin.basic.lib.php");
 include_once("$board_skin_path/mw.lib/mw.sms.lib.php");
 include_once("$g4[path]/lib/etc.lib.php");
 
+$is_head = true;
+
 $wr_content = mw_spelling($wr_content);
 $wr_subject = mw_spelling($wr_subject);
 
@@ -159,6 +161,11 @@ if (!$is_admin && $mw_basic[cf_ban_subject] && preg_match("/\[.*\]/i", $wr_subje
 
 // 재능마켓
 if ($mw_basic[cf_talent_market]) include("$talent_market_path/write_update.head.skin.php");
+
+// 게시판 배너
+if ($mw_basic['cf_bbs_banner']) {
+    include("{$bbs_banner_path}/write_update.skin.php");
+}
 
 $watermark_files = array();
 

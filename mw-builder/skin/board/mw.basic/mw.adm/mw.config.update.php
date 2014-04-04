@@ -96,6 +96,11 @@ if ($cf_include_head_list) $cf_include_head_page.= '/l/';
 if ($cf_include_head_view) $cf_include_head_page.= '/v/';
 if ($cf_include_head_write) $cf_include_head_page.= '/w/';
 
+$cf_bbs_banner_page = '';
+if ($cf_bbs_banner_list) $cf_bbs_banner_page.= '/l/';
+if ($cf_bbs_banner_view) $cf_bbs_banner_page.= '/v/';
+if ($cf_bbs_banner_write) $cf_bbs_banner_page.= '/w/';
+
 $cf_include_tail_page = '';
 if ($cf_include_tail_list) $cf_include_tail_page.= '/l/';
 if ($cf_include_tail_view) $cf_include_tail_page.= '/v/';
@@ -386,6 +391,8 @@ bo_table = '$bo_table'
 ,cf_exam = '$cf_exam'
 ,cf_exam_level = '$cf_exam_level'
 ,cf_exam_notice = '$cf_exam_notice'
+,cf_bbs_banner = '$cf_bbs_banner'
+,cf_bbs_banner_page = '$cf_bbs_banner_page'
 ,cf_collect = '$cf_collect'
 ,cf_talent_market = '$cf_talent_market'
 ,cf_talent_market_commission = '$cf_talent_market_commission'
@@ -729,8 +736,10 @@ if ($chk[cf_include_view]) $sql .= ", cf_include_view = '$cf_include_view' ";
 if ($chk[cf_include_view_tail]) $sql .= ", cf_include_view_tail = '$cf_include_view_tail' ";
 if ($chk[cf_include_file_head]) $sql .= ", cf_include_file_head = '$cf_include_file_head' ";
 if ($chk[cf_include_file_tail]) $sql .= ", cf_include_file_tail = '$cf_include_file_tail' ";
-if ($chk[cf_include_head]) $sql .= ", cf_include_head = '$cf_include_head' ";
-if ($chk[cf_include_head_page]) $sql .= ", cf_include_head_page = '$cf_include_head_page' ";
+if ($chk[cf_include_head]) {
+    $sql .= ", cf_include_head = '$cf_include_head' ";
+    $sql .= ", cf_include_head_page = '$cf_include_head_page' ";
+}
 if ($chk[cf_include_tail]) {
     $sql .= ", cf_include_tail = '$cf_include_tail' ";
     $sql .= ", cf_include_tail_page = '$cf_include_tail_page' ";
@@ -758,6 +767,10 @@ if ($chk[cf_exam]) {
     $sql .= ", cf_exam = '$cf_exam' ";
     $sql .= ", cf_exam_level = '$cf_exam_level' ";
     $sql .= ", cf_exam_notice = '$cf_exam_notice' ";
+}
+if ($chk[cf_bbs_banner]) {
+    $sql .= ", cf_bbs_banner = '$cf_bbs_banner' ";
+    $sql .= ", cf_bbs_banner_page = '$cf_bbs_banner_page' ";
 }
 if ($chk[cf_collect]) $sql .= ", cf_collect = '$cf_collect' ";
 if ($chk[cf_read_level]) {

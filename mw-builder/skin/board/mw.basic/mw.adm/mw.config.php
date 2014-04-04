@@ -2747,6 +2747,31 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
         </div>
     </div>
 
+    <div class="cf_item">
+        <div class="cf_title">  <input type=checkbox name=chk[cf_bbs_banner] value=1>&nbsp; 애드보드</div>
+	<div class="cf_content">
+	    <input type=checkbox name=cf_bbs_banner value=1> 사용
+
+            <input type="button" value="설정" class="bt" onclick="open_bbs_banner()">
+            <span class="cf_info"> (<a href="http://g4.miwit.com/plugin/product/pr_bbs_banner.php" target="_blank">플러그인 설치 후 사용가능 ⇒ <u>다운로드 클릭!</u></a>)</span>  
+            <div>
+                <input type="checkbox" name="cf_bbs_banner_list" value="1"> 목록
+                <input type="checkbox" name="cf_bbs_banner_view" value="1"> 읽기
+                <input type="checkbox" name="cf_bbs_banner_write" value="1"> 쓰기 
+            </div>
+
+            <script>
+            document.cf_form.cf_bbs_banner.checked = "<?=$mw_basic[cf_bbs_banner]?>";
+            document.cf_form.cf_bbs_banner_list.checked = '<? echo strstr($mw_basic[cf_bbs_banner_page], '/l/')?'1':''; ?>';
+            document.cf_form.cf_bbs_banner_view.checked = '<? echo strstr($mw_basic[cf_bbs_banner_page], '/v/')?'1':''; ?>';
+            document.cf_form.cf_bbs_banner_write.checked = '<? echo strstr($mw_basic[cf_bbs_banner_page], '/w/')?'1':''; ?>';
+            function open_bbs_banner() {
+                var bbs_banner = window.open("<?php echo $bbs_banner_path?>/list.php?bo_table=<?php echo $bo_table?>", "bbs_banner", "width=800,height=600,scrollbars=yes");
+                bbs_banner.focus();
+            }
+            </script>
+        </div>
+    </div>
 
     <div class="block"></div>
 </div> <!-- tabs-7 -->

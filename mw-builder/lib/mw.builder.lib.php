@@ -34,6 +34,7 @@ include_once("$g4[path]/lib/mw.latest.rand.lib.php");
 include_once("$g4[path]/lib/mw.latest.group.lib.php");
 include_once("$g4[path]/lib/mw.latest.group.rand.lib.php");
 include_once("$g4[path]/lib/mw.latest.multi.lib.php");
+include_once("$g4[path]/lib/mw.latest.multi.rand.lib.php");
 include_once("$g4[path]/lib/mw.latest.tab.lib.php");
 include_once("$g4[path]/lib/mw.popular.lib.php");
 include_once("$g4[path]/lib/mw.new.lib.php");

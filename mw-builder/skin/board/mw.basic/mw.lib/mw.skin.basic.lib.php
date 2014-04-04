@@ -216,10 +216,19 @@ if ($mw_basic['cf_social_commerce']) {
     }
 }
 
+// 재능마켓
 if ($mw_basic['cf_talent_market']) {
     $talent_market_path = "{$g4['path']}/plugin/talent-market";
     if (!is_dir($talent_market_path) || !file_exists("{$talent_market_path}/_config.php")) {
         $mw_basic['cf_talent_market'] = null;
+    }
+}
+
+// 게시판 배너
+$bbs_banner_path = "{$g4['path']}/plugin/bbs-banner";
+if ($mw_basic['cf_bbs_banner']) {
+    if (!is_dir($bbs_banner_path) || !file_exists("{$bbs_banner_path}/_config.php")) {
+        $mw_basic['cf_bbs_banner'] = null;
     }
 }
 

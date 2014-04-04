@@ -605,9 +605,17 @@ if ($is_comment_editor && $mw_basic[cf_editor] == "cheditor") {
 <input type=hidden name=html        value='html1'>
 <? } ?>
 
-<? if ($is_guest && !$write_error) { ?>
+<?php
+if (!$is_member) {
+    if (!$name) $name = get_cookie("mw_cookie_name");
+    if (!$email) $email = get_cookie("mw_cookie_email");
+    if (!$homepage) $homepage = get_cookie("mw_cookie_homepage");
+}
+
+if ($is_guest && !$write_error) {
+?>
 <div style="padding:0 0 2px 0;">
-    이름 <input type=text maxlength=20 size=10 name="wr_name" itemname="이름" required class=mw_basic_text <?=$write_error?>>
+    이름 <input type=text maxlength=20 size=10 name="wr_name" value="<?php echo $name?>" itemname="이름" required class=mw_basic_text <?=$write_error?>>
     패스워드 <input type=password maxlength=20 size=10 name="wr_password" itemname="패스워드" required class=mw_basic_text <?=$write_error?>>
 </div>
 <?}?>

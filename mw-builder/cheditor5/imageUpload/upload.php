@@ -52,6 +52,17 @@ if (!$imgsize) {
 	unlink($savefile);
 };
 
+switch ($imgsize[2]) {
+    case IMAGETYPE_GIF :    // 1
+    case IMAGETYPE_JPEG :   // 2
+    case IMAGETYPE_PNG :    // 3
+        break;
+    default :
+        $filesize = 0;
+        $random_name = '-ERR';
+        unlink($savefile);
+}
+
 $rdata = sprintf( "{ fileUrl: '%s/%s', filePath: '%s/%s', origName: '%s', fileName: '%s', fileSize: '%d' }",
 	SAVE_URL,
 	$random_name,

@@ -162,7 +162,7 @@ body { text-align:center; }
         <?php
         $mw_smenus = mw_get_small_menus($mw_mmenus[$i][mm_id]);
 	for ($j=0; $j<sizeof($mw_smenus); $j++) {
-            if ($mw_smenus[$i][ms_level_view] > $member[mb_level]) continue;
+            if ($mw_smenus[$j][ms_level_view] > $member[mb_level]) continue;
             ?><div><a href="<?=$mw_smenus[$j][ms_url]?>"
                 target="<?=$mw_smenus[$j][ms_target]?>"
                 title="<?=mw_html_entities($mw_smenus[$j][ms_title])?>"><?=$mw_smenus[$j][ms_name]?></a></div><?

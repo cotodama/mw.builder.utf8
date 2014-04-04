@@ -1,3 +1,79 @@
+4.37.07 (2014.03.24)
+    : SQL Injection 취약점 해결 (코코파님께서 알려 주셨습니다.)
+        
+        common.php
+        lib/common.lib.php
+
+        common.php 에서 $sst 변수에 특수문자를 허용하지 않습니다.
+
+            $sst = preg_replace("/[\<\>\'\"\%\=\(\)\s]/", "", $sst);
+
+        lib/common.lib.php 의 sql_query() 함수에서 union 사용 및 information_schema DB 로의 접근을 허락하지 않습니다.
+
+            // Blind SQL Injection 취약점 해결
+            $sql = trim($sql);
+            // union의 사용을 허락하지 않습니다.
+            $sql = preg_replace("#^select.*from.*union.*#i", "select 1", $sql);
+            // `information_schema` DB로의 접근을 허락하지 않습니다.
+            $sql = preg_replace("#^select.*from.*where.*`?information_schema`?.*#i", "select 1", $sql);
+
+4.37.06 (2014.03.20)
+    : 4.37.07 버전의 코드에 문제가 있어 4.37.06 버전으로 되돌립니다.
+
+       common.php
+       lib/common.lib.php
+
+4.37.07 (2014.03.19)
+    : Blind SQL Injection 취약점 문제 해결 (Suninatas팀 2theT0P님께서 알려 주셨습니다.)
+
+        lib/common.lib.php 에 추가
+
+            // multi-dimensional array에 사용자지정 함수적용
+            function array_map_deep($fn, $array)
+            {
+                if(is_array($array)) {
+                    foreach($array as $key => $value) {
+                        if(is_array($value)) {
+                            $array[$key] = array_map_deep($fn, $value);
+                        } else {
+                            $array[$key] = call_user_func($fn, $value);
+                        }
+                    }
+                } else {
+                    $array = call_user_func($fn, $array);
+                }
+
+                return $array;
+            }
+
+            // SQL Injection 대응 문자열 필터링
+            function sql_escape_string($str)
+            {
+                $pattern = '/(and|or).*(union|select|insert|update|delete|from|where|limit|create|drop).*/i';
+                $replace = '';
+
+                $str = preg_replace($pattern, $replace, $str);
+                $str = call_user_func('mysql_real_escape_string', $str);
+
+                return $str;
+            }
+
+        common.php 에 추가 및 기존 코드 위치 이동
+
+            # 추가
+            // sql_escape_string 적용
+            $_POST    = array_map_deep('sql_escape_string', $_POST);
+            $_GET     = array_map_deep('sql_escape_string', $_GET);
+            $_COOKIE  = array_map_deep('sql_escape_string', $_COOKIE);
+            $_REQUEST = array_map_deep('sql_escape_string', $_REQUEST);
+
+            # 위치 이동
+            // PHP 4.1.0 부터 지원됨
+            // php.ini 의 register_globals=off 일 경우
+            @extract($_GET);
+            @extract($_POST);
+            @extract($_SERVER);
+
 4.37.06 (2014.02.27)
     :   CHEditor 5.09.4 버전 적용
         익스11에서 엔터입력시 한줄띄우기 및 선택된 내용의 폰트, 크기가 적용되지 않던 오류 해결

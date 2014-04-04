@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Bechu-Basic Skin for Gnuboard4
  *
@@ -20,6 +20,8 @@
  */
 
 if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
+
+$is_head = false;
 
 // CCL 정보 업데이트
 $wr_ccl = "";
@@ -435,6 +437,11 @@ if ($mw_basic[cf_quiz] && $mw_basic[cf_quiz_level] <= $member[mb_level] && $w ==
 // 시험문제
 if ($mw_basic['cf_exam'] && $mw_basic['cf_exam_level'] <= $member['mb_level'] && $w == '' && $ex_id) {
     include("{$exam_path}/write_update.skin.php");
+}
+
+// 게시판 배너
+if ($mw_basic['cf_bbs_banner']) {
+    include("{$bbs_banner_path}/write_update.skin.php");
 }
 
 // 설문 

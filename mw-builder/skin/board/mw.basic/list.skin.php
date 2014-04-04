@@ -213,7 +213,11 @@ $new_count = $row[cnt];
 <?  if ($mw_basic['cf_include_head'] && file_exists($mw_basic['cf_include_head']) && strstr($mw_basic[cf_include_head_page], '/l/'))
     include_once($mw_basic[cf_include_head]); ?>
 
-<? include_once("$board_skin_path/mw.proc/mw.list.hot.skin.php"); ?>
+<?php
+if ($mw_basic['cf_bbs_banner']) include_once("$bbs_banner_path/list.skin.php"); // 게시판 배너
+
+include_once("$board_skin_path/mw.proc/mw.list.hot.skin.php");
+?>
 
 <!-- 분류 셀렉트 박스, 게시물 몇건, 관리자화면 링크 -->
 <table width="100%" cellpadding="0" cellspacing="0" border="0">
@@ -268,13 +272,11 @@ if ($mw_basic[cf_contents_shop_write]) { echo " ($mw_cash[cf_cash_name]$mw_basic
 <tr><td height=5></td></tr>
 </table>
 
-<? include_once("$board_skin_path/mw.proc/mw.notice.top.php") ?>
+<?php
+include_once("$board_skin_path/mw.proc/mw.notice.top.php");
+include_once("$board_skin_path/mw.proc/mw.search.top.php");
+include_once("$board_skin_path/mw.proc/mw.cash.membership.skin.php");
 
-<? include_once("$board_skin_path/mw.proc/mw.search.top.php") ?>
-
-<? include_once("$board_skin_path/mw.proc/mw.cash.membership.skin.php") ?>
-
-<?
 if ($is_category && $mw_basic[cf_category_tab]) {
     $category_list = explode("|", $board[bo_category_list]);
 ?>

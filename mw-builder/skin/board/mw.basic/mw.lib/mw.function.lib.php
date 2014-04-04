@@ -777,6 +777,13 @@ function mw_board_popup($view, $html=0)
     $content = $file_viewer.$view[rich_content];
     */
     global $write_table, $wr_id, $mw, $member;
+
+    $html = 0;
+    if (strstr($view['wr_option'], "html1"))
+        $html = 1;
+    else if (strstr($view['wr_option'], "html2"))
+        $html = 2;
+
     $view[content] = conv_content($view[wr_content], $html);
     include("$board_skin_path/view_head.skin.php");
 
@@ -1394,6 +1401,9 @@ function mw_delete_row($board, $write, $save_log=false, $save_message='삭제되
         // 시험문제 삭제
         if (file_exists("$exam_path/delete.skin.php")) include("$exam_path/delete.skin.php");
 
+        // 게시판배너 삭제
+        if (file_exists("$bbs_banner_path/delete.skin.php")) include("$bbs_banner_path/delete.skin.php");
+
         // 재능마켓 삭제
         if (file_exists("$talent_market_path/delete.skin.php")) include("$talent_market_path/delete.skin.php");
 
@@ -1943,6 +1953,11 @@ function mw_move($board, $wr_id_list, $chk_bo_table, $sw)
                 // 시험문제
                 if (!$row2[wr_is_comment] && file_exists("$exam_path/move_update.skin.php")) {
                     include("$exam_path/move_update.skin.php");
+                }
+
+                // 게시판배너
+                if (!$row2[wr_is_comment] && file_exists("$bbs_banner_path/move_update.skin.php")) {
+                    include("$bbs_banner_path/move_update.skin.php");
                 }
 
                 // 재능마켓

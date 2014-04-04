@@ -247,6 +247,73 @@ function mw_title_tag($str)
     return str_replace("\"", "'", $str);
 }
 
+function mw_get_last_thumb($bo_tables, $cnt=1, $is_rand=false)
+{
+    global $g4;
+
+    $files = array();
+
+    foreach ((array)$bo_tables as $bo_table)
+    {
+        $row = sql_fetch("select max(wr_id) as max_id from $g4[write_prefix]$bo_table where wr_is_comment = 0", false);
+        $max = $row['max_id'];
+
+        if (!$max) continue;
+
+        $max_id = $max;
+
+        $path = "$g4[path]/data/file/{$bo_table}/thumbnail"; 
+        if (!is_dir($path))
+            $path = "$g4[path]/data/file/{$bo_table}/thumb"; 
+
+        $fnd = 0;
+
+        for($i=0, $m=$max_id; $i<$m; $i++) {
+            if ($is_rand)
+                $max = rand(1, $max_id);
+            else if ($i)
+                --$max;
+
+            $file_path = "{$path}/{$max}.jpg";
+            if (!file_exists($file_path))
+                $file_path = "{$path}/{$max}";
+
+            if (file_exists($file_path)) {
+                $file = array();
+                $file['bo_table'] = $bo_table;
+                $file['wr_id'] = $max;
+                $file['path'] = $file_path;
+                $file['href'] = "{$g4['bbs_path']}/board.php?bo_table={$bo_table}&wr_id={$max}";
+
+                //$filemtime = filemtime($file_path);
+                if (!$files[$max]['wr_id']) {
+                    $files[$max] = $file;
+                    ++$fnd;
+                }
+            }
+            //if ($i>100) break;
+            if ($fnd >= $cnt) break;
+            if (!$max) break;
+        }
+    }
+
+    if (!count($files)) return;
+
+    krsort($files);
+
+    $list = array();
+    for ($i=1; $i<=$cnt; $i++) {
+        $list[] = array_shift($files);
+        if (!$files) break;
+    }
+
+    $files = null;
+    unset($files);
+
+    return $list;
+}
+
+/*
 function mw_get_last_thumb($bo_tables, $cnt=1)
 {
     global $g4;
@@ -301,7 +368,7 @@ function mw_get_last_thumb($bo_tables, $cnt=1)
     unset($files);
 
     return $list;
-}
+}*/
 
 function mw_get_thumb_path($bo_table, $wr_id, $file=null, $thumb_number=null)
 {

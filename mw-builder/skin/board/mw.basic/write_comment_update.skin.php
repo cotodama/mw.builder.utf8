@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Bechu-Basic Skin for Gnuboard4
  *
@@ -41,4 +41,11 @@ if ($w == 'c') {
         sql_query("update $write_table set wr_is_mobile = '1' where wr_id = '$comment_id'", false);
     }
 }
-?>
+
+// 비회원 이름 쿠키 저장
+if (!$is_member) {
+    set_cookie("mw_cookie_name", $wr_name, -1*$g4[server_time]);
+    set_cookie("mw_cookie_email", $wr_email, -1*$g4[server_time]);
+    set_cookie("mw_cookie_homepage", $wr_homepage, -1*$g4[server_time]);
+}
+

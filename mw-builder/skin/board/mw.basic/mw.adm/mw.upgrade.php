@@ -1257,5 +1257,6 @@ if (is_null($mw_basic[cf_talent_market])) {
     sql_query("alter table $mw[basic_config_table] change cf_comment_head cf_comment_head text not null", false);
     sql_query("alter table $mw[basic_config_table] change cf_comment_tail cf_comment_tail text not null", false);
 
-
+    sql_query("alter table $mw[basic_config_table] add cf_bbs_banner varchar(1) not null", false);
+    sql_query("alter table $mw[basic_config_table] add cf_bbs_banner_page varchar(20) default '/l//v//w/' not null", false);
 

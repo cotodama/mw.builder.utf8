@@ -1,3 +1,23 @@
+ver 2.4.9 (14.03.28)
+    : 애드보드 솔루션 지원
+    : 게시판 상단 파일 그룹적용 오류 (금광님 제안)
+    : 팝업공지 html 적용 오류 (라님님 제안)
+    : 비회원 글작성시 이름 임시 저장 코멘트 적용 (보거스님 제안)
+
+    mw.basic/HISTORY
+    mw.basic/mw.adm/mw.config.php
+    mw.basic/mw.adm/mw.config.update.php
+    mw.basic/mw.adm/mw.upgrade.php
+    mw.basic/mw.lib/mw.skin.basic.lib.php
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/list.skin.php
+    mw.basic/view.skin.php
+    mw.basic/view_comment.skin.php
+    mw.basic/write.skin.php
+    mw.basic/write_update.skin.php
+    mw.basic/write_update.head.skin.php
+    mw.basic/write_comment_update.skin.php
+
 ver 2.4.8 (14.03.21)
     : 게시물 복사시 쪽지 기능 (뒹굴보노님 제안)
     : 게시판 하단 파일 옵션 그룹적용 오류 수정 (재아님 제안)
