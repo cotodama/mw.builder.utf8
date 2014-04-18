@@ -200,6 +200,10 @@ bo_table = '$bo_table'
 ,cf_comment_write = '$cf_comment_write'
 ,cf_comment_level = '$cf_comment_level'
 ,cf_search_level = '$cf_search_level'
+,cf_jump_level = '$cf_jump_level'
+,cf_jump_count = '$cf_jump_count'
+,cf_jump_point = '$cf_jump_point'
+,cf_jump_days = '$cf_jump_days'
 ,cf_singo = '$cf_singo'
 ,cf_singo_id = '$cf_singo_id'
 ,cf_memo_id = '$cf_memo_id'
@@ -552,6 +556,12 @@ if ($chk[cf_comment_emoticon]) $sql .= ", cf_comment_emoticon = '$cf_comment_emo
 if ($chk[cf_post_emoticon]) $sql .= ", cf_post_emoticon = '$cf_post_emoticon' ";
 if ($chk[cf_comment_write]) $sql .= ", cf_comment_write = '$cf_comment_write' ";
 if ($chk[cf_comment_level]) $sql .= ", cf_comment_level = '$cf_comment_level' ";
+if ($chk[cf_jump_level]) {
+    $sql .= ", cf_jump_level = '$cf_jump_level' ";
+    $sql .= ", cf_jump_count = '$cf_jump_count' ";
+    $sql .= ", cf_jump_point = '$cf_jump_point' ";
+    $sql .= ", cf_jump_days = '$cf_jump_days' ";
+}
 if ($chk[cf_search_level]) $sql .= ", cf_search_level = '$cf_search_level' ";
 if ($chk[cf_comment_html]) $sql .= ", cf_comment_html = '$cf_comment_html' ";
 if ($chk[cf_singo]) $sql .= ", cf_singo = '$cf_singo' ";

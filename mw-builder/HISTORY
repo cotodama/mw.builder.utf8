@@ -1,3 +1,26 @@
+4.37.08 (2014.04.10)
+    : 4.37.07 버전의 SQL Injection 취약점 해결로 인해 union, information_schema 회원아이디를 사용하지 못하는 것을 보완
+    : 1 MB = 1,048,576 bytes 로 문구 변경
+    : cheditor 5.1 버전으로 업그레이드
+
+        adm/board_form.php
+        lib/common.lib.php
+        cheditor5/*
+
+
+        lib/common.lib.php
+
+        function sql_query($sql, $error=TRUE)
+        {
+            // Blind SQL Injection 취약점 해결
+            $sql = trim($sql);
+            // union의 사용을 허락하지 않습니다.
+            $sql = preg_replace("#^select.*from.*[^\'\"]union[^\'\"].*#i", "select 1", $sql);
+            // `information_schema` DB로의 접근을 허락하지 않습니다.
+            $sql = preg_replace("#^select.*from.*[^\'\"]`?information_schema`?[^\'\"].*#i", "select 1", $sql);
+
+
+
 4.37.07 (2014.03.24)
     : SQL Injection 취약점 해결 (코코파님께서 알려 주셨습니다.)
         

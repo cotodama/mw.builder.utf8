@@ -31,22 +31,37 @@ function init(dialog) {
 	dlg.setDialogHeight();
 }
 
+function hover(obj, val) {
+  	obj.style.backgroundColor = val ? "#5579aa" : "#fff";
+  	obj.style.color = val ? "#fff" : "#000";
+}
+
 function showTable() {
   	var k = 0;
   	var len = c.length;
   	var w = 9;
   	var h = 20;
-  	
+  	var span, i, j, tr, td;
+    
   	var table = document.createElement('table');
   	table.border = 0;
   	table.cellSpacing = 1;
   	table.cellPadding = 0;
   	table.align = 'center';
   	
-  	for (var i=0; i < w; i++) {
-  		var tr = table.insertRow(i);
-    	for (var j = 0; j < h; j++) {
-    		var td = tr.insertCell(j);
+    var getChar = function() {
+        document.getElementById('fm_input').value = document.getElementById('fm_input').value + c[this.id];
+    };
+    var mouseOver = function() {
+        hover(this, true);
+    };
+    var mouseOut = function() {
+        hover(this, false);
+    };    
+  	for (i=0; i < w; i++) {
+  		tr = table.insertRow(i);
+    	for (j = 0; j < h; j++) {
+    		td = tr.insertCell(j);
     		td.className = 'schar';
     		
         	if ( len < k+1) {
@@ -55,10 +70,13 @@ function showTable() {
         	else {
         		td.style.cursor = 'pointer';
         		td.id = k;
-        		td.onclick = function() { getchar(this.id); };
-        		td.onmouseover = function() { hover(this, true); };
-        		td.onmouseout = function() { hover(this, false); };
-        		td.appendChild(document.createTextNode(c[k]));
+        		td.onclick = getChar;
+        		td.onmouseover = mouseOver;
+        		td.onmouseout = mouseOut;
+                span = document.createElement("span");
+                span.style.fontSize = "13px";
+                span.appendChild(document.createTextNode(c[k]));
+        		td.appendChild(span);
         	}
       		k++;
     	}
@@ -66,7 +84,7 @@ function showTable() {
 
   	var output = document.getElementById('output');
   	if (output.hasChildNodes()) {
-  		for (var i=0; i<output.childNodes.length; i++) {
+  		for (i=0; i<output.childNodes.length; i++) {
   			output.removeChild(output.firstChild);
   		}
   	}
@@ -103,15 +121,6 @@ function sp6 () {
 	showTable();
 }
 
-function hover(obj, val) {
-  	obj.style.backgroundColor = val ? "#5579aa" : "#fff";
-  	obj.style.color = val ? "#fff" : "#000";
-}
-
-function getchar(i) {
-  	document.getElementById('fm_input').value = document.getElementById('fm_input').value + c[i];
-}
-
 function inputChar() {
 	oEditor.insertHtmlPopup(document.getElementById('fm_input').value);
 	oEditor.popupWinClose();
@@ -123,28 +132,29 @@ function popupClose() {
 
 function setupEvent() {
 	var el = document.body.getElementsByTagName('LABEL');
-	
-	for (var i=0; i < el.length; i++) {
+    var i;
+    var tab = function() {
+        document.getElementById(this.id).style.fontWeight = 'bold';
+        switch (this.id) {
+        case 's1' : sp1(); break;
+        case 's2' : sp2(); break;
+        case 's3' : sp3(); break;
+        case 's4' : sp4(); break;
+        case 's5' : sp5(); break;
+        default : sp6();
+        }
+        
+        if (curView != this.id) {
+            document.getElementById(curView).style.fontWeight = 'normal';
+        }
+        curView = this.id;        
+    };
+    
+	for (i=0; i < el.length; i++) {
 		el[i].className = 'handCursor';
 		el[i].style.fontSize = '9pt';
 		el[i].style.margin = (i==0) ? '0px 0px 5px 5px' : '0px 0px 5px 0px';
-		el[i].onclick = function () {
-			document.getElementById(this.id).style.fontWeight = 'bold';
-			switch (this.id) {
-			case 's1' : sp1(); break;
-			case 's2' : sp2(); break;
-			case 's3' : sp3(); break;
-			case 's4' : sp4(); break;
-			case 's5' : sp5(); break;
-			default : sp6();
-			};
-			
-			if (curView != this.id) {
-				document.getElementById(curView).style.fontWeight = 'normal';
-			}
-			curView = this.id;
-		} ;
-
+		el[i].onclick = tab;
 	}
 	
 	if (curView == null) {
@@ -153,6 +163,5 @@ function setupEvent() {
 		document.getElementById(curView).style.fontWeight = 'bold';
 		document.getElementById('output').style.visibility = 'visible';
 	}
-	
 	document.getElementById("fm_input").value = "";
 }

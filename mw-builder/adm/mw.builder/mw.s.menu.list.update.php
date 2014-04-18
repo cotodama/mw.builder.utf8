@@ -29,6 +29,7 @@ auth_check($auth[$sub_menu], "w");
 
 check_token();
 
+
 for ($i=0; $i<count($chk); $i++)
 {
     // 실제 번호를 넘김

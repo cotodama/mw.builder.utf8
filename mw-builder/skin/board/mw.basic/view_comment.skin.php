@@ -622,9 +622,11 @@ if ($is_guest && !$write_error) {
 
 <div style="padding:2px 0 2px 0;">
     <? if (!$is_comment_editor) { ?>
+    <? /* ?>
     <span style="cursor: pointer;" onclick="textarea_decrease('wr_content', 10);"><img src="<?=$board_skin_path?>/img/btn_up.gif" align=absmiddle></span>
     <span style="cursor: pointer;" onclick="textarea_original('wr_content', 5);"><img src="<?=$board_skin_path?>/img/btn_init.gif" align=absmiddle></span>
     <span style="cursor: pointer;" onclick="textarea_increase('wr_content', 10);"><img src="<?=$board_skin_path?>/img/btn_down.gif" align=absmiddle></span>
+    <? */ ?>
     <? if ($mw_basic[cf_comment_html]) echo "<input type=\"checkbox\" id=\"wr_html\" name=\"html\" value=\"html2\"> <label for='wr_html'>html</label>"; ?>
     <? } ?>
 

@@ -80,8 +80,8 @@ $list[$j]['title'] = mw_title_tag(mw_builder_reg_str($list[$j]['wr_subject']));
 <table border=0 cellpadding=0 cellspacing=0>
 <tr>
 <? if ($file) { ?>
-<? $file['title'] = mw_title_tag(mw_builder_reg_str($file['wr_subject']));
-<? $file['subject'] = mw_builder_reg_str($file['subject']);
+<? $file['title'] = mw_title_tag(mw_builder_reg_str($file['wr_subject'])); ?>
+<? $file['subject'] = mw_builder_reg_str($file['subject']); ?>
 <td width=120 align=center class=file>
 <a href="<?=$file[href]?>"><div><img src="<?=$file[path]?>" class="file-img"></div>
 <div class="file-subject"><span class="bo_subject">[<?=$file[bo_subject]?>]</span>

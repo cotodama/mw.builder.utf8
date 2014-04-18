@@ -5,16 +5,17 @@
 // Copyright (c) 1997-2014 CHSOFT
 // ================================================================
 var operaBrowser = false;
-if (navigator.userAgent.indexOf('Opera') >= 0)
+if (navigator.userAgent.indexOf('Opera') >= 0) {
 	operaBrowser = 1;
+}
 
 var MSIE = navigator.userAgent.indexOf('MSIE') >= 0;
-var navigatorVersion = navigator.appVersion.replace(/.*?MSIE (\d\.\d).*/g,'$1')/1;
-	
+var navigatorVersion = navigator.appVersion.replace(/.*?MSIE (\d\.\d).*/g,'$1');
+
 var UploadScript = "";
 var DeleteScript = "";
 
-var AppID = "CHXImage";
+var AppID = "chximage";
 var AppSRC = "";
 var activeImage = false;
 var readyToMove = false;
@@ -23,66 +24,41 @@ var dragDropDiv;
 var insertionMarker;
 var hideTimer = null;
 
-var offsetX_marker = 4;
+var offsetX_marker = -4;
 var offsetY_marker = -3;
-	
+
 var firefoxOffsetX_marker = 4;
 var firefoxOffsetY_marker = -2;
-	
-if (navigatorVersion == 8 && MSIE) {
-	offsetX_marker = 3;
-	offsetY_marker = -4;	
-}
-	
+
 var destinationObject = false;
-	
+
 var divXPositions = [];
 var divYPositions = [];
 var divWidth = [];
 var divHeight = [];
-		
+
 var tmpLeft = 0;
 var tmpTop = 0;
-	
+
 var eventDiff_x = 0;
 var eventDiff_y = 0;
-		
+
 var modifyImages = [];
 var uploadMaxNumber = 12;
 var imageCompleted = 0;
 var imageCompletedList = [];
 var UploadButton = "";
 var UploadImagePath = "";
+var ShowThumbnailSize = { width: 120, height: 90 };
 var oEditor = null;
-var button = [ { alt : "", img : 'imageUpload/submit.gif', cmd : doSubmit, hspace : 2 },
-               { alt : "", img : 'imageUpload/cancel.gif', cmd : closeWindow, hspace : 2 } ];
+var button;
 
-var allowedMaxImgSize = 0;
+var imageResizeWidth = 0;
+var makeThumbnail = true;
+var makeThumbnailWidth = 120;
+var makeThumbnailHeight = 90;
+var sortOnName = false;
 var browser = null;
-
-function init(dialog) {
-	oEditor = this;
-	oEditor.dialog = dialog;
-	var dlg = new Dialog(oEditor);
-
-	UploadImagePath = oEditor.config.iconPath + 'imageUpload';
-	UploadButton = oEditor.config.iconPath + 'imageUpload/add_image_button.gif';
-	AppSRC = oEditor.config.popupPath + 'flash/CHXImage';
-
-	UploadScript = oEditor.config.editorPath + 'imageUpload/upload.php';
-	DeleteScript = oEditor.config.editorPath + 'imageUpload/delete.php';
-
-	allowedMaxImgSize = oEditor.config.allowedMaxImgSize;
-
-	dlg.setDialogHeight(397);
-	dlg.showButton(button);
-	showContents();
-	initGallery();
-	showUploadWindow();
-	initEvent();
-	createInsertionMaker();
-	browser = oEditor.getBrowser();
-}
 
 function createInsertionMaker() {
 	var wrapper = document.getElementById('insertionMarker');
@@ -94,10 +70,10 @@ function createInsertionMaker() {
 
 	var middleIco = new Image();
 	middleIco.src = UploadImagePath + '/marker_middle.gif';
-	middleIco.style.height = '100px';
+	middleIco.style.height = '96px';
 	middleIco.style.width = '6px';
 	wrapper.appendChild(middleIco);
-	
+
 	var bottomIco = new Image();
 	bottomIco.src = UploadImagePath + '/marker_bottom.gif';
 	bottomIco.style.width = '6px';
@@ -107,36 +83,43 @@ function createInsertionMaker() {
 
 function popupClose() {
 // ----------------------------------------------------------------------------------
+    swfobject.removeSWF(AppID);
    	oEditor.popupWinCancel();
 }
 
 function showContents() {
 	var spacer = function(id) {
-		var clear = document.createElement('DIV');
+		var clear = document.createElement('div');
 		clear.style.height = '0px';
 		clear.style.width = '0px';
 		clear.className = 'clear';
 		clear.id = 'spacer' + id;
-		if (MSIE && navigatorVersion < 7) clear.style.display = 'inline';
+
+		if (MSIE && navigatorVersion < 7) {
+            clear.style.display = 'inline';
+        }
 		return clear;
 	};
 
-	var spacerNo = 1;
-	for (var i=0; i<uploadMaxNumber; i++) {
+	var spacerNo = 1, i, imgBox, theImg, lastSpacer;
+	for (i=0; i<uploadMaxNumber; i++) {
 		if (i > 0 && ((i % 4) == 0)) {
 			document.getElementById('imageListWrapper').appendChild(spacer(spacerNo++));
 		}
-		var imgBox = document.createElement('DIV');
+
+		imgBox = document.createElement('div');
 		imgBox.id = 'imgBox' + i;
 		imgBox.className = 'imageBox';
-		var theImg = document.createElement('DIV');
+		theImg = document.createElement('div');
 		theImg.id = 'img_' + i;
 		theImg.className = 'imageBox_theImage';
 		imgBox.appendChild(theImg);
 
 		document.getElementById('imageListWrapper').appendChild(imgBox);
-		if (i == 11) {
-			document.getElementById('imageListWrapper').appendChild(spacer(spacerNo));
+		if (i === (uploadMaxNumber-1)) {
+            lastSpacer = spacer(spacerNo);
+            lastSpacer.style.height = "7px";
+			document.getElementById('imageListWrapper').appendChild(lastSpacer);
 		}
 	}
 
@@ -146,7 +129,7 @@ function showContents() {
 		document.getElementById('imageInfoBox').style.width = '124px';
 	}
 	else {
-		document.getElementById('imageListWrapper').style.padding = '5px 7px 7px 5px';
+		document.getElementById('imageListWrapper').style.padding = '5px 7px 0px 5px';
 		document.getElementById('imageInfoBox').style.height = '298px';
 		document.getElementById('imageInfoBox').style.width = '130px';
 	}
@@ -167,9 +150,113 @@ function getImageCount() {
 	return imageCompleted;
 }
 
-function resetImageCount(num) {
-	imageCompleted = num;
-	document.getElementById('imageCount').innerHTML = num;
+function allowedMaxImage() {
+    return uploadMaxNumber - getImageCount();
+}
+
+function getUploadedCount() {
+    return document.getElementById('imageListWrapper').getElementsByTagName('img').length;
+}
+
+function uploadedImageCount() {
+	imageCompleted = getUploadedCount();
+	document.getElementById('imageCount').innerHTML = imageCompleted;
+}
+
+function uploadError(msg) {
+    alert(msg);
+}
+
+function imageDelete(filePath) {
+    var chximage = document.getElementById(AppID);
+    chximage.ImageDelete(encodeURI(filePath));
+}
+
+function getTopPos(inputObj) {
+// ----------------------------------------------------------------------------------
+	var returnValue = inputObj.offsetTop;
+
+    inputObj = inputObj.offsetParent;
+  	while (inputObj) {
+	  	if (inputObj.tagName.toLowerCase() !== 'html') {
+	  		returnValue += (inputObj.offsetTop - inputObj.scrollTop);
+			if (MSIE) {
+				returnValue+=inputObj.clientTop;
+            }
+	  	}
+        inputObj = inputObj.offsetParent;
+	}
+	return returnValue;
+}
+
+function getLeftPos(inputObj) {
+// ----------------------------------------------------------------------------------
+	var returnValue = inputObj.offsetLeft;
+
+    inputObj = inputObj.offsetParent;
+  	while (inputObj) {
+	  	if (inputObj.id !== 'imageListWrapper') {
+	  		returnValue += inputObj.offsetLeft;
+			if (MSIE) {
+				returnValue += inputObj.clientLeft;
+            }
+	  	}
+        inputObj = inputObj.offsetParent;
+	}
+	return returnValue;
+}
+
+function getDivCoordinates() {
+// ----------------------------------------------------------------------------------
+	var imgBox = document.getElementById('imageListWrapper').getElementsByTagName('DIV');
+    var i;
+	for (i=0; i < imgBox.length; i++) {
+		if ((imgBox[i].className == 'imageBox' || imgBox[i].className == 'imageBoxHighlighted') && imgBox[i].id)
+		{
+			divXPositions[imgBox[i].id] = getLeftPos(imgBox[i]);
+			divYPositions[imgBox[i].id] = getTopPos(imgBox[i]);
+			divWidth[imgBox[i].id]  = imgBox[i].offsetWidth;
+			divHeight[imgBox[i].id] = imgBox[i].offsetHeight;
+		}
+	}
+}
+
+function reOrder() {
+// ----------------------------------------------------------------------------------
+	var wrapper = document.getElementById('imageListWrapper');
+	var imgBox = wrapper.getElementsByTagName('div');
+	var imgNum = 0, i, spacer, breakline = [];
+
+	for (i=0; i < imgBox.length; i++) {
+		if (imgBox[i].id.indexOf('imgBox') === -1) {
+            continue;
+        }
+
+        imgBox[i].className = 'imageBox';
+		imgBox[i].firstChild.className = 'imageBox_theImage';
+
+        if (imgNum > 0 && (imgNum % 4) == 0) {
+            breakline.push(imgBox[i].id);
+        }
+
+		imgNum++;
+	}
+
+    for (i=0; i<breakline.length; i++) {
+		spacer = document.getElementById('spacer' + (i+1));
+		if (i+1 == breakline.length) {
+            wrapper.appendChild(spacer);
+        }
+        else {
+            wrapper.insertBefore(spacer, document.getElementById(breakline[i]));
+        }
+	}
+}
+
+function resetSelectedImageSize() {
+	document.getElementById('selectedImageWidth').innerHTML = 0;
+	document.getElementById('selectedImageHeight').innerHTML = 0;
+    document.getElementById('selectedImageName').innerHTML = "";
 }
 
 function showDelete(event) {
@@ -182,42 +269,53 @@ function showDelete(event) {
 	var T = divYPositions[self.parentNode.id];
 
 	self.className = 'imageBox_theImage_over';
-	button.style.left = (L + 126) + 'px';
+	button.style.left = (L + 115) + 'px';
 	button.style.top = (T - 7) + 'px';
 	button.style.display = 'block';
-	button.onmouseover = function() {
+	button.onmouseover = function(ev) {
 		self.className = 'imageBox_theImage_over';
 		document.getElementById('selectedImageWidth').innerHTML = imageCompletedList[self.id]['width'];
 		document.getElementById('selectedImageHeight').innerHTML = imageCompletedList[self.id]['height'];
+        document.getElementById('selectedImageName').innerHTML = imageCompletedList[self.id]['origName'];
 	};
-	
+
 	document.getElementById('selectedImageWidth').innerHTML = imageCompletedList[self.id]['width'];
 	document.getElementById('selectedImageHeight').innerHTML = imageCompletedList[self.id]['height'];
+    document.getElementById('selectedImageName').innerHTML = imageCompletedList[self.id]['origName'];
 
 	button.onclick = function() {
-		create_request_object(DeleteScript + '?img=' + self.firstChild.src);
+        imageDelete(imageCompletedList[self.id]['filePath']);
 		self.removeChild(self.firstChild);
 		self.onmouseover = null;
 		self.className = 'imageBox_theImage';
 		document.getElementById('removeImage').style.display = 'none';
 
-		if (self.parentNode.nextSibling && self.parentNode.nextSibling.id)
-		{
+		if (self.parentNode.nextSibling && self.parentNode.nextSibling.id) {
 			var wrapper = document.getElementById('imageListWrapper');
 			var moveobj = self.parentNode.nextSibling;
 			var target = self.parentNode;
 
 			while (moveobj != null) {
-				wrapper.insertBefore(moveobj, target);
+                if (moveobj.firstChild && !moveobj.firstChild.firstChild) {
+                    break;
+                }
+                if (/^spacer/.test(moveobj.id)) {
+                    moveobj = moveobj.nextSibling;
+                    continue;
+                }
+                wrapper.insertBefore(moveobj, target);
 				moveobj = target.nextSibling;
 			}
 		}
 
 		resetSelectedImageSize();
 		reOrder();
+        uploadedImageCount();
 	};
 
-	if (hideTimer) clearTimeout(hideTimer);
+	if (hideTimer) {
+        clearTimeout(hideTimer);
+    }
 	hideTimer = setTimeout('hideDelete()', 3000);
 }
 
@@ -226,22 +324,21 @@ function hideDelete(event) {
 	document.getElementById('removeImage').style.display = 'none';
 }
 
-function resetSelectedImageSize() {
-	document.getElementById('selectedImageWidth').innerHTML = 0;
-	document.getElementById('selectedImageHeight').innerHTML = 0;
-}
-
 function startUpload(count) {
 // ----------------------------------------------------------------------------------
-	var el = document.getElementById('imageListWrapper').getElementsByTagName('DIV');
-	for (var i=0; i < el.length; i++) {
-		var imgBox = el[i];
-		if (imgBox.className != 'imageBox_theImage')
+	var el = document.getElementById('imageListWrapper').getElementsByTagName('div');
+    var i, imgBox;
+	for (i=0; i < el.length; i++) {
+		imgBox = el[i];
+		if (imgBox.className !== 'imageBox_theImage') {
 			continue;
+        }
 
-		if (count == 0) break;
+		if (count == 0) {
+            break;
+        }
 
-		if (imgBox.firstChild == null || typeof(imgBox.firstChild.src) == 'undefined') {
+		if (!imgBox.firstChild || imgBox.firstChild.tagName.toLowerCase()  !== 'img') {
 			imgBox.style.backgroundImage = "url('"+UploadImagePath+"/loader.gif')";
 			count--;
 		}
@@ -253,153 +350,106 @@ function fileFilterError(file) {
 		  "gif, png, jpg, 그림 파일만 전송할 수 있습니다.");
 }
 
-function uploadComplete(fileData) {
+function imgComplete(img, imgSize, boxId) {
+    img.setAttribute("border", 0);
+    var resizeW, resizeH, M;
+
+    if (imgSize.width > ShowThumbnailSize.width || imgSize.height > ShowThumbnailSize.height) {
+        if (imgSize.width > imgSize.height) {
+            resizeW = (imgSize.width > ShowThumbnailSize.width) ? ShowThumbnailSize.width : imgSize.width;
+            resizeH = Math.round((imgSize.height * resizeW) / imgSize.width);
+        }
+        else {
+            resizeH = (imgSize.height > ShowThumbnailSize.height) ? ShowThumbnailSize.height : imgSize.height;
+            resizeW = Math.round((imgSize.width * resizeH) / imgSize.height);
+        }
+
+        if (resizeH > ShowThumbnailSize.height) {
+            resizeH = (imgSize.height > ShowThumbnailSize.height) ? ShowThumbnailSize.height : imgSize.height;
+            resizeW = Math.round((imgSize.width * resizeH) / imgSize.height);
+        }
+
+    }
+    else {
+        resizeW = imgSize.width;
+        resizeH = imgSize.height;
+    }
+
+    img.style.width  = resizeW - 2+ 'px';
+    img.style.height = resizeH - 2+ 'px';
+    img.style.margin = "1px";
+
+    if (resizeW < ShowThumbnailSize.width) {
+        M = ShowThumbnailSize.width - resizeW;
+        img.style.marginLeft = Math.round(M/2) + 'px';
+    }
+
+    if (resizeH < ShowThumbnailSize.height) {
+        M = ShowThumbnailSize.height - resizeH;
+        img.style.ShowThumbnailSize = Math.round(M/2) + 'px';
+    }
+
+    var elem = document.getElementById(boxId);
+    elem.style.backgroundImage = "url('"+oEditor.config.iconPath+"dot.gif')";
+    elem.onmouseover = showDelete;
+    elem.onmouseout = function() {
+            this.className = 'imageBox_theImage';
+            resetSelectedImageSize();
+    };
+
+    setImageCount();
+}
+
+function uploadComplete(image) {
 // ----------------------------------------------------------------------------------
-	fileData = fileData.replace(/^\s+/g, '').replace(/\s+$/g, '');
-	if (/^-ERR/.test(fileData)) {
-		alert(fileData);
-		oEditor.popupWinClose();
-	}
+    image.filePath = decodeURI(image.filePath);
+    image.origName = decodeURI(image.origName);
 
-	if (imageCompleted >= uploadMaxNumber)
-		return;
-	
-	var tmpData = eval('('+fileData+')');
+	var el = document.getElementById('imageListWrapper').getElementsByTagName('div');
+    var imgBox = null, tmpImg, i, imgInfo;
+    var imgOnLoad = function() {
+        imgInfo = { "width": image.width, "height": image.height, "fileSize": image.fileSize,
+            "fileUrl": image.fileUrl, "fileName": image.fileName, "filePath": image.filePath, "origName": image.origName };
 
-	if (typeof tmpData == 'undefined')
-		return;
+        imageCompletedList[imgBox.id] = imgInfo;
+        imgComplete(this, imgInfo, imgBox.id);
+    };
 
-	var el = document.getElementById('imageListWrapper').getElementsByTagName('DIV');
-	for (var i=0; i < el.length; i++) {
-		var imgBox = el[i];
-		if (imgBox.className != 'imageBox_theImage')
+	for (i=0; i < el.length; i++) {
+		imgBox = el[i];
+		if (imgBox.className !== 'imageBox_theImage') {
 			continue;
-	
-		if (tmpData['fileSize'] == 0) {
-			imgBox.style.backgroundImage = '';
-			alert(tmpData['origName'] + ' 파일은 잘못된 파일입니다.');
-			break;
-		}
+        }
 
-		if (imgBox.firstChild == null || typeof(imgBox.firstChild.src) == 'undefined') {
-			var tmpImg = new Image();
-			tmpImg.onload = function() { imgComplete(this, imgBox.id, tmpData); };
-			tmpImg.src = tmpData.fileUrl;
-			imgBox.appendChild(tmpImg);
-
-			if (MSIE) tmpImg.style.display = "none";
-			else tmpImg.style.visibility = 'hidden';
+		if (!imgBox.firstChild || imgBox.firstChild.tagName.toLowerCase()  !== 'img') {
+			tmpImg = new Image();
+            tmpImg.style.width = "0px";
+            tmpImg.style.height = "0px";
+            tmpImg.setAttribute("alt", image.origName);
+            tmpImg.onload = imgOnLoad;
+			tmpImg.src = image.fileUrl;
+            imgBox.appendChild(tmpImg);
 			break;
 		}
 	}
-}
-
-function imgComplete(img, boxId, dataObj) {
-	if (img.complete != true) {
-		var R = function() { imgComplete(img, boxId, dataObj); };
-		setTimeout(R, 250);
-	}
-	else {
-		img.border = 0;
-		img.alt = '';
-		var fixWidth = 120;
-		var fixHeight = 90;
-		var resizeW, resizeH;
-		imageCompletedList[boxId] = { width: img.width, height: img.height, info: dataObj };
-
-		if (img.width > fixWidth || img.height > fixHeight) {
-			if (img.width > img.height) {
-				resizeW = (img.width > fixWidth) ? fixWidth : img.width;
-				resizeH = Math.round((img.height * resizeW) / img.width);
-			}
-			else {
-				resizeH = (img.height > fixHeight) ? fixHeight : img.height;
-				resizeW = Math.round((img.width * resizeH) / img.height);
-			}
-
-			if (resizeH > fixHeight) {
-				resizeH = (img.height > fixHeight) ? fixHeight : img.height;
-				resizeW = Math.round((img.width * resizeH) / img.height);
-			}
-
-		}
-		else {
-			resizeW = img.width;
-			resizeH = img.height;
-		}
-
-		img.style.width  = resizeW + 'px';
-		img.style.height = resizeH + 'px';
-		img.hspace = 2;
-		img.vspace = 2;
-
-		if (resizeW < fixWidth) {
-			var M = fixWidth - resizeW;
-			img.style.marginLeft = Math.round(M/2) + 'px';
-		}
-
-		if (resizeH < fixHeight) {
-			var M = fixHeight - resizeH;
-			img.style.marginTop = Math.round(M/2) + 'px';
-		}
-
-		var elem = document.getElementById(boxId);
-		elem.style.backgroundImage = "url('"+oEditor.config.iconPath+"dot.gif')";
-		elem.onmouseover = showDelete;
-		elem.onmouseout = function() {
-				this.className = 'imageBox_theImage';
-				resetSelectedImageSize();
-		};
-		
-		if (MSIE) img.style.display = "block";
-		else img.style.visibility = 'visible';
-		setImageCount();
-		img = img.onload = img.onabort = img.onerror = null;
-	}
-}
-
-function errMaxFileSize (errFileName) {
-	alert("선택하신 '"+errFileName+"' 파일의 크기가 너무 큽니다.\n선택 가능한 파일의 최대 크기는 " + 
-			allowedMaxImgSize+" 바이트입니다.");
-}
-
-function initEvent() {
-//----------------------------------------------------------------------------------
-	CHXImageRUN (
-			"src", 			AppSRC,
-			"width", 		"93",
-			"FlashVars", 	"ServerURL="+UploadScript+"&UploadButton="+UploadButton+"&MaxFileSize="+allowedMaxImgSize,
-			"height", 		"22",
-			"align", 		"middle",
-			"id", 			AppID,
-			"quality", 		"high",
-			"bgcolor", 		"#ffffff",
-			"name", 		AppID,
-			"allowScriptAccess","Always",
-			"type", 		"application/x-shockwave-flash",
-			"pluginspage", 	"http://www.adobe.com/go/getflashplayer"
-		);
 }
 
 function showUploadWindow() {
 // ----------------------------------------------------------------------------------
   	var uploadWindow  = document.getElementById("uploadWindow");
   	var uploadWindowWidth  = 700;
-  	var winWidth  = 0;
-  
-  	if (typeof(window.innerWidth) != 'undefined') {
-  		winHeight = window.innerHeight;
+  	var winWidth;
+
+  	if (typeof window.innerWidth !== 'undefined') {
   		winWidth  = window.innerWidth;
   	}
-	else if (document.documentElement && typeof document.documentElement.clientWidth!='undefined'
-		&& document.documentElement.clientWidth != 0 )
+	else if (document.documentElement && typeof document.documentElement.clientWidth !== 'undefined'
+		&& document.documentElement.clientWidth !== 0 )
 	{
 		winWidth  = document.documentElement.clientWidth;
-		winHeight = document.documentElement.clientHeight;
-	} 
-	else if (document.body && typeof document.body.clientWidth!='undefined') {
+	}
+	else if (document.body && typeof document.body.clientWidth !== 'undefined') {
 		winWidth  = document.body.clientWidth;
-		winHeight = document.body.clientHeight;
 	}
 	else {
 		alert('현재 브라우저를 지원하지 않습니다.');
@@ -407,28 +457,31 @@ function showUploadWindow() {
 	}
 
   	var left = winWidth / 2 - (uploadWindowWidth / 2) + 'px';
-  
+
   	uploadWindow.style.left = left;
   	uploadWindow.style.display = "block";
   	uploadWindow.style.width = uploadWindowWidth + 'px';
 
   	if (modifyImages.length > 0) {
 		var el = document.getElementById('imageListWrapper').getElementsByTagName('DIV');
+        var i, j, imgBox, img;
+	  	for (i=0; i < modifyImages.length; i++) {
+			if (i > 7) {
+                break;
+            }
 
-	  	for (var i=0; i < modifyImages.length; i++) {
-			if (i > 7) break;
-
-			for (var j=0; j < el.length; j++) {
-				var imgBox = el[j];
-				if (imgBox.className != 'imageBox_theImage')
-					continue;
+			for (j=0; j < el.length; j++) {
+				imgBox = el[j];
+				if (imgBox.className != 'imageBox_theImage') {
+                    continue;
+                }
 
 				if (imgBox.firstChild && (imgBox.firstChild.src == modifyImages[i])) {
 					break;
 				}
 
 				if (imgBox.firstChild == null) {
-					var img = new Image();
+					img = new Image();
 					img.src = modifyImages[i];
 					img.border = 0;
 					img.alt = '';
@@ -444,20 +497,15 @@ function showUploadWindow() {
 
 }
 
-function closeWindow() {
-// ----------------------------------------------------------------------------------
-	if (removeImage())
-		popupClose();
-}
-
 function removeImage() {
 // ----------------------------------------------------------------------------------
-	var images = new Array();
+	var images = [], i, theImage, img;
 
-	for (var i=0; i < uploadMaxNumber; i++) {
-		var theImage = document.getElementById('img_'+i);
-		if (theImage.hasChildNodes() && (typeof theImage.firstChild.src != 'undefined'))
-			images.push(theImage);
+	for (i=0; i < uploadMaxNumber; i++) {
+		theImage = document.getElementById('img_'+i);
+		if (theImage.hasChildNodes() && theImage.firstChild.tagName.toLowerCase() === 'img') {
+            images.push(theImage);
+        }
 	}
 
 	if (images.length > 0) {
@@ -465,18 +513,24 @@ function removeImage() {
 			return false;
 		}
 
-		for (var i=0; i<images.length; i++) {
-			var img = images[i];
-			if (img.firstChild != null) {
-				create_request_object(DeleteScript + '?img=' + img.firstChild.src);
+		for (i=0; i<images.length; i++) {
+			img = images[i];
+			if (img.firstChild !== null) {
+                imageDelete(imageCompletedList[img.id]['filePath']);
 				img.removeChild(img.firstChild);
 				img.onmouseover = null;
 				img.parentNode.className = 'imageBox';
 			}
 		}
 	}
-	
 	return true;
+}
+
+function closeWindow() {
+// ----------------------------------------------------------------------------------
+	if (removeImage()) {
+        popupClose();
+    }
 }
 
 function cancelEvent() {
@@ -484,62 +538,6 @@ function cancelEvent() {
 	return false;
 }
 
-function getTopPos(inputObj) {		
-// ----------------------------------------------------------------------------------
-	var returnValue = inputObj.offsetTop;
-    
-    inputObj = inputObj.offsetParent;
-  	while (inputObj) {
-	  	if (inputObj.tagName != 'HTML') {
-	  		returnValue += (inputObj.offsetTop - inputObj.scrollTop);
-			if (MSIE)
-				returnValue+=inputObj.clientTop;
-	  	}
-        inputObj = inputObj.offsetParent;
-	}
-	return returnValue;
-}
-
-function getLeftPos(inputObj) {	  
-// ----------------------------------------------------------------------------------
-	var returnValue = inputObj.offsetLeft;
-    
-    inputObj = inputObj.offsetParent;
-  	while (inputObj) {
-	  	if (inputObj.id != 'imageListWrapper') {
-	  		returnValue += inputObj.offsetLeft;
-			if (MSIE)
-				returnValue+=inputObj.clientLeft;
-	  	}
-        inputObj = inputObj.offsetParent;
-	}
-	return returnValue;
-}
-
-function selectImage(e) {
-// ----------------------------------------------------------------------------------
-	if (MSIE)
-		e = event;
-
-	var el = this.parentNode.firstChild.firstChild;
-	if (!el) return;
-
-	var obj = this.parentNode;
-	if (activeImage)
-		activeImage.className = 'imageBox';
-
-	obj.className = 'imageBoxHighlighted';
-	activeImage = obj;
-	readyToMove = true;
-	moveTimer = 0;
-		
-	tmpLeft = e.clientX + Math.max(document.body.scrollLeft,document.documentElement.scrollLeft);
-	tmpTop = e.clientY + Math.max(document.body.scrollTop,document.documentElement.scrollTop);
-		
-	startMoveTimer();	
-	return false;	
-}
-	
 function startMoveTimer() {
 // ----------------------------------------------------------------------------------
 	if (moveTimer >= 0 && moveTimer < 10) {
@@ -549,18 +547,25 @@ function startMoveTimer() {
 
 	if (moveTimer == 5) {
 		getDivCoordinates();
-		var subElements = dragDropDiv.getElementsByTagName('DIV');
+		var subElements = dragDropDiv.getElementsByTagName('div');
 		if (subElements.length > 0) {
 			dragDropDiv.removeChild(subElements[0]);
 		}
-		
+
 		dragDropDiv.style.display = 'block';
 		var newDiv = activeImage.cloneNode(true);
-		newDiv.className = 'imageBox';	
+		newDiv.className = 'imageBox';
+        if (MSIE && navigatorVersion < 10) {
+            newDiv.style.filter = 'alpha(opacity=50)';
+        }
+        else {
+            newDiv.style.opacity = 0.5;
+        }
+
 		newDiv.id = '';
 		newDiv.style.padding = '2px';
-		dragDropDiv.appendChild(newDiv);	
-			
+		dragDropDiv.appendChild(newDiv);
+
 		dragDropDiv.style.top = tmpTop + 'px';
 		dragDropDiv.style.left = tmpLeft + 'px';
 	}
@@ -568,40 +573,32 @@ function startMoveTimer() {
 	return false;
 }
 
-function reOrder() {
+function selectImage(e) {
 // ----------------------------------------------------------------------------------
-	var wrapper = document.getElementById('imageListWrapper');
-	var imgBox = wrapper.getElementsByTagName('DIV');
-	var imgNum = 0;
-	var breakLine = [];
-	var uploadImg = 0;
+	if (MSIE) {
+		e = event;
+    }
 
-	for (var i=0; i < imgBox.length; i++) {
-		if (imgBox[i].id.indexOf('imgBox') == -1) continue;
-		imgBox[i].className = 'imageBox';
-		imgBox[i].firstChild.className = 'imageBox_theImage';
+	var el = this.parentNode.firstChild.firstChild;
+	if (!el) {
+        return;
+    }
 
-		if (imgBox[i].firstChild.firstChild != null) {
-			uploadImg++;
-		}
+	var obj = this.parentNode;
+	if (activeImage) {
+        activeImage.className = 'imageBox';
+    }
 
-		switch (imgNum) {
-			case 4 :
-			case 8 :
-			case 11 :
-				breakLine.push(imgBox[i].id);
-				break;
-		}
-		imgNum++;
-	}
+	obj.className = 'imageBoxHighlighted';
+	activeImage = obj;
+	readyToMove = true;
+	moveTimer = 0;
 
-	for (var i=0; i<breakLine.length; i++) {
-		var spacer = document.getElementById('spacer' + (i+1));
-		wrapper.insertBefore(spacer, document.getElementById(breakLine[i]));
-		if (i==2) wrapper.appendChild(spacer);
-	}
+	tmpLeft = e.clientX + Math.max(document.body.scrollLeft,document.documentElement.scrollLeft);
+	tmpTop = e.clientY + Math.max(document.body.scrollTop,document.documentElement.scrollTop);
 
-	resetImageCount(uploadImg);
+	startMoveTimer();
+	return false;
 }
 
 function dragDropEnd() {
@@ -610,7 +607,7 @@ function dragDropEnd() {
 	moveTimer = -1;
 	dragDropDiv.style.display = 'none';
 	insertionMarker.style.display = 'none';
-		
+
 	if (destinationObject && destinationObject != activeImage) {
 		var parentObj = destinationObject.parentNode;
 		var chkObj = destinationObject.previousSibling;
@@ -647,42 +644,44 @@ function dragDropEnd() {
 		activeImage = false;
 		destinationObject = false;
 		getDivCoordinates();
-
 		return false;
 	}
-
 	return true;
 }
-	
+
 function dragDropMove(e) {
 // ----------------------------------------------------------------------------------
-	if (moveTimer == -1)
-		return;
+	if (moveTimer == -1) {
+        return;
+    }
 
-	if(MSIE)
-		e = event;
+	if(MSIE) {
+        e = event;
+    }
 
 	var leftPos = e.clientX + document.documentElement.scrollLeft - eventDiff_x;
 	var topPos = e.clientY + document.documentElement.scrollTop - eventDiff_y;
 	dragDropDiv.style.top = topPos + 'px';
 	dragDropDiv.style.left = leftPos + 'px';
-		
+
 	leftPos = leftPos + eventDiff_x;
 	topPos = topPos + eventDiff_y;
-		
-	if (e.button != 1 && MSIE)
-		dragDropEnd();
 
-	var elementFound = false;
+	if (e.button != 1 && MSIE) {
+        dragDropEnd();
+    }
 
-	for (var prop in divXPositions) {
-		if (divXPositions[prop].className == 'clear')
-			continue;
+	var elementFound = false, prop, offsetX, offsetY;
 
-		if  (divXPositions[prop] / 1 < leftPos / 1 && 
-			(divXPositions[prop] / 1 + divWidth[prop] * 0.7) > leftPos / 1 && 
-			 divYPositions[prop] / 1 < topPos / 1 && 
-			(divYPositions[prop] / 1 + divWidth[prop]) > topPos / 1)
+	for (prop in divXPositions) {
+		if (divXPositions[prop].className == 'clear') {
+            continue;
+        }
+
+		if  (divXPositions[prop] < leftPos &&
+			(divXPositions[prop] + divWidth[prop] * 0.7) > leftPos &&
+			 divYPositions[prop] < topPos &&
+			(divYPositions[prop] + divWidth[prop]) > topPos)
 		{
 			if (MSIE) {
 				offsetX = offsetX_marker;
@@ -695,44 +694,28 @@ function dragDropMove(e) {
 
 			insertionMarker.style.top = divYPositions[prop] + offsetY + 'px';
 			insertionMarker.style.left = divXPositions[prop] + offsetX + 'px';
-			insertionMarker.style.display = 'block';	
+			insertionMarker.style.display = 'block';
 			destinationObject = document.getElementById(prop);
-			elementFound = true;	
-			break;	
-		}				
+			elementFound = true;
+			break;
+		}
 	}
-		
+
 	if (!elementFound) {
 		insertionMarker.style.display = 'none';
 		destinationObject = false;
 	}
-	
+
 	return false;
 }
-	
-function getDivCoordinates() {
-// ----------------------------------------------------------------------------------
-	var imgBox = document.getElementById('imageListWrapper').getElementsByTagName('DIV');
 
-	for (var i=0; i < imgBox.length; i++) {	
-		if (imgBox[i].className == 'imageBox' || 
-			imgBox[i].className == 'imageBoxHighlighted' && imgBox[i].id)
-		{
-			divXPositions[imgBox[i].id] = getLeftPos(imgBox[i]);	
-			divYPositions[imgBox[i].id] = getTopPos(imgBox[i]);			
-			divWidth[imgBox[i].id]  = imgBox[i].offsetWidth;		
-			divHeight[imgBox[i].id] = imgBox[i].offsetHeight;	
-		}		
-	}
-}
-	
 function saveImageOrder() {
 // ----------------------------------------------------------------------------------
 	var rData = [];
 	var objects = document.getElementById('imageListWrapper').getElementsByTagName('DIV');
-
-	for (var i=0; i < objects.length; i++) {
-		if (objects[i].className == 'imageBox' || 
+    var i;
+	for (i=0; i < objects.length; i++) {
+		if (objects[i].className == 'imageBox' ||
 			objects[i].className == 'imageBoxHighlighted')
 		{
 			rData.push(objects[i].id);
@@ -745,12 +728,13 @@ function saveImageOrder() {
 function initGallery() {
 // ----------------------------------------------------------------------------------
 	var imgBox = document.getElementById('imageListWrapper').getElementsByTagName('DIV');
-	for (var i=0; i < imgBox.length; i++) {
+    var i;
+	for (i=0; i < imgBox.length; i++) {
 		if (imgBox[i].className == 'imageBox_theImage') {
-			imgBox[i].onmousedown = selectImage;	
+			imgBox[i].onmousedown = selectImage;
 		}
 	}
-	
+
 	document.body.onselectstart = cancelEvent;
 	document.body.ondragstart = cancelEvent;
 	document.body.onmouseup = dragDropEnd;
@@ -761,76 +745,29 @@ function initGallery() {
 	getDivCoordinates();
 }
 
-function create_request_object(params) {
-// ----------------------------------------------------------------------------------
-  var http_request = false;
-  if (window.XMLHttpRequest) {
-    http_request = new XMLHttpRequest();
-    if (http_request.overrideMimeType) {
-      http_request.overrideMimeType('text/xml');
-    }
-  }
-  else if (window.ActiveXObject) {
-    try {
-      http_request = new ActiveXObject("Msxml2.XMLHTTP");
-    }
-    catch (e) {
-      try {
-        http_request = new ActiveXObject("Microsoft.XMLHTTP");
-      }
-      catch (e) {}
-    }
-  }
-
-  if (!http_request) {
-    return false;
-  }
-
-  http_request.onreadystatechange = function() { handle_response(http_request); };
-  http_request.open("GET", params, true);
-  http_request.send(null);
-}
-
-function handle_response (http_request) {
-// ----------------------------------------------------------------------------------
-  if(http_request.readyState == 4){
-    if (http_request.status == 200) {
-      var response = http_request.responseText;
-      if (response) {
-		  return true;
-      }
-    }
-  } 
-}
-
 function doSubmit() {
 // ----------------------------------------------------------------------------------
 	var el = document.getElementById('imageListWrapper').getElementsByTagName('DIV');
 	var imageArray = [];
 	var num = 0;
 	var fm_align = document.getElementById('fm_alignment').alignment;
-	var img_align = 'top';
+	var img_align = 'top', i, imgBox;
 
-	for (var i=0; i < fm_align.length; i++) {
+	for (i=0; i < fm_align.length; i++) {
 		if (fm_align[i].checked) {
 			img_align = fm_align[i].value;
 			break;
 		}
 	}
 
-	for (var i=0; i < el.length; i++) {
-		var imgBox = el[i];
-		if (imgBox.className != 'imageBox_theImage')
+	for (i=0; i < el.length; i++) {
+		imgBox = el[i];
+		if (imgBox.className != 'imageBox_theImage') {
 			continue;
+        }
 
-//----------------------------------------------------------------------------
-// 
 		if (imgBox.firstChild != null) {
-			imageArray[num] = new Object();
-			imageArray[num]['width'] = imageCompletedList[imgBox.id].width;
-			imageArray[num]['height'] = imageCompletedList[imgBox.id].height;
-			imageArray[num]['src'] = imgBox.firstChild.src;
-			imageArray[num]['info'] = imageCompletedList[imgBox.id].info;
+			imageArray[num] = imageCompletedList[imgBox.id];
 
 			if (img_align == 'break' ) {
 				imageArray[num]['alt'] = "break";
@@ -844,8 +781,65 @@ function doSubmit() {
 		}
 	}
 
-	if (imageArray.length > 0)
+	if (imageArray.length > 0) {
 		oEditor.doInsertImage(imageArray);
+    }
 
+    swfobject.removeSWF(AppID);
 	oEditor.popupWinClose();
+}
+
+function initEvent() {
+    var swfVersionStr = "11.1.0";
+    var xiSwfUrlStr = "http://get.adobe.com/kr/flashplayer/";
+    var flashvars = {
+        "UploadScript": UploadScript,
+        "DeleteScript": DeleteScript,
+        "UploadButton": UploadButton,
+        "MakeThumbnail": makeThumbnail,
+        "ThumbnailWidth": makeThumbnailWidth,
+        "ThumbnailHeight": makeThumbnailHeight,
+        "ImageResizeWidth": imageResizeWidth,
+        "SortOnName": sortOnName };
+    var params = {
+        "quality": "high",
+        "bgcolor": "#ffffff",
+        "allowscriptaccess": "Always",
+        "allowfullscreen": "false",
+        "wmode": "transparent" };
+    var attributes = { "id": AppID, "name": AppID, "align": "middle" };
+    swfobject.embedSWF(AppSRC, "oFlashButton", "93", "22", swfVersionStr, xiSwfUrlStr, flashvars, params, attributes);
+}
+
+function init(dialog) {
+	oEditor = this;
+	oEditor.dialog = dialog;
+	var dlg = new Dialog(oEditor);
+
+	UploadImagePath = oEditor.config.iconPath + 'imageUpload';
+	UploadButton = oEditor.config.iconPath + 'imageUpload/add.gif';
+	AppSRC = oEditor.config.popupPath + 'flash/chximage.swf';
+    uploadMaxNumber = oEditor.config.imgUploadNumber;
+	UploadScript = oEditor.config.editorPath + 'imageUpload/upload.php';
+	DeleteScript = oEditor.config.editorPath + 'imageUpload/delete.php';
+
+	imageResizeWidth = oEditor.config.imgMaxWidth;
+    makeThumbnail = oEditor.config.makeThumbnail;
+    sortOnName = oEditor.config.imgUploadSortName;
+    makeThumbnailWidth = oEditor.config.thumbnailWidth;
+    makeThumbnailHeight = oEditor.config.thumbnailHeight;
+
+    document.getElementById("maxImageNum").appendChild(document.createTextNode(uploadMaxNumber));
+
+    button = [ { alt : "", img : 'submit.gif', cmd : doSubmit, hspace : 2 },
+               { alt : "", img : 'cancel.gif', cmd : closeWindow, hspace : 2 } ];
+
+	dlg.setDialogHeight(370);
+	dlg.showButton(button);
+	showContents();
+	initGallery();
+	showUploadWindow();
+    initEvent();
+	createInsertionMaker();
+	browser = oEditor.getBrowser();
 }

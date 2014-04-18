@@ -48,6 +48,7 @@ $mw['okname_table']       = $g4['table_prefix']."mw_okname";
 $mw['temp_table']         = $g4['table_prefix']."mw_temp";
 $mw['bomb_table']         = $g4['table_prefix']."mw_bomb";
 $mw['move_table']         = $g4['table_prefix']."mw_move";
+$mw['jump_log_table']     = $g4['table_prefix']."mw_jump_log";
 
 $default_charset = '';
 if (preg_match("/^utf/i", $g4['charset']))

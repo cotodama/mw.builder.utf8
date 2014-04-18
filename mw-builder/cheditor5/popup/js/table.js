@@ -5,7 +5,7 @@
 // Copyright (c) 1997-2014 CHSOFT
 // ================================================================
 var oEditor = null;
-var button = [ { alt : "", img : 'submit.gif', cmd : doSubmit },              
+var button = [ { alt : "", img : 'submit.gif', cmd : doSubmit },
                { alt : "", img : 'cancel.gif', cmd : popupClose } ];
 var colour = ["ffffcc","ffcc66","ff9900","ffcc99","ff6633","ffcccc","cc9999","ff6699","ff99cc","ff66cc","ffccff","cc99cc","cc66ff","cc99ff","9966cc","ccccff","9999cc","3333ff","6699ff","0066ff","99ccff","66ccff","99cccc","ccffff","99ffcc","66cc99","66ff99","99ff99","ccffcc","33ff33","66ff00","ccff99","99ff00","ccff66","cccc66","ffffff",
               "ffff99","ffcc00","ff9933","ff9966","cc3300","ff9999","cc6666","ff3366","ff3399","ff00cc","ff99ff","cc66cc","cc33ff","9933cc","9966ff","9999ff","6666ff","3300ff","3366ff","0066cc","3399ff","33ccff","66cccc","99ffff","66ffcc","33cc99","33ff99","66ff66","99cc99","00ff33","66ff33","99ff66","99ff33","ccff00","cccc33","cccccc",
@@ -19,7 +19,7 @@ var whichColor = null;
 function init(dialog) {
 	oEditor = this;
 	oEditor.dialog = dialog;
-	
+
 	var dlg = new Dialog(oEditor);
 	dlg.showButton(button);
 	dlg.setDialogHeight();
@@ -89,13 +89,13 @@ function doSubmit()
     if (isNaN(cols)) {
     	cols = 0;
     }
-        
+
     border = document.getElementById("bordersize").value;
     border = parseInt(oEditor.trimSpace(border));
     if (isNaN(border)) {
         border = 0;
     }
-    
+
     width = document.getElementById("width").value;
     width = parseInt(oEditor.trimSpace(width));
     if (isNaN(width)) {
@@ -104,7 +104,7 @@ function doSubmit()
     else {
         width += document.getElementById("widthtype").value;
     }
-    
+
     height = document.getElementById("height").value;
     height = parseInt(oEditor.trimSpace(height));
     if (isNaN(height)) {
@@ -113,30 +113,30 @@ function doSubmit()
     else {
     	height += document.getElementById("heighttype").value;
     }
-    
+
     cellpd = document.getElementById("cellpd").value;
     cellpd = parseInt(oEditor.trimSpace(cellpd));
     if (isNaN(cellpd)) {
     	cellpd = 0;
     }
-    
+
     cellsp = document.getElementById("cellsp").value;
     cellsp = parseInt(oEditor.trimSpace(cellsp));
     if (isNaN(cellsp)) {
     	cellsp = 0;
     }
-    
+
     bgcolor = document.getElementById("idbgcolor").value;
     bgcolor = oEditor.trimSpace(bgcolor);
     if (bgcolor === none || bgcolor === '') {
     	bgcolor = null;
     }
-    
+
     align = document.getElementById("talign").value;
     if (align === 'none') {
     	align = null;
     }
-    
+
     bordercolor = document.getElementById("idbordercolor").value;
     bordercolor = oEditor.trimSpace(bordercolor);
     if (bordercolor === '') {
@@ -148,18 +148,18 @@ function doSubmit()
     if (cssclass === '') {
         cssclass = null;
     }
-    
+
     cssid = document.getElementById("cssId").value;
     cssid = oEditor.trimSpace(cssid);
     if (cssid === '') {
         cssid = null;
     }
-    
+
     if (rows < 1 || cols < 1) {
     	alert('표의 줄 또는 칸 개수가 1개 이상 필요합니다.');
     	return;
     }
-    
+
     var caption = document.getElementById('tableCaption');
     var captionValue = oEditor.trimSpace(caption.value);
     var summary = document.getElementById('tableSummary');
@@ -172,7 +172,7 @@ function doSubmit()
         cell.setAttribute('scope', scope);
         return cell;
     };
-    
+
     var oHead = document.createElement('thead');
     var oBody = document.createElement('tbody');
 
@@ -183,9 +183,9 @@ function doSubmit()
         table.style.borderStyle = 'solid';
         table.style.borderWidth = border + 'px';
     }
-    
+
     table.style.borderCollapse = "collapse";
-    
+
     for (var i=0; i < rows; i++) {
         var row;
         var tr = document.createElement('tr');
@@ -232,9 +232,9 @@ function doSubmit()
     if (oHead.hasChildNodes()) {
         table.appendChild(oHead);
     }
-   
+
     table.appendChild(oBody);
-    
+
     if (summaryValue !== '') table.setAttribute('summary', summaryValue);
     if (width) 	table.setAttribute("width", width);
     if (height) table.setAttribute("height", height);
@@ -248,7 +248,7 @@ function doSubmit()
         var hideCaption, tableCaption;
         tableCaption = table.createCaption();
         tableCaption.appendChild(document.createTextNode(captionValue));
-        
+
         hideCaption = document.getElementById('hideCaption');
         if (hideCaption.checked === true) {
             tableCaption.style.visibility = 'hidden';
@@ -260,33 +260,29 @@ function doSubmit()
     }
 
     table.id = oEditor.makeRandomString();
-    oEditor.insertHtmlPopup(table.outerHTML);
+    oEditor.insertHtmlPopup(table);
     var newTable = oEditor._$(table.id);
-    
+
     var p = document.createElement('p');
     p.appendChild(document.createTextNode('\u00a0'));
-    if (newTable.parentNode.nodeName.toLowerCase() === 'body') {
-        oEditor.doc.body.insertBefore(p, newTable);
-        oEditor.doc.body.insertBefore(newTable, p);
-        oEditor.doc.body.insertBefore(p.cloneNode(true), newTable);
-    }
-    
+    oEditor.insertHtmlPopup(p);
+
     newTable.removeAttribute('id');
-    
+
     if (cssclass) newTable.className = cssclass;
     if (cssid) newTable.id = cssid;
-    
+
     var focusCell = newTable.getElementsByTagName('th')[0];
     if (typeof focusCell === 'undefined') {
         focusCell = newTable.getElementsByTagName('td')[0];
     }
-    
+
     if (oEditor.getBrowser().msie) {
         var cursor = oEditor.doc.body.createTextRange();
         cursor.moveToElementText(focusCell);
         cursor.collapse(false);
         cursor.select();
-        oEditor.setRange(oEditor.getRange());        
+        oEditor.setRange(oEditor.getRange());
     }
     else {
         var selection = oEditor.getSelection();

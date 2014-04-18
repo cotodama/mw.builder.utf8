@@ -1,3 +1,21 @@
+1.4.7 (14.04.18)
+    : 그누보드 최신버전 4.37.08 (14.04.10) 탑재
+    : 배추스킨 최신버전 2.5.2 (14.04.18) 탑재
+    : 그룹,중,소메뉴 목록 수정 개선 (나도장관님 제안)
+    : 이미지 최신글 알고리즘 오류 수정 (나도장관님 제안)
+    : 썸네일 변경시 브라우져 캐쉬 사용안하도록 조치 (나도장관님 제안)
+    : 사이트맵 메뉴출력레벨 적용 (맥스님 제안)
+
+    HISTORY-MW-BUILDER
+    adm/mw.builder/mw.m.menu.list.php
+    adm/mw.builder/mw.s.menu.list.php
+    adm/mw.builder/mw.m.menu.php
+    adm/mw.builder/mw.s.menu.php
+    adm/mw.builder/mw.group.php
+    lib/mw.common.lib.php
+    skin/mw.builder/mw.basic.1/index.main.skin.php
+    skin/mw.builder/mw.basic.2/index.main.skin.php
+
 1.4.6 (14.04.04)
     : 그누보드 최신버전 4.37.07 (14.03.24) 탑재
     : 배추스킨 최신버전 2.5.0 (14.04.04) 탑재

@@ -78,13 +78,16 @@ shuffle($main_banner);
 <div class="sitemap">
 <?
 for ($i=0; $i<$mw_groups_sitemap_count; $i++) {
+    if ($mw_groups_sitemap[$i][gr_level_view] > $member[mb_level]) continue;
     $mw_mmenus = mw_get_middle_menus($mw_groups_sitemap[$i][gr_id]);
     //if ($i!=0) $sline = "class=\"sline\""; else $sline = "";
     echo "<ul $sline>\n";
     echo "<li><div class=\"group\"><a href=\"{$mw_groups_sitemap[$i][gr_url]}\">{$mw_groups_sitemap[$i][gr_subject]}</a></div></li>\n";
     for ($a=0; $a<sizeof($mw_mmenus); $a++) {
+        if ($mw_mmenus[$a][mm_level_view] > $member[mb_level]) continue;
 	$mw_smenus = mw_get_small_menus($mw_mmenus[$a][mm_id]);
 	for ($j=0; $j<sizeof($mw_smenus); $j++) {
+            if ($mw_smenus[$j][ms_level_view] > $member[mb_level]) continue;
 	    echo "<li><div class=\"menu\"><a href=\"{$mw_smenus[$j][ms_url]}\">{$mw_smenus[$j][ms_name]}</a></div></li>\n";
 	}
     }

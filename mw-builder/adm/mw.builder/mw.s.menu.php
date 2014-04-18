@@ -36,13 +36,18 @@ $colspan = 9;
 <script type="text/javascript" src="<?=$g4[path]?>/js/jquery.js"></script>
 <script type="text/javascript">
 function menu_reload(mm_id) {
-    $("#menu-list").load("<?=$mw[admin_path]?>/mw.s.menu.list.php?<?=$qstr?>&mm_id=" + mm_id);
+    if (!Date.now) {
+        Date.now = function() { return new Date().getTime(); };
+    }
+    var t = Date.now() ;
+
+    $("#menu-list").load("<?=$mw[admin_path]?>/mw.s.menu.list.php?<?=$qstr?>&mm_id=" + mm_id + "&t=" + t);
 }
 function mw_move(act, mm_id, ms_id) {
-    $.get("mw.s.menu.move.php?w=" + act + "&mm_id=" + mm_id + "&ms_id=" + ms_id, setTimeout("menu_reload('" + mm_id + "')", 100));
+    $.get("mw.s.menu.move.php?w=" + act + "&mm_id=" + mm_id + "&ms_id=" + ms_id , setTimeout("menu_reload('" + mm_id + "')", 100));
 }
 $(document).ready(function(){
-   menu_reload('<?=$mm_id?>');
+    menu_reload('<?=$mm_id?>');
 });
 
 </script>

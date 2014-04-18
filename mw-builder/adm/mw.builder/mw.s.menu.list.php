@@ -128,6 +128,17 @@ $colspan = 9;
 </table>
 </form>
 
+<form name='fpost' method='post'>
+<input type='hidden' name='sst'   value='<?=$sst?>'>
+<input type='hidden' name='sod'   value='<?=$sod?>'>
+<input type='hidden' name='sfl'   value='<?=$sfl?>'>
+<input type='hidden' name='stx'   value='<?=$stx?>'>
+<input type='hidden' name='page'  value='<?=$page?>'>
+<input type='hidden' name='token' value='<?=$token?>'>
+<input type='hidden' name='mm_id' value='<?=$mm_id?>'>
+<input type='hidden' name='ms_id'>
+</form>
+
 <form name=fboardgrouplist method=post>
 <input type=hidden name=sst   value='<?=$sst?>'>
 <input type=hidden name=sod   value='<?=$sod?>'>
@@ -210,14 +221,4 @@ if ($stx)
 document.fsearch.mm_id.focus();
 </script>
 
-<form name='fpost' method='post'>
-<input type='hidden' name='sst'   value='<?=$sst?>'>
-<input type='hidden' name='sod'   value='<?=$sod?>'>
-<input type='hidden' name='sfl'   value='<?=$sfl?>'>
-<input type='hidden' name='stx'   value='<?=$stx?>'>
-<input type='hidden' name='page'  value='<?=$page?>'>
-<input type='hidden' name='token' value='<?=$token?>'>
-<input type='hidden' name='mm_id' value='<?=$mm_id?>'>
-<input type='hidden' name='ms_id'>
-</form>
 

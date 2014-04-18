@@ -15,33 +15,15 @@ require_once("_config.php");
 $tempfile = $_FILES['file']['tmp_name'];
 $filename = $_FILES['file']['name'];
 
-//if (preg_match("/\.(php|htm|inc)/i", $filename)) die("-ERR: File Format");
-
-// demo.html 파일에서 설정한 SESSID 값입니다.
-$sessid   = $_POST['sessid'];
-
 // 저장 파일 이름
-// $savefile = SAVE_DIR . '/' . $_FILES['file']['name'];
+// 년월일시분초_파일크기_랜덤문자4자.확장자
+// 20140327125959_1234_abcd.jpg
+$savefile = SAVE_DIR . '/' . $_FILES['file']['name'];
 
-$pos = strrpos($filename, '.');
-$ext = strtolower(substr($filename, $pos, strlen($filename)));
+// 사용자PC의 파일 이름: $_POST["origName"]
+// 사용자PC의 파일 경로: $_POST["filePath"]
+// 사용자PC의 파일 크기: $_POST["filesize"]
 
-switch ($ext) {
-case '.gif' :
-case '.png' :
-case '.jpg' :
-case '.jpeg' :
-	break;
-default :
-	die("-ERR: File Format!");
-}
-
-$pos = strrpos($filename, '.');
-$ext = substr($filename, $pos, strlen($filename));
-//$random_name = random_generator() . $ext;
-//$random_name = md5($_SERVER['REMOTE_ADDR']) . '_' . random_generator() . $ext;
-$random_name = md5($_SERVER['REMOTE_ADDR']) . '_' . get_microtime() . $ext;
-$savefile = SAVE_DIR . '/' . $random_name;
 move_uploaded_file($tempfile, $savefile);
 $imgsize = getimagesize($savefile);
 $filesize = filesize($savefile);
@@ -63,51 +45,12 @@ switch ($imgsize[2]) {
         unlink($savefile);
 }
 
-$rdata = sprintf( "{ fileUrl: '%s/%s', filePath: '%s/%s', origName: '%s', fileName: '%s', fileSize: '%d' }",
+$rdata = sprintf('{"fileUrl": "%s/%s", "filePath": "%s", "fileName": "%s", "fileSize": "%d" }',
 	SAVE_URL,
-	$random_name,
-	SAVE_DIR,
-	$random_name,
 	$filename,
-	$random_name,
+	$savefile,
+	$filename,
 	$filesize );
 
 echo $rdata;
-
-function random_generator ($min=8, $max=32, $special=NULL, $chararray=NULL) {
-// ---------------------------------------------------------------------------
-//
-//
-    $random_chars = array();
-    
-    if ($chararray == NULL) {
-        $str = "abcdefghijklmnopqrstuvwxyz";
-        $str .= strtoupper($str);
-        $str .= "1234567890";
-
-        if ($special) {
-            $str .= "!@#$%";
-        }
-    }
-    else {
-        $str = $charray;
-    }
-
-    for ($i=0; $i<strlen($str)-1; $i++) {
-        $random_chars[$i] = $str[$i];
-    }
-
-    srand((float)microtime()*1000000);
-    shuffle($random_chars);
-
-    $length = rand($min, $max);
-    $rdata = '';
-    
-    for ($i=0; $i<$length; $i++) {
-        $char = rand(0, count($random_chars) - 1);
-        $rdata .= $random_chars[$char];
-    }
-    return $rdata;
-}
-
 ?>

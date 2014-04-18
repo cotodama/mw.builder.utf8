@@ -45,16 +45,7 @@ if ($mw_basic[cf_notice_top])
                 $notice[subject] = mw_reg_str($notice[subject]);
                 $notice[subject] = bc_code($notice[subject], 0);
 
-                if ($notice[wr_link_write] && $notice[link_href][1]) {
-                    if (!$notice[link][1] || $is_admin || ($notice[mb_id] && $notice[mb_id] == $member[mb_id]))
-                        ;
-                    else {
-                        if ($notice[link_target][1] == '_blank')
-                            $notice[href] = "javascript:void(window.open('{$notice[link_href][1]}'))";    
-                        else
-                            $notice[href] = $notice[link_href][1];
-                    }
-                }
+                $notice = mw_list_link($notice);
                 ?>
                 <li>
                     <span class="subject"><a href="<?=$notice[href]?>"><?=$notice[subject]?></a></span>

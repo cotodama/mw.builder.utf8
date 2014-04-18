@@ -132,7 +132,7 @@ if ($board[bo_read_point] < 0 && $view[mb_id] != $member[mb_id] && !$point && $i
         set_session("ss_view_{$bo_table}_{$wr_id}", '');
         unset($_SESSION["ss_view_{$bo_table}_{$wr_id}"]);
 
-        echo "<script type='text/javascript'>if (confirm('글을 읽으시면 $board[bo_read_point] 포인트 차감됩니다.\\n(현재포인트 : $member[mb_point])')) location.href = '{$_SERVER["REQUEST_URI"]}&point=1'; else history.back();</script>";
+        echo "<script type='text/javascript'>if (confirm('글을 읽으시면 $board[bo_read_point] 포인트 차감됩니다.\\n\\n현재포인트 : $member[mb_point]p\\n\\n')) location.href = '{$_SERVER["REQUEST_URI"]}&point=1'; else history.back();</script>";
         exit;
     }
 } 

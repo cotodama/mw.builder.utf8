@@ -10,30 +10,7 @@ var AppID = "cheditorPreview";
 var oEditor = null;
 var button = [ { alt : "", img : 'submit.gif', cmd : doSubmit },
                { alt : "", img : 'cancel.gif', cmd : popupClose } ];
-var imageArray = new Array();
-
-function init(dialog) {
-    oEditor = this;
-    oEditor.dialog = dialog;
-
-    var dlg = new Dialog(oEditor);
-    dlg.showButton(button);
-
-    CHXUploadRUN(oEditor.config.popupPath + 'flash/ImagePreview');
-    setWrapper();
-    showPreviewButton();
-    dlg.setDialogHeight();
-}
-
-function showPreviewButton() {
-    var img = new Image();
-    img.src = oEditor.config.iconPath + 'button/preview.gif';
-    img.style.verticalAlign = 'middle';
-    img.className = 'button';
-    img.alt = "";
-    img.onclick = doPreview;
-    document.getElementById("inputOutline").appendChild(img);
-}
+var newImage = null;
 
 function CHEditorImagePreview () {
 // ----------------------------------------------------------------------------------
@@ -55,47 +32,51 @@ function CHXUploadRUN(src) {
               "quality", "high",
               "bgcolor", "#ebe9ed",
               "name", AppID,
+              "wmode", "transparent",
               "allowScriptAccess","Always",
               "type", "application/x-shockwave-flash",
               "pluginspage", "http://www.adobe.com/go/getflashplayer");
 }
 
-
+function getFilename (file) {
+    while (file.indexOf("/") != -1) {
+        file = file.slice(file.indexOf("/") + 1);
+    }
+    return file;
+}
 
 function popupClose()
 {
     oEditor.popupWinCancel();
 }
 
-function doSubmit ()
+function chkImgFormat (url)
 {
-    if (imageArray[0] == null ||
-        imageArray[0]['width'] == null ||
-        imageArray[0]['src'] == null ||
-        imageArray[0]['src'] != document.getElementById('fm_imageUrl').value)
-    {
-        doPreview();
+    var imageName = getFilename(url);
+    var allowSubmit = false;
+    var extArray = [".gif", ".jpg", ".jpeg", ".png"];
+
+    extArray.join(" ");
+    if (imageName === "") {
+        return false;
     }
 
-    if (navigator.userAgent.toLowerCase().indexOf("msie")  != -1) {
-        document.getElementById(AppID).style.display = 'none';
-    }
+    var ext = imageName.slice(imageName.lastIndexOf(".")).toLowerCase();
+    var i;
 
-    var fm_align = document.getElementById('fm_align').alignment;
-    var align = 'center';
-    var i = 0;
-
-    for (; i<fm_align.length; i++) {
-        if (fm_align[i].checked) {
-            align = fm_align[i].value;
+    for (i = 0; i < extArray.length; i++) {
+        if (extArray[i] == ext) {
+            allowSubmit = true;
             break;
         }
     }
 
-    imageArray[0]['align'] = align;
+    if (!allowSubmit) {
+        alert("사진은 GIF, JPG, PNG 형식만 넣을 수 있습니다.");
+        return false;
+    }
 
-    oEditor.doInsertImage(imageArray);
-    oEditor.popupWinClose();
+    return imageName;
 }
 
 function previewImage (source) {
@@ -112,49 +93,22 @@ function checkImageComplete (img) {
         setTimeout("checkImageComplete(document.getElementById('"+img.id+"'))", 250);
     }
     else {
-        var txt = document.createTextNode(img.width + ' X ' + img.height);
         document.getElementById('imageSize').innerHTML = '';
-        document.getElementById('imageSize').appendChild(txt);
 
-        var i = 0;
-        imageArray[i] = new Object();
-        imageArray[i]['width'] = img.width;
-        imageArray[i]['height'] = img.height;
-        imageArray[i]['src'] = img.src;
-        imageArray[i]['alt'] = img.src;
+        newImage = new Image();
+        newImage.style.width = img.width + 'px';
+        newImage.style.height = img.height + 'px';
+        newImage.setAttribute("src", img.src);
+        newImage.setAttribute("alt", getFilename(img.src));
     }
-}
-
-function chkImgFormat (url)
-{
-    var imageName = getFilename(url);
-    var allowSubmit = false;
-    var extArray = new Array(".gif", ".jpg", ".jpeg", ".png");
-
-    extArray.join(" ");
-    if (imageName == "") return false;
-
-    var ext = imageName.slice(imageName.lastIndexOf(".")).toLowerCase();
-
-    for (var i = 0; i < extArray.length; i++) {
-        if (extArray[i] == ext) {
-            allowSubmit = true;
-            break;
-        }
-    }
-
-    if (!allowSubmit) {
-        alert("사진은 GIF, JPG, PNG 형식만 넣을 수 있습니다.");
-        return false;
-    }
-
-    return imageName;
 }
 
 function doPreview () {
     var imgurl = document.getElementById('fm_imageUrl').value;
     var fileName = chkImgFormat(imgurl);
-    if (!fileName) return;
+    if (!fileName) {
+        return;
+    }
 
     var img = new Image();
     img.src = imgurl;
@@ -163,6 +117,45 @@ function doPreview () {
     document.getElementById('tmpImage').appendChild(img);
     checkImageComplete(img);
     previewImage(img.src);
+}
+
+function doSubmit ()
+{
+    if (newImage == null) {
+         alert("미리 보기 버튼을 클릭하여 이미지를 확인해 주십시오.");
+         return;
+    }
+
+    if (navigator.userAgent.toLowerCase().indexOf("msie")  != -1) {
+        document.getElementById(AppID).style.display = 'none';
+    }
+
+    var fm_align = document.getElementById('fm_align').alignment;
+    var align = 'center';
+    var i;
+
+    for (i=0; i<fm_align.length; i++) {
+        if (fm_align[i].checked) {
+            align = fm_align[i].value;
+            break;
+        }
+    }
+
+    var div = document.createElement("div");
+    div.appendChild(newImage);
+
+    if (align == "center" || align == "right") {
+        div.style.textAlign = align;
+    }
+
+    var spacer = document.createElement("div");
+    spacer.appendChild(document.createTextNode("\u00a0"));
+    oEditor.insertHtmlPopup(spacer);
+    oEditor.insertHtmlPopup(div);
+    spacer = document.createElement("div");
+    spacer.appendChild(document.createTextNode("\u00a0"));
+    oEditor.insertHtmlPopup(spacer);
+    oEditor.popupWinClose();
 }
 
 function outputImageSize (w, h) {
@@ -175,21 +168,39 @@ function showImageSize (w, h) {
     outputImageSize(w, h);
 }
 
-function getFilename (file) {
-    while (file.indexOf("/") != -1) {
-        file = file.slice(file.indexOf("/") + 1);
-    }
-    return file;
-}
-
 function setWrapper () {
     var wrapper = document.getElementById('tmpImage');
     wrapper.style.width = '0px';
     wrapper.style.height = '0px';
     wrapper.style.overflow = 'hidden';
-    
-    if (navigator.userAgent.toLowerCase().indexOf('opera') != -1)
+
+    if (navigator.userAgent.toLowerCase().indexOf('opera') != -1) {
         wrapper.style.visibility = 'hidden';
-    else
+    }
+    else {
         wrapper.style.display = 'none';
+    }
+}
+
+function showPreviewButton() {
+    var img = new Image();
+    img.src = oEditor.config.iconPath + 'button/preview.gif';
+    img.style.verticalAlign = 'middle';
+    img.className = 'button';
+    img.alt = "";
+    img.onclick = doPreview;
+    document.getElementById("inputOutline").appendChild(img);
+}
+
+function init(dialog) {
+    oEditor = this;
+    oEditor.dialog = dialog;
+
+    var dlg = new Dialog(oEditor);
+    dlg.showButton(button);
+
+    CHXUploadRUN(oEditor.config.popupPath + 'flash/ImagePreview');
+    setWrapper();
+    showPreviewButton();
+    dlg.setDialogHeight();
 }

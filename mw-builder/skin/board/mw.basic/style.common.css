@@ -848,6 +848,14 @@ img {
     font:normal 10px 'dotum';
 }
 
+#mw_basic .jump {
+    float:right;
+}
+
+#mw_basic .jump input.btn1 {
+    font:normal 10px 'dotum';
+}
+
 #mw_basic .scrap_button {
     float:right;
     margin:10px 0 0 5px;

@@ -700,9 +700,11 @@ if ($mw_basic[cf_category_radio]) {
     <table width=100%>
     <tr>
         <td align=left valign=bottom>
+            <? /* ?>
             <span style="cursor: pointer;" onclick="textarea_decrease('wr_content', 10);"><img src="<?=$board_skin_path?>/img/btn_up.gif"></span>
             <span style="cursor: pointer;" onclick="textarea_original('wr_content', <?=$write_height?>);"><img src="<?=$board_skin_path?>/img/btn_init.gif"></span>
             <span style="cursor: pointer;" onclick="textarea_increase('wr_content', 10);"><img src="<?=$board_skin_path?>/img/btn_down.gif"></span>
+            <? */ ?>
             <? if ($mw_basic[cf_post_emoticon]) {?>
                 <span class=mw_basic_comment_emoticon><a 
                     href="#;" onclick="win_open('<?=$board_skin_path?>/mw.proc/mw.emoticon.skin.php?bo_table=<?=$bo_table?>','emo'

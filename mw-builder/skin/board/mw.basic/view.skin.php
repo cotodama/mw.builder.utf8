@@ -590,13 +590,19 @@ if ($bomb) {
         <div class=mw_basic_view_zzal>
             <input type=button id=zzbtn value="<?=$view[wr_zzal]?> 보기" onclick="zzalview()" class=mw_basic_view_zzal_button>
 
-            <script language=javascript>
+            <script>
+            mw_zzal_flag = false;
             function zzalview()
             {
                 var zzb = document.getElementById("zzb");
                 var btn = document.getElementById("zzbtn");
+
                 if (zzb.style.display == "none")
                 {
+                    if (!mw_zzal_flag) {
+                        $("#zzb").load("<?="{$board_skin_path}/mw.proc/mw.zzal.php?bo_table={$bo_table}&wr_id={$wr_id}"?>");
+                        mw_zzal_flag = true;
+                    }
                     zzb.style.display = "block";
                     btn.value = "<?=$view[wr_zzal]?> 가리기";
                     //resizeBoardImage(650);
@@ -609,7 +615,7 @@ if ($bomb) {
             }
             </script>
 
-            <div id=zzb style="display:none; margin-top:20px;"><?=$file_viewer?></div>
+            <div id=zzb style="display:none; margin-top:20px;"></div>
         </div>
         <? } ?>
 
@@ -891,6 +897,10 @@ if ($mw_basic[cf_attribute] == 'qna' && !$view[is_notice]) {
         <? if ($mw_basic[cf_sns]) { ?>
         <div class="sns"> <?=$view_sns?> </div>
         <? } ?>
+
+        <div class="jump">
+        <?php require($board_skin_path."/mw.proc/mw.jump.php") ?>
+        </div>
     </td>
 </tr>
 <? } ?>

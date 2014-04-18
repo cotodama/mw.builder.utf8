@@ -279,15 +279,16 @@ function mw_get_last_thumb($bo_tables, $cnt=1, $is_rand=false)
                 $file_path = "{$path}/{$max}";
 
             if (file_exists($file_path)) {
+                $filemtime = filemtime($file_path);
                 $file = array();
                 $file['bo_table'] = $bo_table;
                 $file['wr_id'] = $max;
-                $file['path'] = $file_path;
+                $file['path'] = "$file_path?".filesize($file_path);
                 $file['href'] = "{$g4['bbs_path']}/board.php?bo_table={$bo_table}&wr_id={$max}";
+                $file['mtime'] = $filemtime;
 
-                //$filemtime = filemtime($file_path);
-                if (!$files[$max]['wr_id']) {
-                    $files[$max] = $file;
+                if (!$files[$filemtime]['wr_id']) {
+                    $files[$filemtime] = $file;
                     ++$fnd;
                 }
             }

@@ -1,3 +1,35 @@
+ver 2.5.2 (14.04.18)
+    : 모바일빌더 팝업 24시간 버튼 오류 수정 (금광님 제안)
+    : 하위 디렉토리 사용시 짤방 경로 오류 수정 (버즈라이토님 제안)
+    : 새글로 점프기능 (브라운아이즈님 제안)
+    : 링크주소 함수화
+
+    mw.basic/HISTORY
+    mw.basic/mw.adm/mw.config.php
+    mw.basic/mw.adm/mw.config.update.php
+    mw.basic/mw.adm/mw.upgrade.php
+    mw.basic/mw.lib/mw.skin.basic.lib.php
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/mw.proc/mw.zzal.php
+    mw.basic/mw.proc/mw.notice.top.php
+    mw.basic/mw.proc/mw.list.hot.skin.php
+    mw.basic/mw.proc/mw.jump.php
+    mw.basic/mw.proc/mw.jump.update.php
+    mw.basic/list.skin.php
+    mw.basic/view.skin.php
+    mw.basic/style.common.css
+
+ver 2.5.1 (14.04.11)
+    : 모바일 빌더 팝업공지 bootstrap 지원 (금광님 제안)
+    : 모바일 빌더 팝업공지 오류 수정 (금광님 제안)
+    : 게시물 복사시 에디터 첨부 이미지도 별도로 복사 (jobdong님 제안)
+    : 짤방보기 사용시 트래픽 절감을 위해 ajax 처리 (AndroidGame님 제안)
+
+    mw.basic/HISTORY
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/mw.proc/mw.zzal.php
+    mw.basic/view.skin.php
+
 ver 2.5.0 (14.04.04)
     : 게시물별 열람 비밀번호 설정 (재아님 제안)
     : 글작성 자동 창크기 조절 auto grouw 적용 
@@ -6,6 +38,7 @@ ver 2.5.0 (14.04.04)
     mw.adm/mw.config.php
     mw.adm/mw.config.update.php
     mw.adm/mw.upgrade.php
+    mw.basic/mw.lib/mw.function.lib.php
     mw.basic/mw.lib/mw.skin.basic.lib.php
     mw.basic/mw.proc/mw.key.php
     mw.basic/mw.proc/mw.key.update.php

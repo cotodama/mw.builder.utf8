@@ -473,7 +473,7 @@ function umz_get_url($url) {
     if (!$surl)
         $surl = "umz.kr";
     $url2 = urlencode($url);
-    $fp = fsockopen ("umz.miwit.com", 80, $errno, $errstr, 30);
+    $fp = @fsockopen ("umz.miwit.com", 80, $errno, $errstr, 30);
     if (!$fp) return false;
     fputs($fp, "POST /plugin/shorten/update.php?url=$url2 HTTP/1.0\r\n");
     fputs($fp, "Host: $surl:80\r\n");
@@ -719,13 +719,19 @@ function mw_board_popup($view, $html=0)
 
     $dialog_id = "mw_board_popup_$view[wr_id]";
 
-    $board[bo_image_width] = 550;
+    $board['bo_image_width'] = 550;
     $minWidth = 600;
     $minHeight = 300;
-    if (strstr($_SERVER[PHP_SELF], "plugin/mobile")) {
-        $board[bo_image_width] = 300;
-        $minWidth = 300;
-        $minHeight = 300;
+
+    $is_mobile = false;
+    if (strstr($_SERVER['PHP_SELF'], "plugin/mobile")) {
+        $is_mobile = true;
+    }
+
+    if ($is_mobile) {
+        $board[bo_image_width] = 250;
+        $minWidth = 250;
+        $minHeight = 250;
     }
 
     /*
@@ -776,6 +782,10 @@ function mw_board_popup($view, $html=0)
     $subject = bc_code($subject);
     $content = $file_viewer.$view[rich_content];
     */
+    $subject = get_text($view[subject]);
+    $subject = mw_reg_str($subject);
+    $subject = bc_code($subject);
+
     global $write_table, $wr_id, $mw, $member;
 
     $html = 0;
@@ -785,30 +795,92 @@ function mw_board_popup($view, $html=0)
         $html = 2;
 
     $view[content] = conv_content($view[wr_content], $html);
-    include("$board_skin_path/view_head.skin.php");
+    include("$pc_skin_path/view_head.skin.php");
 
     set_session("ss_popup_token", $token = uniqid(time()));
 
-    $add_script = "";
-    if ($is_admin && $view[wr_id]) {
-        $add_script = <<<HEREDOC
-            "팝업내림": function () {
-                var q = confirm("정말로 팝업공지를 내리시겠습니까?")
-                if (q) {
-                    $.get("$pc_skin_path/mw.proc/mw.popup.php?bo_table=$bo_table&wr_id=$view[wr_id]&token=$token", function (ret) {
-                        alert(ret);
-                    });
-                }
-            },
-HEREDOC;
-    }
     if ($_COOKIE[$dialog_id]) return false;
 
-    echo <<<HEREDOC
+    $add_script = "";
+    $add_button = "";
+
+    if ($is_mobile) {
+        // -----------------------------------------------------------
+        // bootstrap modal
+        // -----------------------------------------------------------
+        if ($is_admin && $view[wr_id]) {
+            $add_button = <<<HEREDOC
+                <button type="button" class="btn btn-default" onclick="">내림</button>
+                
+HEREDOC;
+            $add_script = <<<HEREDOC
+                function mw_board_popup_del() {
+                    var q = confirm("정말로 팝업공지를 내리시겠습니까?")
+                    if (q) {
+                        $.get("$pc_skin_path/mw.proc/mw.popup.php?bo_table=$bo_table&wr_id=$view[wr_id]&token=$token", function (ret) {
+                            alert(ret);
+                        });
+                    }
+                }
+HEREDOC;
+        }
+
+        echo <<<HEREDOC
+
+        <div class="modal fade" id="dialog-message-$view[wr_id]" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">$subject</h4>
+                    </div>
+                    <div class="modal-body">
+                    $view[rich_content]
+                    </div>
+                    <div class="modal-footer">
+                        $add_button
+                        <button type="button" class="btn btn-default" onclick="mw_board_popup_24()">24시간</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">확인</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+        $add_script
+        function mw_board_popup_24() {
+            set_cookie("mw_board_popup_$view[wr_id]", "1", 24, "$g4[cookie_domain]");
+            $("#dialog-message-$view[wr_id]").modal('hide');
+        }
+        $(document).ready(function () {
+            $("#dialog-message-$view[wr_id]").modal('show');
+        });
+        </script>
+HEREDOC;
+    }
+    else {
+        // -----------------------------------------------------------
+        // jquery modal
+        // -----------------------------------------------------------
+        if ($is_admin && $view[wr_id]) {
+            $add_script = <<<HEREDOC
+                "팝업내림": function () {
+                    var q = confirm("정말로 팝업공지를 내리시겠습니까?")
+                    if (q) {
+                        $.get("$pc_skin_path/mw.proc/mw.popup.php?bo_table=$bo_table&wr_id=$view[wr_id]&token=$token", function (ret) {
+                            alert(ret);
+                        });
+                    }
+                },
+HEREDOC;
+        }
+
+        echo <<<HEREDOC
         <div id="dialog-message-$view[wr_id]" class="dialog-content" title="$subject">
             <div>$view[rich_content]</div>
         </div>
-        <script type="text/javascript">
+
+        <script>
         $(function() {
             $("#dialog-message-$view[wr_id]").dialog({
                 modal: true,
@@ -820,17 +892,19 @@ HEREDOC;
                         set_cookie("mw_board_popup_$view[wr_id]", "1", 24, "$g4[cookie_domain]");
                         $(this).dialog("close");
                     },
-                    Ok: function() {
+                    "확인": function() {
                         $(this).dialog("close");
                     }
                 }
             });
         });
         </script>
-        <style type="text/css">
+
+        <style>
         .ui-dialog .ui-dialog-buttonpane button { font-size:.8em; }
         </style>
 HEREDOC;
+    }
 }
 
 function is_okname()
@@ -1581,6 +1655,10 @@ function mw_move($board, $wr_id_list, $chk_bo_table, $sw)
                     $row2[wr_content] .= "\n\n[이 게시물은 {$nick}님에 의해 $g4[time_ymdhis] {$board[bo_subject]}에서 " . ($sw == 'copy' ? '복사' : '이동') ." 됨]";
                     if ($sw == 'copy')
                         $row2[wr_content] .= "\n\n".set_http($g4[url])."/$g4[bbs]/board.php?bo_table=$board[bo_table]&wr_id=$row2[wr_id]";
+                }
+
+                if ($sw == 'copy') {
+                    $row2['wr_content'] = mw_editor_image_copy($row2['wr_content']);
                 }
 
                 $sql = " insert into $move_write_table
@@ -2378,6 +2456,9 @@ function mw_youtube($url)
     elseif (preg_match("/\/\/.*youtube\.com\/.*v[=\/]([a-zA-Z0-9_-]+)?/i", $url, $mat)) {
         $v = $mat[1];
     }
+    elseif (preg_match("/\/\/.*youtube\.com\/embed\/([a-zA-Z0-9_-]+)?/i", $url, $mat)) {
+        $v = $mat[1];
+    }
 
     if (!$v) return;
 
@@ -2632,5 +2713,182 @@ function mw_kakao_str($content, $len=50)
     $content = cut_str($content, $len);
 
     return $content;
+}
+
+function mw_editor_image_copy($content)
+{
+    global $g4;
+
+    preg_match_all("/<img src=\"http:\/\/.*\/(data\/cheditor[0-9]\/[^\"]+)\"[^>]+>/iUs", $content, $match1);
+    preg_match_all("/<img src=\"http:\/\/.*\/(data\/geditor\/[^\"]+)\"[^>]+>/iUs", $content, $match2);
+
+    $matchs = array();
+    $matchs[0] = array_merge($match1[0], $match2[0]);
+    $matchs[1] = array_merge($match1[1], $match2[1]);
+
+    for ($i=0, $m=count($matchs[0]); $i<$m; ++$i)
+    {
+        $source = $matchs[1][$i];
+
+        if (!$source) continue;
+
+        preg_match("/^(.*)\.(jpe?g|png|gif)$/i", $source, $match);
+        if ($match[2]) {
+            $file = $match[1];
+            $ext = $match[2];
+        }
+        else {
+            continue;
+        }
+
+        $k = 1;
+        while (1) {
+            $copy = "{$file}-{$k}.{$ext}";
+
+            if (!file_exists("{$g4['path']}/{$copy}"))
+                break;
+            else
+                ++$k;
+
+        }
+
+        $res = @copy("{$g4['path']}/{$source}", "{$g4['path']}/{$copy}");
+        if ($res)
+            $content = str_replace($source, $copy, $content);
+    }
+
+    return $content;
+}
+
+function mw_write_icon($row)
+{
+    global $board_skin_path, $pc_skin_path, $is_singo;
+    global $quiz_id, $bomb_id, $vote_id;
+
+    $write_icon = '';
+    $style =  "align=absmiddle style=\"border-bottom:2px solid #fff;\"";
+
+    ob_start();
+    if ($row['wr_kcb_use'])
+        echo "<img src=\"{$pc_skin_path}/img/icon_kcb.png\" {$style}>&nbsp;";
+    elseif (in_array($row['wr_id'], $quiz_id))
+        echo "<img src=\"{$quiz_path}/img/icon_quiz.png\" {$style}>&nbsp;";
+    elseif (in_array($row['wr_id'], $bomb_id))
+        echo "<img src=\"{$pc_skin_path}/img/icon_bomb.gif\" {$style}>&nbsp;";
+    elseif (in_array($row['wr_id'], $vote_id))
+        echo "<img src=\"{$pc_skin_path}/img/icon_vote.png\" {$style}>&nbsp;";
+    elseif ($row['wr_is_mobile'])
+        echo "<img src=\"{$pc_skin_path}/img/icon_mobile.png\" {$style} width=\"13\" height=\"12\">&nbsp;";
+    elseif (strstr($row['wr_link1'], "youtu"))
+        echo "<img src=\"{$pc_skin_path}/img/icon_youtube.png\" width=\"13\" height=\"12\">&nbsp;";
+    elseif ($row['wr_key_password'])
+        echo "<img src=\"{$pc_skin_path}/img/icon_key.png\" {$style} width=\"13\" height=\"12\">&nbsp;";
+    else
+        echo "<img src=\"{$pc_skin_path}/img/icon_subject.gif\" width=\"13\" height=\"12\">&nbsp;";
+
+    // ---- 
+
+    if ($is_singo)
+        echo "<img src=\"{$pc_skin_path}/img/icon_red.png\" {$style}>&nbsp;";
+
+    if ($row['wr_view_block'])
+        echo "<img src=\"{$pc_skin_path}/img/icon_view_block.png\" {$style}>&nbsp;";
+
+    $write_icon = ob_get_contents();
+    ob_end_clean();
+
+    return $write_icon;
+}
+
+function mw_list_link($row)
+{
+    global $g4, $board_skin_path, $board, $mw_basic, $member, $is_admin, $is_member, $write;
+
+    // 링크로그
+    for ($j=1; $j<=$g4['link_count']; $j++)
+    {
+        //if ($mw_basic[cf_link_log])  {
+            $row['link'][$j] = set_http(get_text($row["wr_link{$j}"]));
+            $row['link_href'][$j] = "$board_skin_path/link.php?bo_table=$board[bo_table]&wr_id={$row[wr_id]}&no=$j" . $qstr;
+            $row['link_hit'][$j] = (int)$row["wr_link{$j}_hit"];
+        //}
+
+        $row['link_target'][$j] = $row["wr_link{$j}_target"];
+        if (!$row['link_target'][$j])
+            $row['link_target'][$j] = '_blank';
+    }
+
+    // 링크게시판
+    if ($mw_basic['cf_link_board'] && $row['link_href'][1]) {
+        //if (!$is_admin && $member['mb_id'] && $row['mb_id'] != $member['mb_id'])
+        if (!$row['link'][1] || $is_admin || ($row['mb_id'] && $row['mb_id'] == $member['mb_id']))
+            ;
+        else if ($row['icon_secret'])
+            ;
+        else if ($member['mb_level'] >= $mw_basic['cf_link_board']) {
+            if ($row['link_target'][1] == '_blank')
+                $row['href'] = "javascript:void(window.open('{$row['link_href'][1]}'))";    
+            else
+                $row['href'] = $row['link_href'][1];
+        }
+        else
+            $row['href'] = "javascript:void(alert('권한이 없습니다.'))";
+        $row['wr_hit'] = $row['link_hit'][1];
+    }
+
+    // 게시물별 링크이동
+    else if ($row['wr_link_write'] && $row['link_href'][1]) {
+        if (!$row['link'][1] || $is_admin || ($row['mb_id'] && $row['mb_id'] == $member['mb_id']))
+            ;
+        else if ($row['icon_secret'])
+            ;
+        else if ($mw_basic['cf_read_level'] && $row['wr_read_level']) {
+            if ($row['wr_read_level'] <= $member['mb_level']) {
+                if ($row['link_target'][1] == '_blank')
+                    $row['href'] = "javascript:void(window.open('{$row['link_href'][1]}'))";    
+                else
+                    $row['href'] = $row['link_href'][1];
+            }
+            else
+                $row['href'] = "javascript:void(alert('권한이 없습니다.'))";
+        }
+        else if ($member['mb_level'] >= $board['bo_read_level']) {
+            if ($row['link_target'][1] == '_blank')
+                $row['href'] = "javascript:void(window.open('{$row['link_href'][1]}'))";    
+            else
+                $row['href'] = $row['link_href'][1];
+        }
+        else
+            $row['href'] = "javascript:void(alert('권한이 없습니다.'))";
+        $row['wr_hit'] = $row['link_hit'][1];
+    }
+
+    // 글읽기 포인트 결제 안내
+    else if ($board['bo_read_point'] < 0 && $row['mb_id'] != $member['mb_id'] && !$is_admin && $mw_basic['cf_read_point_message']) {
+        if (!$is_member) {
+            $href = "javascript:alert('글을 읽으시면 {$board['bo_read_point']} 포인트 차감됩니다.\\n\\n로그인해주세요.')";
+            $row['href'] = $href;
+        }
+        else {
+            $tmp = sql_fetch(" select * from {$g4['point_table']} where mb_id = '{$member['mb_id']}' and po_rel_table = '{$bo_table}' and po_rel_id = '{$row['wr_id']}' and po_rel_action = '읽기'");
+            if (!$tmp) {
+                if (!$is_admin && $board['bo_read_point'] && $board['bo_read_point'] + $member['mb_point'] < 0) {
+                    $href = "javascript:alert('포인트가 부족합니다.\\n\\n";
+                    $href.= "- 읽기 포인트: {$board['bo_read_point']}p\\n- 현재 포인트: {$member['mb_point']}p')";
+                    $row['href'] = $href;
+                }
+                else {
+                    $href = "javascript:if (confirm('글을 읽으시면 {$board['bo_read_point']} 포인트 차감됩니다.";
+                    $href.= "\\n\\n현재 포인트: {$member['mb_point']}p\\n\\n')) location.href = '{$row['href']}&point=1'";
+                    $row['href'] = $href;
+                }
+            }
+        }
+    } 
+    else if ($mw_basic['cf_read_level'] && $row['wr_read_level'] && $row['wr_read_level'] > $member['mb_level']) {
+        $row['href'] = "javascript:void(alert('권한이 없습니다.'))";
+    }
+
+    return $row;
 }
 

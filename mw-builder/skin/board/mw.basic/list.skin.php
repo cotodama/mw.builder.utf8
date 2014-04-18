@@ -32,7 +32,8 @@ mw_bomb();
 // 실명인증 & 성인인증
 if ($mw_basic[cf_kcb_list] && !is_okname()) {
     check_okname();
-} else {
+    return;
+}
 
 // 컨텐츠샵 멤버쉽
 if (function_exists("mw_cash_is_membership")) {
@@ -402,84 +403,7 @@ if ($mw_basic[cf_contents_shop]) {
 	$mw_price = number_format($list[$i][wr_contents_price]).$mw_cash[cf_cash_unit];
 }
 
-// 링크로그
-for ($j=1; $j<=$g4['link_count']; $j++)
-{
-    //if ($mw_basic[cf_link_log])  {
-        $list[$i]['link'][$j] = set_http(get_text($list[$i]["wr_link{$j}"]));
-        $list[$i]['link_href'][$j] = "$board_skin_path/link.php?bo_table=$board[bo_table]&wr_id={$list[$i][wr_id]}&no=$j" . $qstr;
-        $list[$i]['link_hit'][$j] = (int)$list[$i]["wr_link{$j}_hit"];
-    //}
-
-    $list[$i]['link_target'][$j] = $list[$i]["wr_link{$j}_target"];
-    if (!$list[$i]['link_target'][$j])
-        $list[$i]['link_target'][$j] = '_blank';
-}
-
-// 링크게시판
-if ($mw_basic[cf_link_board] && $list[$i][link_href][1]) {
-    //if (!$is_admin && $member[mb_id] && $list[$i][mb_id] != $member[mb_id])
-    if (!$list[$i][link][1] || $is_admin || ($list[$i][mb_id] && $list[$i][mb_id] == $member[mb_id]))
-        ;
-    else if ($list[$i][icon_secret])
-        ;
-    else if ($member[mb_level] >= $mw_basic[cf_link_board]) {
-        if ($list[$i][link_target][1] == '_blank')
-            $list[$i][href] = "javascript:void(window.open('{$list[$i][link_href][1]}'))";    
-        else
-            $list[$i][href] = $list[$i][link_href][1];
-    }
-    else
-        $list[$i][href] = "javascript:void(alert('권한이 없습니다.'))";
-    $list[$i][wr_hit] = $list[$i][link_hit][1];
-}
-
-// 게시물별 링크이동
-else if ($list[$i][wr_link_write] && $list[$i][link_href][1]) {
-    if (!$list[$i][link][1] || $is_admin || ($list[$i][mb_id] && $list[$i][mb_id] == $member[mb_id]))
-        ;
-    else if ($list[$i][icon_secret])
-        ;
-    else if ($mw_basic[cf_read_level] && $list[$i][wr_read_level]) {
-        if ($list[$i][wr_read_level] <= $member[mb_level]) {
-            if ($list[$i][link_target][1] == '_blank')
-                $list[$i][href] = "javascript:void(window.open('{$list[$i][link_href][1]}'))";    
-            else
-                $list[$i][href] = $list[$i][link_href][1];
-        }
-        else
-            $list[$i][href] = "javascript:void(alert('권한이 없습니다.'))";
-    }
-    else if ($member[mb_level] >= $board[bo_read_level]) {
-        if ($list[$i][link_target][1] == '_blank')
-            $list[$i][href] = "javascript:void(window.open('{$list[$i][link_href][1]}'))";    
-        else
-            $list[$i][href] = $list[$i][link_href][1];
-    }
-    else
-        $list[$i][href] = "javascript:void(alert('권한이 없습니다.'))";
-    $list[$i][wr_hit] = $list[$i][link_hit][1];
-}
-
-// 글읽기 포인트 결제 안내
-else if ($board[bo_read_point] < 0 && $list[$i][mb_id] != $member[mb_id] && $is_member && !$is_admin && $mw_basic[cf_read_point_message]) {
-    $tmp = sql_fetch(" select * from $g4[point_table] where mb_id = '$member[mb_id]' and po_rel_table = '$bo_table' and po_rel_id = '{$list[$i][wr_id]}' and po_rel_action = '읽기'");
-    if (!$tmp) {
-        if (!$is_admin && $board[bo_read_point] && $board[bo_read_point] + $member[mb_point] < 0) {
-            $href = "javascript:alert('포인트가 부족합니다.\\n\\n";
-            $href.= "(글읽기 포인트:$board[bo_read_point]\\n\\n현재포인트 : $member[mb_point])')";
-            $list[$i][href] = $href;
-        }
-        else {
-            $href = "javascript:if (confirm('글을 읽으시면 $board[bo_read_point] 포인트 차감됩니다.";
-            $href.= "\\n\\n(현재포인트 : $member[mb_point])')) location.href = '{$list[$i][href]}&point=1'";
-            $list[$i][href] = $href;
-        }
-    }
-} 
-else if ($mw_basic[cf_read_level] && $write[wr_read_level] && $write[wr_read_level] > $member[mb_level]) {
-    $list[$i][href] = "javascript:void(alert('권한이 없습니다.'))";
-}
+$list[$i] = mw_list_link($list[$i]);
 
 // sns식 날짜표시
 if ($mw_basic[cf_sns_datetime]) {
@@ -522,31 +446,9 @@ if (!$list[$i]['icon_new'] && $list[$i]['wr_last'] != $list[$i]['wr_datetime'] &
 }
 
 // 게시물 아이콘
-$write_icon = '';
-ob_start();
-if ($is_singo)
-    echo "<img src=\"$board_skin_path/img/icon_red.png\" align=absmiddle style=\"border-bottom:2px solid #fff;\">&nbsp;";
-if ($list[$i][wr_view_block])
-    echo "<img src=\"$board_skin_path/img/icon_view_block.png\" align=absmiddle style=\"border-bottom:2px solid #fff;\">&nbsp;";
-elseif ($list[$i][wr_kcb_use])
-    echo "<img src=\"$board_skin_path/img/icon_kcb.png\" align=absmiddle style=\"border-bottom:2px solid #fff;\">&nbsp;";
-elseif (in_array($list[$i][wr_id], $quiz_id))
-    echo "<img src=\"$quiz_path/img/icon_quiz.png\" align=absmiddle style=\"border-bottom:2px solid #fff;\">&nbsp;";
-elseif (in_array($list[$i][wr_id], $bomb_id))
-    echo "<img src=\"$board_skin_path/img/icon_bomb.gif\" align=absmiddle style=\"border-bottom:2px solid #fff;\">&nbsp;";
-elseif (in_array($list[$i][wr_id], $vote_id))
-    echo "<img src=\"$board_skin_path/img/icon_vote.png\" align=absmiddle style=\"border-bottom:2px solid #fff;\">&nbsp;";
-elseif ($list[$i][wr_is_mobile])
-    echo "<img src=\"$board_skin_path/img/icon_mobile.png\" align=absmiddle style=\"border-bottom:2px solid #fff;\" width=13 height=12>&nbsp;";
-elseif (strstr($list[$i]['wr_link1'], "youtu"))
-    echo "<img src=\"$board_skin_path/img/icon_youtube.png\" align=absmiddle style=\"border-bottom:2px solid #fff;\" width=13 height=12>&nbsp;";
-elseif ($list[$i]['wr_key_password'])
-    echo "<img src=\"$board_skin_path/img/icon_key.png\" align=absmiddle style=\"border-bottom:2px solid #fff;\" width=13 height=12>&nbsp;";
-else
-    echo "<img src=\"$board_skin_path/img/icon_subject.gif\" align=absmiddle style=\"border-bottom:2px solid #fff;\" width=13 height=12>&nbsp;";
-$write_icon = ob_get_contents();
-ob_end_clean();
+$write_icon = mw_write_icon($list);
 
+// 썸네일
 $thumb_file = mw_thumb_jpg("$thumb_path/{$list[$i][wr_id]}");
 $thumb2_file = mw_thumb_jpg("$thumb2_path/{$list[$i][wr_id]}");
 $thumb3_file = mw_thumb_jpg("$thumb3_path/{$list[$i][wr_id]}");
@@ -1123,8 +1025,6 @@ while ($row = sql_fetch_array($qry)) {
     $view = get_view($row2, $board, $board_skin_path, 255);
     mw_board_popup($view, $html);
 }
-
-} // 실명인증
 
 // RSS 수집기
 if ($mw_basic[cf_collect] == 'rss' && $rss_collect_path && file_exists("$rss_collect_path/_config.php")) {

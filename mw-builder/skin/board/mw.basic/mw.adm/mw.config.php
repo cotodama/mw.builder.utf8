@@ -1955,6 +1955,28 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 	</div>
     </div>
 
+    <div class="cf_item">
+	<div class="cf_title"> <input type=checkbox name=chk[cf_jump_level] value=1>&nbsp; 새글점프</div>
+	<div class="cf_content">
+            <select name="cf_jump_level" id="cf_jump_level">
+            <option value="0">사용안함</option>
+            <?php for ($i=1; $i<=10; $i++) { ?>
+            <option value="<?php echo $i?>"><?php echo $i?> 레벨</option>
+            <?php } ?>
+            </select>
+	    <span class="cf_info">(현재글을 새글로 갱신합니다.)</span>
+	    <script> document.cf_form.cf_jump_level.value = '<?php echo $mw_basic['cf_jump_level']?>'; </script>
+            <div>
+                포인트 차감 : <input type="text" class="ed" name="cf_jump_point" size="4" numeric value="<?=$mw_basic[cf_jump_point]?>"> p
+            </div>
+            <div>
+                횟수 제한 :
+                <input type="text" class="ed" name="cf_jump_days" size="4" numeric value="<?=$mw_basic[cf_jump_days]?>"> 일에 
+                <input type="text" class="ed" name="cf_jump_count" size="4" numeric value="<?=$mw_basic[cf_jump_count]?>"> 번
+            </div>
+	</div>
+    </div>
+
     <div class="block"></div>
 
 </div> <!-- tabs-3 -->

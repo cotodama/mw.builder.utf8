@@ -1,4 +1,4 @@
-p { 
+p {
     margin: 0px 
 }
 span:after,span:before {
@@ -7,3 +7,9 @@ span:after,span:before {
 }
 table, td, th{ border:1px dotted #ccc; }
 table { border-collapse: collapse }
+.source-comment {
+    font-size: inherit;
+    font-family: inherit;
+    color: #666;
+    font-style: italic;
+}

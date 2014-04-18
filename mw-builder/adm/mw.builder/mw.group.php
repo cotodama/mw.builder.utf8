@@ -34,14 +34,19 @@ $colspan = 9;
 <script type="text/javascript" src="<?=$g4[path]?>/js/jquery.js"></script>
 <script type="text/javascript">
 function group_reload() {
-    $("#group-list").load("<?=$mw[admin_path]?>/mw.group.list.php?<?=$qstr?>");
+    if (!Date.now) {
+        Date.now = function() { return new Date().getTime(); };
+    }
+    var t = Date.now() ;
+
+    $("#group-list").load("<?=$mw[admin_path]?>/mw.group.list.php?<?=$qstr?>&t=" + t);
 }
 function mw_move(act, gr_id) {
     var url = "mw.group.move.php?w=" + act + "&gr_id=" + gr_id;
     $.post(url, setTimeout("group_reload()", 100));
 }
 $(document).ready(function(){
-   group_reload();
+    group_reload();
 });
 
 </script>

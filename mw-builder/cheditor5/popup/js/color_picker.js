@@ -21,7 +21,7 @@ function init(dialog, argv) {
 	oEditor = this;
 	oEditor.dialog = dialog;
 	setColor = argv;
-	
+
 	var dlg = new Dialog(oEditor);
 	dlg.showButton(button);
 	dlg.setDialogHeight();
@@ -33,7 +33,7 @@ function setShowColor() {
 	var color = setColor.selectedCell.getAttribute('bgcolor');
     if (color) {
     	showColor.style.backgroundColor = color;
-    }	
+    }
 }
 
 function drawColor(el)
@@ -52,7 +52,7 @@ function drawColor(el)
 	insideTable.cellSpacing = 1;
 	insideTable.cellPadding = 0;
 	insideTable.align = 'center';
-    
+
     var showColor = document.getElementById('show_color');
     var k = 0;
 
@@ -66,11 +66,11 @@ function drawColor(el)
             td2.onclick = getColor;
             td2.colour = '#' + colour[k];
             td2.style.border = '1px solid #' + colour[k];
-            td2.onmouseover = function() { 
+            td2.onmouseover = function() {
             	this.style.border = '1px solid #fff';
             	showColor.style.backgroundColor=this.colour;
             };
-            td2.onmouseout = function() { 
+            td2.onmouseout = function() {
             	this.style.border = '1px solid ' + this.colour ;
             };
             k++;

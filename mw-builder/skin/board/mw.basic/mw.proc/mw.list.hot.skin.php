@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Bechu-Basic Skin for Gnuboard4
  *
@@ -85,38 +85,23 @@ if ($mw_basic[cf_hot_basis] == 'file') {
 
 for ($i=0, $m=count($hot_list); $row=$hot_list[$i]; $i++)
 {
-    $row[href] = "$g4[bbs_path]/board.php?bo_table=$bo_table&wr_id=$row[wr_id]";
-    $row[link_href] = "$board_skin_path/link.php?bo_table=$bo_table&wr_id=$row[wr_id]&no=1";
+    $row = get_list($row, $board, $board_skin_path, $mw_basic[cf_hot_len]);
+    $row = mw_list_link($row);
 
-    // 링크게시판
-    if ($mw_basic[cf_link_board] && $row[wr_link1]) {
-        if ($is_admin || ($row[mb_id] && $row[mb_id] == $member[mb_id]))
-            ;
-        else if ($member[mb_level] >= $mw_basic[cf_link_board])
-            $row[href] = "javascript:void(window.open('{$row[link_href]}'))";    
-        else
-            $row[href] = "javascript:void(alert('권한이 없습니다.'))";    
-    }
+    $row[subject] = mw_reg_str($row[subject]);
+    $row[subject] = bc_code($row[subject], 0);
 
-    if ($row[wr_link_write] && $row[wr_link1]) {
-        if ($is_admin || ($row[mb_id] && $row[mb_id] == $member[mb_id]))
-            ;
-        else
-            $row[href] = "javascript:void(window.open('{$row[link_href]}'))";
-    }
     $hot_list[$i] = $row;
 }
 ?>
 <div id=mw_basic_hot_list>
     <h3> <?=$hot_title?> 인기 게시물 </h3>
     <ul class=mw_basic_hot_dot>
-    <?
+    <?php
     for ($i=0, $m=count($hot_list); $row=$hot_list[$i]; $i++) {
-        $row[wr_subject] = mw_reg_str($row[wr_subject]);
-        $row[wr_subject] = bc_code($row[wr_subject], 0);
         ?>
         <li class=hot_icon_<?=($i+1)?>> 
-            <nobr><a href="<?=$row[href]?>"><?=cut_str($row[wr_subject], $mw_basic[cf_hot_len])?></a></nobr>
+            <nobr><a href="<?=$row[href]?>"><?=$row[subject]?></a></nobr>
         </li>
         <?
         if (($i+1)%($mw_basic[cf_hot_limit]/2)==0) echo "</ul><ul>";
@@ -125,5 +110,3 @@ for ($i=0, $m=count($hot_list); $row=$hot_list[$i]; $i++)
     </ul>
     <div class="block"></div>
 </div>
-<?
-
