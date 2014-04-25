@@ -1,3 +1,22 @@
+4.37.09 (2014.04.29)
+    : cheditor5 에서 이미지 확장자가 있는 경우만 업로드와 삭제가 되도록 수정 (하늘처럼님께서 알려 주셨습니다.)
+
+        cheditor5/imageUpload/delete.php
+        cheditor5/imageUpload/upload.php
+
+    : 권한이 맞지 않는 경우에 로그인 후 잘못 링크된 오류 해결 (클베님께서 알려 주셨습니다.)
+
+        bbs/board.php
+
+            원래코드 : alert($msg, "./login.php?wr_id=$wr_id{$qstr}&url=".urlencode("./board.php?bo_table=$bo_table&wr_id=$wr_id"));
+            수정코드 : alert($msg, "./login.php?wr_id=$wr_id{$qstr}&url=".urlencode("$_SERVER[PHP_SELF]?bo_table=$bo_table&wr_id=$wr_id"));
+
+            원래코드 : alert("글을 읽을 권한이 없습니다.\\n\\n회원이시라면 로그인 후 이용해 보십시오.", "./login.php?wr_id=$wr_id{$qstr}&url=".urlencode("./board.php?bo_table=$bo_table&wr_id=$wr_id"));
+            수정코드 : alert("글을 읽을 권한이 없습니다.\\n\\n회원이시라면 로그인 후 이용해 보십시오.", "./login.php?wr_id=$wr_id{$qstr}&url=".urlencode("$_SERVER[PHP_SELF]?bo_table=$bo_table&wr_id=$wr_id"));
+
+            원래코드 : alert("목록을 볼 권한이 없습니다.\\n\\n회원이시라면 로그인 후 이용해 보십시오.", "./login.php?wr_id=$wr_id{$qstr}&url=".urlencode("board.php?bo_table=$bo_table&wr_id=$wr_id"));
+            수정코드 : alert("목록을 볼 권한이 없습니다.\\n\\n회원이시라면 로그인 후 이용해 보십시오.", "./login.php?wr_id=$wr_id{$qstr}&url=".urlencode("$_SERVER[PHP_SELF]?bo_table=$bo_table&wr_id=$wr_id"));
+
 4.37.08 (2014.04.10)
     : 4.37.07 버전의 SQL Injection 취약점 해결로 인해 union, information_schema 회원아이디를 사용하지 못하는 것을 보완
     : 1 MB = 1,048,576 bytes 로 문구 변경

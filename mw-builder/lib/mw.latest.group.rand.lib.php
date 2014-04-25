@@ -38,7 +38,7 @@ function mw_latest_group_rand($skin_dir="", $gr_id, $rows=10, $subject_len=40, $
     $cache_file_file = "$g4[path]/data/mw.cache/latest-{$gr_id}-file-{$rows}-{$is_img}-{$subject_len}";
     $cache_file_board = "$g4[path]/data/mw.cache/latest-{$gr_id}-board-{$rows}-{$is_img}-{$subject_len}";
 
-    $board = mw_cache_read($cache_file_board, $minute);
+    $board_list = mw_cache_read($cache_file_board, $minute);
     $list = mw_cache_read($cache_file_list, $minute);
     $file = mw_cache_read($cache_file_file, $minute);
 
@@ -73,8 +73,13 @@ function mw_latest_group_rand($skin_dir="", $gr_id, $rows=10, $subject_len=40, $
 	    if (!@file_exists($file[$i][path])) $file[$i] = null;
 	    if (@is_dir($file[$i][path])) $file[$i] = null;
 	    if ($file[$i]) {
-		$row2 = sql_fetch("select wr_subject,wr_comment, wr_link1 from $g4[write_prefix]$row[bo_table] where wr_id = '$row[wr_id]'");
-                $file[$i]['wr_subject'] = $row['wr_subject'];
+                if (empty($board_list[$row[bo_table]]))
+                    $board_list[$row[bo_table]] = sql_fetch("select * from $g4[board_table] where bo_table = '{$row['bo_table']}'");
+
+		$row2 = sql_fetch("select * from $g4[write_prefix]$row[bo_table] where wr_id = '$row[wr_id]'");
+		$row2 = mw_get_list($row2, $board_list[$row[bo_table]], $latest_skin_path, $subject_len);
+
+                $file[$i]['wr_subject'] = $row2['wr_subject'];
                 $file[$i][subject] = conv_subject($row2[wr_subject], $subject_len, "…");
                 $file[$i][wr_comment] = $row2[wr_comment];
                 $file[$i][wr_link1] = $row2[wr_link1];
@@ -107,16 +112,21 @@ function mw_latest_group_rand($skin_dir="", $gr_id, $rows=10, $subject_len=40, $
 		 order by rand() desc limit $rows";
 	$qry = sql_query($sql);
 	for ($i=0; $row=sql_fetch_array($qry); $i++) {
-	    if ($old_board != $row[bo_table]) {
+	    /*if ($old_board != $row[bo_table]) {
 		$board = sql_fetch("select * from $g4[board_table] where bo_table = '$row[bo_table]'");
 		$old_board = $row[bo_table];
-	    }
+	    }*/
+            if (empty($board_list[$row[bo_table]]))
+                $board_list[$row[bo_table]] = sql_fetch("select * from $g4[board_table] where bo_table = '{$row['bo_table']}'");
+
+            $board = $board_list[$row[bo_table]];
 	    if ($board) {
 		$board['bo_use_sideview'] = 1;
 		$tmp_write_table = $g4['write_prefix'] . $row[bo_table]; // 게시판 테이블 전체이름
 
 		$sql2 = " select * from $tmp_write_table where wr_id = '$row[wr_id]' ";
 		$row2 = sql_fetch($sql2);
+
 		$list[$i] = mw_get_list($row2, $board, $latest_skin_path, $subject_len);
                 $list[$i][href] = "$g4[bbs_path]/board.php?bo_table=$row[bo_table]&wr_id=$row[wr_id]";
 		$list[$i][bo_subject] = $board[bo_subject];
@@ -136,7 +146,7 @@ function mw_latest_group_rand($skin_dir="", $gr_id, $rows=10, $subject_len=40, $
 	}
 	else if ($minute > 0) {
 	    mw_cache_write($cache_file_list, $list);
-	    mw_cache_write($cache_file_board, $board);
+	    mw_cache_write($cache_file_board, $board_list);
 	}
     }
 

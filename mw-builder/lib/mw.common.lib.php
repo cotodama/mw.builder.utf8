@@ -116,6 +116,11 @@ function mw_get_list($write_row, $board, $skin_path, $subject_len=40)
 
     $list['is_notice'] = preg_match("/[^0-9]{0,1}{$list['wr_id']}[\r]{0,1}/",$board['bo_notice']);
 
+    if ($list['wr_view_block']) {
+        $list['wr_subject'] = "보기가 차단된 게시물입니다.";
+        $list['wr_content'] = "보기가 차단된 게시물입니다.";
+    }
+
     if ($subject_len)
         $list['subject'] = conv_subject($list['wr_subject'], $subject_len, "…");
     else

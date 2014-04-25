@@ -164,7 +164,7 @@ if ($w == "u")
         $row = sql_fetch(" select bf_file, bf_content from $g4[board_file_table] where bo_table = '$bo_table' and wr_id = '$wr_id' and bf_no = '$i' ");
         if ($row[bf_file])
         {
-            $file_script .= "add_file(\"&nbsp;&nbsp;<a href='#;' onclick='hiddenframe.location.href=\\\"{$file[$i][href]}\\\"'>".cut_str($file[$i][source], 20)."({$file[$i][size]})</a> <input type='checkbox' name='bf_file_del[$i]' value='1'> 파일 삭제하려면 체크하세요.";
+            $file_script .= "add_file(\"&nbsp;&nbsp;<a href='#;' onclick='hiddenframe.location.href=\\\"{$file[$i][href]}\\\"'>".cut_str($file[$i][source], 20)."({$file[$i][size]})</a> <input type='checkbox' id='bf_file_del_$i' name='bf_file_del[$i]' value='1'> <label for='bf_file_del_$i'>파일 삭제하려면 체크하세요.</label>";
             if ($is_file_content)
                 //$file_script .= "<br><input type='text' class=ed size=50 name='bf_content[$i]' value='{$row[bf_content]}' title='업로드 이미지 파일에 해당 되는 내용을 입력하세요.'>";
                 // 첨부파일설명에서 ' 또는 " 입력되면 오류나는 부분 수정

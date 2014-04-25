@@ -24,6 +24,10 @@ $savefile = SAVE_DIR . '/' . $_FILES['file']['name'];
 // 사용자PC의 파일 경로: $_POST["filePath"]
 // 사용자PC의 파일 크기: $_POST["filesize"]
 
+// 파일의 확장자가 이미지가 아니라면 삭제
+if (!preg_match("/.(gif|jpe?g|png)$/i", $savefile))
+    unlink($savefile);
+
 move_uploaded_file($tempfile, $savefile);
 $imgsize = getimagesize($savefile);
 $filesize = filesize($savefile);

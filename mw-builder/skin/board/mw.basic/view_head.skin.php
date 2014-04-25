@@ -627,9 +627,9 @@ if ($write[wr_reply] == "" && ($is_admin == "super" || $is_admin == "group")) {
 // 배추코드
 $view[rich_content] = bc_code($view[rich_content], 1, 0);
 if (strstr($write[wr_option], "html")) {
-    $view[rich_content] = mw_set_sync_tag($view[rich_content]);
     $view[rich_content] = mw_tag_debug($view[rich_content]);
 }
+$view[rich_content] = mw_set_sync_tag($view[rich_content]);
 
 if ($mw_basic[cf_iframe_level] && $mw_basic[cf_iframe_level] <= $mb[mb_level]) {
     $view[rich_content] = mw_special_tag($view[rich_content]);
@@ -871,4 +871,9 @@ if ($mw_basic['cf_marketdb'] and $write['wr_marketdb']) {
         }
     }
 }
+
+if (!$mw_basic['cf_time_view'])
+    $mw_basic['cf_time_view'] = "Y-m-d (w) H:i";
+
+$view['datetime2'] = mw_get_date($write['wr_datetime'], $mw_basic['cf_time_view']);
 

@@ -1067,6 +1067,7 @@ if (is_null($mw_basic[cf_hot_limit])) {
     sql_query("alter table $mw[basic_config_table] add cf_hot_limit tinyint default '10' not null", false);
 }
     sql_query("alter table $mw[basic_config_table] add cf_hot_len int default '90' not null", false);
+    sql_query("alter table $mw[basic_config_table] add cf_hot_cache int default '0' not null", false);
 
 // 퀴즈 플러그인 
 if (is_null($mw_basic[cf_quiz])) {
@@ -1278,4 +1279,7 @@ if (is_null($mw_basic[cf_talent_market])) {
         primary key (jp_id)) ".$default_charset;
     sql_query($sql, false);
 
+    sql_query("alter table {$mw['basic_config_table']} add cf_time_list varchar(20) not null default '' ", false);
+    sql_query("alter table {$mw['basic_config_table']} add cf_time_view varchar(20) not null default '' ", false);
+    sql_query("alter table {$mw['basic_config_table']} add cf_time_comment varchar(20) not null default '' ", false);
 

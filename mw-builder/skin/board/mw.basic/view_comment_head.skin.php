@@ -171,6 +171,7 @@ if ($mw_basic[cf_attribute] != "anonymous" && !$row[wr_anonymous] && $row[mb_id]
     $comment_image = "$comment_image_path/{$row[mb_id]}";
     $is_comment_image = true;
     $tmpsize = @getImageSize($comment_image);
+    $comment_image.= '?'.filemtime($comment_image);
 }
 
 $row[content] = mw_reg_str($row[content]); // 자동치환
@@ -178,9 +179,9 @@ $row[content] = mw_reg_str($row[content]); // 자동치환
 $row[content] = bc_code($row[content]);
 if (strstr($row[wr_option], "html")) {
     $row[content] = mw_tag_debug($row[content]);
-    $row[content] = mw_set_sync_tag($row[content]); // 잘못된 태그교정
 }
-$row[content] = mw_youtube_content($row[content]); // 유투브 자동 재생
+$row[content] = mw_set_sync_tag($row[content]); // 잘못된 태그교정
+$row[content] = mw_youtube_content($row[content], "144"); // 유투브 자동 재생
 
 if ($mw_basic[cf_iframe_level] && $mw_basic[cf_iframe_level] <= $mb[mb_level]) {
     $row[content] = mw_special_tag($row[content]);
@@ -203,5 +204,10 @@ $str = preg_replace("/\[\<a\s*href\=\"(http|https|ftp)\:\/\/([^[:space:]]+)\.(gi
 $str = preg_replace_callback("/\[code\](.*)\[\/code\]/iU", "_preg_callback", $str);
 
 $row[content] = $str;
+
+if (!$mw_basic['cf_time_comment'])
+    $mw_basic['cf_time_comment'] = "Y-m-d (w) H:i";
+
+$row['datetime2'] = mw_get_date($row['wr_datetime'], $mw_basic['cf_time_comment']);
 
 return true;

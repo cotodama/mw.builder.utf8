@@ -158,10 +158,10 @@ if ($mw_basic[cf_resize_original]) {
     while ($row = sql_fetch_array($qry)) {
         $file = "$file_path/$row[bf_file]";
         $size = getImageSize($file);
-        if ($size[0] > $mw_basic[cf_resize_original] || $mw_basic[cf_resize_original] < $size[1]) {
+        //if ($size[0] > $mw_basic[cf_resize_original] || $mw_basic[cf_resize_original] < $size[1]) {
             mw_make_thumbnail($mw_basic[cf_resize_original], $mw_basic[cf_resize_original], $file, $file, true);
             $size = getImageSize($file);
-        }
+        //}
         sql_query("update $g4[board_file_table] set bf_width = '$size[0]', bf_height = '$size[1]',
             bf_filesize = '".filesize($file)."'
             where bo_table = '$bo_table' and wr_id = '$wr_id' and bf_no = '$row[bf_no]'");

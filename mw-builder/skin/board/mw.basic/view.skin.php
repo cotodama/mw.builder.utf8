@@ -272,7 +272,7 @@ if ($is_category && $mw_basic[cf_category_tab]) {
 	<? //} // mw_basic[cf_attribute] != 'anonymous'?>
 	</span>
         <? } ?>
-        날짜 : <span class=mw_basic_view_datetime><?=substr($view[wr_datetime],0,10)." (".get_yoil($view[wr_datetime]).") ".substr($view[wr_datetime],11,5)?></span>
+        날짜 : <span class=mw_basic_view_datetime><?=$view['datetime2']?></span>
         조회 : <span class=mw_basic_view_hit><?=$view[wr_hit]?></span>
         <? /*if ($is_good) { ?>추천 : <span class=mw_basic_view_good><?=$view[wr_good]?></span><?}*/?>
         <? /*if ($is_nogood) { ?>비추천 : <span class=mw_basic_view_nogood><?=$view[wr_nogood]?></span><?}*/?>
@@ -714,6 +714,7 @@ if ($is_signature && $signature && !$view[wr_anonymous] && $mw_basic[cf_attribut
         $comment_image = "$comment_image_path/{$view[mb_id]}";
         $is_comment_image = true;
         $tmpsize = @getImageSize($comment_image);
+        $comment_image.= '?'.filemtime($comment_image);
     }
 
     $signature = preg_replace("/<a[\s]+href=[\'\"](http:[^\'\"]+)[\'\"][^>]+>(.*)<\/a>/i", "[$1 $2]", $signature);
@@ -896,6 +897,8 @@ if ($mw_basic[cf_attribute] == 'qna' && !$view[is_notice]) {
 
         <? if ($mw_basic[cf_sns]) { ?>
         <div class="sns"> <?=$view_sns?> </div>
+        <? } else { ?>
+        <style>.jump { margin:10px 0 0 5px } </style>
         <? } ?>
 
         <div class="jump">

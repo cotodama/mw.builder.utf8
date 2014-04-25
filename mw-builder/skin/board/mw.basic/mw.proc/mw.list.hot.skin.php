@@ -41,7 +41,15 @@ if (!$mw_basic[cf_hot_limit]) $mw_basic[cf_hot_limit] = 10;
 #mw_basic #mw_basic_hot_list li.hot_icon_9 { background:url(<?=$board_skin_path?>/img/icon_hot_9.gif) no-repeat left 2px; }
 #mw_basic #mw_basic_hot_list li.hot_icon_10 { background:url(<?=$board_skin_path?>/img/icon_hot_10.gif) no-repeat left 2px; }
 </style>
-<?
+<?php
+$hot_list = array();
+
+$hot_cache_path = "{$g4['path']}/data/mw.basic.cache";
+$hot_cache_file = "{$hot_cache_path}/list-hot-{$board['bo_table']}";
+mw_mkdir($hot_cache_path, 0707);
+
+$hot_list = mw_board_cache_read($hot_cache_file, 10);
+
 switch ($mw_basic[cf_hot]) {
     case "1": $hot_start = ""; $hot_title = "실시간"; break;
     case "2": $hot_start = date("Y-m-d H:i:s", $g4[server_time]-60*60*24*7); $hot_title = "주간"; break;
@@ -51,36 +59,39 @@ switch ($mw_basic[cf_hot]) {
     case "6": $hot_start = date("Y-m-d H:i:s", $g4[server_time]-60*60*24*30*3); $hot_title = "3개월"; break;
     case "7": $hot_start = date("Y-m-d H:i:s", $g4[server_time]-60*60*24*30*6); $hot_title = "6개월"; break;
 }
-$sql_between = 1;
-if ($mw_basic[cf_hot] > 1) {
-    $sql_between = " wr_datetime between '$hot_start' and '$g4[time_ymdhis]' ";
-}
-$sql_except = "";
-$tmp = explode("\n", $board[bo_notice]);
-for ($i=0, $m=sizeof($tmp); $i<$m; $i++) { 
-    if (!trim($tmp[$i])) continue;
-    $bo_notice[] = trim($tmp[$i]);
-}
-if (count($bo_notice)>0)
-    $sql_except = " and wr_id not in (".implode(",", $bo_notice).") ";
 
-$hot_list = array();
+if (!$hot_list) {
+    $sql_between = 1;
+    if ($mw_basic[cf_hot] > 1) {
+        $sql_between = " wr_datetime between '$hot_start' and '$g4[time_ymdhis]' ";
+    }
+    $sql_except = "";
+    $tmp = explode("\n", $board[bo_notice]);
+    for ($i=0, $m=sizeof($tmp); $i<$m; $i++) { 
+        if (!trim($tmp[$i])) continue;
+        $bo_notice[] = trim($tmp[$i]);
+    }
+    if (count($bo_notice)>0)
+        $sql_except = " and wr_id not in (".implode(",", $bo_notice).") ";
 
-if ($mw_basic[cf_hot_basis] == 'file') {
-    $sql_between = str_replace("wr_datetime", "bf_datetime", $sql_between);
-    $sql = " select wr_id, sum(CAST(bf_download AS SIGNED)) as down from $g4[board_file_table] where bo_table = '$bo_table' and $sql_between $sql_except ";
-    $sql.= " group by bo_table, wr_id order by down desc limit $mw_basic[cf_hot_limit]";
-    $qry = sql_query($sql);
-    while ($row = sql_fetch_array($qry)) {
-        $hot_list[] = sql_fetch("select wr_id, wr_subject, wr_link1, wr_link_write from $write_table where wr_id = '$row[wr_id]'");
+
+    if ($mw_basic[cf_hot_basis] == 'file') {
+        $sql_between = str_replace("wr_datetime", "bf_datetime", $sql_between);
+        $sql = " select wr_id, sum(CAST(bf_download AS SIGNED)) as down from $g4[board_file_table] where bo_table = '$bo_table' and $sql_between $sql_except ";
+        $sql.= " group by bo_table, wr_id order by down desc limit $mw_basic[cf_hot_limit]";
+        $qry = sql_query($sql);
+        while ($row = sql_fetch_array($qry)) {
+            $hot_list[] = sql_fetch("select wr_id, wr_subject, wr_link1, wr_link_write from $write_table where wr_id = '$row[wr_id]'");
+        }
+    } else {
+        $sql = " select wr_id, wr_subject, wr_link1, wr_link_write from $write_table where wr_is_comment = 0 and $sql_between $sql_except ";
+        $sql.= " order by wr_{$mw_basic[cf_hot_basis]} desc limit $mw_basic[cf_hot_limit]";
+        $qry = sql_query($sql);
+        while ($row = sql_fetch_array($qry)) {
+            $hot_list[] = $row;
+        }
     }
-} else {
-    $sql = " select wr_id, wr_subject, wr_link1, wr_link_write from $write_table where wr_is_comment = 0 and $sql_between $sql_except ";
-    $sql.= " order by wr_{$mw_basic[cf_hot_basis]} desc limit $mw_basic[cf_hot_limit]";
-    $qry = sql_query($sql);
-    while ($row = sql_fetch_array($qry)) {
-        $hot_list[] = $row;
-    }
+    mw_board_cache_write($hot_cache_file, $hot_list);
 }
 
 for ($i=0, $m=count($hot_list); $row=$hot_list[$i]; $i++)

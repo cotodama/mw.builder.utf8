@@ -531,13 +531,22 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
             <? for ($i=2; $i<=10; $i=$i+2) { ?>
             <option value="<?=$i?>"><?=$i?></option>
             <? } ?>
-            </select> 개, 제목길이 :
-            <input type="text" name="cf_hot_len" id="cf_hot_len" size="3" value="<?=$mw_basic[cf_hot_len]?>">
-	    <span class="cf_info">(목록상단에 인기 게시물을 출력합니다.)</span>
+            </select> 개<br>
             <div>
-            <input type="checkbox" name="cf_hot_list" value="1">목록 
-            <input type="checkbox" name="cf_hot_view" value="1">읽기
-            <input type="checkbox" name="cf_hot_write" value="1">쓰기
+                길이 :
+                <input type="text" name="cf_hot_len" id="cf_hot_len" size="3" value="<?=$mw_basic[cf_hot_len]?>"> 글자
+                <span class="cf_info">(목록상단에 인기 게시물을 출력합니다.)</span>
+            </div>
+            <div>
+                캐시 :
+                <input type="text" name="cf_hot_cache" id="cf_hot_cache" size="3" value="<?=$mw_basic[cf_hot_cache]?>"> 분
+                <span class="cf_info">(인기게시물을 파일로 저장해 DB 부담을 줄여줍니다.)</span>
+            </div>
+            <div>
+                출력 :
+                <input type="checkbox" name="cf_hot_list" value="1">목록 
+                <input type="checkbox" name="cf_hot_view" value="1">읽기
+                <input type="checkbox" name="cf_hot_write" value="1">쓰기
             </div>
 	    <script>
 	    document.cf_form.cf_hot.value = "<?=$mw_basic[cf_hot]?>";
@@ -1152,15 +1161,6 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
     </div>
  
     <div class="cf_item">
-	<div class="cf_title"><input type=checkbox name=chk[cf_sns_datetime] value=1>&nbsp; SNS 스타일 날짜 표시 </div>
-	<div class="cf_content">
-	    <input type=checkbox name=cf_sns_datetime value=1> 사용 
-	    <span class="cf_info">(1분전, 2시간전, 3일전 ...)</span>
-	    <script> document.cf_form.cf_sns_datetime.checked = '<?=$mw_basic[cf_sns_datetime]?>'; </script>
-	</div>
-    </div>
-
-    <div class="cf_item">
 	<div class="cf_title"><input type=checkbox name=chk[cf_insert_subject] value=1>&nbsp; 글쓰기 기본 제목 </div>
 	<div class="cf_content">
 	    <input type="text" size="60" name="cf_insert_subject" class="ed" value="<?=$mw_basic[cf_insert_subject]?>"> 
@@ -1288,8 +1288,93 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 	</div>
     </div>
 
-    <div class="block"></div>
+    <div class="cf_item">
+	<div class="cf_title"><input type=checkbox name=chk[cf_time_list] value=1>&nbsp; 날짜 표시 </div>
+	<div class="cf_content">
+            <div>
+                목록 :
+                <select name="cf_time_list" id="cf_time_list">
+                    <option value="">기본</option>
+                    <option value="sns">SNS스타일(1분전, 2시간전, 3일전 ...)</option>
+                    <option value="manual">사용자정의</option>
+                </select>
+                <input type="text" size="20" class="ed" name="cf_time_list_manual" id="cf_time_list_manual" style="display:none">
+            </div>
+            <div>
+                본문 :
+                <select name="cf_time_view" id="cf_time_view">
+                    <option value="">기본</option>
+                    <option value="sns">SNS스타일(1분전, 2시간전, 3일전 ...)</option>
+                    <option value="manual">사용자정의</option>
+                </select>
+                <input type="text" size="20" class="ed" name="cf_time_view_manual" id="cf_time_view_manual" style="display:none">
+            </div>
+            <div>
+                댓글 :
+                <select name="cf_time_comment" id="cf_time_comment">
+                    <option value="">기본</option>
+                    <option value="sns">SNS스타일(1분전, 2시간전, 3일전 ...)</option>
+                    <option value="manual">사용자정의</option>
+                </select>
+                <input type="text" size="20" class="ed" name="cf_time_comment_manual" id="cf_time_comment_manual" style="display:none">
+            </div>
+	    <script>
+            <?php
+            if ($mw_basic['cf_sns_datetime']) {
+                $mw_basic['cf_time_list'] = "sns";
+            }
+            if ($mw_basic['cf_time_list'] && $mw_basic['cf_time_list'] != "sns") {
+                $mw_basic['cf_time_list_manual'] = $mw_basic['cf_time_list'];
+                $mw_basic['cf_time_list'] = 'manual';
+            }
+            if ($mw_basic['cf_time_view'] && $mw_basic['cf_time_view'] != "sns") {
+                $mw_basic['cf_time_view_manual'] = $mw_basic['cf_time_view'];
+                $mw_basic['cf_time_view'] = 'manual';
+            }
+            if ($mw_basic['cf_time_comment'] && $mw_basic['cf_time_comment'] != "sns") {
+                $mw_basic['cf_time_comment_manual'] = $mw_basic['cf_time_comment'];
+                $mw_basic['cf_time_comment'] = 'manual';
+            }
 
+            if (!$mw_basic['cf_time_list_manual']) $mw_basic['cf_time_list_manual'] = "m-d";
+            if (!$mw_basic['cf_time_view_manual']) $mw_basic['cf_time_view_manual'] = "Y-m-d (w) H:i:s";
+            if (!$mw_basic['cf_time_comment_manual']) $mw_basic['cf_time_comment_manual'] = "Y-m-d (w) H:i:s";
+            ?>
+            $("#cf_time_list").val('<?php echo $mw_basic['cf_time_list']?>');
+            $("#cf_time_view").val('<?php echo $mw_basic['cf_time_view']?>');
+            $("#cf_time_comment").val('<?php echo $mw_basic['cf_time_comment']?>');
+
+            $(document).ready(function () {
+                $("#cf_time_list").change(function () {
+                    if ($(this).val() == "manual") {
+                        $("#cf_time_list_manual").css("display", "inline");
+                        $("#cf_time_list_manual").val("<?php echo $mw_basic['cf_time_list_manual']?>");
+                    }
+                    else
+                        $("#cf_time_list_manual").css("display", "none");
+                });
+                $("#cf_time_view").change(function () {
+                    if ($(this).val() == "manual") {
+                        $("#cf_time_view_manual").css("display", "inline");
+                        $("#cf_time_view_manual").val("<?php echo $mw_basic['cf_time_view_manual']?>");
+                    }
+                    else
+                        $("#cf_time_list_manual").css("display", "none");
+                });
+                $("#cf_time_comment").change(function () {
+                    if ($(this).val() == "manual") {
+                        $("#cf_time_comment_manual").css("display", "inline");
+                        $("#cf_time_comment_manual").val("<?php echo $mw_basic['cf_time_comment_manual']?>");
+                    }
+                    else
+                        $("#cf_time_list_manual").css("display", "none");
+                });
+            });
+            </script>
+	</div>
+    </div>
+
+    <div class="block"></div>
 </div>
 
 <div id="tabs-3" class="tabs"> <!-- 기능 -->

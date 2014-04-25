@@ -56,10 +56,12 @@ if ($config[cf_admin] == $mb_id)
 
 if (!$is_ip) {
     $mb_intercept_date = date("Ymd", $g4[server_time]);
-    $sql = " update $g4[member_table] set ";
-    $sql.= " mb_level = '1', ";
-    $sql.= " mb_intercept_date = '$mb_intercept_date',  ";
-    $sql.= " mb_memo = '$mb_memo'  ";
+    $sql = " update $g4[member_table] set mb_level = '1' ";
+    $sql.= " ,mb_intercept_date = '$mb_intercept_date'  ";
+    $sql.= " ,mb_memo = '$mb_memo'  ";
+    $sql.= " ,mb_mailling = ''  ";
+    $sql.= " ,mb_sms = ''  ";
+    $sql.= " ,mb_open = ''  ";
     $sql.= " where mb_id='$mb_id' ";
     sql_query($sql);
 }

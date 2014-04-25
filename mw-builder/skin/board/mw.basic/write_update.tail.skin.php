@@ -22,7 +22,7 @@
 if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가 
 
 if ($mw_basic[cf_contents_shop_write] && $w == "") {
-    mw_buy_contents2($member[mb_id], $mw_basic[cf_contents_shop_write_cash], "$board[bo_subject] 게시물 작성", $bo_table);
+    mw_buy_contents2($member[mb_id], $mw_basic[cf_contents_shop_write_cash], "$board[bo_subject] 게시물 작성", $bo_table, $wr_id);
 }
 
 //if (function_exists('mw_moa_insert') && !$wr_anonymous && $mw_basic[cf_attribute] != 'anonymous') {

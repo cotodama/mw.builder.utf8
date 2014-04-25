@@ -268,7 +268,7 @@ if ($mw_basic[cf_comment_best]) {
             <img src="<?=$board_skin_path?>/img/btn_ip.gif" align=absmiddle title='IP조회' style="cursor:pointer" onclick="btn_ip('<?=$row[wr_ip]?>')">
             <img src="<?=$board_skin_path?>/img/btn_ip_search.gif" align=absmiddle title='IP검색' style="cursor:pointer" onclick="btn_ip_search('<?=$row[wr_ip]?>')">
             <? } ?>
-            <span class=mw_basic_comment_datetime><?=substr($row[wr_datetime],0,10)." (".get_yoil($row[wr_datetime]).") ".substr($row[wr_datetime],11,5)?></span>
+            <span class=mw_basic_comment_datetime><?php echo $row['datetime2']?></span>
 
         </td>
         <!-- 링크 버튼, 코멘트 작성시간 -->
@@ -431,7 +431,7 @@ for ($i=0; $i<$to_record; $i++) {
 		<img src="<?=$board_skin_path?>/img/btn_ip.gif" align=absmiddle title='IP조회' style="cursor:pointer" onclick="btn_ip('<?=$list[$i][wr_ip]?>')">
 		<img src="<?=$board_skin_path?>/img/btn_ip_search.gif" align=absmiddle title='IP검색' style="cursor:pointer" onclick="btn_ip_search('<?=$list[$i][wr_ip]?>')">
 		<? } ?>
-                <span class=mw_basic_comment_datetime><?=substr($list[$i][wr_datetime],0,10)." (".get_yoil($list[$i][wr_datetime]).") ".substr($list[$i][wr_datetime],11,5)?></span>
+                <span class=mw_basic_comment_datetime><?php echo $row['datetime2']?></span>
             </td>
         </tr>
         </table>
