@@ -531,13 +531,22 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
             <? for ($i=2; $i<=10; $i=$i+2) { ?>
             <option value="<?=$i?>"><?=$i?></option>
             <? } ?>
-            </select> 개, 제목길이 :
-            <input type="text" name="cf_hot_len" id="cf_hot_len" size="3" value="<?=$mw_basic[cf_hot_len]?>">
-	    <span class="cf_info">(목록상단에 인기 게시물을 출력합니다.)</span>
+            </select> 개<br>
             <div>
-            <input type="checkbox" name="cf_hot_list" value="1">목록 
-            <input type="checkbox" name="cf_hot_view" value="1">읽기
-            <input type="checkbox" name="cf_hot_write" value="1">쓰기
+                길이 :
+                <input type="text" name="cf_hot_len" id="cf_hot_len" size="3" value="<?=$mw_basic[cf_hot_len]?>"> 글자
+                <span class="cf_info">(목록상단에 인기 게시물을 출력합니다.)</span>
+            </div>
+            <div>
+                캐시 :
+                <input type="text" name="cf_hot_cache" id="cf_hot_cache" size="3" value="<?=$mw_basic[cf_hot_cache]?>"> 분
+                <span class="cf_info">(인기게시물을 파일로 저장해 DB 부담을 줄여줍니다.)</span>
+            </div>
+            <div>
+                출력 :
+                <input type="checkbox" name="cf_hot_list" value="1">목록 
+                <input type="checkbox" name="cf_hot_view" value="1">읽기
+                <input type="checkbox" name="cf_hot_write" value="1">쓰기
             </div>
 	    <script>
 	    document.cf_form.cf_hot.value = "<?=$mw_basic[cf_hot]?>";

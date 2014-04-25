@@ -173,6 +173,7 @@ bo_table = '$bo_table'
 ,cf_hot_basis = '$cf_hot_basis'
 ,cf_hot_limit = '$cf_hot_limit'
 ,cf_hot_len = '$cf_hot_len'
+,cf_hot_cache = '$cf_hot_cache'
 ,cf_hot_print = '$cf_hot_print'
 ,cf_related = '$cf_related'
 ,cf_latest = '$cf_latest'
@@ -524,6 +525,7 @@ if ($chk[cf_hot]) {
     $sql .= ", cf_hot_basis = '$cf_hot_basis' ";
     $sql .= ", cf_hot_limit = '$cf_hot_limit' ";
     $sql .= ", cf_hot_len = '$cf_hot_len' ";
+    $sql .= ", cf_hot_cache = '$cf_hot_cache' ";
     $sql .= ", cf_hot_print = '$cf_hot_print' ";
 }
 if ($chk[cf_related]) $sql .= ", cf_related = '$cf_related' ";

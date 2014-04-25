@@ -1067,6 +1067,7 @@ if (is_null($mw_basic[cf_hot_limit])) {
     sql_query("alter table $mw[basic_config_table] add cf_hot_limit tinyint default '10' not null", false);
 }
     sql_query("alter table $mw[basic_config_table] add cf_hot_len int default '90' not null", false);
+    sql_query("alter table $mw[basic_config_table] add cf_hot_cache int default '0' not null", false);
 
 // 퀴즈 플러그인 
 if (is_null($mw_basic[cf_quiz])) {

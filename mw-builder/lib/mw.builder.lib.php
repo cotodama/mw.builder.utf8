@@ -99,17 +99,25 @@ if ($sub_domain && $sub_domain != "www") {
 }
 
 // 사용자 정의 URL
-if (!defined("_MW_INDEX_") && !$bo_table && !$pg_id) {
+if (!defined("_MW_INDEX_")) {
     $ms_id = "";
     $sql = "select * from $mw[menu_small_table] where ms_url <> '' order by ms_order";
     $qry = sql_query($sql);
-    while ($row = sql_fetch_array($qry)) {
+    while ($row = sql_fetch_array($qry))
+    {
+        // url query 가 있는 경우
+        $tmp = parse_url($row[ms_url]);
+        if (strstr($_SERVER[PHP_SELF], $tmp[path]) && $tmp[query]) {
+            parse_str($tmp[query], $str_get);
+            $res = array_diff($str_get, $_GET);
+            if (empty($res)) { // query 가 일치하면
+                // ms_id
+                $mw_smenu = $row;
+                $ms_id = $row[ms_id];
+                break;
+            }
+        }
 	if (strstr($_SERVER[PHP_SELF], $row[ms_url])) {
-	    $mw_smenu = $row;
-	    $ms_id = $row[ms_id];
-	    break;
-	}
-	if (strstr($_SERVER[REQUEST_URI], $row[ms_url])) {
 	    $mw_smenu = $row;
 	    $ms_id = $row[ms_id];
 	    break;
@@ -192,9 +200,11 @@ if ($mm_id) {
 
 if (is_member_page() && $mw[config][cf_member] && !$mw[config][cf_sub_domain_off]) { // 회원페이지 member 서브도메인 접속
     mw_sub_domain_only("member");
-} else if ($group[gr_sub_domain] && !$mw[config][cf_sub_domain_off]) { // 그룹별 서브도메인 접속
+}
+else if ($group[gr_sub_domain] && !$mw[config][cf_sub_domain_off]) { // 그룹별 서브도메인 접속
     mw_sub_domain_only($group[gr_sub_domain]);
-} else if ($mw[config][cf_www]) { // www 로만 접속
+}
+else if ($mw[config][cf_www]) { // www 로만 접속
     mw_sub_domain_only("www");
 }
 
@@ -228,7 +238,8 @@ if ($mg_id) {
     $mw_group_skin_home_path = "$g4[path]/skin/mw.builder/{$group[gr_skin_home]}";
     $mw_group_skin_tail_path = "$g4[path]/skin/mw.builder/{$group[gr_skin_tail]}";
     $mw_mmenu_skin_path = "$g4[path]/skin/mw.builder/{$mw_mmenu[mm_skin]}";
-} else {
+}
+else {
     $mw_member_skin_head_path = "$g4[path]/skin/mw.builder/{$mw[config][cf_member_skin_head]}";
     $mw_member_skin_tail_path = "$g4[path]/skin/mw.builder/{$mw[config][cf_member_skin_tail]}";
 }

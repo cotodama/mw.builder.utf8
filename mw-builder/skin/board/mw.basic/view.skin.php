@@ -896,6 +896,8 @@ if ($mw_basic[cf_attribute] == 'qna' && !$view[is_notice]) {
 
         <? if ($mw_basic[cf_sns]) { ?>
         <div class="sns"> <?=$view_sns?> </div>
+        <? } else { ?>
+        <style>.jump { margin:10px 0 0 5px } </style>
         <? } ?>
 
         <div class="jump">

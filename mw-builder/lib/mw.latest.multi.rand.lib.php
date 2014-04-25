@@ -46,36 +46,19 @@ function mw_latest_multi_rand($skin_dir="", $tables, $rows=10, $subject_len=40, 
 
     $sql_tables = implode("','", $tables);
 
+    $sql = "select * from {$g4['board_table']} where bo_table in ('{$sql_tables}') ";
+    $qry = sql_query($sql);
+    while ($row = sql_fetch_array($qry)) {
+        $board_list[$row['bo_table']] = $row;
+    }
+
     if ($is_img && !$file) {
-	$file = array();
-	/*$sql = "select f.bo_table, f.wr_id, f.bf_file , b.bo_subject
-		  from $g4[board_file_table] as f, $g4[board_table] as b 
-		 where f.bo_table = b.bo_table and b.bo_use_search = '1' and f.bo_table in ('$sql_tables') and bf_type > 0 and bf_type < 4 and bf_no = 0
-		 order by bf_datetime desc limit $is_img";
-	$qry = sql_query($sql);
-	for ($i=0; $row=sql_fetch_array($qry); $i++) {
-	    $file[$i] = array();
-	    $file[$i][bo_table] = $row[bo_table];
-	    $file[$i][bo_subject] = $row[bo_subject];
-	    $file[$i][wr_id] = $row[wr_id];
-	    $file[$i][path] = "$g4[path]/data/file/$row[bo_table]/thumbnail/$row[wr_id]";
-	    //$file[$i][href] = "$g4[bbs_path]/board.php?bo_table=$row[bo_table]&wr_id=$row[wr_id]";
-	    $file[$i][href] = "$g4[url]/$g4[bbs]/board.php?bo_table=$row[bo_table]&wr_id=$row[wr_id]";
-	    if (!@file_exists($file[$i][path])) $file[$i][path] = "$g4[path]/data/file/$row[bo_table]/thumb/$row[wr_id]";
-	    if (!@file_exists($file[$i][path])) $file[$i][path] = "$g4[path]/data/file/$row[bo_table]/$row[bf_file]";
-	    if (!@file_exists($file[$i][path])) $file[$i][path] = "$latest_skin_path/img/noimage.gif";
-	    if (!@file_exists($file[$i][path])) $file[$i] = null;
-	    if (@is_dir($file[$i][path])) $file[$i] = null;
-	    if ($file[$i]) {
-		$row2 = sql_fetch("select wr_subject, wr_comment from $g4[write_prefix]$row[bo_table] where wr_id = '$row[wr_id]'");
-                $file[$i][subject] = conv_subject($row2[wr_subject], $subject_len, "…");
-                $file[$i][wr_comment] = $row2[wr_comment];
-	    }
-	}*/
 
         $file = mw_get_last_thumb($tables, $is_img, true);
         for ($i=0, $m=count($file); $i<$m; ++$i) {
-            $row = sql_fetch("select wr_subject, wr_comment, wr_link1 from {$g4[write_prefix]}{$file[$i]['bo_table']} where wr_id = '{$file[$i]['wr_id']}'");
+            $row = sql_fetch("select * from {$g4['write_prefix']}{$file[$i]['bo_table']} where wr_id = '{$file[$i]['wr_id']}'");
+            $row = mw_get_list($row, $board_list[$file[$i]['bo_table']], $latest_skin_path, $subject_len);
+
             $file[$i]['wr_subject'] = $row['wr_subject'];
             $file[$i]['subject'] = conv_subject($row['wr_subject'], $subject_len, "…");
             $file[$i]['wr_comment'] = $row['wr_comment'];
@@ -105,10 +88,11 @@ function mw_latest_multi_rand($skin_dir="", $tables, $rows=10, $subject_len=40, 
 	$sql .= " order by rand() desc limit $rows";
 	$qry = sql_query($sql);
 	for ($i=0; $row=sql_fetch_array($qry); $i++) {
-	    if ($old_board != $row[bo_table]) {
+	    /*if ($old_board != $row[bo_table]) {
 		$board = sql_fetch("select * from $g4[board_table] where bo_table = '$row[bo_table]'");
 		$old_board = $row[bo_table];
-	    }
+	    }*/
+            $board = $board_list[$row['bo_table']];
 	    if ($board) {
 		$board['bo_use_sideview'] = 1;
 		$tmp_write_table = $g4['write_prefix'] . $row[bo_table]; // 게시판 테이블 전체이름

@@ -71,10 +71,15 @@ function mw_latest_main($skin_dir="", $bo_tables, $rows=10, $subject_len=40, $mi
 	    if (!@file_exists($file[$i][path])) $file[$i] = null;
 	    if (@is_dir($file[$i][path])) $file[$i] = null;
 	    if ($file[$i]) {
-		$row = sql_fetch("select wr_subject, wr_comment from $g4[write_prefix]$row[bo_table] where wr_id = '$row[wr_id]'");
+                if (empty($board_list[$row[bo_table]]))
+                    $board_list[$row[bo_table]] = sql_fetch("select * from $g4[board_table] where bo_table = '{$row['bo_table']}'");
+
+		$row = sql_fetch("select * from $g4[write_prefix]$row[bo_table] where wr_id = '$row[wr_id]'");
+                $row = mw_get_list($row, $board_list[$row[bo_table]], $latest_skin_path, $subject_len);
+
                 $file[$i]['wr_subject'] = $row['wr_subject'];
-		$file[$i][subject] = conv_subject($row[wr_subject], $subject_len, "…");
-		$file[$i][wr_comment] = $row[wr_comment];
+		$file[$i]['subject'] = conv_subject($row['wr_subject'], $subject_len, "…");
+		$file[$i]['wr_comment'] = $row['wr_comment'];
 	    }
 
 	}
@@ -94,10 +99,16 @@ function mw_latest_main($skin_dir="", $bo_tables, $rows=10, $subject_len=40, $mi
         }
 	$sql .= " order by bn_datetime desc limit $main_rows";
 	$qry =  sql_query($sql);
-	for ($i=0; $row = sql_fetch_array($qry); $i++) {
+	for ($i=0; $row = sql_fetch_array($qry); $i++)
+        {
 	    $tmp_write_table = $g4['write_prefix'] . $row[bo_table]; // 게시판 테이블 전체이름
-	    $sql = "select wr_subject,ca_name,wr_comment from $tmp_write_table where wr_id = '$row[wr_id]'";
-	    $row2 = sql_fetch($sql);
+
+            if (empty($board_list[$row[bo_table]]))
+                $board_list[$row[bo_table]] = sql_fetch("select * from $g4[board_table] where bo_table = '{$row['bo_table']}'");
+
+            $row2 = sql_fetch("select * from $tmp_write_table where wr_id = '$row[wr_id]'");
+            $row2 = mw_get_list($row, $board_list[$row[bo_table]], $latest_skin_path, $subject_len);
+
 	    $list[$i]['wr_subject'] = $row2['wr_subject'];
 	    $list[$i]['subject'] = conv_subject($row2['wr_subject'], $subject_len, "…");
 	    $list[$i]['wr_id'] = $row[wr_id];
@@ -135,10 +146,15 @@ function mw_latest_main($skin_dir="", $bo_tables, $rows=10, $subject_len=40, $mi
 		if (!@file_exists($file[path])) $file[path] = "$latest_skin_path/img/noimage.gif";
 		if (!@file_exists($file[path])) $file = null;
 		if ($file) {
-		    $row = sql_fetch("select wr_subject, wr_comment from $g4[write_prefix]$bo_table where wr_id = '$row[wr_id]'");
+                    if (empty($board_list[$row[bo_table]]))
+                        $board_list[$row[bo_table]] = sql_fetch("select * from $g4[board_table] where bo_table = '{$row['bo_table']}'");
+
+                    $row = sql_fetch("select * from $g4[write_prefix]$row[bo_table] where wr_id = '$row[wr_id]'");
+                    $row = mw_get_list($row, $board_list[$row[bo_table]], $latest_skin_path, $subject_len);
+
                     $file['wr_subject'] = $row['wr_subject'];
-                    $file[subject] = conv_subject($row[wr_subject], $subject_len, "…");
-                    $file[wr_comment] = $row[wr_comment];
+                    $file['subject'] = conv_subject($row[wr_subject], $subject_len, "…");
+                    $file['wr_comment'] = $row[wr_comment];
 		}
 	    } else {
 		$file[href] = "#";
@@ -148,8 +164,10 @@ function mw_latest_main($skin_dir="", $bo_tables, $rows=10, $subject_len=40, $mi
 
 	    $list = array();
 
-	    $sql = " select * from $g4[board_table] where bo_table = '$bo_table'";
-	    $board = sql_fetch($sql);
+            if (empty($board_list[$row[bo_table]]))
+                $board_list[$row[bo_table]] = sql_fetch("select * from $g4[board_table] where bo_table = '{$row['bo_table']}'");
+
+            $board = $board_list[$row[bo_table]];
 
 	    if ($board) {
 		$tmp_write_table = $g4['write_prefix'] . $bo_table; // 게시판 테이블 전체이름
@@ -158,7 +176,7 @@ function mw_latest_main($skin_dir="", $bo_tables, $rows=10, $subject_len=40, $mi
 		$qry = sql_query($sql);
 
 		for ($i=0; $row = sql_fetch_array($qry); $i++) {
-		    $list[$i] = get_list($row, $board, $latest_skin_path, $subject_len);
+		    $list[$i] = mw_get_list($row, $board, $latest_skin_path, $subject_len);
 		    $list[$i][content] = $list[$i][wr_content] = "";
 		}
 		if (!$i) {

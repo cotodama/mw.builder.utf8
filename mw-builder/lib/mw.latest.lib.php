@@ -42,15 +42,21 @@ function mw_latest($skin_dir="", $bo_table, $rows=10, $subject_len=40, $is_img=0
     $board = mw_cache_read($cache_file_board, $minute);
     $file = mw_cache_read($cache_file_file, $minute);
 
+    if (empty($board))
+        $board = sql_fetch(" select * from $g4[board_table] where bo_table = '$bo_table' ");
+
     if ($is_img && !$file) {
         $file = array();
         $file = mw_get_last_thumb($bo_table, $is_img);
         for ($i=0, $m=count($file); $i<$m; ++$i) {
-            $row = sql_fetch("select wr_subject, wr_comment, wr_link1 from {$g4[write_prefix]}{$file[$i]['bo_table']} where wr_id = '{$file[$i]['wr_id']}'");
+            $row = sql_fetch("select * from {$g4[write_prefix]}{$file[$i]['bo_table']} where wr_id = '{$file[$i]['wr_id']}'");
+            $row = mw_get_list($row, $board, $latest_skin_path, $subject_len);
+
             $file[$i]['wr_subject'] = $row['wr_subject'];
             $file[$i]['subject'] = conv_subject($row['wr_subject'], $subject_len, "…");
             $file[$i]['wr_comment'] = $row['wr_comment'];
             $file[$i]['wr_link1'] = $row['wr_link1'];
+
         }
 
         if (count($file) < $is_img) {
@@ -64,9 +70,6 @@ function mw_latest($skin_dir="", $bo_table, $rows=10, $subject_len=40, $is_img=0
     }
 
     if (!$list) {
-	$sql = " select * from $g4[board_table] where bo_table = '$bo_table'";
-	$board = sql_fetch($sql);
-
 	if ($board) {
 	    $tmp_write_table = $g4['write_prefix'] . $bo_table; // 게시판 테이블 전체이름
 
@@ -97,7 +100,8 @@ function mw_latest($skin_dir="", $bo_table, $rows=10, $subject_len=40, $is_img=0
 		mw_cache_write($cache_file_board, $board);
 	    }
 
-	} else {
+	}
+        else {
 	    $list = array();
 	    $board = array();
 	    $board[bo_subject] = "none";

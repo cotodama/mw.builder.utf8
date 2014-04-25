@@ -41,6 +41,8 @@ function mw_latest_rand($skin_dir="", $bo_table, $rows=10, $subject_len=40, $is_
     //$board = mw_cache_read($cache_file_board, $minute);
     //$file = mw_cache_read($cache_file_file, $minute);
 
+    $board = sql_fetch(" select * from $g4[board_table] where bo_table = '$bo_table' ");
+
     if ($is_img && !$file) {
         $file = array();
 	$sql = "select *
@@ -60,7 +62,9 @@ function mw_latest_rand($skin_dir="", $bo_table, $rows=10, $subject_len=40, $is_
 	    if (!@file_exists($file[$i][path])) $file[$i] = null;
 	    if (@is_dir($file[$i][path])) $file[$i] = null;
 	    if ($file[$i]) {
-		$row2 = sql_fetch("select wr_subject,wr_comment, wr_link1 from $g4[write_prefix]$row[bo_table] where wr_id = '$row[wr_id]'");
+		$row2 = sql_fetch("select * from $g4[write_prefix]$row[bo_table] where wr_id = '$row[wr_id]'");
+		$row2 = mw_get_list($row2, $board, $latest_skin_path, $subject_len);
+
                 $file[$i]['wr_subject'] = $row['wr_subject'];
                 $file[$i][subject] = conv_subject($row2[wr_subject], $subject_len, "…");
                 $file[$i][wr_comment] = $row2[wr_comment];
@@ -79,8 +83,6 @@ function mw_latest_rand($skin_dir="", $bo_table, $rows=10, $subject_len=40, $is_
     }
 
     if (!$list) {
-	$sql = " select * from $g4[board_table] where bo_table = '$bo_table'";
-	$board = sql_fetch($sql);
 
 	$noids = array();
 	for ($i=0; $i<count($file); $i++) {

@@ -438,6 +438,11 @@ if ($list[$i][wr_singo] && $list[$i][wr_singo] >= $mw_basic[cf_singo_number] && 
     $is_singo = true;
 }
 
+// 보기차단 게시물
+if ($list[$i]['wr_view_block']) {
+    $list[$i][subject] = "보기가 차단된 게시물입니다.";
+}
+
 // 업데이트 아이콘
 $list[$i]['icon_update'] = "";
 if (!$list[$i]['icon_new'] && $list[$i]['wr_last'] != $list[$i]['wr_datetime'] && $list[$i]['wr_last'] >= date("Y-m-d H:i:s", $g4['server_time'] - ($board['bo_new'] * 3600))) {
@@ -446,7 +451,7 @@ if (!$list[$i]['icon_new'] && $list[$i]['wr_last'] != $list[$i]['wr_datetime'] &
 }
 
 // 게시물 아이콘
-$write_icon = mw_write_icon($list);
+$write_icon = mw_write_icon($list[$i]);
 
 // 썸네일
 $thumb_file = mw_thumb_jpg("$thumb_path/{$list[$i][wr_id]}");
@@ -711,7 +716,7 @@ else if ($mw_basic[cf_type] == "gall")
         if ($mw_basic[cf_type] == "desc") {
             echo "</div>";
             $desc = strip_tags($list[$i][wr_content]);
-            $desc = preg_replace("/{이미지\:([0-9]+)[:]?([^}]*)}/ie", "", $desc);
+            $desc = preg_replace("/{이미지\:([0-9]+)[:]?([^}]*)}/i", "", $desc);
             $desc = mw_reg_str($desc);
             $desc = cut_str($desc, $mw_basic[cf_desc_len]);
             echo "<div class=mw_basic_list_desc> $desc </div>";
@@ -728,7 +733,14 @@ else if ($mw_basic[cf_type] == "gall")
     <? if (!$mw_basic[cf_post_name]) { ?>
     <? if ($mw_basic[cf_attribute] != "anonymous") { ?> <td><nobr class=mw_basic_list_name><?=$list[$i][name]?></nobr></td> <?}?> <?}?>
     <? if ($mw_basic[cf_attribute] == 'qna') { ?>
-        <td class=mw_basic_list_qna_status><div><img src="<?=$board_skin_path?>/img/icon_qna_<?=$list[$i][wr_qna_status]?>.png"></div></td> <?}?>
+        <td class=mw_basic_list_qna_status>
+            <? if ($list[$i]['reply'] ) { ?>
+                &nbsp;
+            <? } else { ?>
+            <div><img src="<?=$board_skin_path?>/img/icon_qna_<?=$list[$i][wr_qna_status]?>.png"></div>
+            <? } ?>
+        </td>
+    <? } ?>
     <? if ($mw_basic[cf_attribute] == 'qna' && $mw_basic[cf_qna_point_use]) { ?> <td class=mw_basic_list_point><?=$list[$i][wr_qna_point]?></span></td> <?}?>
     <? if (!$mw_basic[cf_post_date]) { ?> <td class=mw_basic_list_datetime><?=$list[$i][datetime2]?></td> <?}?>
     <? if (!$mw_basic[cf_list_good] && $is_good) { ?><td class=mw_basic_list_good><?=$list[$i][wr_good]?></td><? } ?>

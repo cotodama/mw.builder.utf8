@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Bechu basic skin for gnuboard4
  *
@@ -205,7 +205,21 @@ function mw_make_thumbnail($set_width, $set_height, $source_file, $thumbnail_fil
         default: return false;
     }
 
-    if ($keep)
+    if (!$mw_basic[cf_resize_base])
+        $mw_basic[cf_resize_base] = 'long';
+
+    // 원본이 설정 사이즈보다 작은 경우 변경하지 않음
+    if ($mw_basic[cf_resize_base] == 'long' && $size[0] < $set_width && $size[1] < $set_height) {
+        return;
+    }
+    else if ($mw_basic[cf_resize_base] == 'width' && $size[0] < $set_width) {
+        return;
+    }
+    else if ($mw_basic[cf_resize_base] == 'height' && $size[1] < $set_height) {
+        return;
+    }
+
+    if ($keep) // 비율 유지
     {
 	$keep_size = mw_thumbnail_keep($size, $set_width, $set_height);
 	$set_width = $get_width = $keep_size[0];
@@ -414,6 +428,7 @@ function mw_set_sync_tag($content) {
     $content = mw_get_sync_tag($content, "table");
     $content = mw_get_sync_tag($content, "font");
 
+    // 그누보드 auto_link 에 괄호포함되는 문제 해결
     $content = preg_replace("/\(<a href=\"([^\)]+)\)\"([^>]*)>([^\)]+)\)<\/a>/i", "(<a href=\"$1\"$2>$3</a>)", $content);
 
     if ($board[bo_image_width]) {
@@ -2768,34 +2783,30 @@ function mw_write_icon($row)
     $write_icon = '';
     $style =  "align=absmiddle style=\"border-bottom:2px solid #fff;\"";
 
-    ob_start();
     if ($row['wr_kcb_use'])
-        echo "<img src=\"{$pc_skin_path}/img/icon_kcb.png\" {$style}>&nbsp;";
+        $write_icon = "<img src=\"{$pc_skin_path}/img/icon_kcb.png\" {$style}>&nbsp;";
     elseif (in_array($row['wr_id'], $quiz_id))
-        echo "<img src=\"{$quiz_path}/img/icon_quiz.png\" {$style}>&nbsp;";
+        $write_icon = "<img src=\"{$quiz_path}/img/icon_quiz.png\" {$style}>&nbsp;";
     elseif (in_array($row['wr_id'], $bomb_id))
-        echo "<img src=\"{$pc_skin_path}/img/icon_bomb.gif\" {$style}>&nbsp;";
+        $write_icon = "<img src=\"{$pc_skin_path}/img/icon_bomb.gif\" {$style}>&nbsp;";
     elseif (in_array($row['wr_id'], $vote_id))
-        echo "<img src=\"{$pc_skin_path}/img/icon_vote.png\" {$style}>&nbsp;";
+        $write_icon = "<img src=\"{$pc_skin_path}/img/icon_vote.png\" {$style}>&nbsp;";
     elseif ($row['wr_is_mobile'])
-        echo "<img src=\"{$pc_skin_path}/img/icon_mobile.png\" {$style} width=\"13\" height=\"12\">&nbsp;";
+        $write_icon = "<img src=\"{$pc_skin_path}/img/icon_mobile.png\" {$style} width=\"13\" height=\"12\">&nbsp;";
     elseif (strstr($row['wr_link1'], "youtu"))
-        echo "<img src=\"{$pc_skin_path}/img/icon_youtube.png\" width=\"13\" height=\"12\">&nbsp;";
+        $write_icon = "<img src=\"{$pc_skin_path}/img/icon_youtube.png\" width=\"13\" height=\"12\">&nbsp;";
     elseif ($row['wr_key_password'])
-        echo "<img src=\"{$pc_skin_path}/img/icon_key.png\" {$style} width=\"13\" height=\"12\">&nbsp;";
+        $write_icon = "<img src=\"{$pc_skin_path}/img/icon_key.png\" {$style} width=\"13\" height=\"12\">&nbsp;";
     else
-        echo "<img src=\"{$pc_skin_path}/img/icon_subject.gif\" width=\"13\" height=\"12\">&nbsp;";
+        $write_icon = "<img src=\"{$pc_skin_path}/img/icon_subject.gif\" width=\"13\" height=\"12\">&nbsp;";
 
     // ---- 
 
     if ($is_singo)
-        echo "<img src=\"{$pc_skin_path}/img/icon_red.png\" {$style}>&nbsp;";
+        $write_icon = "<img src=\"{$pc_skin_path}/img/icon_red.png\" {$style}>&nbsp;";
 
     if ($row['wr_view_block'])
-        echo "<img src=\"{$pc_skin_path}/img/icon_view_block.png\" {$style}>&nbsp;";
-
-    $write_icon = ob_get_contents();
-    ob_end_clean();
+        $write_icon = "<img src=\"{$pc_skin_path}/img/icon_view_block.png\" {$style}>&nbsp;";
 
     return $write_icon;
 }
@@ -2890,5 +2901,43 @@ function mw_list_link($row)
     }
 
     return $row;
+}
+
+function mw_board_cache_read($cache_file, $cache_time) // 분단위
+{
+    global $g4;
+
+    if (!is_file($cache_file)) return false;
+    if (!$cache_time) return false;
+
+    $diff_time = $g4[server_time] - filemtime($cache_file);
+
+    $cache_time *= 60; 
+
+    if ($diff_time > $cache_time) return false;
+
+    ob_start();
+    readfile($cache_file);
+    $content = ob_get_contents();
+    ob_end_clean();
+
+    $content = base64_decode($content);
+    $content = unserialize($content);
+
+    return $content;
+}
+
+function mw_board_cache_write($cache_file, $content)
+{
+    global $g4;
+
+    $content = serialize($content);
+    $content = base64_encode($content);
+
+    //mw_mkdir($cache_file);
+
+    $f = fopen($cache_file, "w");
+    fwrite($f, $content);
+    fclose($f);
 }
 
