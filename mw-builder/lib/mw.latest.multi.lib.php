@@ -58,9 +58,12 @@ function mw_latest_multi($skin_dir="", $tables, $rows=10, $subject_len=40, $is_i
             $row = sql_fetch("select * from {$g4[write_prefix]}{$file[$i]['bo_table']} where wr_id = '{$file[$i]['wr_id']}'");
             $row = mw_get_list($row, $board_list[$file[$i]['bo_table']], $latest_skin_path, $subject_len);
 
+<<<<<<< HEAD
             if ($row['wr_view_block'])
                 $file[$i]['path'] = "$latest_skin_path/img/noimage.gif";
 
+=======
+>>>>>>> 3ded01fdf9942ad808f8146d7ac4c0f59ccc39f1
             $file[$i]['wr_subject'] = $row['wr_subject'];
             $file[$i]['subject'] = conv_subject($row['wr_subject'], $subject_len, "…");
             $file[$i]['wr_comment'] = $row['wr_comment'];

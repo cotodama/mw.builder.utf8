@@ -2953,6 +2953,7 @@ function mw_board_cache_write($cache_file, $content)
     fclose($f);
 }
 
+<<<<<<< HEAD
 function mw_get_date($datetime, $val)
 {
     if (!$val)
@@ -2970,3 +2971,5 @@ function mw_get_date($datetime, $val)
     return $date;
 }
 
+=======
+>>>>>>> 3ded01fdf9942ad808f8146d7ac4c0f59ccc39f1

@@ -43,6 +43,7 @@ if (!$mw_basic[cf_hot_limit]) $mw_basic[cf_hot_limit] = 10;
 </style>
 <?php
 $hot_list = array();
+<<<<<<< HEAD
 
 $hot_cache_path = "{$g4['path']}/data/mw.basic.cache";
 $hot_cache_file = "{$hot_cache_path}/list-hot-{$board['bo_table']}";
@@ -71,6 +72,35 @@ if (!$hot_list) {
         if (!trim($tmp[$i])) continue;
         $bo_notice[] = trim($tmp[$i]);
     }
+=======
+
+$hot_cache_path = "{$g4['path']}/data/mw.basic.cache";
+$hot_cache_file = "{$hot_cache_path}/list-hot-{$board['bo_table']}";
+mw_mkdir($hot_cache_path, 0707);
+
+$hot_list = mw_board_cache_read($hot_cache_file, 10);
+
+if (!$hot_list) {
+    switch ($mw_basic[cf_hot]) {
+        case "1": $hot_start = ""; $hot_title = "실시간"; break;
+        case "2": $hot_start = date("Y-m-d H:i:s", $g4[server_time]-60*60*24*7); $hot_title = "주간"; break;
+        case "3": $hot_start = date("Y-m-d H:i:s", $g4[server_time]-60*60*24*30); $hot_title = "월간"; break;
+        case "4": $hot_start = date("Y-m-d H:i:s", $g4[server_time]-60*60*24); $hot_title = "일간"; break;
+        case "5": $hot_start = date("Y-m-d H:i:s", $g4[server_time]-60*60*24*365); $hot_title = "연간"; break;
+        case "6": $hot_start = date("Y-m-d H:i:s", $g4[server_time]-60*60*24*30*3); $hot_title = "3개월"; break;
+        case "7": $hot_start = date("Y-m-d H:i:s", $g4[server_time]-60*60*24*30*6); $hot_title = "6개월"; break;
+    }
+    $sql_between = 1;
+    if ($mw_basic[cf_hot] > 1) {
+        $sql_between = " wr_datetime between '$hot_start' and '$g4[time_ymdhis]' ";
+    }
+    $sql_except = "";
+    $tmp = explode("\n", $board[bo_notice]);
+    for ($i=0, $m=sizeof($tmp); $i<$m; $i++) { 
+        if (!trim($tmp[$i])) continue;
+        $bo_notice[] = trim($tmp[$i]);
+    }
+>>>>>>> 3ded01fdf9942ad808f8146d7ac4c0f59ccc39f1
     if (count($bo_notice)>0)
         $sql_except = " and wr_id not in (".implode(",", $bo_notice).") ";
 
