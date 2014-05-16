@@ -720,6 +720,7 @@ $(document).ready(function () {
     <? if ($mw_basic[cf_comment_emoticon] && !$is_comment_editor && !$write_error) {?>
     <span class=mw_basic_comment_emoticon><a href="javascript:win_open('<?=$board_skin_path?>/mw.proc/mw.emoticon.skin.php?bo_table=<?=$bo_table?>','emo','width=600,height=400,scrollbars=yes')">☞ 이모티콘</a></span>
     <? } ?>
+            <? if ($mw_basic[cf_comment_specialchars]) {?>
             <span class=mw_basic_comment_emoticon><a href="#;" onclick="specialchars()">☞특수문자</a></span>
             <style>
             #mw_basic_special_characters {
@@ -748,6 +749,7 @@ $(document).ready(function () {
                 $("#mw_basic_special_characters").toggle();
             }
             </script>
+            <? } ?>
     <? if ($mw_basic[cf_comment_file] && $mw_basic[cf_comment_file] <= $member['mb_level'] && !$write_error) { ?>
     <span class=mw_basic_comment_file onclick="$('#comment_file_layer').toggle('slow');">☞ 첨부파일</span>
     <? } ?>

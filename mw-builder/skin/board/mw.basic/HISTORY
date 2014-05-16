@@ -1,4 +1,35 @@
-<<<<<<< HEAD
+ver 2.5.6 (14.05.16)
+    : png, gif 선명도 설정 가능 (재아님 제안)
+    : 특수문자 사용유무 (재아님 제안)
+    : vimeo 링크 오류 수정 (젬스박님 제안)
+    : 모바일 width 조정시 height 제거 (takeone님 제안)
+
+    mw.basic/HISTORY
+    mw.basic/mw.adm/mw.config.php
+    mw.basic/mw.adm/mw.config.update.php
+    mw.basic/mw.adm/mw.upgrade.php
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/write.skin.php
+    mw.basic/view_comment.skin.php
+ 
+ver 2.5.5 (14.05.09)
+    : 워터마크가 이미지 보다 클경우 자동 리사이징 (텔리님 제안)
+    : 이모티콘+워터마크 사용시 새창 오류 수정 (흰발톱님 제안)
+    : 날짜표시 사용자정의 설정 오류 (브라운아이즈님 제안)
+    : 점프 횟수 오류 수정 (재아님 제안)
+    : 글작성 제한 IP체크 옵션
+
+    mw.basic/HISTORY
+    mw.basic/mw.adm/mw.config.php
+    mw.basic/mw.adm/mw.config.update.php
+    mw.basic/mw.adm/mw.upgrade.php
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/mw.proc/mw.jump.update.php
+    mw.basic/view_head.skin.php
+    mw.basic/write.skin.php
+    mw.basic/write_update.head.skin.php
+    mw.basic/write_comment_update.head.skin.php
+ 
 ver 2.5.4 (14.05.02)
     : 인기게시물 제목 미출력 오류 (브라운아이즈님 제안)
     : 보기 차단시 썸네일 미출력 (나도장관님 제안)
@@ -22,8 +53,6 @@ ver 2.5.4 (14.05.02)
     mw.basic/view_comment_head.skin.php
     mw.basic/write_update.tail.skin.php
  
-=======
->>>>>>> 3ded01fdf9942ad808f8146d7ac4c0f59ccc39f1
 ver 2.5.3 (14.04.25)
     : 질문게시판에서 답변글 질문상태표시안함 (재아님 제안)
     : 이미지 리사이징시 원본이 설정값보다 작으면 실행하지 않음 (히어님 제안)

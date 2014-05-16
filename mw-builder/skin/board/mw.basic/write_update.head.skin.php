@@ -87,8 +87,13 @@ if (($w == "" || $w == "r") && $mw_basic[cf_write_register] && !$is_admin) {
 // 글작성 제한
 if (($w == "" || $w == "r") && $mw_basic[cf_write_day] && $mw_basic[cf_write_day_count] && !$is_admin) {
     $old = date("Y-m-d 00:00:00", $g4[server_time]-((60*60*24)*($mw_basic[cf_write_day]-1)));
-    $sql = "select count(wr_id) as cnt from $write_table where mb_id = '$member[mb_id]' and wr_is_comment = '0' ";
-    $sql.= "and wr_datetime between '$old' and '$g4[time_ymd] 23:59:59'";
+    $sql = "select count(wr_id) as cnt from $write_table ";
+    $sql.= " where wr_is_comment = '0' ";
+    $sql.= "   and wr_datetime between '$old' and '$g4[time_ymd] 23:59:59'";
+    if ($mw_basic[cf_write_day_ip])
+        $sql.= "   and wr_ip = '$_SERVER[REMOTE_ADDR]' ";
+    else
+        $sql.= "   and mb_id = '$member[mb_id]' ";
     $row = sql_fetch($sql);
 
     if ($row[cnt] >= $mw_basic[cf_write_day_count]) {

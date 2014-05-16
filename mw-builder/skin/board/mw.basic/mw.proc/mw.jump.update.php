@@ -46,7 +46,7 @@ $row = sql_fetch($sql);
 $count = $row['cnt'];
 $count++;
 
-if ($mw_basic['cf_jump_count'] and $count >= $mw_basic['cf_jump_count'] and !$is_admin) {
+if ($mw_basic['cf_jump_count'] and $count > $mw_basic['cf_jump_count'] and !$is_admin) {
     die("횟수를 초과했습니다.");
 }
 

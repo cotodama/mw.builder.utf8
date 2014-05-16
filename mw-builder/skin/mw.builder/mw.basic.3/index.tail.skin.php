@@ -38,7 +38,20 @@ All rights reserved.
 <? //echo "contact: $email"; ?>
 </div>
 
-<?
+<?php
 // 팝업창 
 if (_MW_INDEX_ && !is_member_page()) echo mw_popup();
 ?>
+
+<?php
+if ((strstr(strtolower($_SERVER['HTTP_USER_AGENT']), "mobile") and file_exists($g4['path']."/extend/mw.mobile.extend.php")) or $is_admin) {
+    echo "<div style='margin:0; padding:30px; text-align:center; border-top:1px solid #ccc;''>";
+    $mobile_link = "$g4[path]/plugin/mobile";
+    if ($bo_table) {
+        $mobile_link .= "/board.php?bo_table=".$bo_table;
+        if ($wr_id)
+            $mobile_link .= "&wr_id=".$wr_id;
+    }
+    echo "<a href='{$mobile_link}' style='font:bold 60px gulim;'>모바일 웹으로 보기</a>";
+    echo "</div>";
+}

@@ -181,11 +181,7 @@ if (strstr($row[wr_option], "html")) {
     $row[content] = mw_tag_debug($row[content]);
 }
 $row[content] = mw_set_sync_tag($row[content]); // 잘못된 태그교정
-<<<<<<< HEAD
 $row[content] = mw_youtube_content($row[content], "144"); // 유투브 자동 재생
-=======
-$row[content] = mw_youtube_content($row[content]); // 유투브 자동 재생
->>>>>>> 3ded01fdf9942ad808f8146d7ac4c0f59ccc39f1
 
 if ($mw_basic[cf_iframe_level] && $mw_basic[cf_iframe_level] <= $mb[mb_level]) {
     $row[content] = mw_special_tag($row[content]);

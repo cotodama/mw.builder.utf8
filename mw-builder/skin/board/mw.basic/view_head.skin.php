@@ -414,7 +414,8 @@ if ($mw_basic[cf_no_img_ext]) { // 이미지 확대 사용 안함
         $view[rich_content] = str_replace("<img", "<img oncontextmenu=\"return false\" style=\"-webkit-touch-callout:none\" ", $view[rich_content]);
 
 
-} else {
+}
+else {
     // 웹에디터 이미지 클릭시 원본 사이즈 조정
     $data = $view[rich_content];
     $path = $size = null;
@@ -422,6 +423,7 @@ if ($mw_basic[cf_no_img_ext]) { // 이미지 확대 사용 안함
     for ($i=0; $i<count($matchs[1]); $i++) {
         $match = $matchs[1][$i];
         $no_www = str_replace("www.", "", $g4[url]);
+        $path = "";
         if (strstr($match, $g4[url])) {
             $path = str_replace($g4[url], $g4[path], $match);
         } elseif (strstr($match, $no_www)) {

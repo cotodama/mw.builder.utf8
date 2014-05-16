@@ -76,12 +76,9 @@ function mw_latest_main($skin_dir="", $bo_tables, $rows=10, $subject_len=40, $mi
 		$row = sql_fetch("select * from $g4[write_prefix]$row[bo_table] where wr_id = '$row[wr_id]'");
                 $row = mw_get_list($row, $board_list[$row[bo_table]], $latest_skin_path, $subject_len);
 
-<<<<<<< HEAD
                 if ($row['wr_view_block'])
                     $file[$i][path] = "$latest_skin_path/img/noimage.gif";
 
-=======
->>>>>>> 3ded01fdf9942ad808f8146d7ac4c0f59ccc39f1
                 $file[$i]['wr_subject'] = $row['wr_subject'];
 		$file[$i]['subject'] = conv_subject($row['wr_subject'], $subject_len, "…");
 		$file[$i]['wr_comment'] = $row['wr_comment'];
@@ -112,11 +109,7 @@ function mw_latest_main($skin_dir="", $bo_tables, $rows=10, $subject_len=40, $mi
                 $board_list[$row[bo_table]] = sql_fetch("select * from $g4[board_table] where bo_table = '{$row['bo_table']}'");
 
             $row2 = sql_fetch("select * from $tmp_write_table where wr_id = '$row[wr_id]'");
-<<<<<<< HEAD
             $row2 = mw_get_list($row2, $board_list[$row[bo_table]], $latest_skin_path, $subject_len);
-=======
-            $row2 = mw_get_list($row, $board_list[$row[bo_table]], $latest_skin_path, $subject_len);
->>>>>>> 3ded01fdf9942ad808f8146d7ac4c0f59ccc39f1
 
 	    $list[$i]['wr_subject'] = $row2['wr_subject'];
 	    $list[$i]['subject'] = conv_subject($row2['wr_subject'], $subject_len, "…");
@@ -173,17 +166,10 @@ function mw_latest_main($skin_dir="", $bo_tables, $rows=10, $subject_len=40, $mi
 
 	    $list = array();
 
-<<<<<<< HEAD
             if (empty($board_list[$bo_table]))
                 $board_list[$row[bo_table]] = sql_fetch("select * from $g4[board_table] where bo_table = '{$row['bo_table']}'");
 
             $board = $board_list[$bo_table];
-=======
-            if (empty($board_list[$row[bo_table]]))
-                $board_list[$row[bo_table]] = sql_fetch("select * from $g4[board_table] where bo_table = '{$row['bo_table']}'");
-
-            $board = $board_list[$row[bo_table]];
->>>>>>> 3ded01fdf9942ad808f8146d7ac4c0f59ccc39f1
 
 	    if ($board) {
 		$tmp_write_table = $g4['write_prefix'] . $bo_table; // 게시판 테이블 전체이름

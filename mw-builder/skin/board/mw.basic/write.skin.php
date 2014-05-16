@@ -100,10 +100,15 @@ if (($w == "" || $w == "r") && $mw_basic[cf_write_register] && !$is_admin) {
 }
 
 // 글작성 제한
-if (($w == "" || $w == "r") && $mw_basic[cf_write_day] && $mw_basic[cf_write_day_count] && !$is_admin) {
+if (($w == "" || $w == "r") && $mw_basic[cf_write_day] && $mw_basic[cf_write_day_count]) {
     $old = date("Y-m-d 00:00:00", $g4[server_time]-((60*60*24)*($mw_basic[cf_write_day]-1)));
-    $sql = "select count(wr_id) as cnt from $write_table where mb_id = '$member[mb_id]' and wr_is_comment = '0' ";
-    $sql.= "and wr_datetime between '$old' and '$g4[time_ymd] 23:59:59'";
+    $sql = "select count(wr_id) as cnt from $write_table ";
+    $sql.= " where wr_is_comment = '0' ";
+    $sql.= "   and wr_datetime between '$old' and '$g4[time_ymd] 23:59:59'";
+    if ($mw_basic[cf_write_day_ip])
+        $sql.= "   and wr_ip = '$_SERVER[REMOTE_ADDR]' ";
+    else
+        $sql.= "   and mb_id = '$member[mb_id]' ";
     $row = sql_fetch($sql);
 
     if ($row[cnt] >= $mw_basic[cf_write_day_count]) {
@@ -249,10 +254,10 @@ if ($is_dhtml_editor && $mw_basic[cf_editor] == "cheditor") {
     echo cheditor1('wr_content', '100%', '250'); */
     include_once("$g4[path]/lib/cheditor4.lib.php");
     echo "<script src='$g4[cheditor4_path]/cheditor.js'></script>";
-    echo cheditor1('wr_content', '100%', $write_height*25);
+    echo cheditor1('wr_content', '100%', ($write_height*25).'px');
 
     if ($mw_basic[cf_contents_shop] == '2') {
-        echo cheditor1('wr_contents_preview', '100%', $write_height*25);
+        echo cheditor1('wr_contents_preview', '100%', ($write_height*25).'px');
     }
 }
 
@@ -710,6 +715,7 @@ if ($mw_basic[cf_category_radio]) {
                     href="#;" onclick="win_open('<?=$board_skin_path?>/mw.proc/mw.emoticon.skin.php?bo_table=<?=$bo_table?>','emo'
                     ,'width=600,height=400,scrollbars=yes')">☞ 이모티콘</a></span>
             <? } ?>
+            <? if ($mw_basic[cf_post_specialchars]) {?>
             <a href="#;" onclick="specialchars()">☞특수문자</a>
             <style>
             #mw_basic_special_characters {
@@ -737,6 +743,7 @@ if ($mw_basic[cf_category_radio]) {
                 $("#mw_basic_special_characters").toggle();
             }
             </script>
+            <? } ?>
         </td>
         <td align=right><? if ($write_min || $write_max) { ?><span id=char_count></span>글자<?}?></td>
     </tr>

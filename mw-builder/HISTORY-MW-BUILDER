@@ -1,4 +1,14 @@
-<<<<<<< HEAD
+1.5.0 (14.05.16)
+    : 그누보드 최신버전 4.37.10 (14.05.15) 탑재
+    : 배추스킨 최신버전 2.5.6 (14.05.16) 탑재
+    : 모바일 빌더 설치시 하단에 모바일 웹페이지 이동 링크 출력 (나도장관님 제안)
+
+    HISTORY-MW-BUILDER
+    head.php
+    skin/mw.builder/mw.basic.1/index.tail.skin.php
+    skin/mw.builder/mw.basic.2/index.tail.skin.php
+    skin/mw.builder/mw.basic.3/index.tail.skin.php
+ 
 1.4.9 (14.05.02)
     : 그누보드 최신버전 4.37.09 (14.04.29) 탑재
     : 배추스킨 최신버전 2.5.4 (14.05.02) 탑재
@@ -12,8 +22,6 @@
     lib/mw.latest.multi.rand.lib.php
     lib/mw.latest.rand.lib.php
  
-=======
->>>>>>> 3ded01fdf9942ad808f8146d7ac4c0f59ccc39f1
 1.4.8 (14.04.25)
     : 그누보드 최신버전 4.37.08 (14.04.10) 탑재
     : 배추스킨 최신버전 2.5.3 (14.04.25) 탑재
