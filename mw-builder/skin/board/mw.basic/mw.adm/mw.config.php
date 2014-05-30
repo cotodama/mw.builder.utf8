@@ -2566,6 +2566,22 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 	</div>
     </div>
 
+    <?php
+    if (!$mw_basic[cf_image_outline_color])
+        $mw_basic[cf_image_outline_color] = "#cccccc";
+    ?>
+
+    <div class="cf_item">
+	<div class="cf_title"> <input type=checkbox name=chk[cf_image_outline] value=1>&nbsp; 이미지 외곽선 </div>
+	<div class="cf_content">
+	    <input type=checkbox name=cf_image_outline value=1> 사용
+	    , 색상 : <input type="text" class="ed" size="10" name="cf_image_outline_color" value="<?=$mw_basic[cf_image_outline_color]?>"> 사용
+            <span class="cf_info">(이미지 업로드시 외곽선을 자동으로 그립니다.)</span>
+	    <script> document.cf_form.cf_image_outline.checked = '<?=$mw_basic[cf_image_outline]?>'; </script>
+	</div>
+    </div>
+
+
 
     <div class="block"></div>
 </div> <!-- tabs-5-2 -->
@@ -2735,6 +2751,8 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 	    <br/><input type=checkbox name=cf_social_commerce_hp value=1> 주문문자 사용
                 <span class="cf_info">(알림탭의 글등록 알림문자 옵션에서 ICODEKOREA 계정정보 입력시 사용가능)</span>
 
+            <br/>진행시작일수 : <input type="text" class="ed" name="cf_social_commerce_begin" size="3" numeric value="<?=$mw_basic[cf_social_commerce_begin]?>"> 일 이내
+            <br/>진행최대일수 : <input type="text" class="ed" name="cf_social_commerce_limit" size="3" numeric value="<?=$mw_basic[cf_social_commerce_limit]?>"> 일 까지
             <div><a href="#;" onclick="win_open('<?=$social_commerce_path?>/terms_write.php?bo_table=<?=$bo_table?>', 'terms', 'width=800,height=600,scrollbars=1')" style="text-decoration:underline;">이용약관 및 개인정보 제3자제공 동의 편집</a></div>
 	    <script>
             document.cf_form.cf_social_commerce.checked = "<?=$mw_basic[cf_social_commerce]?>";

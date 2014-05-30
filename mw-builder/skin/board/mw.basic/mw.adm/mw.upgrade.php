@@ -1014,6 +1014,8 @@ if (is_null($mw_basic[cf_social_commerce])) {
     sql_query("alter table $mw[basic_config_table] add cf_social_commerce_level int not null", false);
 }
     sql_query("alter table $mw[basic_config_table] add cf_social_commerce_hp varchar(1) not null", false);
+    sql_query("alter table $mw[basic_config_table] add cf_social_commerce_begin int not null", false);
+    sql_query("alter table $mw[basic_config_table] add cf_social_commerce_limit int not null", false);
 
 // 마케팅DB
 if (is_null($mw_basic[cf_marketdb])) {
@@ -1287,4 +1289,7 @@ if (is_null($mw_basic[cf_talent_market])) {
 
     sql_query("alter table $mw[basic_config_table] add cf_post_specialchars varchar(1) not null default '1'", false);
     sql_query("alter table $mw[basic_config_table] add cf_comment_specialchars varchar(1) not null default '1'", false);
+
+    sql_query("alter table {$mw[basic_config_table]} add cf_image_outline varchar(1) not null", false);
+    sql_query("alter table {$mw[basic_config_table]} add cf_image_outline_color varchar(7) not null default '#cccccc'", false);
 

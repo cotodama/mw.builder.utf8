@@ -57,7 +57,17 @@ set_session("ss_token", $token);
     font-size:12px;
     padding:2px;
     width:95%;
-    height:100px;
+    height:50px;
+}
+.input { 
+    border-top:1px solid #9a9a9a;
+    border-left:1px solid #9a9a9a;
+    border-right:1px solid #d8d8d8;
+    border-bottom:1px solid #d8d8d8;
+    font-size:12px;
+    padding:2px;
+    width:95%;
+    height:25px;
 }
 .options { text-align:center; margin:0 0 10px 0; }
 .buttons { text-align:center; }
@@ -96,8 +106,13 @@ function is_all_moving() {
     <div class="title"> <?=$mb_name?> 회원을 접근차단하시겠습니까? </div>
 
     <div class="content">
-    <div> 관리자 메모 </div>
-    <textarea name="mb_memo" class="text"><?=$mb[mb_memo]?></textarea>
+        <div> 관리자 메모 </div>
+        <textarea name="mb_memo" class="text"><?=$mb[mb_memo]?></textarea>
+    </div>
+
+    <div class="content">
+        <div> 단어필터링 </div>
+        <input type="text" name="cf_filter" class="input">
     </div>
 
     <div class="options">

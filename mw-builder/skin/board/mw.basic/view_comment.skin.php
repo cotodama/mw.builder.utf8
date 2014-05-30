@@ -1109,7 +1109,7 @@ var g4_skin_path = "<?=$board_skin_path?>";
 <? if ($mw_basic[cf_icon_level]) { ?>
 <style type="text/css">
 <? for ($i=0; $i<=99; $i++) { ?>
-#mw_basic .icon_level<?=$i?> { background:url(<?=$board_skin_path?>/img/icon_level.png) 0 -<?=($i*10)?>px; width:50px; height:10px; font-size:10px; line-height:10px; }
+#mw_basic .icon_level<?=$i?> { background:url(<?=$board_skin_path?>/img/icon_level.png) 0 -<?=($i*10)?>px no-repeat; width:50px; height:10px; font-size:10px; line-height:10px; }
 <? } ?>
 </style>
 <? } ?>

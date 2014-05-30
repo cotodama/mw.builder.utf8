@@ -295,6 +295,7 @@ bo_table = '$bo_table'
 ,cf_img_1_noview = '$cf_img_1_noview'
 ,cf_thumb_jpg = '$cf_thumb_jpg'
 ,cf_image_save_close = '$cf_image_save_close'
+,cf_image_outline = '$cf_image_outline'
 ,cf_only_one = '$cf_only_one'
 ,cf_must_notice = '$cf_must_notice'
 ,cf_must_notice_read = '$cf_must_notice_read'
@@ -321,6 +322,8 @@ bo_table = '$bo_table'
 ,cf_good_cancel = '$cf_good_cancel'
 ,cf_social_commerce = '$cf_social_commerce'
 ,cf_social_commerce_hp = '$cf_social_commerce_hp'
+,cf_social_commerce_limit = '$cf_social_commerce_limit'
+,cf_social_commerce_begin = '$cf_social_commerce_begin'
 ,cf_marketdb = '$cf_marketdb'
 ,cf_marketdb_hp = '$cf_marketdb_hp'
 ,cf_google_map = '$cf_google_map'
@@ -670,6 +673,10 @@ if ($chk[cf_post_num]) $sql .= ", cf_post_num = '$cf_post_num' ";
 if ($chk[cf_img_1_noview]) $sql .= ", cf_img_1_noview = '$cf_img_1_noview' ";
 if ($chk[cf_thumb_jpg]) $sql .= ", cf_thumb_jpg = '$cf_thumb_jpg' ";
 if ($chk[cf_image_save_close]) $sql .= ", cf_image_save_close = '$cf_image_save_close' ";
+if ($chk[cf_image_outline]) {
+    $sql .= ", cf_image_outline = '$cf_image_outline' ";
+    $sql .= ", cf_image_outline_color = '$cf_image_outline_color' ";
+}
 if ($chk[cf_only_one]) $sql .= ", cf_only_one = '$cf_only_one' ";
 if ($chk[cf_must_notice]) {
     $sql .= ", cf_must_notice = '$cf_must_notice' ";
@@ -716,6 +723,8 @@ if ($chk[cf_good_cancel]) $sql .= ", cf_good_cancel = '$cf_good_cancel' ";
 if ($chk[cf_social_commerce]) {
     $sql .= ", cf_social_commerce = '$cf_social_commerce' ";
     $sql .= ", cf_social_commerce_hp = '$cf_social_commerce_hp' ";
+    $sql .= ", cf_social_commerce_limit = '$cf_social_commerce_limit' ";
+    $sql .= ", cf_social_commerce_begin = '$cf_social_commerce_begin' ";
 }
 if ($chk[cf_marketdb]) {
     $sql .= ", cf_marketdb = '$cf_marketdb' ";

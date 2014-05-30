@@ -44,7 +44,7 @@ if (_MW_INDEX_ && !is_member_page()) echo mw_popup();
 ?>
 
 <?php
-if ((strstr(strtolower($_SERVER['HTTP_USER_AGENT']), "mobile") and file_exists($g4['path']."/extend/mw.mobile.extend.php")) or $is_admin) {
+if ((strstr(strtolower($_SERVER['HTTP_USER_AGENT']), "mobile") and file_exists($g4['path']."/extend/mw.mobile.extend.php"))) {
     echo "<div style='margin:0; padding:30px; text-align:center; border-top:1px solid #ccc;''>";
     $mobile_link = "$g4[path]/plugin/mobile";
     if ($bo_table) {

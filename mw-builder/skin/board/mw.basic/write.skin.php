@@ -1393,7 +1393,7 @@ if ($w == "") {
 <tr>
 <td class=mw_basic_write_title>· 링크 #<?=$i?></td>
 <td class=mw_basic_write_content>
-    <input type="text" size=50 name="wr_link<?=$i?>" itemname="링크 #<?=$i?>" value="<?=$write["wr_link{$i}"]?>" class=mw_basic_text>
+    <input type="text" size=50 name="wr_link<?=$i?>" id="wr_link<?=$i?>" itemname="링크 #<?=$i?>" value="<?=$write["wr_link{$i}"]?>" class=mw_basic_text>
     <? if ($mw_basic[cf_link_target_level] && $mw_basic[cf_link_target_level] <= $member[mb_level]) { ?>
         <select name="wr_link<?=$i?>_target">
             <option value="_blank">새창 (_blank)</option>
@@ -1829,13 +1829,18 @@ function fwrite_check(f) {
 
     var subject = "";
     var content = "";
-    <? if (!$is_admin) { ?>
+    var link1 = "";
+    var link2 = "";
+
+    <? if (1) { //!$is_admin) { ?>
     $.ajax({
         url: "<?=$board_skin_path?>/ajax.filter.php",
         type: "POST",
         data: {
             "subject": f.wr_subject.value,
-            "content": f.wr_content.value
+            "content": f.wr_content.value,
+            "link1": f.wr_link1.value,
+            "link2": f.wr_link2.value
         },
         dataType: "json",
         async: false,
@@ -1843,6 +1848,8 @@ function fwrite_check(f) {
         success: function(data, textStatus) {
             subject = data.subject;
             content = data.content;
+            link1 = data.link1;
+            link2 = data.link2;
         }
     });
     <? } ?>
@@ -1859,6 +1866,18 @@ function fwrite_check(f) {
             ed_wr_content.returnFalse();
         else 
             f.wr_content.focus();
+        return false;
+    }
+
+    if (link1) {
+        alert("링크에 금지단어('"+link1+"')가 포함되어있습니다");
+        f.wr_link1.focus();
+        return false;
+    }
+
+    if (link2) {
+        alert("링크에 금지단어('"+link2+"')가 포함되어있습니다");
+        f.wr_link2.focus();
         return false;
     }
 

@@ -209,14 +209,16 @@ function mw_make_thumbnail($set_width, $set_height, $source_file, $thumbnail_fil
         $mw_basic[cf_resize_base] = 'long';
 
     // 원본이 설정 사이즈보다 작은 경우 변경하지 않음
-    if ($mw_basic[cf_resize_base] == 'long' && $size[0] < $set_width && $size[1] < $set_height) {
-        return;
-    }
-    else if ($mw_basic[cf_resize_base] == 'width' && $size[0] < $set_width) {
-        return;
-    }
-    else if ($mw_basic[cf_resize_base] == 'height' && $size[1] < $set_height) {
-        return;
+    if ($source_file == $thumbnail_file) {
+        if ($mw_basic[cf_resize_base] == 'long' && $size[0] < $set_width && $size[1] < $set_height) {
+            return;
+        }
+        else if ($mw_basic[cf_resize_base] == 'width' && $size[0] < $set_width) {
+            return;
+        }
+        else if ($mw_basic[cf_resize_base] == 'height' && $size[1] < $set_height) {
+            return;
+        }
     }
 
     if ($keep) // 비율 유지
@@ -263,6 +265,9 @@ function mw_make_thumbnail($set_width, $set_height, $source_file, $thumbnail_fil
     if (!$mw_basic[cf_resize_quality])
         $mw_basic[cf_resize_quality] = 80;
 
+    if ($mw_basic[cf_image_outline])
+        mw_image_outline($target, $size, $mw_basic[cf_image_outline_color]);
+
     @imagejpeg($target, $thumbnail_file, $mw_basic[cf_resize_quality]);
     @chmod($thumbnail_file, 0606);
 
@@ -277,12 +282,70 @@ function mw_make_thumbnail($set_width, $set_height, $source_file, $thumbnail_fil
         @touch($thumbnail_file, strtotime($time));
 }
 
+function mw_hex_to_rgb($hex)
+{
+   $hex = str_replace("#", "", $hex);
+
+   if(strlen($hex) == 3) {
+      $r = hexdec(substr($hex,0,1).substr($hex,0,1));
+      $g = hexdec(substr($hex,1,1).substr($hex,1,1));
+      $b = hexdec(substr($hex,2,1).substr($hex,2,1));
+   }
+   else {
+      $r = hexdec(substr($hex,0,2));
+      $g = hexdec(substr($hex,2,2));
+      $b = hexdec(substr($hex,4,2));
+   }
+   $rgb = array($r, $g, $b);
+
+   return $rgb;
+}
+
+function mw_image_outline($source, $size=null, $color="#cccccc")
+{
+    global $mw_basic;
+
+    if (!preg_match("/(jpe?g|gif|png)$/i", $source)) return;
+
+    $source_file = $source;
+    $size = @getimagesize($source_file);
+    switch ($size[2]) {
+        case 1: $source = @imagecreatefromgif($source_file); break;
+        case 2: $source = @imagecreatefromjpeg($source_file); break;
+        case 3: $source = @imagecreatefrompng($source_file); break;
+        default: return false;
+    }
+
+    $rgb = mw_hex_to_rgb($color); 
+    $color = imagecolorallocate($source, $rgb[0], $rgb[1], $rgb[2]);
+    $xy = array(0, 0, $size[0]-1, 0, $size[0]-1, $size[1]-1, 0, $size[1]-1);
+    imagepolygon($source, $xy, 4, $color);
+
+    switch ($size[2]) {
+        case 1:
+            imagegif($source, $source_file);
+            break;
+        case 2:
+            imagejpeg($source, $source_file, $mw_basic[cf_resize_quality]);
+            break;
+        case 3:
+            imagepng($source, $source_file);
+            break;
+    }
+    @chmod($source_file, 0606);
+    @imagedestroy($source);
+
+    return $source;
+}
+
 function mw_watermark($target, $tw, $th, $source, $position, $transparency=100)
 {
     global $mw_basic;
 
     $wf = $source;
     $ws = @getimagesize($wf);
+
+    $is_alpha_work = false;
 
     switch ($ws[2]) {
         case 1: $wi = @imagecreatefromgif($wf); break;
@@ -314,7 +377,7 @@ function mw_watermark($target, $tw, $th, $source, $position, $transparency=100)
                 $set_height = $get_height = $keep_size[1];
 
                 $target2 = imagecreatetruecolor($set_width, $set_height);
-                if ($ws[2] == 1 || $ws[2] == 3) {
+                if ($ws[2] == 1 || $ws[2] == 3) { // 1:gif, 3:png
                     imagealphablending($target2, false);
                     imagesavealpha($target2, true);
                     $transparent = imagecolorallocatealpha($target2, 255, 255, 255, 127);
@@ -335,6 +398,7 @@ function mw_watermark($target, $tw, $th, $source, $position, $transparency=100)
                 $wx = (int)($tw/2 - $ws[0]/2);
                 $wy = (int)($th/2 - $ws[1]/2);
 
+                $is_alpha_work = true;
             }
             else {
                 $wx = (int)($tw/2 - $ws[0]/2);
@@ -342,14 +406,25 @@ function mw_watermark($target, $tw, $th, $source, $position, $transparency=100)
             }
             break;
     }
-    if ($ws[2] == 1 || $ws[2] == 3) {
+    if ($ws[2] == 1 && !$is_alpha_work) { // 1:gif
+        $target2 = imagecreatetruecolor($ws[0], $ws[1]);
+        imagealphablending($target2, false);
+        imagesavealpha($target2, true);
+
+        $transparent = imagecolorallocatealpha($target2, 255, 255, 255, 127);
+        imagefilledrectangle($target2, 0, 0, $ws[0], $ws[1], $transparent);
+        imagecopyresampled($target2, $wi, 0, 0, 0, 0, $ws[0], $ws[1], $ws[0], $ws[1]);
+        imagedestroy($wi);
+        $wi = $target2;
+    }
+    if ($ws[2] == 1 || $ws[2] == 3) { // 1:gif, 3:png
         //imagealphablending($wi, TRUE);
         //imagealphablending($target, TRUE);
         //imagecopy($target, $wi, $wx, $wy, 0, 0, $ws[0], $ws[1]);
         imagecopymerge_alpha($target, $wi, $wx, $wy, 0, 0, $ws[0], $ws[1], $transparency);
     }
     else {
-        imagecopymerge($target, $wi, $wx, $wy, 0, 0, $ws[0], $ws[1], $transparency);
+        @imagecopymerge($target, $wi, $wx, $wy, 0, 0, $ws[0], $ws[1], $transparency);
     }
     @imagedestroy($wi);
 }
@@ -520,21 +595,21 @@ function mw_set_sync_tag($content) {
         preg_match_all("/width\s*:\s*([0-9]+)px/iUs", $content, $matchs);
         for ($i=0, $m=count($matchs[1]); $i<$m; $i++) {
             if ($matchs[1][$i] > $board[bo_image_width]) {
-                $content = preg_replace("/{$matchs[0][$i]}/i", "width:{$board[bo_image_width]}px ", $content);
+                $content = str_replace($matchs[0][$i], "width:{$board[bo_image_width]}px ", $content);
             }
         }
 
         preg_match_all("/width=[\"\']?([0-9]+)[\"\']?\s.*height=[\"\']?([0-9]+)[\"\'\s>]/iUs", $content, $matchs);
         for ($i=0, $m=count($matchs[1]); $i<$m; $i++) {
             if ($matchs[1][$i] > $board[bo_image_width]) {
-                $content = preg_replace("/{$matchs[0][$i]}/i", "width=\"{$board[bo_image_width]}\" ", $content);
+                $content = str_replace($matchs[0][$i], "width=\"{$board[bo_image_width]}\" ", $content);
             }
         }
 
         preg_match_all("/width=[\"\']?([0-9]+)[\"\'\s>]/iUs", $content, $matchs);
         for ($i=0, $m=count($matchs[1]); $i<$m; $i++) {
             if ($matchs[1][$i] > $board[bo_image_width]) {
-                $content = preg_replace("/{$matchs[0][$i]}/i", "width=\"{$board[bo_image_width]}\" ", $content);
+                $content = str_replace($matchs[0][$i], "width=\"{$board[bo_image_width]}\" ", $content);
             }
         }
     }
@@ -2873,7 +2948,7 @@ function mw_editor_image_copy($content)
 
 function mw_write_icon($row)
 {
-    global $board_skin_path, $pc_skin_path, $is_singo;
+    global $board_skin_path, $pc_skin_path, $is_singo, $quiz_path;
     global $quiz_id, $bomb_id, $vote_id;
 
     $write_icon = '';

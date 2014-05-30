@@ -66,6 +66,31 @@ if (!$is_ip) {
     sql_query($sql);
 }
 
+if ($cf_filter) {
+    $tmp = explode(",", $config['cf_filter']);
+    $is_filter_add = true;
+    $filter_list = array();
+    foreach ((array)$tmp as $f) {
+        $f = trim($f);
+        if (!$f) continue;
+        if ($f == $cf_filter) {
+            $is_filter_add = false;
+            break;
+        }
+        $filter_list[] = $f;
+    }
+    if ($is_filter_add) {
+        $tmp = explode(",", $cf_filter);
+        foreach ((array)$tmp as $f) {
+            $f = trim($f);
+            if (!$f) continue;
+            $filter_list[] = $f;
+        }
+        $cf_filter = addslashes(implode(",", $filter_list));
+        sql_query("update {$g4['config_table']} set cf_filter = '{$cf_filter}'");
+    }
+}
+
 if ($is_all_delete or $is_all_move) {
     $all_board_sql = "select * from $g4[board_table] ";
     $all_board_qry = sql_query($all_board_sql);

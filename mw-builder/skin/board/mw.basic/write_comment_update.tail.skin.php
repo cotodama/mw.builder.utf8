@@ -106,3 +106,6 @@ if ($file_upload_msg)
     alert($file_upload_msg, "./board.php?bo_table=$bo_table&wr_id=$wr[wr_parent]&page=$page" . $qstr . "&cwin=$cwin#c_{$comment_id}");
 
 
+if ($mw_basic[cf_image_outline]) {
+    mw_image_outline($dest_file);
+}

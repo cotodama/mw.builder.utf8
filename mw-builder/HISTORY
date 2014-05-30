@@ -1,3 +1,16 @@
+4.37.11 (2014.05.26)
+    : SQL Injection 취약점이 발견되어 수정 (한국인터넷진흥원에서 알려주셨습니다.)
+
+        bbs/register_form_update.php
+
+            $mb_email = str_replace('\\', '', $mb_email);
+            $mb_homepage = str_replace('\\', '', $mb_homepage);
+
+    : 자신이 업로드한 이미지 파일만 삭제가 되도록 수정 (라엘님께서 알려주셨습니다.)
+
+        cheditor5/imageUpload/delete.php
+        cheditor5/imageUpload/upload.php
+
 4.37.10 (2014.05.15)
     : 비회원이 자바스크립트를 이용해 댓글 수정할 수 있는 오류 수정 (한국인터넷진흥원에서 알려주셨습니다.)
 

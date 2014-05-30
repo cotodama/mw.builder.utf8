@@ -1,7 +1,13 @@
-<?
+<?php
 include_once("./_common.php");
 include_once("$g4[path]/lib/etc.lib.php");
 
+$gmnow = gmdate("D, d M Y H:i:s") . " GMT";
+header("Expires: 0"); // rfc2616 - Section 14.21
+header("Last-Modified: " . $gmnow);
+header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
+header("Cache-Control: pre-check=0, post-check=0, max-age=0"); // HTTP/1.1
+header("Pragma: no-cache"); // HTTP/1.0
 if (!function_exists('convert_charset')) 
 {
     /*
@@ -28,6 +34,8 @@ header("Content-Type: text/html; charset=$g4[charset]");
 
 $subject = str_replace(" ", "", strtolower($_POST['subject']));
 $content = str_replace(" ", "", strtolower($_POST['content']));
+$link1 = str_replace(" ", "", strtolower($_POST['link1']));
+$link2 = str_replace(" ", "", strtolower($_POST['link2']));
 
 //euc-kr 일 경우 $config['cf_filter'] 를 utf-8로 변환한다.
 if (strtolower($g4[charset]) == 'euc-kr') 
@@ -67,7 +75,32 @@ for ($i=0; $i<count($filter); $i++)
             $cont = $str;
         break;
     }
-}
 
-die("{\"subject\":\"$subj\",\"content\":\"$cont\"}");
-?>
+    // link1 필터링 (찾으면 중지)
+    $lin1 = "";
+    $pos = @strpos($link1, $str);
+    if ($pos !== false) 
+    {
+        if (strtolower($g4[charset]) == 'euc-kr') 
+            $lin1 = convert_charset('utf-8', 'cp949', $str);//cp949 로 변환해서 반환
+        else 
+            $lin1 = $str;
+        break;
+    }
+
+    $lin2 = "";
+    $pos = @strpos($link2, $str);
+    if ($pos !== false) 
+    {
+        if (strtolower($g4[charset]) == 'euc-kr') 
+            $lin2 = convert_charset('utf-8', 'cp949', $str);//cp949 로 변환해서 반환
+        else 
+            $lin2 = $str;
+        break;
+    }
+}
+$str = "{\"subject\":\"$subj\",\"content\":\"$cont\",\"link1\":\"$lin1\",\"link2\":\"$lin2\"}";
+
+//write_log("$g4[path]/data/filter-test", "$str\n");
+
+die($str);

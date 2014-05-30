@@ -47,3 +47,11 @@ if ($is_admin && $mw_basic[cf_attribute] == "1:1" && $wr_to_id) {
     }
 }
 
+if ($mw_basic[cf_image_outline]) {
+    for ($i=0, $m=count($upload); $i<$m; ++$i) {
+        $dest_file = "$g4[path]/data/file/$bo_table/" . $upload[$i][file];
+        if (file_exists($dest_file)) {
+            mw_image_outline($dest_file);
+        }
+    }
+}

@@ -13,12 +13,12 @@ require_once("_config.php");
 //
 //
 $tempfile = $_FILES['file']['tmp_name'];
-$filename = $_FILES['file']['name'];
+$filename = md5($_SERVER['REMOTE_ADDR']).'_'.$_FILES['file']['name'];
 
 // 저장 파일 이름
-// 년월일시분초_파일크기_랜덤문자4자.확장자
-// 20140327125959_1234_abcd.jpg
-$savefile = SAVE_DIR . '/' . $_FILES['file']['name'];
+// md5(IP)_년월일시분초_랜덤문자4자.확장자
+// 1234567890abcdef1234567890abcdef_20140327125959_abcd.jpg
+$savefile = SAVE_DIR . '/' . $filename;
 
 // 사용자PC의 파일 이름: $_POST["origName"]
 // 사용자PC의 파일 경로: $_POST["filePath"]
