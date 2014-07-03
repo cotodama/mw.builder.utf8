@@ -20,7 +20,7 @@ $style_name = "mw-latest-side-$bo_table-$rows-$subject_len";
 
 <div class="<?php echo $style_name?>">
     <div class="subject">
-        <div><a href="<?php echo $g4['bbs_path']?>/board.php?bo_table=<?php echo $bo_table?>"><!--
+        <div><a href="<?php echo mw_builder_seo_url($bo_table)?>"><!--
             --><?php echo $board['bo_subject']?></a></div>
     </div>
     <ul>
@@ -32,8 +32,7 @@ $style_name = "mw-latest-side-$bo_table-$rows-$subject_len";
         $list[$i]['subject'] = mw_builder_reg_str($list[$i]['subject']);
         $list[$i]['title'] = mw_title_tag(mw_builder_reg_str($list[$i]['wr_subject']));
         $list[$i]['comment_cnt'] = $list[$i]['wr_comment'] ? "+{$list[$i]['wr_comment']}" : ''; ?>
-        <li><a href="<?php echo $g4['bbs_path']?>/board.php?bo_table=<?php
-            echo $bo_table?>&wr_id=<?php echo $list[$i]['wr_id']?>" title="<?php echo $list[$i]['title']?>"><?php
+        <li><a href="<?php echo mw_builder_seo_url($bo_table, $list[$i]['wr_id'])?>" title="<?php echo $list[$i]['title']?>"><?php
             echo cut_str($list[$i]['subject'], $subject_len)?>&nbsp;<!--
             --><span class="comment"><?php echo $list[$i]['comment_cnt']?></span></a></li>
     <?php } ?>

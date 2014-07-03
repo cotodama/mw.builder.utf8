@@ -21,25 +21,26 @@
 
 if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
 
-@include_once("$g4[path]/lib/mw.cache.lib.php");
-@include_once("$g4[path]/lib/mw.host.lib.php");
+include_once("$g4[path]/lib/mw.cache.lib.php");
+include_once("$g4[path]/lib/mw.host.lib.php");
 
 function mw_get_group_row($row) {
     global $g4, $mw;
     $mw_group = array();
     $mw_group = $row;
     //$mw_group[gr_target] = "_top";
-    $mw_group[gr_url] = $row[gr_sub_domain] && !$mw[config][cf_sub_domain_off] ? "$g4[url]/" : "$g4[url]/?mw_main=$row[gr_id]";
+    $mw_group[gr_url] = $row[gr_sub_domain] && !$mw[config][cf_sub_domain_off] ? "$g4[url]/" : mw_builder_seo_main($row[gr_id]);
     if ($row[gr_mmove]) { // 첫번째 중메뉴로 바로 이동
 	$row2 = sql_fetch("select mm_id from $mw[menu_middle_table] where gr_id = '$row[gr_id]' order by mm_order limit 1");
-	$mw_group[gr_url] .= $row[gr_sub_domain] && !$mw[config][cf_sub_domain_off] ? "?mw_menu=$row2[mm_id]" : "&mw_menu=$row2[mm_id]";
+	$mw_group[gr_url] .= (($row[gr_sub_domain] && !$mw[config][cf_sub_domain_off]) or $mw['config']['cf_seo_url']) ? "?mw_menu=$row2[mm_id]" : "&mw_menu=$row2[mm_id]";
     }
     elseif ($row[gr_smove]) { // 첫번째 소메뉴로 바로 이동
 	$row2 = sql_fetch("select * from $mw[menu_middle_table] where gr_id = '$row[gr_id]' order by mm_order limit 1");
 	$row2 = sql_fetch("select * from $mw[menu_small_table] where mm_id = '$row2[mm_id]' order by ms_order limit 1");
-	$mw_group[gr_url] = "$g4[url]/$g4[bbs]/board.php?bo_table=$row2[bo_table]";
-	if ($row2[ca_name]) $mw_group[gr_url] .= "&sca=".urlencode($row2[ca_name]);
-	if ($row2[pg_id]) $mw_group[gr_url] = "$g4[url]/page.php?pg_id=$row2[pg_id]";
+	$mw_group[gr_url] = mw_builder_seo_url($row2[bo_table]);
+	if ($row2[ca_name])
+            $mw_group[gr_url] .= mw_builder_seo_sign()."sca=".urlencode($row2[ca_name]);
+	if ($row2[pg_id]) $mw_group[gr_url] = mw_builder_seo_page($row2[pg_id]);
 	if ($row2[ms_url]) $mw_group[gr_url] = "$g4[url]$row2[ms_url]";
     }
     if ($row[gr_sub_domain] && !$mw[config][cf_sub_domain_off]) // 서브도메인 적용
@@ -56,12 +57,13 @@ function mw_get_middle_menu_row($row) {
     global $g4, $mw;
     $mw_mmenu = array();
     $mw_mmenu = $row;
-    $mw_mmenu[mm_url] = "$g4[url]/?mw_main=$row[gr_id]&mw_menu=$row[mm_id]";
+    $mw_mmenu[mm_url] = mw_builder_seo_main($row[gr_id])."?mw_menu=$row[mm_id]";
     if ($row[mm_smove]) { // 첫번째 소메뉴로 바로 이동
 	$row2 = sql_fetch("select * from $mw[menu_small_table] where mm_id = '$row[mm_id]' order by ms_order limit 1");
-	$mw_mmenu[mm_url] = "$g4[url]/$g4[bbs]/board.php?bo_table=$row2[bo_table]";
-	if ($row2[ca_name]) $mw_mmenu[mm_url] .= "&sca=".urlencode($row2[ca_name]);
-	if ($row2[pg_id]) $mw_mmenu[mm_url] = "$g4[url]/page.php?pg_id=$row2[pg_id]";
+	$mw_mmenu[mm_url] = mw_builder_seo_url($row2[bo_table]);
+	if ($row2[ca_name])
+            $mw_mmenu[mm_url] .= mw_builder_seo_sign()."sca=".urlencode($row2[ca_name]);
+	if ($row2[pg_id]) $mw_mmenu[mm_url] = mw_builder_seo_page($row2[pg_id]);
 	if ($row2[ms_url]) $mw_mmenu[mm_url] = "$g4[url]$row2[ms_url]";
     }
     //if ($row[mm_url]) $mw_mmenu[mm_url] = $row[mm_url];
@@ -78,11 +80,11 @@ function mw_get_small_menu_row($row) {
     global $g4, $mw;
     $mw_smenu = array();
     $mw_smenu = $row;
-    $mw_smenu[ms_url] = "$g4[url]/$g4[bbs]/board.php?bo_table=$row[bo_table]";
+    $mw_smenu[ms_url] = mw_builder_seo_url($row[bo_table]);
     if ($row[ca_name])
-	$mw_smenu[ms_url] .= "&sca=".urlencode($row[ca_name]);
+	$mw_smenu[ms_url] .= mw_builder_seo_sign()."sca=".urlencode($row[ca_name]);
     if ($row[pg_id])
-        $mw_smenu[ms_url] = "$g4[url]/page.php?pg_id=$row[pg_id]";
+        $mw_smenu[ms_url] = mw_builder_seo_page($row[pg_id]);
     if ($row[ms_url])
 	$mw_smenu[ms_url] = "$g4[url]$row[ms_url]";
     $row2 = sql_fetch("select gr_id from $mw[menu_middle_table] where mm_id = '$row[mm_id]'");

@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Bechu-Basic Skin for Gnuboard4
  *
@@ -85,6 +85,8 @@ table caption { font-size:13px; color:#555; font-weight:bold; text-decoration:no
 </table>
 
 <p align=center>
+<input type="button" value="복     원" onclick="restore_contents()">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <input type="button" value="목     록" onclick="location.href='mw.history.list.php?bo_table=<?=$bo_table?>&wr_id=<?=$wr_id?>&<?=$qstr?>';">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <input type="button" value="닫     기" onclick="self.close();">
@@ -92,6 +94,26 @@ table caption { font-size:13px; color:#555; font-weight:bold; text-decoration:no
 <br/>
 <br/>
 
-<?
+<script>
+function restore_contents() {
+    ans = confirm("정말 복원하시겠습니까?");
+    if (!ans) return;
+
+
+    location.href = "mw.history.restore.php?bo_table=<?php echo $bo_table?>&wr_id=<?php echo $wr_id?>&ph_id=<?php echo $ph_id?>";
+    opener.location.reload();
+
+    /*$.get("mw.history.restore.php", {
+        "bo_table": "<?php echo $bo_table?>",
+        "wr_id": "<?php echo $wr_id?>",
+        "ph_id": "<?php echo $ph_id?>"
+    }, function (str) {
+        alert(str);
+        opener.location.reload();
+    });*/
+}
+</script>
+
+<?php
+
 include_once("$g4[path]/tail.sub.php");
-?>

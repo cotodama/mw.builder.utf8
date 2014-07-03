@@ -26,7 +26,8 @@ if ($member[mb_level] < 2)
     if ($member[mb_id])
         alert("목록을 볼 권한이 없습니다.", $g4[path]);
     else
-        alert("목록을 볼 권한이 없습니다.\\n\\n회원이시라면 로그인 후 이용해 보십시오.", "./login.php?wr_id=$wr_id{$qstr}&url=".urlencode("board.php?bo_table=$bo_table&wr_id=$wr_id"));
+        alert("목록을 볼 권한이 없습니다.\\n\\n회원이시라면 로그인 후 이용해 보십시오.",
+            $g4['bbs_path']."/login.php?wr_id=$wr_id{$qstr}&url=".urlencode("board.php?bo_table=$bo_table&wr_id=$wr_id"));
 }
  
 $sop = strtolower($sop);
@@ -144,5 +145,4 @@ while ($row = sql_fetch_array($result))
     $k++;
 }
 
-$write_pages = get_paging($config[cf_write_pages], $page, $total_page, "./board.php?bo_table=$bo_table".$qstr."&page=");
-?>
+$write_pages = get_paging($config[cf_write_pages], $page, $total_page, $g4['bbs_path']."/board.php?bo_table=$bo_table".$qstr."&page=");

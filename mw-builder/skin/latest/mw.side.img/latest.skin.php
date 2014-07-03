@@ -35,7 +35,7 @@ $style_name = "mw-side-img-$bo_table-$rows-$subject_len-$mw_side_img_cnt";
 
         $list[$i]['subject'] = mw_builder_reg_str($list[$i]['subject']);
 
-        $list[$i]['href'] = "{$g4['bbs_path']}/board.php?bo_table={$tmp_table}&wr_id={$list[$i]['wr_id']}";
+        $list[$i]['href'] = mw_builder_seo_url($tmp_table, $list[$i]['wr_id']);
     ?>
     <div id="<?php echo $style_name.$i?>" class="item">
         <div class="file"><!--

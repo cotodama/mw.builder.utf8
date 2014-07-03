@@ -67,5 +67,6 @@ for ($i=count($tmp_array)-1; $i>=0; $i--)
 }
 
 @include_once("$board_skin_path/delete_all.tail.skin.php");
-goto_url("./board.php?bo_table=$bo_table&page=$page" . $qstr);
+//goto_url($g4['bbs_path']."/board.php?bo_table=$bo_table&page=$page" . $qstr);
+goto_url(mw_seo_url($bo_table, 0, "&page=$page" . $qstr));
 exit;

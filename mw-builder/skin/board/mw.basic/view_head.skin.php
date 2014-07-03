@@ -249,7 +249,6 @@ for ($i=$file_start; $i<=$view[file][count]; $i++) {
         if ($mw_basic[cf_watermark_use] && file_exists($mw_basic[cf_watermark_path])) {
             preg_match("/src='([^']+)'/iUs", $view[file][$i][view], $match);
             $watermark_file = mw_watermark_file($match[1]);
-echo "1234";
             $view[file][$i][view] = str_replace($match[1], $watermark_file, $view[file][$i][view]);
         }
 
@@ -331,7 +330,9 @@ if ($write[wr_singo] && $write[wr_singo] >= $mw_basic[cf_singo_number] && $mw_ba
     $view[content] = $content;
 }
 
-@include($mw_basic[cf_include_view_top]);
+if ($mw_basic[cf_include_view_top] && is_file($mw_basic[cf_include_view_top])) {
+    include($mw_basic[cf_include_view_top]);
+}
 
 // 컨텐츠샵 멤버쉽
 if (function_exists("mw_cash_is_membership") && $member[mb_id] != $write[mb_id]) {
@@ -387,10 +388,6 @@ if ($mw_basic[cf_print]) {
     $print_href = "javascript:btn_print()";
 }
 
-// 쓰기버튼 항상 출력
-if ($mw_basic[cf_write_button])
-    $write_href = "./write.php?bo_table=$bo_table";
-
 // 글쓰기 버튼에 분류저장
 if ($sca && $write_href)
     $write_href .= "&sca=".urlencode($sca);
@@ -402,11 +399,6 @@ if ($write_href && $mw_basic[cf_write_notice]) {
 
 // 스킨설정버튼
 $config_href = "javascript:mw_config()";
-
-// RSS 버튼
-$rss_href = "";
-if ($board[bo_use_rss_view])
-    $rss_href = "./rss.php?bo_table=$bo_table";
 
 $view[rich_content] = preg_replace("/{이미지\:([0-9]+)[:]?([^}]*)}/ie", "mw_view_image(\$view, '\\1', '\\2')", $view[content]);
 
@@ -516,14 +508,14 @@ if ($mw_basic[cf_attribute] != "1:1" && (!$prev_href || !$next_href))
     $prev_href = "";
     if ($prev[wr_id]) {
         $prev_wr_subject = get_text(cut_str($prev[wr_subject], 255));
-        $prev_href = "./board.php?bo_table=$bo_table&wr_id=$prev[wr_id]&page=$page" . $qstr;
+        $prev_href = mw_seo_url($bo_table, $prev[wr_id], "&page=$page" . $qstr);
     }
 
     // 다음글 링크
     $next_href = "";
     if ($next[wr_id]) {
         $next_wr_subject = get_text(cut_str($next[wr_subject], 255));
-        $next_href = "./board.php?bo_table=$bo_table&wr_id=$next[wr_id]&page=$page" . $qstr;
+        $next_href = mw_seo_url($bo_table, $next[wr_id], "&page=$page" . $qstr);
     }
 }
 
@@ -551,7 +543,7 @@ $is_category = false;
 if ($board[bo_use_category]) 
 {
     $is_category = true;
-    $category_location = "./board.php?bo_table=$bo_table&sca=";
+    $category_location = mw_seo_url($bo_table, 0, "&sca=");
     $category_option = get_category_option($bo_table); // SELECT OPTION 태그로 넘겨받음
 
     if ($mw_basic[cf_default_category] && !$sca) $sca = $mw_basic[cf_default_category];
@@ -611,7 +603,9 @@ if ($is_admin) {
 
 // 짧은 글주소 사용 - 자체도메인
 $shorten = '';
-if ($mw_basic[cf_shorten])
+if ($mw_basic['cf_seo_url'])
+    $shorten = mw_seo_url($bo_table, $wr_id);
+else if ($mw_basic[cf_shorten])
     $shorten = "$g4[url]/$bo_table/$wr_id";
 
 $new_time = date("Y-m-d H:i:s", $g4[server_time] - ($board[bo_new] * 3600));
@@ -848,11 +842,10 @@ if (function_exists("mw_moa_read"))
 $ob_exam = '';
 $ob_exam_flag = false;
 if ($mw_basic['cf_exam']) {
-    if (file_exists("{$exam_path}/view.skin.php")) {
+    if (is_file("{$exam_path}/view.skin.php")) {
         ob_start();
         include("{$exam_path}/view.skin.php");
-        $ob_exam = ob_get_contents();
-        ob_end_clean();
+        $ob_exam = ob_get_clean();
 
         if (preg_match("/\[시험문제\]/i", $view[rich_content])) {
             $ob_exam_flag = true;
@@ -864,11 +857,10 @@ if ($mw_basic['cf_exam']) {
 $ob_marketdb = '';
 $ob_marketdb_flag = false;
 if ($mw_basic['cf_marketdb'] and $write['wr_marketdb']) { 
-    if (file_exists("{$marketdb_path}/view.skin.php")) {
+    if (is_file("{$marketdb_path}/view.skin.php")) {
         ob_start();
         include("{$marketdb_path}/view.skin.php");
-        $ob_marketdb = ob_get_contents();
-        ob_end_clean();
+        $ob_marketdb = ob_get_clean();
 
         if (preg_match("/\[마케팅DB\]/i", $view[rich_content])) {
             $ob_marketdb_flag = true;

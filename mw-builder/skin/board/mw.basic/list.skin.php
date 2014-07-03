@@ -62,7 +62,7 @@ $is_category = false;
 if ($board[bo_use_category]) 
 {
     $is_category = true;
-    $category_location = "./board.php?bo_table=$bo_table&sca=";
+    $category_location = mw_seo_url($bo_table, 0, "&sca=");
     $category_option = mw_get_category_option($bo_table); // SELECT OPTION 태그로 넘겨받음
 
     if ($mw_basic[cf_default_category] && !$sca) $sca = $mw_basic[cf_default_category];
@@ -70,7 +70,7 @@ if ($board[bo_use_category])
 
 // page 변수 중복 제거
 $qstr = preg_replace("/(\&page=.*)/", "", $qstr);
-$write_pages = get_paging($config[cf_write_pages], $page, $total_page, "./board.php?bo_table=$bo_table".$qstr."&page=");
+$write_pages = get_paging($config[cf_write_pages], $page, $total_page, mw_seo_url($bo_table, 0, $qstr."&page="));
 
 // 이전,다음 검색시 페이지 번호 제거
 $prev_part_href = preg_replace("/(\&page=.*)/", "", $prev_part_href);
@@ -93,10 +93,6 @@ if ($mw_basic[cf_anonymous]) {
         alert("익명작성이 가능한 게시판에서는 아이디 또는 이름으로 검색하실 수 없습니다.");
     }
 }
-
-// 쓰기버튼 항상 출력
-if ($mw_basic[cf_write_button])
-    $write_href = "./write.php?bo_table=$bo_table";
 
 // 글쓰기 버튼에 분류저장
 if ($sca && $write_href)
@@ -211,10 +207,11 @@ $new_count = $row[cnt];
 <!-- 게시판 목록 시작 -->
 <table width="<?=$bo_table_width?>" align="center" cellpadding="0" cellspacing="0"><tr><td id=mw_basic>
 
-<?  if ($mw_basic['cf_include_head'] && file_exists($mw_basic['cf_include_head']) && strstr($mw_basic[cf_include_head_page], '/l/'))
-    include_once($mw_basic[cf_include_head]); ?>
-
 <?php
+if ($mw_basic[cf_include_head] && is_file($mw_basic[cf_include_head]) && strstr($mw_basic[cf_include_head_page], '/l/')) {
+    include_once($mw_basic[cf_include_head]);
+}
+
 if ($mw_basic['cf_bbs_banner']) include_once("$bbs_banner_path/list.skin.php"); // 게시판 배너
 
 include_once("$board_skin_path/mw.proc/mw.list.hot.skin.php");
@@ -248,7 +245,7 @@ include_once("$board_skin_path/mw.proc/mw.list.hot.skin.php");
         <span class=mw_basic_total style="cursor:pointer;" onclick="win_open('<?=$talent_market_path?>/order_list.php?bo_table=<?=$bo_table?>', 'order_list', 'width=800,height=600,scrollbars=1');">[주문내역]</span>
         <? } ?>
 
-        <? include("$board_skin_path/mw.proc/mw.smart-alarm-config.php") ?>
+        <?php include("$board_skin_path/mw.proc/mw.smart-alarm-config.php") ?>
         <span class=mw_basic_total>총 게시물 <?=number_format($total_count)?>건, 최근 <?=number_format($new_count)?> 건</span>
         <? if ($is_admin && $mw_basic[cf_collect] == 'rss' && file_exists("$g4[path]/plugin/rss-collect/_lib.php")) {?>
         <img src="<?=$g4[path]?>/plugin/rss-collect/img/btn_collect.png" align="absmiddle" style="cursor:pointer;" onclick="win_open('<?=$g4[path]?>/plugin/rss-collect/config.php?bo_table=<?=$bo_table?>', 'rss_collect', 'width=800,height=600,scrollbars=1')">
@@ -288,7 +285,7 @@ if ($is_category && $mw_basic[cf_category_tab]) {
     <? } ?>
     <? for ($i=0, $m=sizeof($category_list); $i<$m; $i++) { ?>
     <li <? if (urldecode($sca) == $category_list[$i]) echo "class='selected'";?>><div><a 
-        href="<?=$g4[bbs_path]?>/board.php?bo_table=<?=$bo_table?>&sca=<?=urlencode($category_list[$i])?>"><?=$category_list[$i]?></a></div></li>
+        href="<?php echo mw_seo_url($bo_table, 0, "&sca=".urlencode($category_list[$i]))?>"><?=$category_list[$i]?></a></div></li>
     <? } ?>
 </ul>
 </div>
@@ -336,11 +333,32 @@ if ($is_category && $mw_basic[cf_category_tab]) {
 $line_number = 0;
 for ($i=0; $i<count($list); $i++) {
 
-if (file_exists($mw_basic[cf_include_list_main])) {
+$html = 0;
+if (strstr($list[$i]['wr_option'], "html1"))
+    $html = 1;
+else if (strstr($list[$i]['wr_option'], "html2"))
+    $html = 2;
+
+if ($mw_basic[cf_include_list_main] && is_file($mw_basic[cf_include_list_main])) {
     include($mw_basic[cf_include_list_main]);
 }
 
 mw_basic_move_cate($bo_table, $list[$i][wr_id]);
+
+$ca_color = '';
+if ($sca && $mw_category) {
+    $ca_color = $mw_category['ca_color'];
+}
+else {
+    if (!$mw_category_list[$list[$i]['ca_name']])
+        $mw_category_list[$list[$i]['ca_name']] = mw_category_info($list[$i]['ca_name']);
+
+    $ca_color = $mw_category_list[$list[$i]['ca_name']]['ca_color'];
+}
+
+$ca_color_style = '';
+if ($ca_color)
+    $ca_color_style = " style='color:{$ca_color}' ";
 
 // 댓글감춤
 if ($list[$i][wr_comment_hide])
@@ -466,78 +484,11 @@ $thumb5_file = mw_thumb_jpg("$thumb5_path/{$list[$i][wr_id]}");
 $set_width = $mw_basic[cf_thumb_width];
 $set_height = $mw_basic[cf_thumb_height];
 
-//if ($mw_basic[cf_type] != "list")
 if (!file_exists($thumb_file))
 {
-    $file = mw_get_first_file($bo_table, $list[$i][wr_id], true);
-    if (!empty($file)) {
-        $source_file = "$file_path/{$file[bf_file]}";
+    $is_thumb = mw_make_thumbnail_row($bo_table, $list[$i]['wr_id'], $list[$i]['wr_content']);
 
-        //if ($mw_basic[cf_img_1_noview])
-        //    $thumb_file = "$file_path/{$file[bf_file]}";
-        //else
-
-        if (!file_exists($thumb_file)) {
-            mw_make_thumbnail($set_width, $set_height, $source_file, $thumb_file, $mw_basic[cf_thumb_keep]);
-        } else {
-            //if (!$mw_basic[cf_img_1_noview]) {
-            if ($mw_basic[cf_thumb_keep]) {
-                $size = @getImageSize($source_file);
-                $size = mw_thumbnail_keep($size, $set_width, $set_height);
-                $set_width = $size[0];
-                $set_height = $size[1];
-            } else
-                $size = @getImageSize($thumb_file);
-
-            if ($size[0] != $set_width || $size[1] != $set_height) {
-                mw_make_thumbnail($mw_basic[cf_thumb_width], $mw_basic[cf_thumb_height], $source_file, $thumb_file, $mw_basic[cf_thumb_keep]);
-                if ($mw_basic[cf_thumb2_width])
-                    @mw_make_thumbnail($mw_basic[cf_thumb2_width], $mw_basic[cf_thumb2_height], $source_file,
-                        "{$thumb2_file}", $mw_basic[cf_thumb2_keep]);
-                if ($mw_basic[cf_thumb3_width])
-                    @mw_make_thumbnail($mw_basic[cf_thumb3_width], $mw_basic[cf_thumb3_height], $source_file,
-                        "{$thumb3_file}", $mw_basic[cf_thumb3_keep]);
-                if ($mw_basic[cf_thumb4_width])
-                    @mw_make_thumbnail($mw_basic[cf_thumb4_width], $mw_basic[cf_thumb4_height], $source_file,
-                        "{$thumb4_file}", $mw_basic[cf_thumb4_keep]);
-                if ($mw_basic[cf_thumb5_width])
-                    @mw_make_thumbnail($mw_basic[cf_thumb5_width], $mw_basic[cf_thumb5_height], $source_file,
-                        "{$thumb5_file}", $mw_basic[cf_thumb5_keep]);
-            }
-        //}
-        }
-    } else {
-        preg_match_all("/<img.*src=\\\"(.*)\\\"/iUs", stripslashes($list[$i][wr_content]), $matchs);
-        for ($j=0, $m=count($matchs[1]); $j<$m; ++$j) {
-            $mat = $matchs[1][$j];
-            if (strstr($mat, "mw.basic.comment.image")) $mat = '';
-            if (strstr($mat, "mw.emoticon")) $mat = '';
-            if (preg_match("/cheditor[0-9]\/icon/i", $mat)) $mat = '';
-            if ($mat) {
-                //$mat = str_replace($g4[url], "..", $mat);
-                $mat = preg_replace("/(http:\/\/.*)\/data\//i", "../data/", $mat);
-                if (file_exists($mat)) {
-                    mw_make_thumbnail($mw_basic[cf_thumb_width], $mw_basic[cf_thumb_height], $mat, $thumb_file, $mw_basic[cf_thumb_keep]);
-                    if ($mw_basic[cf_thumb2_width])
-                        @mw_make_thumbnail($mw_basic[cf_thumb2_width], $mw_basic[cf_thumb2_height], $mat,
-                            "{$thumb2_file}", $mw_basic[cf_thumb2_keep]);
-                    if ($mw_basic[cf_thumb3_width])
-                        @mw_make_thumbnail($mw_basic[cf_thumb3_width], $mw_basic[cf_thumb3_height], $mat,
-                            "{$thumb3_file}", $mw_basic[cf_thumb3_keep]);
-                    if ($mw_basic[cf_thumb4_width])
-                        @mw_make_thumbnail($mw_basic[cf_thumb4_width], $mw_basic[cf_thumb4_height], $mat,
-                            "{$thumb4_file}", $mw_basic[cf_thumb4_keep]);
-                    if ($mw_basic[cf_thumb5_width])
-                        @mw_make_thumbnail($mw_basic[cf_thumb5_width], $mw_basic[cf_thumb5_height], $mat,
-                            "{$thumb5_file}", $mw_basic[cf_thumb5_keep]);
-                    $is_thumb = true;
-                    break;
-                }
-            } // if 
-        } // for 
-    }
-
-    if (!file_exists("$thumb_path/{$list[$i]['wr_id']}")) {
+    if (!is_file($thumb_path.'/'.$list[$i]['wr_id'])) {
         if (preg_match("/youtu/i", $list[$i]['link'][1])) mw_get_youtube_thumb($list[$i]['wr_id'], $list[$i]['link'][1]);
         else if (preg_match("/youtu/i", $list[$i]['link'][2])) mw_get_youtube_thumb($list[$i]['wr_id'], $list[$i]['link'][2]);
         else if (preg_match("/vimeo/i", $list[$i]['link'][1])) mw_get_vimeo_thumb($list[$i]['wr_id'], $list[$i]['link'][1]);
@@ -594,7 +545,10 @@ else if ($mw_basic[cf_type] == "gall")
 
     // 제목스타일
     if ($mw_basic[cf_subject_style]) {
-        $style .= " style='font-family:{$list[$i][wr_subject_font]}; color:{$list[$i][wr_subject_color]}";
+        $style .= " style='font-family:{$list[$i][wr_subject_font]}; ";
+        if ($list[$i][wr_subject_color] != $mw_basic[cf_subject_style_color_default])
+            $style .= " color:{$list[$i][wr_subject_color]}";
+
         if ($list[$i][wr_subject_bold]) {
             $style .= "; font-weight:bold; ";
         }
@@ -615,7 +569,7 @@ else if ($mw_basic[cf_type] == "gall")
             <? if (!$mw_basic[cf_thumb_keep]) echo "style='width:".($set_width+10)."px; text-align:left;'"; ?>>
         <? if ($is_category && $list[$i][ca_name]) { ?>
             <div style="margin:0 0 5px 0;"><a href="<?=$list[$i][ca_name_href]?>"
-                class=mw_basic_list_category>[<?=$list[$i][ca_name]?>]</a></div>
+                class=mw_basic_list_category <?php echo $ca_color_style?>>[<?=$list[$i][ca_name]?>]</a></div>
         <? } ?>
         <?=$write_icon?><a href="<?=$list[$i][href]?>"><?=$list[$i][subject]?></a>
         <? if ($list[$i][comment_cnt]) { ?>
@@ -673,7 +627,7 @@ else if ($mw_basic[cf_type] == "gall")
         echo $list[$i][reply];
         echo $list[$i][icon_reply];
         if ($is_category && $list[$i][ca_name]) {
-            echo "<a href=\"{$list[$i][ca_name_href]}\" class=mw_basic_list_category>[{$list[$i][ca_name]}]</a>&nbsp;";
+            echo "<a href=\"{$list[$i][ca_name_href]}\" class=mw_basic_list_category {$ca_color_style}>[{$list[$i][ca_name]}]</a>&nbsp;";
         }
 
         if ($mw_basic[cf_read_level] && $list[$i][wr_read_level])
@@ -696,7 +650,10 @@ else if ($mw_basic[cf_type] == "gall")
 
         // 제목스타일
         if ($mw_basic[cf_subject_style]) {
-            $style .= " style='font-family:{$list[$i][wr_subject_font]}; color:{$list[$i][wr_subject_color]}";
+            $style .= " style='font-family:{$list[$i][wr_subject_font]}; ";
+            if ($list[$i][wr_subject_color] != $mw_basic[cf_subject_style_color_default])
+                $style .= " color:{$list[$i][wr_subject_color]}";
+
             if ($list[$i][wr_subject_bold])
                 $style .= "; font-weight:bold; ";
             $style .= " '";
@@ -719,6 +676,8 @@ else if ($mw_basic[cf_type] == "gall")
         if ($mw_basic[cf_type] == "desc") {
             echo "</div>";
             $desc = strip_tags($list[$i][wr_content]);
+            if ($list[$i][wr_contents_preview])
+                $desc = conv_content($list[$i][wr_contents_preview], $html);
             $desc = preg_replace("/{이미지\:([0-9]+)[:]?([^}]*)}/i", "", $desc);
             $desc = mw_reg_str($desc);
             $desc = cut_str($desc, $mw_basic[cf_desc_len]);
@@ -861,8 +820,11 @@ else if ($mw_basic[cf_type] == "gall")
 </tr>
 </table>
 
-<?  if ($mw_basic['cf_include_tail'] && file_exists($mw_basic['cf_include_tail']) && strstr($mw_basic[cf_include_tail_page], '/l/'))
-    include_once($mw_basic[cf_include_tail]); ?>
+<?php
+if ($mw_basic[cf_include_tail] && is_file($mw_basic[cf_include_tail]) && strstr($mw_basic[cf_include_tail_page], '/l/')) {
+    include_once($mw_basic[cf_include_tail]);
+}
+?>
 
 </td></tr></table>
 
@@ -936,7 +898,7 @@ function select_delete() {
     if (!confirm("선택한 게시물을 정말 "+str+" 하시겠습니까?\n\n한번 "+str+"한 자료는 복구할 수 없습니다"))
         return;
 
-    f.action = "./delete_all.php";
+    f.action = "<?php echo $g4['bbs_path']?>/delete_all.php";
     f.submit();
 }
 
@@ -959,7 +921,6 @@ function select_copy(sw) {
     f.sw.value = sw;
     f.target = "move";
     f.action = "<?=$board_skin_path?>/move.php";
-    //f.action = "./move.php";
     f.submit();
 }
 

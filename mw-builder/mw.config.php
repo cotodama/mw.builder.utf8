@@ -1,4 +1,4 @@
-<?
+<?php
 if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
 
 $mw = array();
@@ -16,4 +16,4 @@ $mw['page_table']		= $mw['table_prefix'] . "page";	            // 페이지 관�
 $mw['admin'] = "mw.builder";
 $mw['admin_path'] = $g4['admin_path'] . "/" . $mw['admin']; 
 
-?>
+

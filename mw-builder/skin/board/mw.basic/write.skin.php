@@ -21,12 +21,6 @@
 
 if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
 
-$mw_is_list = false;
-$mw_is_view = false;
-$mw_is_write = true;
-
-include_once("$board_skin_path/mw.lib/mw.skin.basic.lib.php");
-
 // 실명인증 & 성인인증
 if ($mw_basic[cf_kcb_write] && !is_okname()) {
     check_okname();
@@ -196,11 +190,6 @@ if ($w == "") {  // 첨부파일 기본갯수
 // 스킨설정버튼
 $config_href = "javascript:mw_config()";
 
-// RSS 버튼
-$rss_href = "";
-if ($board[bo_use_rss_view])
-    $rss_href = "./rss.php?bo_table=$bo_table";
-
 $admin_href = "";
 // 최고관리자 또는 그룹관리자라면
 if ($member[mb_id] && ($is_admin == 'super' || $group[gr_admin] == $member[mb_id])) 
@@ -211,8 +200,8 @@ $is_category = false;
 if ($board[bo_use_category]) 
 {
     $is_category = true;
-    $category_location = "./board.php?bo_table=$bo_table&sca=";
-    $category_option = get_category_option($bo_table); // SELECT OPTION 태그로 넘겨받음
+    $category_location = mw_seo_url($bo_table, 0, "&sca=");
+    $category_option = mw_category_option($bo_table); // SELECT OPTION 태그로 넘겨받음
 
     if ($mw_basic[cf_default_category] && !$sca) $sca = $mw_basic[cf_default_category];
 }
@@ -256,7 +245,7 @@ if ($is_dhtml_editor && $mw_basic[cf_editor] == "cheditor") {
     echo "<script src='$g4[cheditor4_path]/cheditor.js'></script>";
     echo cheditor1('wr_content', '100%', ($write_height*25).'px');
 
-    if ($mw_basic[cf_contents_shop] == '2') {
+    if ($mw_basic[cf_type] == 'desc' or $mw_basic[cf_contents_shop] == '2') {
         echo cheditor1('wr_contents_preview', '100%', ($write_height*25).'px');
     }
 }
@@ -376,11 +365,13 @@ jQuery(function($){
 <!-- 글작성 시작 -->
 <table width="<?=$bo_table_width?>" align="center" cellpadding="0" cellspacing="0"><tr><td id=mw_basic>
 
-<?  if ($mw_basic['cf_include_head'] && file_exists($mw_basic['cf_include_head']) && strstr($mw_basic[cf_include_head_page], '/w/'))
-    include_once($mw_basic[cf_include_head]); ?>
-
 <?php
-if ($mw_basic['cf_bbs_banner']) include_once("$bbs_banner_path/list.skin.php"); // 게시판 배너
+if ($mw_basic[cf_include_head] && is_file($mw_basic[cf_include_head] ) && strstr($mw_basic[cf_include_head_page], '/w/')) {
+    include_once($mw_basic[cf_include_head]);
+}
+
+if ($mw_basic['cf_bbs_banner'])
+    include_once("$bbs_banner_path/list.skin.php"); // 게시판 배너
 
 include_once("$board_skin_path/mw.proc/mw.list.hot.skin.php");
 ?>
@@ -393,7 +384,7 @@ var char_max = parseInt(<?=$write_max?>); // 최대
 
 <script src="<?=$board_skin_path?>/mw.js/tooltip.js"></script>
 
-<? include_once("$board_skin_path/mw.proc/mw.cash.membership.skin.php") ?>
+<?php include_once("$board_skin_path/mw.proc/mw.cash.membership.skin.php") ?>
 
 <!-- 분류 셀렉트 박스, 게시물 몇건, 관리자화면 링크 -->
 <table width="100%">
@@ -437,11 +428,11 @@ if ($mw_basic[cf_contents_shop_write]) { echo " ($mw_cash[cf_cash_name]$mw_basic
 <tr><td height=5></td></tr>
 </table>
 
-<? include_once("$board_skin_path/mw.proc/mw.notice.top.php") ?>
-
-<? include_once("$board_skin_path/mw.proc/mw.search.top.php") ?>
-
-<? include_once("$board_skin_path/mw.proc/mw.cash.membership.skin.php") ?>
+<?php
+include_once("$board_skin_path/mw.proc/mw.notice.top.php");
+include_once("$board_skin_path/mw.proc/mw.search.top.php");
+include_once("$board_skin_path/mw.proc/mw.cash.membership.skin.php");
+?>
 
 
 <!--<form name="fwrite" method="post" action="javascript:fwrite_check(document.fwrite);" enctype="multipart/form-data">-->
@@ -495,12 +486,26 @@ if ($is_category && $mw_basic[cf_category_tab]) {
         ⇒ <a href="<?=$g4[path]?>/plugin/cybercash/index.php" target="_blank">충전하기</a>)</span>
 </td></tr>
 <tr><td colspan=2 height=1 bgcolor=#e7e7e7></td></tr>
+
 <? } ?>
+
+<?php if ($is_admin && $mw_basic['cf_contents_shop']) { ?>
+<tr>
+<td class=mw_basic_write_title>· 진행회원ID</td>
+<td class=mw_basic_write_content>
+    <input maxlength=20 size=15 name="contents_shop_id" itemname="진행회원ID" value="<?php echo $write['mb_id']?>" class=mw_basic_text>
+    (관리자 전용, 글작성자 지정)
+</td></tr>
+<tr><td colspan=2 height=1 bgcolor=#e7e7e7></td></tr>
+<?php } ?>
 
 <? if ($is_admin && $mw_basic[cf_attribute] == "1:1") { ?>
 <tr>
 <td class=mw_basic_write_title>· 지정회원ID</td>
-<td><input maxlength=20 size=15 name=wr_to_id itemname="지정회원" value="<?=$write[wr_to_id]?>" class=mw_basic_text></td></tr>
+<td class=mw_basic_write_content>
+    <input maxlength=20 size=15 name=wr_to_id itemname="지정회원" value="<?=$write[wr_to_id]?>" class=mw_basic_text>
+    (관리자 전용, 특정회원에게만 보이는 글 작성시 사용)
+</td></tr>
 <tr><td colspan=2 height=1 bgcolor=#e7e7e7></td></tr>
 <? } ?>
 
@@ -593,9 +598,15 @@ if ($is_dhtml_editor) $mw_basic[cf_content_align] = false;
 <tr><td colspan=2 height=1 bgcolor=#e7e7e7></td></tr>
 <? } ?>
 
-<?  if ($mw_basic[cf_social_commerce]) include("$social_commerce_path/write.skin.php"); ?>
-<?  if ($mw_basic[cf_talent_market]) include("$talent_market_path/write.skin.php"); ?>
-<?  if ($mw_basic[cf_marketdb]) include("$marketdb_path/write.skin.php"); ?>
+<?php
+if ($mw_basic[cf_social_commerce]) include("$social_commerce_path/write.skin.php");
+if ($mw_basic[cf_talent_market]) include("$talent_market_path/write.skin.php");
+if ($mw_basic[cf_marketdb]) include("$marketdb_path/write.skin.php");
+
+if ($mw_basic['cf_include_write_head'] && is_file($mw_basic['cf_include_write_head'])) {
+    include($mw_basic['cf_include_write_head']);
+}
+?>
 
 <? if ($is_category) { ?>
 <tr>
@@ -603,12 +614,17 @@ if ($is_dhtml_editor) $mw_basic[cf_content_align] = false;
 <td>
 <?
 if ($mw_basic[cf_category_radio]) {
-    $category_list = explode("|", $board[bo_category_list]);
+    $category_list = array_filter(explode("|", $board[bo_category_list]), "trim");
     if ($is_admin) {
         ?> <input type="radio" name="ca_name" value="공지" id="ca_name_1000"> <label for="ca_name_1000">공지 </label> <?
     }
     for ($i=0, $m=sizeof($category_list); $i<$m; $i++) { 
-        ?> <input type="radio" name="ca_name" value="<?=$category_list[$i]?>" id="ca_name_<?$i?>"> <label for="ca_name_<?=$i?>"><?=$category_list[$i]?> </label> <?
+        $row = sql_fetch(" select * from {$mw['category_table']} where bo_table = '{$bo_table}' and ca_name = '{$category_list[$i]}'");
+        if ($row['ca_level_write'] && $row['ca_level_write'] > $member['mb_level']) continue;
+        ?>
+        <input type="radio" name="ca_name" value="<?=$category_list[$i]?>" id="ca_name_<?=$i?>">
+        <label for="ca_name_<?=$i?>"><?=$category_list[$i]?> </label>
+        <?
     } 
     if ($w == "u") {
         ?>
@@ -694,6 +710,12 @@ if ($mw_basic[cf_category_radio]) {
 <tr><td colspan=2 height=1 bgcolor=#e7e7e7></td></tr>
 <? } ?>
 
+<?php
+if ($mw_basic['cf_include_write_main'] && is_file($mw_basic['cf_include_write_main'])) {
+    include($mw_basic['cf_include_write_main']);
+}
+?>
+
 <tr>
 <? if ($mw_basic[cf_write_width] == "large") {?>
 <td colspan="2" style='padding:5px 0 5px 20px;'>
@@ -763,7 +785,7 @@ if ($mw_basic[cf_category_radio]) {
 </tr>
 <tr><td colspan=2 height=1 bgcolor=#e7e7e7></td></tr>
 
-<? if ($mw_basic[cf_contents_shop] == '2') { ?>
+<? if ($mw_basic[cf_type] == 'desc' or $mw_basic[cf_contents_shop] == '2') { ?>
 <tr>
 <td class=mw_basic_write_title>· 컨텐츠 요약</td>
 <td class=mw_basic_write_content>
@@ -785,7 +807,8 @@ if ($mw_basic[cf_category_radio]) {
     ><?=$write[wr_contents_preview]?></textarea>
     <? } // if (!$is_dhtml_editor || $mw_basic[cf_editor] != "cheditor") ?>
     <? if ($is_dhtml_editor && $mw_basic[cf_editor] == "cheditor") echo cheditor2('wr_contents_preview', $write[wr_contents_preview]); ?>
-    <div> ※ 유료컨텐츠 홍보 내용을 간략히 작성해주세요. 무료컨텐츠의 경우 입력하실 필요가 없습니다.</div>
+    <!--<div> ※ 유료컨텐츠 홍보 내용을 간략히 작성해주세요. 무료컨텐츠의 경우 입력하실 필요가 없습니다.</div>-->
+    <div> ※  컨텐츠 내용을 간략히 작성해주세요.</div>
 </td>
 </tr>
 <tr><td colspan=2 height=1 bgcolor=#e7e7e7></td></tr>
@@ -843,6 +866,12 @@ if ($mw_basic[cf_category_radio]) {
 </tr>
 <tr><td colspan=2 height=1 bgcolor=#e7e7e7></td></tr>
 <? } } ?>
+
+<?php
+if ($mw_basic['cf_include_write_tail'] && is_file($mw_basic['cf_include_write_tail'])) {
+    include($mw_basic['cf_include_write_tail']);
+}
+?>
 
 <? if ($mw_basic[cf_bomb_level] && $mw_basic[cf_bomb_time] && !$is_admin) { ?>
 <tr>
@@ -1642,13 +1671,16 @@ if ($mw_basic['cf_bbs_banner']) {
 <tr>
     <td width="100%" align="center" valign="top">
         <input type=image id="btn_submit" src="<?=$board_skin_path?>/img/btn_save.gif" border=0 accesskey='s'>&nbsp;
-        <a href="./board.php?bo_table=<?=$bo_table?>"><img id="btn_list" src="<?=$board_skin_path?>/img/btn_list.gif" border=0></a></td>
+        <a href="<?php echo mw_seo_url($bo_table)?>"><img id="btn_list" src="<?=$board_skin_path?>/img/btn_list.gif" border=0></a></td>
 </tr>
 </table>
 </form>
 
-<?  if ($mw_basic['cf_include_tail'] && file_exists($mw_basic['cf_include_tail']) && strstr($mw_basic[cf_include_tail_page], '/w/'))
-    include_once($mw_basic[cf_include_tail]); ?>
+<?php
+if ($mw_basic[cf_include_tail] && is_file($mw_basic[cf_include_tail]) && strstr($mw_basic[cf_include_tail_page], '/w/')) {
+    include_once($mw_basic[cf_include_tail]);
+}
+?>
 
 </td></tr></table>
 
@@ -1821,7 +1853,7 @@ function fwrite_check(f) {
     if ($is_dhtml_editor && $mw_basic[cf_editor] == "cheditor") {
         echo cheditor3('wr_content');
 
-        if ($mw_basic[cf_contents_shop] == '2') {
+        if ($mw_basic[cf_type] == 'desc' or $mw_basic[cf_contents_shop] == '2') {
             echo cheditor3('wr_contents_preview');
         }
     }
@@ -1832,16 +1864,23 @@ function fwrite_check(f) {
     var link1 = "";
     var link2 = "";
 
-    <? if (1) { //!$is_admin) { ?>
+    var filter_data = {
+        "subject": f.wr_subject.value,
+        "content": f.wr_content.value
+    };
+
+    if (typeof(f.wr_link1) != "undefined") {
+        filter_data.link1 = f.wr_link1.value;
+    }
+
+    if (typeof(f.wr_link2) != "undefined") {
+        filter_data.link2 = f.wr_link2.value;
+    }
+
     $.ajax({
         url: "<?=$board_skin_path?>/ajax.filter.php",
         type: "POST",
-        data: {
-            "subject": f.wr_subject.value,
-            "content": f.wr_content.value,
-            "link1": f.wr_link1.value,
-            "link2": f.wr_link2.value
-        },
+        data: filter_data,
         dataType: "json",
         async: false,
         cache: false,
@@ -1852,7 +1891,6 @@ function fwrite_check(f) {
             link2 = data.link2;
         }
     });
-    <? } ?>
 
     if (subject) {
         alert("제목에 금지단어('"+subject+"')가 포함되어있습니다");

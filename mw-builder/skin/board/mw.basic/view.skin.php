@@ -122,11 +122,12 @@ AutoSourcing.init( 'view_%id%' , true);
 <!-- 게시글 보기 시작 -->
 <table width="<?=$bo_table_width?>" align="center" cellpadding="0" cellspacing="0"><tr><td id=mw_basic>
 
-<?  if ($mw_basic['cf_include_head'] && file_exists($mw_basic['cf_include_head']) && strstr($mw_basic[cf_include_head_page], '/v/'))
-    include_once($mw_basic[cf_include_head]); ?>
-
 <?php
-if ($mw_basic['cf_bbs_banner']) include_once("$bbs_banner_path/list.skin.php"); // 게시판 배너
+if ($mw_basic[cf_include_head] && is_file($mw_basic[cf_include_head]) && strstr($mw_basic[cf_include_head_page], '/v/'))
+    include_once($mw_basic[cf_include_head]);
+
+if ($mw_basic['cf_bbs_banner'])
+    include_once("$bbs_banner_path/list.skin.php"); // 게시판 배너
 
 include_once("$board_skin_path/mw.proc/mw.list.hot.skin.php");
 ?>
@@ -179,14 +180,14 @@ if ('<?=$sca?>') document.fcategory_view.sca.value = '<?=urlencode($sca)?>';
 <? } ?>
 </script>
 
-<? include_once("$board_skin_path/mw.proc/mw.notice.top.php") ?>
-
-<? include_once("$board_skin_path/mw.proc/mw.search.top.php") ?>
-
-<? include_once("$board_skin_path/mw.proc/mw.cash.membership.skin.php") ?>
+<?php
+include_once("$board_skin_path/mw.proc/mw.notice.top.php");
+include_once("$board_skin_path/mw.proc/mw.search.top.php");
+include_once("$board_skin_path/mw.proc/mw.cash.membership.skin.php");
+?>
 
 <!-- 링크 버튼 -->
-<?
+<?php
 ob_start();
 ?>
 <table width=100%>
@@ -280,7 +281,17 @@ if ($is_category && $mw_basic[cf_category_tab]) {
         <? if ($print_href) { ?><a href="<?=$print_href?>"><img src="<?=$board_skin_path?>/img/btn_print.gif" align=absmiddle title='인쇄'></a><?}?>
     </td>
 </tr>
-<?  if ($mw_basic[cf_umz]) { // 짧은 글주소 사용 ?>
+<? if ($mw_basic[cf_shorten]) { ?>
+<tr><td height=1 bgcolor=#E7E7E7></td></tr>
+<tr>
+    <td height=30 class=mw_basic_view_title>
+        글주소 : <span id="post_url"><?=$shorten?></span>
+        <img src="<?=$board_skin_path?>/img/copy.png" id="post_url_copy" align="absmiddle">
+    </td>
+</tr>
+<?
+} 
+else if ($mw_basic[cf_umz]) { // 짧은 글주소 사용 ?>
 <tr><td height=1 bgcolor=#E7E7E7></td></tr>
 <tr>
     <td height=30 class=mw_basic_view_title>
@@ -307,25 +318,24 @@ if ($is_category && $mw_basic[cf_category_tab]) {
 </tr>
 <? } ?>
 
-<? if ($mw_basic[cf_shorten]) { ?>
-<tr><td height=1 bgcolor=#E7E7E7></td></tr>
-<tr>
-    <td height=30 class=mw_basic_view_title>
-        글주소 : <span id="post_url"><?=$shorten?></span>
-        <img src="<?=$board_skin_path?>/img/copy.png" id="post_url_copy" align="absmiddle">
-    </td>
-</tr>
-<? } ?>
+<?php
+if ($mw_basic['cf_include_file_head'] && is_file($mw_basic['cf_include_file_head'])) {
+    echo "<tr><td>";
+    include_once($mw_basic['cf_include_file_head']);
+    echo "</td></tr>";
+}
 
-<? if ($mw_basic[cf_include_file_head]) { echo "<tr><td>"; @include_once($mw_basic[cf_include_file_head]); echo "</td></tr>"; } ?>
+if ($mw_basic['cf_file_head']) {
+    echo "<tr><td>{$mw_basic['cf_file_head']}</td></tr>";
+}
 
-<? if ($mw_basic[cf_file_head]) { echo "<tr><td>$mw_basic[cf_file_head]</td></tr>"; } ?>
-<?
 // 가변 파일
 $cnt = 0;
 for ($i=0; $i<count($view[file]); $i++) {
     if ($view[file][$i][source] && !$view[file][$i][view] && !$view[file][$i][movie]) {
         $cnt++;
+
+    $view[file][$i][href] = str_replace('./', $g4['bbs_path'].'/', $view[file][$i][href]);
 ?>
 <tr><td height=1 bgcolor=#E7E7E7></td></tr>
 <tr>
@@ -394,11 +404,18 @@ $(document).ready(function () {
 #qr_code_layer .qr_code_info { float:left; margin:0 0 0 10px; width:115px; font:normal 12px 'gulim'; line-height:18px; color:#555; }
 </style>
 
-<? if ($mw_basic[cf_file_tail]) { echo "<tr><td>$mw_basic[cf_file_tail]</td></tr>"; } ?>
+<?php
+if ($mw_basic['cf_file_tail']) {
+    echo "<tr><td>{$mw_basic['cf_file_tail']}</td></tr>";
+}
 
-<? if ($mw_basic[cf_include_file_tail]) { echo "<tr><td>"; @include_once($mw_basic[cf_include_file_tail]); echo "</td></tr>"; } ?>
+if ($mw_basic['cf_include_file_tail'] && is_file($mw_basic['cf_include_file_tail'])) {
+    echo "<tr><td>";
+    include_once($mw_basic['cf_include_file_tail']);
+    echo "</td></tr>";
+} 
 
-<? if ($is_admin || $history_href || $is_singo_admin) { ?>
+if ($is_admin || $history_href || $is_singo_admin) { ?>
 <tr><td height=1 bgcolor=#E7E7E7></td></tr>
 <tr>
     <td height=40 class="func_buttons">
@@ -470,7 +487,7 @@ $(document).ready(function () {
 <? if ($mw_basic[cf_social_commerce]) { ?>
 <tr>
     <td>
-        <? include("$social_commerce_path/view.skin.php") ?>
+        <?php include("$social_commerce_path/view.skin.php") ?>
     </td>
 </tr>
 <? } ?>
@@ -478,7 +495,7 @@ $(document).ready(function () {
 <? if ($mw_basic[cf_talent_market]) { ?>
 <tr>
     <td>
-        <? include("$talent_market_path/view.skin.php") ?>
+        <?php include("$talent_market_path/view.skin.php") ?>
     </td>
 </tr>
 <? } ?>
@@ -534,7 +551,10 @@ if ($bomb) {
     <td class=mw_basic_view_content>
         <div id=view_<?=$wr_id?>>
 
-        <? @include_once($mw_basic[cf_include_view_head])?>
+        <?php
+        if ($mw_basic['cf_include_view_head'] && is_file($mw_basic['cf_include_view_head']))
+            include_once($mw_basic['cf_include_view_head']);
+        ?>
 
         <?=bc_code($mw_basic[cf_content_head], 1, 1)?>
 
@@ -580,9 +600,13 @@ if ($bomb) {
         <? } ?>
 
         <?echo $view[rich_content]; // {이미지:0} 과 같은 코드를 사용할 경우?>
+        <div style="clear:both; line-height:0; font-size:0;"></div>
 
         <?=bc_code($mw_basic[cf_content_add], 1, 1)?>
-        <? @include_once($mw_basic[cf_include_view])?>
+        <?php
+        if ($mw_basic[cf_include_view] && is_file($mw_basic[cf_include_view]))
+            include_once($mw_basic[cf_include_view]);
+        ?>
 
         </div>
 
@@ -682,7 +706,10 @@ if ($bomb) {
 
         <?=bc_code($mw_basic[cf_content_tail], 1, 1)?>
 
-        <? @include_once($mw_basic[cf_include_view_tail])?>
+        <?php
+        if ($mw_basic[cf_include_view_tail] && is_file($mw_basic[cf_include_view_tail]))
+            include_once($mw_basic[cf_include_view_tail]);
+        ?>
 
         </div>
     </td>
@@ -981,8 +1008,10 @@ if (!$view[wr_comment_hide] && ($mw_basic[cf_comment_level] <= $member[mb_level]
 
 <?=$link_buttons?>
 
-<?  if ($mw_basic['cf_include_tail'] && file_exists($mw_basic['cf_include_tail']) && strstr($mw_basic[cf_include_tail_page], '/v/'))
-    include_once($mw_basic[cf_include_tail]); ?>
+<?php
+if ($mw_basic[cf_include_tail] && is_file($mw_basic[cf_include_tail]) && strstr($mw_basic[cf_include_tail_page], '/v/'))
+    include_once($mw_basic[cf_include_tail]);
+?>
 
 </td></tr></table><br>
 

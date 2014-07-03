@@ -32,7 +32,7 @@ $count = count($main) - 1;
 </div><div class="div"><img src="<?=$latest_skin_path?>/img/main-bar-div.gif"></div>
 <? for ($i=$count-1; $i>-1; $i--) { ?>
 <div class="tab" id="main-<?=($i+1)?>" onmouseover="tab_over(<?=$i+1?>)" onmouseout="tab_over_cancel()">
-<div class="link"><a href="<?=$g4[bbs_path]?>/board.php?bo_table=<?=$bo_tables[$i]?>"><?=$main[$bo_tables[$i]]['board']['bo_subject']?></a></div>
+<div class="link"><a href="<?=mw_builder_seo_url($bo_tables[$i])?>"><?=$main[$bo_tables[$i]]['board']['bo_subject']?></a></div>
 </div><div class="div"><img src="<?=$latest_skin_path?>/img/main-bar-div.gif"></div>
 <? } ?>
 <div class="tab-on" id="main-0" onmouseover="tab_over(0)" onmouseout="tab_over_cancel()">

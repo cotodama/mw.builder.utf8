@@ -182,6 +182,7 @@ cf_www char(1) not null default ''
 ,cf_index_skin_tail varchar(50) not null default '{$default_skin}'
 ,cf_index_cache int not null default 10 
 ,cf_index_width int not null default 800
+,cf_seo_url varchar(1) not null default ''
 ,cf_member_skin_head varchar(50) not null default '{$default_skin}'
 ,cf_member_skin_tail varchar(50) not null default '{$default_skin}'
 ,cf_default_group varchar(50) not null default ''
@@ -200,6 +201,7 @@ if (!$row)
 @mysql_query("alter table $mw[config_table] change `cf_www` `cf_www` char(1) not null default ''");
 
 @mysql_query("alter table $mw[config_table] add `cf_sub_domain_off` varchar(1) not null default ''");
+@mysql_query("alter table $mw[config_table] add `cf_seo_url` varchar(1) not null default ''");
 
 @mysql_query("alter table $g4[board_table] change `bo_count_delete` `bo_count_delete` tinyint not null default '1'");
 @mysql_query("alter table $g4[board_table] change `bo_count_modify` `bo_count_modify` tinyint not null default '1'");

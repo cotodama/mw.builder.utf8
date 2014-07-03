@@ -106,9 +106,9 @@ if (!defined("_MW_INDEX_")) {
     while ($row = sql_fetch_array($qry))
     {
         // url query 가 있는 경우
-        $tmp = parse_url($row[ms_url]);
-        if (strstr($_SERVER[PHP_SELF], $tmp[path]) && $tmp[query]) {
-            parse_str($tmp[query], $str_get);
+        $tmp2 = parse_url($row[ms_url]);
+        if (strstr($_SERVER[PHP_SELF], $tmp2[path]) && $tmp2[query]) {
+            parse_str($tmp2[query], $str_get);
             $res = array_diff($str_get, $_GET);
             if (empty($res)) { // query 가 일치하면
                 // ms_id
@@ -206,6 +206,13 @@ else if ($group[gr_sub_domain] && !$mw[config][cf_sub_domain_off]) { // 그룹�
 }
 else if ($mw[config][cf_www]) { // www 로만 접속
     mw_sub_domain_only("www");
+}
+
+if ($mw['config']['cf_seo_url'] && strstr($_SERVER['REQUEST_URI'], $g4['bbs'].'/board.php')) {
+    goto_url2(mw_builder_seo_url($bo_table, $wr_id, $qstr));
+}
+if ($mw['config']['seo_url'] && strstr($_SERVER['REQUEST_URI'], '/page.php')) {
+    goto_url2(mw_builder_seo_page($pg_id));
 }
 
 if ($group[gr_level] > $member[mb_level]) { alert("접근권한이 없습니다."); }

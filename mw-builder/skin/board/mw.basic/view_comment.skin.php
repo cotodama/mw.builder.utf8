@@ -365,7 +365,7 @@ for ($i=0; $i<$to_record; $i++) {
     if (!$res) continue;
     $list[$i] = $row;
 
-    if ($mw_basic[cf_include_comment_main] && file_exists($mw_basic[cf_include_comment_main])) {
+    if ($mw_basic[cf_include_comment_main] && is_file($mw_basic[cf_include_comment_main])) {
         include($mw_basic[cf_include_comment_main]);
     }
 ?>
@@ -590,7 +590,7 @@ if ($is_comment_editor && $mw_basic[cf_editor] == "cheditor") {
 
 <div id=mw_basic_comment_write_form>
 
-<form name="fviewcomment" method="post" action="./write_comment_update.php" onsubmit="return fviewcomment_submit(this);" autocomplete="off" style="margin:0;" enctype="multipart/form-data">
+<form name="fviewcomment" method="post" action="<?php echo $g4['bbs_path']?>/write_comment_update.php" onsubmit="return fviewcomment_submit(this);" autocomplete="off" style="margin:0;" enctype="multipart/form-data">
 <input type=hidden name=w           id=w value='c'>
 <input type=hidden name=bo_table    value='<?=$bo_table?>'>
 <input type=hidden name=wr_id       value='<?=$wr_id?>'>
@@ -716,7 +716,10 @@ $(document).ready(function () {
     <input type=checkbox id="wr_secret" name="wr_secret" value="secret" <? if ($mw_basic[cf_comment_secret]) echo "checked" ?>>
     <label for="wr_secret">비밀글 (체크하면 글쓴이만 내용을 확인할 수 있습니다.)</label>
     <? } ?>
-    <? if ($mw_basic[cf_anonymous]) {?> <input type="checkbox" name="wr_anonymous" value="1"> 익명 <? } ?>
+    <? if ($mw_basic[cf_anonymous]) {?>
+    <input type="checkbox" name="wr_anonymous" id="wr_anonymous" value="1">
+    <label for="wr_anonymous">익명</label>
+    <? } ?>
     <? if ($mw_basic[cf_comment_emoticon] && !$is_comment_editor && !$write_error) {?>
     <span class=mw_basic_comment_emoticon><a href="javascript:win_open('<?=$board_skin_path?>/mw.proc/mw.emoticon.skin.php?bo_table=<?=$bo_table?>','emo','width=600,height=400,scrollbars=yes')">☞ 이모티콘</a></span>
     <? } ?>
@@ -730,6 +733,7 @@ $(document).ready(function () {
                 padding:10px;
                 position:absolute;
                 margin:0 0 0 100px;
+                z-index:99999999;
             }
             #mw_basic_special_characters table td {
                 padding:3px;

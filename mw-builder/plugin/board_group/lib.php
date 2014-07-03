@@ -113,8 +113,8 @@ function mw_board_group($title, $info, $timer, $list)
             <div class="mw_board_group_<?=$mbgi?>_list_layout">
                 <? for ($i=0; $i<$count; $i++) { ?>
                 <div><a href="javascript:mw_board_group_<?=$mbgi?>_click('<?=$board[$i][bo_table]?>')" id="mw_board_group_<?=$mbgi?>_item_<?=$board[$i][bo_table]?>"
-                    class="mw_board_group_<?=$mbgi?>_item"  ondblclick="location.href='<?=$g4[bbs_path]?>/board.php?bo_table=<?=$board[$i][bo_table]?>'"><?=$board[$i][bo_subject]?></a>
-                    <a href="<?=$g4[bbs_path]?>/board.php?bo_table=<?=$board[$i][bo_table]?>" class="quick_move">▶</a>
+                    class="mw_board_group_<?=$mbgi?>_item" ondblclick="location.href='<?=mw_builder_seo_url($board[$i][bo_table])?>'"><?=$board[$i][bo_subject]?></a>
+                    <a href="<?=mw_builder_seo_url($board[$i][bo_table])?>" class="quick_move">▶</a>
                 </div>
                 <? } ?>
             </div>

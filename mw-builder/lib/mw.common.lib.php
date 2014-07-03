@@ -104,8 +104,11 @@ function unhtmlspecialchars($str)
 // 게시물 정보($write_row)를 출력하기 위하여 $list로 가공된 정보를 복사 및 가공
 function mw_get_list($write_row, $board, $skin_path, $subject_len=40)
 {
-    global $g4, $config;
-    global $qstr, $page;
+    global $g4;
+    global $config;
+    global $qstr;
+    global $page;
+    global $mw;
 
     //$t = get_microtime();
     $bbs_path = "$g4[url]/$g4[bbs]";
@@ -139,6 +142,9 @@ function mw_get_list($write_row, $board, $skin_path, $subject_len=40)
 	}
 
     $list['comment_cnt'] = "";
+    if ($list['wr_comment_hide'])
+        $list['wr_comment'] = 0;
+
     if ($list['wr_comment'])
         $list['comment_cnt'] = "($list[wr_comment])";
 
@@ -183,9 +189,12 @@ function mw_get_list($write_row, $board, $skin_path, $subject_len=40)
         $list['icon_link'] = "<img src='$skin_path/img/icon_link.gif' align='absmiddle'>";
 
     // 분류명 링크
-    $list['ca_name_href'] = "$bbs_path/board.php?bo_table=$board[bo_table]&sca=".urlencode($list['ca_name']);
+    //$list['ca_name_href'] = "$bbs_path/board.php?bo_table=$board[bo_table]&sca=".urlencode($list['ca_name']);
+    $list['ca_name_href'] = mw_builder_seo_url($board[bo_table])."&sca=".urlencode($list['ca_name']);
 
-    $list['href'] = "$bbs_path/board.php?bo_table=$board[bo_table]&wr_id=$list[wr_id]" . $qstr;
+    //$list['href'] = "$bbs_path/board.php?bo_table=$board[bo_table]&wr_id=$list[wr_id]" . $qstr;
+    $list['href'] = mw_builder_seo_url($board['bo_table'], $list['wr_id'], $qstr);
+
     //$list['href'] = "$bbs_path/board.php?bo_table=$board[bo_table]&wr_id=$list[wr_id]";
     if ($board['bo_use_comment'])
         $list['comment_href'] = "javascript:win_comment('$bbs_path/board.php?bo_table=$board[bo_table]&wr_id=$list[wr_id]&cwin=1');";
@@ -223,10 +232,13 @@ function mw_get_list($write_row, $board, $skin_path, $subject_len=40)
 
 function goto_url2($url) {
     global $g4;
-    
-    include_once("$g4[path]/head.sub.php");
+
+    header("location: {$url}");
+    exit;
+
+    /*include_once("$g4[path]/head.sub.php");
     echo "<script type='text/javascript'> window.onload = function () { location.replace('$url'); } </script>";
-    include_once("$g4[path]/tail.sub.php");
+    include_once("$g4[path]/tail.sub.php");*/
     exit;
 }
 
@@ -289,7 +301,7 @@ function mw_get_last_thumb($bo_tables, $cnt=1, $is_rand=false)
                 $file['bo_table'] = $bo_table;
                 $file['wr_id'] = $max;
                 $file['path'] = "$file_path?".filesize($file_path);
-                $file['href'] = "{$g4['bbs_path']}/board.php?bo_table={$bo_table}&wr_id={$max}";
+                $file['href'] = mw_builder_seo_url($bo_table, $max);
                 $file['mtime'] = $filemtime;
 
                 if (!$files[$filemtime]['wr_id']) {
@@ -349,7 +361,7 @@ function mw_get_last_thumb($bo_tables, $cnt=1)
                 $file['bo_table'] = $bo_table;
                 $file['wr_id'] = $max;
                 $file['path'] = $file_path;
-                $file['href'] = "{$g4['url']}/{$g4['bbs']}/board.php?bo_table={$bo_table}&wr_id={$max}";
+                $file['href'] = mw_builder_seo_url($bo_table, $max);
 
                 //$filemtime = filemtime($file_path);
                 $files[$max] = $file;
@@ -433,5 +445,71 @@ function mw_html_entities($str)
     $str = str_replace("'", "&prime;", $str);
 
     return $str;
+}
+
+function mw_builder_seo_url($bo_table, $wr_id=0, $qstr='')
+{
+    global $g4;
+    global $mw;
+
+    $url = $g4['bbs_path'].'/board.php?bo_table='.$bo_table;
+
+    if ($wr_id)
+        $url .= '&wr_id='.$wr_id;
+
+    if ($qstr)
+        $url .= $qstr;
+
+    if ($mw['config']['cf_seo_url'])
+    {
+        $url = $g4['url'].'/b/'.$bo_table;
+
+        if ($wr_id)
+            $url .= '-'.$wr_id;
+
+        if ($qstr)
+            $url .= '?'.$qstr;
+    }
+
+    return $url;
+}
+
+function mw_builder_seo_page($pg_id)
+{
+    global $g4;
+    global $mw;
+
+    $url = $g4['url'].'/page?pg_id='.$pg_id;
+
+    if ($mw['config']['cf_seo_url']) {
+        $url = $g4['url'].'/page_'.$pg_id;
+    }
+
+    return $url;
+}
+
+
+function mw_builder_seo_main($gr_id)
+{
+    global $g4;
+    global $mw;
+
+    $url = $g4['url'].'/?mw_main='.$gr_id;
+
+    if ($mw['config']['cf_seo_url']) {
+        $url = $g4['url'].'/main_'.$gr_id;
+    }
+
+    return $url;
+}
+
+function mw_builder_seo_sign()
+{
+    global $mw;
+
+    if ($mw['config']['cf_seo_url'])
+        return '?';
+    else
+        return '&';
 }
 

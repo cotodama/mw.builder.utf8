@@ -23,6 +23,6 @@ if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
 
 mw_delete_row($board, $write);
 @include_once("$board_skin_path/delete.tail.skin.php");
-goto_url("./board.php?bo_table=$bo_table&page=$page" . $qstr);
+goto_url(mw_seo_url($bo_table, 0, "&page=$page" . $qstr));
 
 exit;

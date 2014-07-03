@@ -69,9 +69,9 @@ $file[$a]['title'] = mw_title_tag(mw_builder_reg_str($file[$a]['wr_subject']));
     $list[$i][subject] = mw_builder_reg_str($list[$i][subject]);
     $list[$i]['title'] = mw_title_tag(mw_builder_reg_str($list[$i]['wr_subject']));
     ?>
-    <li><?//=$list[$i][name]?> <a href="<?=$list[$i][href]?>" title="<?=$list[$i][title]?>"><?=$list[$i][subject]?></a>
+    <li><?//=$list[$i][name]?> <a href="<?=mw_builder_seo_url($list[$i]['bo_table'], $list[$i]['wr_id'])?>" title="<?=$list[$i][title]?>"><?=$list[$i][subject]?></a>
         <span class='comment'><?=$list[$i][wr_comment]?'+'.$list[$i][wr_comment]:''?></span>
-	<span class="bo_table"> | <a href="<?=$g4[url]?>/<?=$g4[bbs]?>/board.php?bo_table=<?=$list[$i][bo_table]?>"><?=$list[$i][bo_subject]?></a></span></li>
+	<span class="bo_table"> | <a href="<?=mw_builder_seo_url($list[$i]['bo_table'])?>"><?=$list[$i][bo_subject]?></a></span></li>
     <? } ?>
     </ul>
 </td>

@@ -152,6 +152,26 @@ if ($cf_bomb_item_select)
 else
     $cf_bomb_item = "";
 
+$sql = " select * from {$mw['category_table']} where bo_table = '{$bo_table}' ";
+$qry = sql_query($sql);
+while ($row = sql_fetch_array($qry))
+{
+    $ca_type = "ca_type_".$row['ca_id'];
+    $ca_level_list = "ca_level_list_".$row['ca_id'];
+    $ca_level_view = "ca_level_view_".$row['ca_id'];
+    $ca_level_write = "ca_level_write_".$row['ca_id'];
+    $ca_color = "ca_color_".$row['ca_id'];
+
+    $sql = " update {$mw['category_table']} set ";
+    $sql.= "  ca_type = '".$$ca_type."' ";
+    $sql.= " ,ca_level_list = '".$$ca_level_list."' ";
+    $sql.= " ,ca_level_view = '".$$ca_level_view."' ";
+    $sql.= " ,ca_level_write = '".$$ca_level_write."' ";
+    $sql.= " ,ca_color = '".$$ca_color."' ";
+    $sql.= "  where ca_id = '{$row['ca_id']}' ";
+    sql_query($sql);
+}
+
 $sql = "update $mw[basic_config_table] set
 bo_table = '$bo_table'
 ,cf_type = '$cf_type'
@@ -344,6 +364,7 @@ bo_table = '$bo_table'
 ,cf_related_table = '$cf_related_table'
 ,cf_latest_table = '$cf_latest_table'
 ,cf_anonymous = '$cf_anonymous'
+,cf_anonymous_nopoint = '$cf_anonymous_nopoint'
 ,cf_contents_shop = '$cf_contents_shop'
 ,cf_contents_shop_download_count = '$cf_contents_shop_download_count'
 ,cf_contents_shop_download_day = '$cf_contents_shop_download_day'
@@ -368,6 +389,7 @@ bo_table = '$bo_table'
 ,cf_exif = '$cf_exif'
 ,cf_no_img_ext = '$cf_no_img_ext'
 ,cf_print = '$cf_print'
+,cf_seo_url = '$cf_seo_url'
 ,cf_umz = '$cf_umz'
 ,cf_umz2 = '$cf_umz2'
 ,cf_shorten = '$cf_shorten'
@@ -387,6 +409,9 @@ bo_table = '$bo_table'
 ,cf_include_tail_page = '$cf_include_tail_page'
 ,cf_include_list_main = '$cf_include_list_main'
 ,cf_include_comment_main = '$cf_include_comment_main'
+,cf_include_write_head = '$cf_include_write_head'
+,cf_include_write_main = '$cf_include_write_main'
+,cf_include_write_tail = '$cf_include_write_tail'
 ,cf_subject_style = '$cf_subject_style'
 ,cf_subject_style_level = '$cf_subject_style_level'
 ,cf_subject_style_color_default = '$cf_subject_style_color_default'
@@ -416,6 +441,7 @@ bo_table = '$bo_table'
 ,cf_exam = '$cf_exam'
 ,cf_exam_level = '$cf_exam_level'
 ,cf_exam_notice = '$cf_exam_notice'
+,cf_exam_download = '$cf_exam_download'
 ,cf_bbs_banner = '$cf_bbs_banner'
 ,cf_bbs_banner_page = '$cf_bbs_banner_page'
 ,cf_collect = '$cf_collect'
@@ -767,12 +793,16 @@ if ($chk[cf_name_title]) $sql .= ", cf_name_title = '$cf_name_title' ";
 if ($chk[cf_attach_count]) $sql .= ", cf_attach_count = '$cf_attach_count' ";
 if ($chk[cf_related_table]) $sql .= ", cf_related_table = '$cf_related_table' ";
 if ($chk[cf_latest_table]) $sql .= ", cf_latest_table = '$cf_latest_table' ";
-if ($chk[cf_anonymous]) $sql .= ", cf_anonymous = '$cf_anonymous' ";
+if ($chk[cf_anonymous]) {
+    $sql .= ", cf_anonymous = '$cf_anonymous' ";
+    $sql .= ", cf_anonymous_nopoint = '$cf_anonymous_nopoint' ";
+}
 if ($chk[cf_write_notice]) $sql .= ", cf_write_notice = '$cf_write_notice' ";
 if ($chk[cf_css]) $sql .= ", cf_css = '$cf_css' ";
 if ($chk[cf_exif]) $sql .= ", cf_exif = '$cf_exif' ";
 if ($chk[cf_no_img_ext]) $sql .= ", cf_no_img_ext = '$cf_no_img_ext' ";
 if ($chk[cf_print]) $sql .= ", cf_print = '$cf_print' ";
+if ($chk[cf_seo_url]) $sql .= ", cf_seo_url = '$cf_seo_url' ";
 if ($chk[cf_umz]) $sql .= ", cf_umz = '$cf_umz' ";
 if ($chk[cf_umz]) $sql .= ", cf_umz2 = '$cf_umz2' ";
 if ($chk[cf_shorten]) $sql .= ", cf_shorten = '$cf_shorten' ";
@@ -792,6 +822,9 @@ if ($chk[cf_include_tail]) {
 }
 if ($chk[cf_include_list_main]) $sql .= ", cf_include_list_main = '$cf_include_list_main' ";
 if ($chk[cf_include_comment_main]) $sql .= ", cf_include_comment_main = '$cf_include_comment_main' ";
+if ($chk[cf_include_write_head]) $sql .= ", cf_include_write_head = '$cf_include_write_head' ";
+if ($chk[cf_include_write_main]) $sql .= ", cf_include_write_main = '$cf_include_write_main' ";
+if ($chk[cf_include_write_tail]) $sql .= ", cf_include_write_tail = '$cf_include_write_tail' ";
 if ($chk[cf_subject_style]) {
     $sql .= ", cf_subject_style = '$cf_subject_style' ";
     $sql .= ", cf_subject_style_level = '$cf_subject_style_level' ";
@@ -813,6 +846,7 @@ if ($chk[cf_exam]) {
     $sql .= ", cf_exam = '$cf_exam' ";
     $sql .= ", cf_exam_level = '$cf_exam_level' ";
     $sql .= ", cf_exam_notice = '$cf_exam_notice' ";
+    $sql .= ", cf_exam_download = '$cf_exam_download' ";
 }
 if ($chk[cf_bbs_banner]) {
     $sql .= ", cf_bbs_banner = '$cf_bbs_banner' ";

@@ -203,92 +203,8 @@ if ($mw_basic[cf_change_image_size] && $member[mb_level] >= $mw_basic[cf_change_
     }
 }
 
-// 섬네일 생성, 무조건 생성으로 변경 (1.0.6)
-//if ($mw_basic[cf_type] != "list") {
-
-// 첫번째 첨부이미지 본문 출력 안할시 (1.1.2);
-// 삭제 (1.2.5);
-/*if ($mw_basic[cf_img_1_noview]) {
-    $file = mw_get_first_file($bo_table, $wr_id, true);
-    if (!empty($file)) {
-        $source_file = "$file_path/{$file[bf_file]}";
-        $dest_file = "$thumb_path/{$wr_id}"; 
-        @copy($source_file, $dest_file);
-    }
-}
-else
-{*/
-    $thumb_file = mw_thumb_jpg("$thumb_path/{$wr_id}");
-    $thumb2_file = mw_thumb_jpg("$thumb2_path/{$wr_id}");
-    $thumb3_file = mw_thumb_jpg("$thumb3_path/{$wr_id}");
-    $thumb4_file = mw_thumb_jpg("$thumb4_path/{$wr_id}");
-    $thumb5_file = mw_thumb_jpg("$thumb5_path/{$wr_id}");
-
-    if (file_exists($thumb_file)) unlink($thumb_file);
-    if (file_exists($thumb2_file)) unlink($thumb2_file);
-    if (file_exists($thumb3_file)) unlink($thumb3_file);
-    if (file_exists($thumb4_file)) unlink($thumb4_file);
-    if (file_exists($thumb5_file)) unlink($thumb5_file);
-
-    $file = mw_get_first_file($bo_table, $wr_id, true);
-    if (!empty($file)) {
-        $source_file = "$file_path/{$file[bf_file]}";
-        mw_make_thumbnail($mw_basic[cf_thumb_width], $mw_basic[cf_thumb_height], $source_file, $thumb_file, $mw_basic[cf_thumb_keep]);
-        if ($mw_basic[cf_thumb2_width])
-            @mw_make_thumbnail($mw_basic[cf_thumb2_width], $mw_basic[cf_thumb2_height], $source_file,
-                "{$thumb2_file}", $mw_basic[cf_thumb2_keep]);
-        if ($mw_basic[cf_thumb3_width]) {
-            @mw_make_thumbnail($mw_basic[cf_thumb3_width], $mw_basic[cf_thumb3_height], $source_file,
-                "{$thumb3_file}", $mw_basic[cf_thumb3_keep]);
-        }
-        if ($mw_basic[cf_thumb4_width]) {
-            @mw_make_thumbnail($mw_basic[cf_thumb4_width], $mw_basic[cf_thumb4_height], $source_file,
-                "{$thumb4_file}", $mw_basic[cf_thumb4_keep]);
-        }
-        if ($mw_basic[cf_thumb5_width]) {
-            @mw_make_thumbnail($mw_basic[cf_thumb5_width], $mw_basic[cf_thumb5_height], $source_file,
-                "{$thumb5_file}", $mw_basic[cf_thumb5_keep]);
-        }
-    } else {
-        $is_thumb = false;
-        preg_match_all("/<img.*src=\\\"(.*)\\\"/iUs", stripslashes($wr_content), $matchs);
-        for ($i=0, $m=count($matchs[1]); $i<$m; ++$i) {
-            $mat = $matchs[1][$i];
-            if (strstr($mat, "mw.basic.comment.image")) $mat = '';
-            if (strstr($mat, "mw.emoticon")) $mat = '';
-            if (preg_match("/cheditor[0-9]\/icon/i", $mat)) $mat = '';
-            if ($mat) {
-                //$mat = str_replace($g4[url], "..", $mat);
-                $mat = preg_replace("/(http:\/\/.*)\/data\//i", "../data/", $mat);
-                if (file_exists($mat)) {
-                    mw_make_thumbnail($mw_basic[cf_thumb_width], $mw_basic[cf_thumb_height], $mat, $thumb_file, $mw_basic[cf_thumb_keep]);
-                    if ($mw_basic[cf_thumb2_width])
-                        @mw_make_thumbnail($mw_basic[cf_thumb2_width], $mw_basic[cf_thumb2_height], $mat,
-                            "{$thumb2_file}", $mw_basic[cf_thumb2_keep]);
-                    if ($mw_basic[cf_thumb3_width])
-                        @mw_make_thumbnail($mw_basic[cf_thumb3_width], $mw_basic[cf_thumb3_height], $mat,
-                            "{$thumb3_file}", $mw_basic[cf_thumb3_keep]);
-                    if ($mw_basic[cf_thumb4_width])
-                        @mw_make_thumbnail($mw_basic[cf_thumb4_width], $mw_basic[cf_thumb4_height], $mat,
-                            "{$thumb4_file}", $mw_basic[cf_thumb4_keep]);
-                    if ($mw_basic[cf_thumb5_width])
-                        @mw_make_thumbnail($mw_basic[cf_thumb5_width], $mw_basic[cf_thumb5_height], $mat,
-                            "{$thumb5_file}", $mw_basic[cf_thumb5_keep]);
-                    $is_thumb = true;
-                    break;
-                }
-            } // if 
-        } // for 
-        if (!$is_thumb) {
-            if (file_exists($thumb_file)) unlink($thumb_file);
-            if (file_exists($thumb2_file)) unlink($thumb2_file);
-            if (file_exists($thumb3_file)) unlink($thumb3_file);
-            if (file_exists($thumb4_file)) unlink($thumb4_file);
-            if (file_exists($thumb5_file)) unlink($thumb5_file);
-        }
-    }
-//}
-//}
+// 썸네일 생성
+$is_thumb = mw_make_thumbnail_row($bo_table, $wr_id, $wr_content, true);
 
 // 원본 워터마크
 for ($i=0, $m=sizeof($watermark_files); $i<$m; $i++) // 기존 원터마크 파일 삭제
@@ -407,6 +323,13 @@ if ($w == "" && trim($mw_basic[cf_memo_id]) && $is_admin != "super")
                   where mb_id = '$memo_id' ";
         sql_query($sql);
     }
+}
+
+if ($mw_basic[cf_type] == 'desc') {
+    $sql = " update $write_table set ";
+    $sql.= " wr_contents_preview = '$wr_contents_preview' ";
+    $sql.= " where wr_id = '$wr_id' ";
+    sql_query($sql);
 }
 
 //컨텐츠 가격 및 사용도메인
@@ -544,6 +467,15 @@ if ($mw_basic[cf_reward])
 // 익명
 if ($mw_basic[cf_anonymous]) {
     sql_query(" update $write_table set wr_anonymous = '$wr_anonymous' where wr_id = '$wr_id' ");
+
+    if ($mw_basic[cf_anonymous_nopoint] && $wr_anonymous) {
+        if ($w == '') {
+            delete_point($member[mb_id], $bo_table, $wr_id, '쓰기');
+        }
+        else if ($w == 'r') {
+            delete_point($member[mb_id], $bo_table, $wr_id, '쓰기');
+        }
+    }
 }
 
 // 글읽기 레벨

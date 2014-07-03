@@ -28,6 +28,7 @@ if (!defined('_GNUBOARD_')) exit;
 function mw_latest($skin_dir="", $bo_table, $rows=10, $subject_len=40, $is_img=0, $minute=0)
 {
     global $g4;
+    global $mw;
 
     if ($skin_dir)
         $latest_skin_path = "$g4[path]/skin/latest/$skin_dir";
@@ -86,7 +87,7 @@ function mw_latest($skin_dir="", $bo_table, $rows=10, $subject_len=40, $is_img=0
 
 	    for ($i=0; $row = sql_fetch_array($qry); $i++) {
 		$list[$i] = mw_get_list($row, $board, $latest_skin_path, $subject_len);
-                $list[$i][href] = "$g4[bbs_path]/board.php?bo_table=$bo_table&wr_id=$row[wr_id]";
+                $list[$i][href] = mw_builder_seo_url($bo_table, $row[wr_id]);
 		$list[$i][content] = $list[$i][wr_content] = "";
 	    }
 

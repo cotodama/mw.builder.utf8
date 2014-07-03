@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Bechu-Basic Skin for Gnuboard4
  *
@@ -25,5 +25,9 @@ $sop = strtolower($sop);
 if ($sop != "and" && $sop != "or")
     $sop = "and";
 
+$mw_is_list = false;
+$mw_is_view = false;
+$mw_is_write = true;
 
-?>
+include_once("$board_skin_path/mw.lib/mw.skin.basic.lib.php");
+

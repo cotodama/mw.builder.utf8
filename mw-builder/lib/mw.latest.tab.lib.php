@@ -58,7 +58,7 @@ function mw_latest_tab($skin_dir="", $bo_tables, $rows=10, $subject_len=40, $min
 	    for ($j=0; $row=sql_fetch_array($qry); $j++) {
 		$list[$j] = mw_get_list($row, $board, $latest_skin_path, $subject_len);
 		$list[$j][content] = $list[$i][wr_content] = "";
-                $list[$j][href] = "$g4[bbs_path]/board.php?bo_table=$bo_table&wr_id={$list[$j][wr_id]}";
+                $list[$j][href] = mw_builder_seo_url($bo_table, $list[$j][wr_id]);
 	    }
 	    if (!$j) {
 		for ($j=0; $j<$rows; $j++) {

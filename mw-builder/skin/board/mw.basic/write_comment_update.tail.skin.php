@@ -103,7 +103,7 @@ if ($mw_basic[cf_comment_file]) {
 }
 
 if ($file_upload_msg)
-    alert($file_upload_msg, "./board.php?bo_table=$bo_table&wr_id=$wr[wr_parent]&page=$page" . $qstr . "&cwin=$cwin#c_{$comment_id}");
+    alert($file_upload_msg, $g4['bbs_path']."/board.php?bo_table=$bo_table&wr_id=$wr[wr_parent]&page=$page" . $qstr . "&cwin=$cwin#c_{$comment_id}");
 
 
 if ($mw_basic[cf_image_outline]) {

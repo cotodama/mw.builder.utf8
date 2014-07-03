@@ -38,7 +38,7 @@ for ($k=0; $k<count($arr); $k++)
     if (strlen($option) > 10)
         $option = substr($arr[$k], 0, 18) . "…";
 
-    $skin_options .= "<option value='$arr[$k]'>$option</option>";
+    $skin_options .= "<option value='{$arr[$k]}'>$option</option>";
 }
 
 $sql = "select * from $mw[config_table] limit 1";
@@ -48,6 +48,7 @@ if ($mw[config][cf_overlogin]) $cf_overlogin = "checked";
 if ($mw[config][cf_www]) $cf_www = "checked";
 if ($mw[config][cf_member]) $cf_member = "checked";
 if ($mw[config][cf_sub_domain_off]) $cf_sub_domain_off = "checked";
+if ($mw[config][cf_seo_url]) $cf_seo_url = "checked";
 
 // 그룹
 $group_options = "";
@@ -58,18 +59,28 @@ while ($row = sql_fetch_array($qry)) {
 }
 ?>
 
+<style>
+table.tconfig tbody td:first-child { width:20%; color:#616161; padding:5px 0px 5px 10px; font-weight:bold; text-align: right; }
+table.tconfig tbody td:nth-child(2) { width:30%; color:#868686; padding:5px 10px 5px 10px; }
+</style>
+
 <form name='fconfig' method='post' onsubmit="return fconfigform_submit(this);">
 <input type=hidden name=token value='<?=$token?>'>
 
 <table width=100% cellpadding=0 cellspacing=0 border=0>
-<colgroup width=20% class='col1 pad1 bold right'>
-<colgroup width=30% class='col2 pad2'>
-<colgroup width=20% class='col1 pad1 bold right'>
-<colgroup width=30% class='col2 pad2'>
+<colgroup width=30% class='col1 pad1 bold right'>
+<colgroup width=70% class='col2 pad2'>
 <tr class='ht'>
-    <td colspan=4 align=left><?=subtitle("기본 설정")?></td>
+    <td colspan=4 align=left><?=subtitle($g4[title])?></td>
 </tr>
 <tr><td colspan=4 class=line1></td></tr>
+</table>
+
+<table width=100% cellpadding=0 cellspacing=0 border=0 class="tconfig">
+<colgroup width=20% class='col1 pad1 bold right'>
+<colgroup width=30% class='col2 pad2'>
+<colgroup width=20% class='col1 pad1 bold right'>
+<colgroup width=30% class='col2 pad2'>
 <tr class='ht'>
     <td>www 로만 접속가능</td>
     <td>
@@ -96,6 +107,13 @@ while ($row = sql_fetch_array($qry)) {
     <td>
 	<input type=checkbox name=cf_sub_domain_off value=1 <?=$cf_sub_domain_off?>> 사용안함 
         <?=help("그룹관리에서 서브도메인이 입력되어 있어도 이곳에서 사용안함으로 하면 서브도메인을 사용하지 않습니다.")?>
+    </td>
+</tr>
+<tr class='ht'>
+    <td>SEO URL (Permalink)</td>
+    <td>
+	<input type=checkbox name=cf_seo_url value=1 <?=$cf_seo_url?>> 사용
+        (추가 설정 필요, <a href="http://www.miwit.com/b/mw_tip-3870" target="_blank">설정방법 클릭!</a>) 
     </td>
 </tr>
 <tr class='ht'>
@@ -127,7 +145,6 @@ while ($row = sql_fetch_array($qry)) {
 	<select id=cf_member_skin_tail name=cf_member_skin_tail><option value=''></option><?=$skin_options?></select>
     </td>
 </tr>
-<tr><td colspan=4 class=line2></td></tr>
 <tr><td colspan=4 class=ht></td></tr>
 </table>
 

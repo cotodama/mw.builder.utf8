@@ -30,7 +30,7 @@ $style_name = "mw-board-group-list";
         if ($list[$i]['icon_new']) $list[$i]['subject'] .= "&nbsp;" . $list[$i]['icon_new'];
         //if ($list[$i]['icon_hot']) $list[$i]['subject'] .= "&nbsp;" . $list[$i]['icon_hot'];
         $list[$i]['subject'] = mw_builder_reg_str($list[$i]['subject']);
-        $list[$i]['href'] = $g4['bbs_path']."/board.php?bo_table={$tmp_table}&wr_id=".$list[$i]['wr_id'];
+        $list[$i]['href'] = mw_builder_seo_url($tmp_table, $list[$i]['wr_id'], $qstr);
         $list[$i]['title'] = mw_title_tag(mw_builder_reg_str($list[$i]['wr_subject']));
         ?>
         <li>

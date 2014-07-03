@@ -1,3 +1,124 @@
+ver 2.6.3 (14.07.04)
+    : 퍼머링크 (seo url) 지원
+    : 썸네일 재생성 오류 수정 (oolloo님 제안)
+    : 코멘트 제한 오류 수정 (l2zeo님 제안)
+    : 요약정보 html 처리 (역지사지님 제안)
+
+    mw.basic/HISTORY
+    mw.basic/mw.adm/mw.config.php
+    mw.basic/mw.adm/mw.config.update.php
+    mw.basic/mw.adm/mw.upgrade.php
+    mw.basic/mw.lib/mw.skin.basic.lib.php
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/mw.proc/mw.adm.thumb.remake.php
+    mw.basic/mw.proc/mw.list.1n1.php
+    mw.basic/mw.proc/mw.print.php
+    mw.basic/mw.proc/mw.jump.php
+    mw.basic/mw.proc/mw.one.talk.php
+    mw.basic/list.skin.php
+    mw.basic/view.skin.php
+    mw.basic/view_head.skin.php
+    mw.basic/view_comment.skin.php
+    mw.basic/view_comment_head.skin.php
+    mw.basic/delete.skin.php
+    mw.basic/delete_all.skin.php
+    mw.basic/delete_comment.head.skin.php
+    mw.basic/write.skin.php
+    mw.basic/write_update.skin.php
+    mw.basic/write_comment_update.head.skin.php
+    mw.basic/write_comment_update.tail.skin.php
+
+ver 2.6.2 (14.06.27)
+    : 외부 이미지 썸네일 생성 (oolloo님 제안)
+    : 동영상 가로크기 자동 조정시 세로 사이즈 비율 적용 (크레이티브님 제안)
+    : 게시물 정렬시 답글 따라가기 (oolloo님 제안)
+    : 게시물 점프시 답글 따라가기
+    : 특수문자 입력창 z-index 적용 (신비님 제안)
+    : 글작성 페이지 파일 포함 기능 - 중간 추가 (재아님 제안)
+
+    mw.basic/HISTORY
+    mw.basic/mw.adm/mw.config.php
+    mw.basic/mw.adm/mw.config.update.php
+    mw.basic/mw.adm/mw.upgrade.php
+    mw.basic/mw.lib/mw.skin.basic.lib.php
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/mw.proc/mw.adm.order.php
+    mw.basic/mw.proc/mw.jump.update.php
+    mw.basic/mw.proc/mw.adm.thumb.remake.php
+    mw.basic/bbs-img/*
+    mw.basic/list.skin.php
+    mw.basic/write.skin.php
+    mw.basic/write_update.skin.php
+    mw.basic/view_comment.skin.php
+    mw.basic/move.php
+ 
+ver 2.6.1 (14.06.20)
+    : 분류별 게시판 타입 (스타일디비님 제안)
+    : 분류별 복사, 이동, 삭제 (재아님 제안)
+    : 분류별 색상 (연탄님 제안)
+    : 게시판 분류 권한별 사용권한
+    : 요약형 전용 요약정보를 따로 입력 (역지사지님 제안)
+
+    mw.basic/HISTORY
+    mw.basic/mw.adm/mw.config.php
+    mw.basic/mw.adm/mw.config.update.php
+    mw.basic/mw.adm/mw.upgrade.php
+    mw.basic/mw.adm/mw.category.delete.php
+    mw.basic/mw.adm/mw.category.move.php
+    mw.basic/mw.adm/mw.category.move.update.php
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/mw.lib/mw.skin.basic.lib.php
+    mw.basic/list.skin.php
+    mw.basic/write.head.skin.php
+    mw.basic/write.skin.php
+    mw.basic/write_update.head.skin.php
+    mw.basic/write_update.skin.php
+    mw.basic/move.php
+ 
+ver 2.6.0 (14.06.13)
+    : 다운로드시 파일명 인코딩 익스11 적용 (라우터님 제안)
+    : 링크권한 없는 경우 글쓰기 에러 수정 (한글닷컴님 제안)
+    : 외부 파일 include 시 파일 검사 (인쇄쟁이님 제안)
+    : 선택익명 포인트 지급 안함 옵션 (AndroidGame님 제안)
+    : 컨텐츠샵 관리자의 진행회원ID 설정기능 (갈갈이님 제안)
+    : 글작성 페이지 파일 포함 기능 (재아님 제안)
+
+    mw.basic/HISTORY
+    mw.basic/mw.adm/mw.config.php
+    mw.basic/mw.adm/mw.config.update.php
+    mw.basic/mw.adm/mw.upgrade.php
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/download.skin.php
+    mw.basic/write.skin.php
+    mw.basic/list.skin.php
+    mw.basic/view.skin.php
+    mw.basic/view_head.skin.php
+    mw.basic/view_comment.skin.php
+    mw.basic/write_update.skin.php
+    mw.basic/write_update.tail.skin.php
+    mw.basic/write_comment_update.skin.php
+ 
+ver 2.5.9 (14.06.06)
+    : 로그 복원기능
+    : 유투브 재생주소 feeds 제외 (재아님 제안)
+    : 워터마크 테스트 코드 삭제 (금광님 제안)
+    : 시험문제 솔루션 연동 - 다운로드 전 시험필수 옵션 추가 (태양이님 제안)
+    : 분류 label 적용 오타수정
+
+    mw.basic/HISTORY
+    mw.basic/mw.adm/mw.config.php
+    mw.basic/mw.adm/mw.config.update.php
+    mw.basic/mw.adm/mw.upgrade.php
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/mw.proc/mw.history.restore.php
+    mw.basic/mw.proc/mw.history.view.php
+    mw.basic/write.skin.php
+    mw.basic/list.skin.php
+    mw.basic/view.skin.php
+    mw.basic/view_head.skin.php
+    mw.basic/view_comment.skin.php
+    mw.basic/download.skin.php
+
 ver 2.5.8 (14.05.30)
     : 회원차단시 단어필터링 설정 (재아님 제안)
     : 레벨 표시 css 조정 (l2zeo님 제안)

@@ -32,8 +32,14 @@ if (!$tn) $tn = 0;
 if (!$mw_basic[cf_type]) $mw_basic[cf_type] = "list";
 
 $g4[title] = "배추 BASIC SKIN 관리자";
-//include_once("mw.head.php");
-include_once("$g4[path]/head.sub.php");
+
+header("Content-Type: text/html; charset=$g4[charset]");
+$gmnow = gmdate("D, d M Y H:i:s") . " GMT";
+header("Expires: 0"); // rfc2616 - Section 14.21
+header("Last-Modified: " . $gmnow);
+header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
+header("Cache-Control: pre-check=0, post-check=0, max-age=0"); // HTTP/1.1
+header("Pragma: no-cache"); // HTTP/1.0
 
 if (!$mw_basic[cf_thumb_width]) $mw_basic[cf_thumb_width] = 80;
 if (!$mw_basic[cf_thumb_height]) $mw_basic[cf_thumb_height] = 50;
@@ -42,6 +48,32 @@ if (!$mw_basic[cf_write_height]) $mw_basic[cf_write_height] = 10;
 
 set_session("ss_config_token", $token = uniqid(time()));
 ?>
+<!doctype html>
+<html lang="ko">
+<meta charset="<?=$g4['charset']?>">
+<title><?=$g4['title']?></title>
+<link rel="stylesheet" href="<?=$g4['path']?>/style.css" type="text/css">
+</head>
+<script type="text/javascript">
+// 자바스크립트에서 사용하는 전역변수 선언
+var g4_path      = "<?=$g4['path']?>";
+var g4_bbs       = "<?=$g4['bbs']?>";
+var g4_bbs_img   = "<?=$g4['bbs_img']?>";
+var g4_url       = "<?=$g4['url']?>";
+var g4_is_member = "<?=$is_member?>";
+var g4_is_admin  = "<?=$is_admin?>";
+var g4_bo_table  = "<?=isset($bo_table)?$bo_table:'';?>";
+var g4_sca       = "<?=isset($sca)?$sca:'';?>";
+var g4_charset   = "<?=$g4['charset']?>";
+var g4_cookie_domain = "<?=$g4['cookie_domain']?>";
+var g4_is_gecko  = navigator.userAgent.toLowerCase().indexOf("gecko") != -1;
+var g4_is_ie     = navigator.userAgent.toLowerCase().indexOf("msie") != -1;
+<? if ($is_admin) { echo "var g4_admin = '{$g4['admin']}';"; } ?>
+</script>
+<script type="text/javascript" src="<?=$g4['path']?>/js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="<?=$g4['path']?>/js/common.js"></script>
+<body topmargin="0" leftmargin="0" <?=isset($g4['body_script']) ? $g4['body_script'] : "";?>>
+<a name="g4_head"></a>
 
 <table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
 
@@ -1099,6 +1131,30 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
     </div>
 
     <div class="cf_item">
+	<div class="cf_title"> <input type=checkbox name=chk[cf_include_write_head] value=1>&nbsp; 글쓰기 상단</div>
+	<div class="cf_content">
+	    <input type="text" size="60" name="cf_include_write_head" class="ed" value="<?=$mw_basic[cf_include_write_head]?>"> 
+	    <div class="cf_info">글작성 페이지 제목 상단 부분에 포함될 파일입니다.</div>
+	</div>
+    </div>
+
+    <div class="cf_item">
+	<div class="cf_title"> <input type=checkbox name=chk[cf_include_write_main] value=1>&nbsp; 글쓰기 중간</div>
+	<div class="cf_content">
+	    <input type="text" size="60" name="cf_include_write_main" class="ed" value="<?=$mw_basic[cf_include_write_main]?>"> 
+	    <div class="cf_info">글작성 페이지 제목 하단 부분에 포함될 파일입니다.</div>
+	</div>
+    </div>
+
+    <div class="cf_item">
+	<div class="cf_title"> <input type=checkbox name=chk[cf_include_write_tail] value=1>&nbsp; 글쓰기 하단</div>
+	<div class="cf_content">
+	    <input type="text" size="60" name="cf_include_write_tail" class="ed" value="<?=$mw_basic[cf_include_write_tail]?>"> 
+	    <div class="cf_info">글작성 페이지 내용 아래 부분에 포함될 파일입니다.</div>
+	</div>
+    </div>
+
+    <div class="cf_item">
 	<div class="cf_title"> <input type=checkbox name=chk[cf_download_popup] value=1>&nbsp; 다운로드 팝업 </div>
 	<div class="cf_content">
             <input type=checkbox name=cf_download_popup value=1> 사용
@@ -1154,9 +1210,18 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
     <div class="cf_item">
 	<div class="cf_title"> <input type=checkbox name=chk[cf_anonymous] value=1>&nbsp; 선택익명 </div>
 	<div class="cf_content" height=60>
-            <input type="checkbox" name="cf_anonymous" value="1">
-	    <span class="cf_info">(글작성시 익명을 선택할 수 있습니다.)</span>
-	    <script> document.cf_form.cf_anonymous.checked = "<?=$mw_basic[cf_anonymous]?>"; </script>
+            <div>
+                <input type="checkbox" name="cf_anonymous" value="1"> 사용
+                <span class="cf_info">(글작성시 익명을 선택할 수 있습니다.)</span>
+            </div>
+            <div>
+                <input type="checkbox" name="cf_anonymous_nopoint" value="1"> 포인트 적립안함
+                <span class="cf_info">(선택익명 사용시 쓰기 포인트를 적립하지 않습니다.)</span>
+            </div>
+	    <script>
+            document.cf_form.cf_anonymous.checked = "<?=$mw_basic[cf_anonymous]?>";
+            document.cf_form.cf_anonymous_nopoint.checked = "<?=$mw_basic[cf_anonymous_nopoint]?>";
+            </script>
 	</div>
     </div>
  
@@ -2227,6 +2292,110 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
     </div>
 
     <div class="cf_item">
+	<div class="cf_title"> <input type=checkbox disabled>&nbsp; 분류 설정 </div>
+	<div class="cf_content" height=80>
+            <style>
+            .mw_category { background-color:#ccc; }
+            .mw_category td { background-color:#eee; text-align:center; }
+            </style>
+            <table border="0" cellpadding="3" cellspacing="1" class="mw_category">
+            <tr>
+                <td width="120">분류명</td>
+                <td>출력형태</td>
+                <td>목록권한</td>
+                <td>읽기권한</td>
+                <td>쓰기권한</td>
+                <td>색상</td>
+                <td>-</td>
+            </tr>
+            <?php
+            $ca_list = array_filter(explode("|", $board['bo_category_list']), "trim");
+            $db_list = implode("','", $ca_list);
+            sql_query("delete from {$mw['category_table']} where bo_table = '{$bo_table}' and ca_name not in ('$db_list')");
+
+            foreach ((array)$ca_list as $ca_name) {
+                $row = mw_category_info($ca_name);
+                if (!$row) {
+                    sql_query("insert into {$mw['category_table']} set bo_table = '{$bo_table}', ca_name = '{$ca_name}' ");
+                    $row['ca_id'] = mysql_insert_id();
+                }
+                ?>
+                <tr>
+                    <td><?php echo $ca_name?></td>
+                    <td>
+                        <select id="ca_type_<?php echo $row['ca_id']?>" name="ca_type_<?php echo $row['ca_id']?>">
+                            <option value="">기본</option>
+                            <option value="list">목록형</option>
+                            <option value="thumb">썸네일형</option>
+                            <option value="gall">갤러리형</option>
+                            <option value="desc">요약형</option>
+                        </select>
+                        <script> $("#ca_type_<?php echo $row['ca_id']?>").val("<?php echo $row['ca_type']?>"); </script>
+                    </td>
+                    <td>
+                        <select id="ca_level_list_<?php echo $row['ca_id']?>" name="ca_level_list_<?php echo $row['ca_id']?>">
+                            <option value="">기본</option>
+                            <?php for ($i=$board['bo_list_level']; $i<=10; ++$i) { ?>
+                            <option value="<?php echo $i?>"><?php echo $i?></option>
+                            <?php } ?>
+                        </select>
+                        <script> $("#ca_level_list_<?php echo $row['ca_id']?>").val("<?php echo $row['ca_level_list']?>"); </script>
+                    </td>
+                    <td>
+                        <select id="ca_level_view_<?php echo $row['ca_id']?>" name="ca_level_view_<?php echo $row['ca_id']?>">
+                            <option value="">기본</option>
+                            <?php for ($i=$board['bo_read_level']; $i<=10; ++$i) { ?>
+                            <option value="<?php echo $i?>"><?php echo $i?></option>
+                            <?php } ?>
+                        </select>
+                        <script> $("#ca_level_view_<?php echo $row['ca_id']?>").val("<?php echo $row['ca_level_view']?>"); </script>
+                    </td>
+                    <td>
+                        <select id="ca_level_write_<?php echo $row['ca_id']?>" name="ca_level_write_<?php echo $row['ca_id']?>">
+                            <option value="">기본</option>
+                            <?php for ($i=$board['bo_write_level']; $i<=10; ++$i) { ?>
+                            <option value="<?php echo $i?>"><?php echo $i?></option>
+                            <?php } ?>
+                        </select>
+                        <script> $("#ca_level_write_<?php echo $row['ca_id']?>").val("<?php echo $row['ca_level_write']?>"); </script>
+                    </td>
+                    <td>
+                        <input type="text" size="10" id="ca_color_<?php echo $row['ca_id']?>" name="ca_color_<?php echo $row['ca_id']?>" value="<?php echo $row['ca_color']?>">
+                    </td>
+                    <td>
+                        <input type="button" class="bt" value="글삭제" onclick="mw_category_action('<?php echo $ca_name?>', 'del')">
+                        <input type="button" class="bt" value="글이동" onclick="mw_category_action('<?php echo $ca_name?>', 'move')">
+                        <input type="button" class="bt" value="글복사" onclick="mw_category_action('<?php echo $ca_name?>', 'copy')">
+                    </td>
+                </tr>
+                <?php
+            }
+            ?>
+            </table>
+            <script>
+            function mw_category_action(ca_name, act)
+            {
+                if (act == 'del') {
+                    if (!confirm("정말 '" + ca_name + "' 분류의 게시물을 모두 삭제하시겠습니까?")) return;
+                    $.get("<?php echo $board_skin_path?>/mw.adm/mw.category.delete.php", {
+                        "bo_table" : "<?php echo $bo_table?>",
+                        "ca_name" : ca_name
+                    }, function (str) {
+                        alert(str);
+                    });
+                    return;
+                }
+                var url = "<?php echo $board_skin_path?>/mw.adm/mw.category.move.php";
+                url += "?bo_table=<?php echo $bo_table?>";
+                url += "&ca_name=" + ca_name;
+                url += "&sw=" + act;
+                var sub_win = window.open(url, "move", "left=50, top=50, width=500, height=550, scrollbars=1");
+            }
+            </script>
+	</div>
+    </div>
+
+    <div class="cf_item">
 	<div class="cf_title"> <input type=checkbox name=chk[cf_download_log] value=1>&nbsp; 다운로드 로그 </div>
 	<div class="cf_content">
 	    <input type=checkbox name=cf_download_log value=1> 사용
@@ -2675,6 +2844,15 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 <div id="tabs-7" class="tabs"> <!-- 플러그인 -->
 
     <div class="cf_item">
+	<div class="cf_title"> <input type=checkbox name=chk[cf_seo_url] value=1>&nbsp; SEO URL </div>
+	<div class="cf_content">
+	    <input type=checkbox name=cf_seo_url value=1> 사용
+            <span class="cf_info">(퍼머링크, 게시물 고유주소, 추가설정 필요 ⇒  <a href="http://www.miwit.com/b/mw_tip-3870" target="_blank" style="text-decoration:underline;">설정방법 클릭!</a>)</span>  
+	    <script> document.cf_form.cf_seo_url.checked = <?=$mw_basic[cf_seo_url]?>; </script>
+	</div>
+    </div>
+
+    <div class="cf_item">
 	<div class="cf_title"> <input type=checkbox name=chk[cf_umz] value=1>&nbsp; 짧은링크 </div>
 	<div class="cf_content">
 	    <input type=checkbox name=cf_umz value=1> 사용 <span class="cf_info">(게시물마다 umz.kr/xxxxx 형식의 짧은 글주소 자동생성)</span>  
@@ -2689,7 +2867,7 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
     <div class="cf_item">
 	<div class="cf_title"> <input type=checkbox name=chk[cf_shorten] value=1>&nbsp; 짧은링크-자체도메인 </div>
 	<div class="cf_content">
-	    <input type=checkbox name=cf_shorten value=1> 사용 <span class="cf_info">(주소:도메인/게시판/글번호 형식, <a href="http://g4.miwit.com/plugin/product/pr_shorten.php" target="_blank">플러그인 설치 후 사용가능 ⇒ <u>다운로드 클릭!</u></a>)</span>  
+	    <input type=checkbox name=cf_shorten value=1> 사용 <span class="cf_info">(포워딩 기능, 주소:도메인/게시판/글번호 형식, <a href="http://g4.miwit.com/plugin/product/pr_shorten.php" target="_blank">플러그인 설치 후 사용가능 ⇒ <u>다운로드 클릭!</u></a>)</span>  
 	    <script> document.cf_form.cf_shorten.checked = <?=$mw_basic[cf_shorten]?>; </script>
 	</div>
     </div>
@@ -2895,6 +3073,7 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
                 <span class="cf_info">(시험문제를 등록할 수 있는 레벨)</span>
             </div>
 	    <input type=checkbox name=cf_exam_notice value=1> 공지에 있는 시험문제를 모두 치뤄야 글 등록 가능
+	    <input type=checkbox name=cf_exam_download value=1> 공지에 있는 시험문제를 모두 치뤄야 다운로드 가능
 
             <!--<div> 시험문제참여 가능레벨
                 <select name=cf_exam_join_level>
@@ -3155,10 +3334,10 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 <div id="tabs-10" class="tabs"> <!-- 버전확인 -->
 
     <div style="font-weight:bold; font-size:15px; margin:0 0 5px 0;"> -버전확인 </div>
-    <div><textarea cols="130" rows="10" readonly><?@include("../HISTORY")?></textarea></div>
+    <div><textarea cols="130" rows="10" readonly><?php echo mw_read_file("../HISTORY")?></textarea></div>
 
     <div style="font-weight:bold; font-size:15px; margin:10px 0 5px 0;"> - 라이센스 </div>
-    <div><textarea cols="130" rows="10" readonly><?@include("../LICENSE")?></textarea></div>
+    <div><textarea cols="130" rows="10" readonly><?php echo mw_read_file("../LICENSE")?></textarea></div>
 
 </div> <!-- tabs-10 -->
 
@@ -3180,6 +3359,11 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 
 </div> <!-- load -->
 
-<?
+<script type="text/javascript" src="<?=$g4['path']?>/js/wrest.js"></script>
 
-include_once("$g4[path]/tail.sub.php");
+<!-- 새창 대신 사용하는 iframe -->
+<iframe width=0 height=0 name='hiddenframe' style='display:none;'></iframe>
+
+</body>
+</html>
+

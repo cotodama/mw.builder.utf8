@@ -103,7 +103,7 @@ function mw_latest_multi_rand($skin_dir="", $tables, $rows=10, $subject_len=40, 
 		$sql2 = " select * from $tmp_write_table where wr_id = '$row[wr_id]' ";
 		$row2 = sql_fetch($sql2);
 		$list[$i] = mw_get_list($row2, $board, $latest_skin_path, $subject_len);
-                $list[$i][href] = "$g4[bbs_path]/board.php?bo_table=$row[bo_table]&wr_id=$row[wr_id]";
+                $list[$i][href] = mw_builder_seo_url($row[bo_table], $row[wr_id]);
 		$list[$i][bo_subject] = $board[bo_subject];
 		$list[$i][bo_table] = $board[bo_table];
 		$list[$i][content] = $list[$i][wr_content] = "";

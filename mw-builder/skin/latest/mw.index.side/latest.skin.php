@@ -19,7 +19,7 @@ $style_name = "mw-latest-side-$bo_table-$rows-$subject_len";
 
 <div class="<?=$style_name?>">
 <div style="border:1px solid #fff">
-<div class="subject"><div><a href="<?=$g4[bbs_path]?>/board.php?bo_table=<?=$bo_table?>"><?=$board[bo_subject]?></a></div></div>
+<div class="subject"><div><a href="<?=mw_builder_seo_url($bo_table)?>"><?=$board[bo_subject]?></a></div></div>
 <table border=0 cellpadding=0 cellspacing=0>
 <tr>
 <? if ($is_img && $file[0]) { ?>

@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * MW Builder for Gnuboard4
  *
@@ -32,6 +32,7 @@ $sql = " update $mw[config_table]
             set cf_www			= '$cf_www',
 		cf_member		= '$cf_member',
 		cf_sub_domain_off	= '$cf_sub_domain_off',
+		cf_seo_url	        = '$cf_seo_url',
 		cf_popular_cache	= '$cf_popular_cache',
 		cf_default_group	= '$cf_default_group',
 		cf_member_skin_head	= '$cf_member_skin_head',
@@ -40,4 +41,3 @@ $sql = " update $mw[config_table]
 sql_query($sql);
 
 goto_url("./mw.config.form.php");
-?>

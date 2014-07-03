@@ -26,7 +26,7 @@ define("_MW_BOARD_", TRUE);
 // 디렉토리 생성
 function mw_mkdir($path, $permission=0707) {
     //if (is_dir($path)) return;
-    if (file_exists($path)) @unlink($path);
+    if (is_file($path)) @unlink($path);
 
     @mkdir($path, $permission);
     @chmod($path, $permission);
@@ -255,7 +255,7 @@ function mw_make_thumbnail($set_width, $set_height, $source_file, $thumbnail_fil
     @imagecopyresampled($target, $source, 0, 0, $src_x, $src_y, $get_width, $get_height, $size[0], $size[1]);
 
     if ($source_file != $thumbnail_file && $mw_basic[cf_watermark_use_thumb]
-        && file_exists("$g4[bbs_path]/$mw_basic[cf_watermark_path]")) { // watermark
+        && is_file("$g4[bbs_path]/$mw_basic[cf_watermark_path]")) { // watermark
         mw_watermark($target, $set_width, $set_height
             , "$g4[bbs_path]/$mw_basic[cf_watermark_path]"
             , $mw_basic[cf_watermark_position]
@@ -305,7 +305,7 @@ function mw_image_outline($source, $size=null, $color="#cccccc")
 {
     global $mw_basic;
 
-    if (!preg_match("/(jpe?g|gif|png)$/i", $source)) return;
+    if (!@preg_match("/(jpe?g|gif|png)$/i", $source)) return;
 
     $source_file = $source;
     $size = @getimagesize($source_file);
@@ -485,13 +485,13 @@ function mw_watermark_file($source_file)
 {
     global $watermark_path, $mw_basic, $g4;
 
-    if (!file_exists($source_file)) return;
+    if (!is_file($source_file)) return;
 
     $pathinfo = pathinfo($source_file);
     $basename = md5(basename($source_file)).'.'.$pathinfo[extension];
     $watermark_file = "$watermark_path/$basename";
 
-    if (file_exists($watermark_file)) return $watermark_file;
+    if (is_file($watermark_file)) return $watermark_file;
 
     $size = @getimagesize($source_file);
     switch ($size[2]) {
@@ -588,7 +588,7 @@ function mw_set_sync_tag($content) {
     $content = preg_replace("/\(<a href=\"([^\)]+)\)\"([^>]*)>([^\)]+)\)<\/a>/i", "(<a href=\"$1\"$2>$3</a>)", $content);
 
     if ($board[bo_image_width]) {
-        if (strstr($_SERVER[PHP_SELF], "plugin/mobile")) {
+        if (mw_is_mobile_builder()) {
             $board[bo_image_width] = 280;
         }
 
@@ -602,7 +602,8 @@ function mw_set_sync_tag($content) {
         preg_match_all("/width=[\"\']?([0-9]+)[\"\']?\s.*height=[\"\']?([0-9]+)[\"\'\s>]/iUs", $content, $matchs);
         for ($i=0, $m=count($matchs[1]); $i<$m; $i++) {
             if ($matchs[1][$i] > $board[bo_image_width]) {
-                $content = str_replace($matchs[0][$i], "width=\"{$board[bo_image_width]}\" ", $content);
+                $height = mw_width_ratio($matchs[1][$i], $matchs[2][$i], $board[bo_image_width]);
+                $content = str_replace($matchs[0][$i], "width=\"{$board[bo_image_width]}\", height=\"{$height}\" ", $content);
             }
         }
 
@@ -614,6 +615,14 @@ function mw_set_sync_tag($content) {
         }
     }
     return $content;
+}
+
+function mw_width_ratio($width, $height, $target)
+{
+    $ratio = $height / $width;
+    $tmp = $target * $ratio;
+
+    return (int)$tmp;
 }
 
 // html 태그 갯수 맞추기
@@ -769,7 +778,7 @@ function get_comment_file($bo_table, $wr_id)
     while ($row = sql_fetch_array($result))
     {
         $no = $row[bf_no];
-        $file[$no][href] = "./download.php?bo_table=$bo_table&wr_id=$wr_id&no=$no" . $qstr;
+        $file[$no][href] = $g4['bbs_path']."/download.php?bo_table=$bo_table&wr_id=$wr_id&no=$no" . $qstr;
         $file[$no][download] = $row[bf_download];
         // 4.00.11 - 파일 path 추가
         $file[$no][path] = "$g4[path]/data/file/$bo_table";
@@ -878,8 +887,8 @@ function mw_delete_editor_image($data)
         $size = @getimagesize($path);
         if ($size[0] > 0) {
             $watermark_file = "$watermark_path/".basename($path);
-            if (file_exists($path)) @unlink($path); // 에디터 이미지 삭제
-            if (file_exists($watermark_file)) @unlink($watermark_file); // 에디터 워터마크 삭제
+            if (is_file($path)) @unlink($path); // 에디터 이미지 삭제
+            if (is_file($watermark_file)) @unlink($watermark_file); // 에디터 워터마크 삭제
         }
     }
 }
@@ -897,10 +906,7 @@ function mw_board_popup($view, $html=0)
     $minWidth = 600;
     $minHeight = 300;
 
-    $is_mobile = false;
-    if (strstr($_SERVER['PHP_SELF'], "plugin/mobile")) {
-        $is_mobile = true;
-    }
+    $is_mobile = mw_is_mobile_builder();
 
     if ($is_mobile) {
         $board[bo_image_width] = 250;
@@ -1121,7 +1127,7 @@ function check_okname()
     else
         $req_file = "$board_skin_path/mw.proc/mw.okname.php"; // 실명인증
 
-    if (file_exists($req_file)) require($req_file);
+    if (is_file($req_file)) require($req_file);
 }
 
 // 자동치환
@@ -1153,12 +1159,13 @@ function mw_write_file($file, $contents)
 
 function mw_read_file($file)
 {
-    ob_start();
-    @readfile($file);
-    $contents = ob_get_contents();
-    ob_end_clean();
-
-    return $contents;
+    $content = '';
+    if (is_file($file)) {
+        ob_start();
+        readfile($file);
+        $content = ob_get_clean();
+    }
+    return $content;
 }
 
 function mw_basic_read_config_file()
@@ -1188,7 +1195,7 @@ function mw_basic_write_config_file()
     fclose($f);
     @chmod($mw_basic_config_file, 0600);
 
-    if (!file_exists("$mw_basic_config_path/.htaccess")) {
+    if (!is_file("$mw_basic_config_path/.htaccess")) {
         $f = fopen("$mw_basic_config_path/.htaccess", "w");
         fwrite($f, "Deny from All");
         fclose($f);
@@ -1264,10 +1271,10 @@ function bc_code($str, $is_content=1, $only_admin=0) {
             $callback = create_function ('$arg', '
                 global $g4;
 
-                if (strstr($_SERVER[PHP_SELF], "plugin/mobile"))
+                if (mw_is_mobile_builder())
                     $arg[1] = preg_replace("/^\.\.\//", "../../", $arg[1]);
                 $content = $arg[0];
-                if (file_exists($arg[1])) {
+                if (is_file($arg[1])) {
                     ob_start();
                     include($arg[1]);
                     $content = ob_get_contents();
@@ -1281,7 +1288,7 @@ function bc_code($str, $is_content=1, $only_admin=0) {
             function ($arg) {
                 global $g4;
                 $content = $arg[0];
-                if (file_exists($arg[1])) {
+                if (is_file($arg[1])) {
                     ob_start();
                     include($arg[1]);
                     $content = ob_get_contents();
@@ -1321,7 +1328,7 @@ function mw_spelling($str)
     return $str;
 
     $path = "$board_skin_path/mw.lib/mw.spelling";
-    if (file_exists($path)) {
+    if (is_file($path)) {
         $tmp = mw_read_file($path);
         $list = explode(",", $tmp);
         for ($i=0, $m=count($list); $i<$m; $i++) {
@@ -1407,7 +1414,7 @@ function mw_delete_row($board, $write, $save_log=false, $save_message='삭제되
 
     $board_skin_path = "$g4[path]/skin/board/$board[bo_skin]";
     $lib_file_path = "$board_skin_path/mw.lib/mw.skin.basic.lib.php";
-    if (file_exists($lib_file_path)) include($lib_file_path);
+    if (is_file($lib_file_path)) include($lib_file_path);
 
     $count_write = 0;
     $count_comment = 0;
@@ -1415,27 +1422,27 @@ function mw_delete_row($board, $write, $save_log=false, $save_message='삭제되
     // 썸네일 삭제
     if ($thumb_path) {
         $thumb_file = mw_thumb_jpg("$thumb_path/$write[wr_id]");
-        if (file_exists($thumb_file)) @unlink($thumb_file);
+        if (is_file($thumb_file)) @unlink($thumb_file);
     }
 
     if ($thumb2_path) {
         $thumb_file = mw_thumb_jpg("$thumb2_path/$write[wr_id]");
-        if (file_exists($thumb_file)) @unlink($thumb_file);
+        if (is_file($thumb_file)) @unlink($thumb_file);
     }
 
     if ($thumb3_path) {
         $thumb_file = mw_thumb_jpg("$thumb3_path/$write[wr_id]");
-        if (file_exists($thumb_file)) @unlink($thumb_file);
+        if (is_file($thumb_file)) @unlink($thumb_file);
     }
 
     if ($thumb4_path) {
         $thumb_file = mw_thumb_jpg("$thumb4_path/$write[wr_id]");
-        if (file_exists($thumb_file)) @unlink($thumb_file);
+        if (is_file($thumb_file)) @unlink($thumb_file);
     }
 
     if ($thumb5_path) {
         $thumb_file = mw_thumb_jpg("$thumb5_path/$write[wr_id]");
-        if (file_exists($thumb_file)) @unlink($thumb_file);
+        if (is_file($thumb_file)) @unlink($thumb_file);
     }
 
     if ($lightbox_path) {
@@ -1633,27 +1640,27 @@ function mw_delete_row($board, $write, $save_log=false, $save_message='삭제되
         sql_query(" delete from $g4[scrap_table] where bo_table = '$board[bo_table]' and wr_id = '$write[wr_id]' ");
 
         // 퀴즈삭제
-        if ($mw_basic[cf_quiz] && file_exists("$quiz_path/_config.php")) {
+        if ($mw_basic[cf_quiz] && is_file("$quiz_path/_config.php")) {
             include("$quiz_path/_config.php");
-            $row = sql_fetch(" select * from $mw_quiz[quiz_table] where bo_table = '$board[bo_table]' and wr_id = '$write[wr_id]' ");
-            sql_query(" delete from $mw_quiz[quiz_table] where bo_table = '$board[bo_table]' and wr_id = '$write[wr_id]' ");
-            sql_query(" delete from $mw_quiz[log_table] where qz_id = '$row[qz_id]' ");
+            $row = sql_fetch(" select * from $mw_quiz[quiz_table] where bo_table = '$board[bo_table]' and wr_id = '$write[wr_id]' ", false);
+            sql_query(" delete from $mw_quiz[quiz_table] where bo_table = '$board[bo_table]' and wr_id = '$write[wr_id]' ", false);
+            sql_query(" delete from $mw_quiz[log_table] where qz_id = '$row[qz_id]' ", false);
         }
 
         // 소셜커머스 삭제
-        if (file_exists("$social_commerce_path/delete.skin.php")) include("$social_commerce_path/delete.skin.php");
+        if (is_file("$social_commerce_path/delete.skin.php")) @include("$social_commerce_path/delete.skin.php");
 
         // 마케팅DB 삭제
-        if (file_exists("$marketdb_path/delete.skin.php")) include("$marketdb_path/delete.skin.php");
+        if (is_file("$marketdb_path/delete.skin.php")) @include("$marketdb_path/delete.skin.php");
 
         // 시험문제 삭제
-        if (file_exists("$exam_path/delete.skin.php")) include("$exam_path/delete.skin.php");
+        if (is_file("$exam_path/delete.skin.php")) @include("$exam_path/delete.skin.php");
 
         // 게시판배너 삭제
-        if (file_exists("$bbs_banner_path/delete.skin.php")) include("$bbs_banner_path/delete.skin.php");
+        if (is_file("$bbs_banner_path/delete.skin.php")) @include("$bbs_banner_path/delete.skin.php");
 
         // 재능마켓 삭제
-        if (file_exists("$talent_market_path/delete.skin.php")) include("$talent_market_path/delete.skin.php");
+        if (is_file("$talent_market_path/delete.skin.php")) @include("$talent_market_path/delete.skin.php");
 
         // 모아보기 삭제
         if (function_exists('mw_moa_delete')) mw_moa_delete($write[wr_id]);
@@ -1849,7 +1856,6 @@ function mw_move($board, $wr_id_list, $chk_bo_table, $sw)
                                 wr_link2          = '".addslashes($row2[wr_link2])."',
                                 wr_link1_hit      = '$row2[wr_link1_hit]',
                                 wr_link2_hit      = '$row2[wr_link2_hit]',
-                                wr_trackback      = '".addslashes($row2[wr_trackback])."',
                                 wr_hit            = '$row2[wr_hit]',
                                 wr_good           = '$row2[wr_good]',
                                 wr_nogood         = '$row2[wr_nogood]',
@@ -1876,6 +1882,8 @@ function mw_move($board, $wr_id_list, $chk_bo_table, $sw)
 
                 $insert_id = mysql_insert_id();
                 sql_query("unlock tables", false);
+
+                sql_query(" update $move_write_table set wr_trackback = '".addslashes($row2[wr_trackback])."' where wr_id = '$insert_id' ", false);
 
                 if (!$row2[wr_is_comment]) { // 원글
                     $save_parent = $insert_id;
@@ -2193,34 +2201,34 @@ function mw_move($board, $wr_id_list, $chk_bo_table, $sw)
                 }
 
                 // 소셜커머스
-                if (!$row2[wr_is_comment] && file_exists("$social_commerce_path/move_update.skin.php")) {
-                    include("$social_commerce_path/move_update.skin.php");
+                if (!$row2[wr_is_comment] && is_file("$social_commerce_path/move_update.skin.php")) {
+                    @include("$social_commerce_path/move_update.skin.php");
                 }
 
                 // 마케팅DB
-                if (!$row2[wr_is_comment] && file_exists("$marketdb_path/move_update.skin.php")) {
-                    include("$marketdb_path/move_update.skin.php");
+                if (!$row2[wr_is_comment] && is_file("$marketdb_path/move_update.skin.php")) {
+                    @include("$marketdb_path/move_update.skin.php");
                 }
 
                 // 시험문제
-                if (!$row2[wr_is_comment] && file_exists("$exam_path/move_update.skin.php")) {
-                    include("$exam_path/move_update.skin.php");
+                if (!$row2[wr_is_comment] && is_file("$exam_path/move_update.skin.php")) {
+                    @include("$exam_path/move_update.skin.php");
                 }
 
                 // 게시판배너
-                if (!$row2[wr_is_comment] && file_exists("$bbs_banner_path/move_update.skin.php")) {
-                    include("$bbs_banner_path/move_update.skin.php");
+                if (!$row2[wr_is_comment] && is_file("$bbs_banner_path/move_update.skin.php")) {
+                    @include("$bbs_banner_path/move_update.skin.php");
                 }
 
                 // 재능마켓
-                if (!$row2[wr_is_comment] && file_exists("$talent_market_path/move_update.skin.php")) {
-                    include("$talent_market_path/move_update.skin.php");
+                if (!$row2[wr_is_comment] && is_file("$talent_market_path/move_update.skin.php")) {
+                    @include("$talent_market_path/move_update.skin.php");
                 }
 
                 // 퀴즈
-                if (!$row2[wr_is_comment] && file_exists("$quiz_path/move_update.skin.php")) {
-                    include("$quiz_path/_config.php");
-                    include("$quiz_path/move_update.skin.php");
+                if (!$row2[wr_is_comment] && is_file("$quiz_path/move_update.skin.php")) {
+                    @include("$quiz_path/_config.php");
+                    @include("$quiz_path/move_update.skin.php");
                 }
 
                 $cnt++;
@@ -2334,27 +2342,27 @@ function mw_bomb()
                     global $thumb_path, $thumb2_path, $thumb3_path, $thumb4_path, $thumb5_path, $lightbox_path, $watermark_path;
                     if ($thumb_path) {
                         $thumb_file = mw_thumb_jpg("$thumb_path/$write[wr_id]");
-                        if (file_exists($thumb_file)) @unlink($thumb_file);
+                        if (is_file($thumb_file)) @unlink($thumb_file);
                     }
 
                     if ($thumb2_path) {
                         $thumb_file = mw_thumb_jpg("$thumb2_path/$write[wr_id]");
-                        if (file_exists($thumb_file)) @unlink($thumb_file);
+                        if (is_file($thumb_file)) @unlink($thumb_file);
                     }
 
                     if ($thumb3_path) {
                         $thumb_file = mw_thumb_jpg("$thumb3_path/$write[wr_id]");
-                        if (file_exists($thumb_file)) @unlink($thumb_file);
+                        if (is_file($thumb_file)) @unlink($thumb_file);
                     }
 
                     if ($thumb4_path) {
                         $thumb_file = mw_thumb_jpg("$thumb4_path/$write[wr_id]");
-                        if (file_exists($thumb_file)) @unlink($thumb_file);
+                        if (is_file($thumb_file)) @unlink($thumb_file);
                     }
 
                     if ($thumb5_path) {
                         $thumb_file = mw_thumb_jpg("$thumb5_path/$write[wr_id]");
-                        if (file_exists($thumb_file)) @unlink($thumb_file);
+                        if (is_file($thumb_file)) @unlink($thumb_file);
                     }
 
                     if ($lightbox_path) {
@@ -2407,7 +2415,7 @@ function mw_get_noimage()
 {
     global $g4, $mw_basic, $board_skin_path;
 
-    if (trim($mw_basic[cf_noimage_path]) && file_exists($mw_basic[cf_noimage_path]) and !is_dir($mw_basic[cf_noimage_path]))
+    if (trim($mw_basic[cf_noimage_path]) && is_file($mw_basic[cf_noimage_path]) and !is_dir($mw_basic[cf_noimage_path]))
         return $mw_basic[cf_noimage_path];
 
     return "$board_skin_path/img/noimage.gif";
@@ -2619,6 +2627,8 @@ function mw_youtube($url, $q=0)
     $v = '';
     $l = '';
 
+    if (strstr($url, "youtube.com/feeds")) return;
+
     if (preg_match("/^https?:\/\/youtu.be\/([a-zA-Z0-9_-]+)?/i", $url, $mat)) {
         $v = $mat[1];
     }
@@ -2734,7 +2744,7 @@ function mw_make_lightbox()
 
         $lightbox_file = "{$lightbox_path}/{$view['wr_id']}-{$i}";
 
-        if (!file_exists($lightbox_file)) {
+        if (!is_file($lightbox_file)) {
             $source_file = "{$view['file'][$i]['path']}/{$view['file'][$i]['file']}";
             mw_make_thumbnail($mw_basic['cf_lightbox_x'], $mw_basic['cf_lightbox_y'], $source_file, $lightbox_file, 0);
         }
@@ -2822,7 +2832,7 @@ function mw_thumb_jpg($file)
 
     if (!$mw_basic['cf_thumb_jpg']) return $file;
     if (preg_match("/\.jpg$/i", $file)) return $file;
-    if (!file_exists($file)) return $jpg;
+    if (!is_file($file)) return $jpg;
 
     rename($file, $jpg);
     return $jpg;
@@ -2931,7 +2941,7 @@ function mw_editor_image_copy($content)
         while (1) {
             $copy = "{$file}-{$k}.{$ext}";
 
-            if (!file_exists("{$g4['path']}/{$copy}"))
+            if (!is_file("{$g4['path']}/{$copy}"))
                 break;
             else
                 ++$k;
@@ -2984,7 +2994,20 @@ function mw_write_icon($row)
 
 function mw_list_link($row)
 {
-    global $g4, $board_skin_path, $board, $mw_basic, $member, $is_admin, $is_member, $write;
+    global $g4; 
+    global $board_skin_path; 
+    global $board; 
+    global $mw_basic; 
+    global $member; 
+    global $is_admin; 
+    global $is_member; 
+    global $write;
+    global $bo_table;
+    global $qstr;
+
+    if ($mw_basic['cf_seo_url']) {
+        $row['href'] = mw_seo_url($bo_table, $row['wr_id'], $qstr);
+    }
 
     // 링크로그
     for ($j=1; $j<=$g4['link_count']; $j++)
@@ -3127,5 +3150,276 @@ function mw_get_date($datetime, $val)
         $date = "<span title='{$init}'>{$date}</span>";
     }
     return $date;
+}
+
+function mw_ie()
+{
+    $agent = $_SERVER['HTTP_USER_AGENT'];
+
+    if (preg_match("/msie/i", $agent)) {
+        return true;
+    }
+    else if (preg_match("/rv:1/i", $agent)) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+function mw_category_option($bo_table='')
+{
+    global $mw, $g4, $board, $member;
+
+    $arr = array_filter(explode("|", $board['bo_category_list']), "trim");
+    $str = "";
+    for ($i=0; $i<count($arr); $i++) {
+        $sql = " select * from {$mw['category_table']} where bo_table = '{$bo_table}' and ca_name = '{$arr[$i]}'";
+        $row = sql_fetch($sql);
+        if ($row['ca_level_write'] && $row['ca_level_write'] > $member['mb_level']) continue;
+        if (trim($arr[$i])) {
+            $str .= "<option value='{$arr[$i]}'>{$arr[$i]}</option>\n";
+        }
+    }
+
+    return $str;
+}
+
+function mw_category_info($ca_name)
+{
+    global $bo_table, $g4, $mw;
+
+    if (!$bo_table) return;
+    if (!$ca_name) return;
+
+    $sql = " select * from {$mw['category_table']} where bo_table = '{$bo_table}' and ca_name = '{$ca_name}' ";
+    $row = sql_fetch($sql);
+
+    return $row;
+}
+
+function mw_save_remote_image($url, $save_path)
+{
+    $url  = parse_url($url);
+
+    $host = $url['host'];
+    $path = $url['path'];
+    $port = 80;
+
+    if ($url['query']) $path .= '?'.$url['query'];
+    if ($url['port']) $port = $url['port'];
+
+    $fp = @fsockopen ($host, $port, $errno, $errstr, 10);
+    if (!$fp) return false;
+    else {
+        fputs($fp, "GET $path HTTP/1.0\r\n");
+        fputs($fp, "User-Agent: mw.basic\r\n");
+        fputs($fp, "Host: $host:80\r\n");
+        fputs($fp, "Accept: image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, */*\r\n");
+        fputs($fp, "\r\n");
+
+        while (trim($buffer = fgets($fp,1024)) != "") { $header .= $buffer; }
+        while (!feof($fp)) { $buffer .= fgets($fp,1024); }
+    }
+    fclose($fp);
+    if ($buffer) {
+        $fw = fopen ($save_path, "wb");
+        fwrite($fw, trim($buffer));
+        chmod ($save_path, 0777);
+        fclose($fw);
+    }
+    return is_file($save_path);
+}
+
+// 게시물별 썸네일 생성
+function mw_make_thumbnail_row ($bo_table, $wr_id, $wr_content, $remote=false)
+{
+    global $g4;
+    global $mw_basic;
+    global $file_path;
+    global $thumb_file;
+    global $thumb2_file;
+    global $thumb3_file;
+    global $thumb4_file;
+    global $thumb5_file;
+
+    $is_thumb = false;
+
+    if (is_file($thumb_file)) unlink($thumb_file);
+    if (is_file($thumb2_file)) unlink($thumb2_file);
+    if (is_file($thumb3_file)) unlink($thumb3_file);
+    if (is_file($thumb4_file)) unlink($thumb4_file);
+    if (is_file($thumb5_file)) unlink($thumb5_file);
+
+    $file = mw_get_first_file($bo_table, $wr_id, true);
+
+    // 첨부파일 썸네일 생성
+    if (!empty($file))
+    {
+        mw_make_thumbnail_all($file_path.'/'.$file['bf_file']);
+
+        $is_thumb = true;
+    }
+    // 컨텐츠내 이미지 썸네일 생성
+    else
+    {
+        preg_match_all("/<img.*src=\\\"(.*)\\\"/iUs", stripslashes($wr_content), $matchs);
+
+        for ($i=0, $m=count($matchs[1]); $i<$m; ++$i)
+        {
+            $mat = $matchs[1][$i];
+
+            // 이모티콘 썸네일 생성 제외
+            if (strstr($mat, "mw.basic.comment.image")) $mat = '';
+            if (strstr($mat, "mw.emoticon")) $mat = '';
+            if (preg_match("/cheditor[0-9]\/icon/i", $mat)) $mat = '';
+
+            if ($mat)
+            {
+                //$mat = str_replace($g4[url], "..", $mat);
+                $dat = preg_replace("/(http:\/\/.*)\/data\//i", "../data/", $mat);
+
+                // 서버내 이미지 썸네일 생성
+                if (is_file($dat))
+                {
+                    mw_make_thumbnail_all($dat);
+
+                    $is_thumb = true;
+                    break; // for (i)
+                }
+
+                // 외부 이미지 썸네일 생성
+                else if ($remote)
+                {
+                    $ret = mw_save_remote_image($mat, $thumb_file);
+                    if ($ret)
+                    {
+                        mw_make_thumbnail_all($thumb_file);
+
+                        $is_thumb = true;
+                        break; //for (i)
+                    }
+                }// if (is_file)
+
+            } // if (mat)
+        } // for (i)
+
+    }
+
+    if (!$is_thumb) {
+        if (is_file($thumb_file)) unlink($thumb_file);
+        if (is_file($thumb2_file)) unlink($thumb2_file);
+        if (is_file($thumb3_file)) unlink($thumb3_file);
+        if (is_file($thumb4_file)) unlink($thumb4_file);
+        if (is_file($thumb5_file)) unlink($thumb5_file);
+    }
+
+    return $is_thumb;
+}
+
+function mw_make_thumbnail_all ($source_file)
+{
+    global $g4;
+    global $mw_basic;
+    global $thumb_file;
+    global $thumb2_file;
+    global $thumb3_file;
+    global $thumb4_file;
+    global $thumb5_file;
+
+    mw_make_thumbnail($mw_basic['cf_thumb_width'], $mw_basic['cf_thumb_height'], $source_file,
+        $thumb_file, $mw_basic['cf_thumb_keep']);
+
+    if ($mw_basic['cf_thumb2_width']) {
+        @mw_make_thumbnail($mw_basic['cf_thumb2_width'], $mw_basic['cf_thumb2_height'], $source_file,
+            $thumb2_file, $mw_basic['cf_thumb2_keep']);
+    }
+
+    if ($mw_basic['cf_thumb3_width']) {
+        @mw_make_thumbnail($mw_basic['cf_thumb3_width'], $mw_basic['cf_thumb3_height'], $source_file,
+            $thumb3_file, $mw_basic['cf_thumb3_keep']);
+    }
+
+    if ($mw_basic['cf_thumb4_width']) {
+        @mw_make_thumbnail($mw_basic['cf_thumb4_width'], $mw_basic['cf_thumb4_height'], $source_file,
+            $thumb4_file, $mw_basic['cf_thumb4_keep']);
+    }
+
+    if ($mw_basic['cf_thumb5_width']) {
+        @mw_make_thumbnail($mw_basic['cf_thumb5_width'], $mw_basic['cf_thumb5_height'], $source_file,
+            $thumb5_file, $mw_basic['cf_thumb5_keep']);
+    }
+}
+
+function mw_seo_url($bo_table, $wr_id=0, $qstr='')
+{
+    global $g4;
+    global $mw_basic;
+
+    $url = $g4['bbs_path']."/board.php?bo_table=".$bo_table;
+
+    if ($wr_id)
+        $url .= "&wr_id=".$wr_id;
+
+    if ($qstr)
+        $url .= $qstr;
+
+    $seo_path = '/b/';
+    if (mw_is_mobile_builder())
+        $seo_path = '/m/b/';
+
+    if ($mw_basic['cf_seo_url'])
+    {
+        $url = $g4['url'].$seo_path.$bo_table;
+
+        if ($wr_id)
+            $url .= '-'.$wr_id;
+
+        if ($qstr)
+            $url .= '?'.$qstr;
+    }
+
+    return $url;
+}
+
+function mw_bbs_path($path)
+{
+    global $g4;
+
+    if (mw_is_mobile_builder()) {
+        $path = preg_replace("/\.\//iUs", $g4['path'].'/plugin/mobile/', $path);
+    }
+    else {
+        $path = preg_replace("/\.\//iUs", $g4['bbs_path'].'/', $path);
+    }
+
+    return $path;
+}
+
+function mw_seo_bbs_path($path)
+{
+    global $g4;
+    global $bo_table;
+
+    if (mw_is_mobile_builder()) {
+        $path = str_replace('../../plugin/mobile/board.php?bo_table='.$bo_table, mw_seo_url($bo_table).'?', $path);
+    }
+    else {
+        $path = str_replace('../board.php?bo_table='.$bo_table, mw_seo_url($bo_table).'?', $path);
+    }
+
+    return $path;
+}
+
+function mw_is_mobile_builder()
+{
+    $is_mobile = false;
+
+    if (strstr($_SERVER['PHP_SELF'], "/plugin/mobile/"))
+        $is_mobile = true;
+    else if (strstr($_SERVER['PHP_SELF'], "/m/b/"))
+        $is_mobile = true;
+
+    return $is_mobile;
 }
 

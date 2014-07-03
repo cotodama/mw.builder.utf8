@@ -27,6 +27,7 @@ if (!defined('_GNUBOARD_')) exit;
 function mw_latest_main($skin_dir="", $bo_tables, $rows=10, $subject_len=40, $minute=0)
 {
     global $g4;
+    global $mw;
 
     if ($skin_dir)
         $latest_skin_path = "$g4[path]/skin/latest/$skin_dir";
@@ -63,7 +64,7 @@ function mw_latest_main($skin_dir="", $bo_tables, $rows=10, $subject_len=40, $mi
 	    $file[$i][bo_subject] = $row[bo_subject];
 	    $file[$i][wr_id] = $row[wr_id];
 	    $file[$i][path] = "$g4[path]/data/file/$row[bo_table]/thumbnail/$row[wr_id]";
-	    $file[$i][href] = "$g4[bbs_path]/board.php?bo_table=$row[bo_table]&wr_id=$row[wr_id]";
+	    $file[$i][href] = mw_builder_seo_url($row[bo_table], $row[wr_id]);
 	    if (!@file_exists($file[$i][path])) $file[$i][path] = "$g4[path]/data/file/$row[bo_table]/thumb/$row[bf_file]";
 	    if (!@file_exists($file[$i][path])) $file[$i][path] = "$g4[path]/data/file/$row[bo_table]/$row[bf_file]";
 	    if (!@file_exists($file[$i][path])) $file[$i][path] = "$latest_skin_path/img/noimage.gif";
@@ -116,7 +117,7 @@ function mw_latest_main($skin_dir="", $bo_tables, $rows=10, $subject_len=40, $mi
 	    $list[$i]['wr_id'] = $row[wr_id];
 	    $list[$i]['ca_name'] = get_text($row2[ca_name]);
 	    $list[$i]['bo_table'] = $row[bo_table];
-	    $list[$i]['href'] = "$g4[bbs_path]/board.php?bo_table=$row[bo_table]&wr_id=$row[wr_id]";
+	    $list[$i]['href'] = mw_builder_seo_url($row[bo_table], $row[wr_id]);
 	    $list[$i]['bo_subject'] = $row[bo_subject];
 	    $list[$i]['wr_comment'] = $row2[wr_comment];
 	}
@@ -142,7 +143,7 @@ function mw_latest_main($skin_dir="", $bo_tables, $rows=10, $subject_len=40, $mi
 		$file = array();
 		$file[wr_id] = $row[wr_id];
 		$file[path] = "$g4[path]/data/file/$bo_table/thumbnail/$row[wr_id]";
-		$file[href] = "$g4[bbs_path]/board.php?bo_table=$bo_table&wr_id=$row[wr_id]";
+		$file[href] = mw_builder_seo_url($bo_table, $row[wr_id]);
 		if (!@file_exists($file[path])) $file[path] = "$g4[path]/data/file/$bo_table/thumb/$row[wr_id]";
 		if (!@file_exists($file[path])) $file[path] = "$g4[path]/data/file/$bo_table/$row[bf_file]";
 		if (!@file_exists($file[path])) $file[path] = "$latest_skin_path/img/noimage.gif";

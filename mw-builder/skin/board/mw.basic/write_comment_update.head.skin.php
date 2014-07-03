@@ -68,12 +68,12 @@ if ($mw_basic[cf_replace_word] > $member[mb_level]) {
 }
 
 // 댓글작성 조건 
-if (($w == "" || $w == "r") && $mw_basic[cf_comment_point] && !$is_admin) {
+if (($w == "" || $w == "c") && $mw_basic[cf_comment_point] && !$is_admin) {
     if ($member[mb_point] < $mw_basic[cf_comment_point]) {
         alert("이 게시판은 $mw_basic[cf_comment_point] 포인트 이상 소지자만 코멘트 작성이 가능합니다.");
     }
 }
-if (($w == "" || $w == "r") && $mw_basic[cf_comment_register] && !$is_admin) {
+if (($w == "" || $w == "c") && $mw_basic[cf_comment_register] && !$is_admin) {
     $gap = ($g4[server_time] - strtotime($member[mb_datetime])) / (60*60*24);
     if ($gap < $mw_basic[cf_comment_register]) {
         alert("이 게시판은 가입후 $mw_basic[cf_comment_register] 일이 지나야 코멘트 작성이 가능합니다.");

@@ -15,17 +15,6 @@ if ($is_admin != "board" && $is_admin != "group" && $is_admin != "super")
 $g4[title] = "게시물 " . $act;
 include_once("$g4[path]/head.sub.php");
 
-$wr_id_list = "";
-if ($wr_id)
-    $wr_id_list = $wr_id;
-else {
-    $comma = "";
-    for ($i=0; $i<count($_POST[chk_wr_id]); $i++) {
-        $wr_id_list .= $comma . $_POST[chk_wr_id][$i];
-        $comma = ",";
-    }
-}
-
 $sql = " select * 
            from $g4[board_table] a, 
                 $g4[group_table] b
@@ -35,12 +24,7 @@ if ($is_admin == 'group')
 else if ($is_admin == 'board') 
     $sql .= " and a.bo_admin = '$member[mb_id]' ";
 $sql .= " order by a.gr_id, a.bo_order_search, a.bo_table ";
-$result = sql_query($sql, false);
-if (!$result) {
-    $sql = str_replace("bo_order_search", "bo_order", $sql);
-    $result = sql_query($sql);
-}
-
+$result = sql_query($sql);
 for ($i=0; $row=sql_fetch_array($result); $i++) 
 {
     $list[$i] = $row;
@@ -90,7 +74,7 @@ while ($row = sql_fetch_array($qry))
 <form name="fboardmoveall" method="post" onsubmit="return fboardmoveall_submit(this);">
 <input type=hidden name=sw          value='<?=$sw?>'>
 <input type=hidden name=bo_table    value='<?=$bo_table?>'>
-<input type=hidden name=wr_id_list  value="<?=$wr_id_list?>">
+<input type=hidden name=ca_name  value="<?=$ca_name?>">
 <input type=hidden name=sfl         value='<?=$sfl?>'>
 <input type=hidden name=stx         value='<?=$stx?>'>
 <input type=hidden name=spt         value='<?=$spt?>'>
@@ -194,13 +178,13 @@ function fboardmoveall_submit(f)
 
     document.getElementById("btn_submit").disabled = true;
 
-    f.action = "<?=$board_skin_path?>/move_update.php";
+    f.action = "<?=$board_skin_path?>/mw.adm/mw.category.move.update.php";
     return true;
 }
 </script>
 
 </td></tr></table>
 
-<?
+<?php
+
 include_once("$g4[path]/tail.sub.php");
-?>

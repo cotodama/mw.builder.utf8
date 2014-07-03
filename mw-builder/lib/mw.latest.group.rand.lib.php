@@ -66,7 +66,7 @@ function mw_latest_group_rand($skin_dir="", $gr_id, $rows=10, $subject_len=40, $
 	    $file[$i][wr_id] = $row[wr_id];
 	    $file[$i][path] = "$g4[path]/data/file/$bo_table/thumbnail/$row[wr_id]";
 	    //$file[$i][href] = "$g4[bbs_path]/board.php?bo_table=$row[bo_table]&wr_id=$row[wr_id]";
-	    $file[$i][href] = "$g4[url]/$g4[bbs]/board.php?bo_table=$row[bo_table]&wr_id=$row[wr_id]";
+	    $file[$i][href] = mw_builder_seo_url($row[bo_table], $row[wr_id]);
 	    if (!@file_exists($file[$i][path])) $file[$i][path] = "$g4[path]/data/file/$row[bo_table]/thumb/$row[wr_id]";
 	    if (!@file_exists($file[$i][path])) $file[$i][path] = "$g4[path]/data/file/$row[bo_table]/$row[bf_file]";
 	    if (!@file_exists($file[$i][path])) $file[$i][path] = "$latest_skin_path/img/noimage.gif";
@@ -128,7 +128,7 @@ function mw_latest_group_rand($skin_dir="", $gr_id, $rows=10, $subject_len=40, $
 		$row2 = sql_fetch($sql2);
 
 		$list[$i] = mw_get_list($row2, $board, $latest_skin_path, $subject_len);
-                $list[$i][href] = "$g4[bbs_path]/board.php?bo_table=$row[bo_table]&wr_id=$row[wr_id]";
+                $list[$i][href] = mw_builder_seo_url($row[bo_table], $row[wr_id]);
 		$list[$i][bo_subject] = $board[bo_subject];
 		$list[$i][bo_table] = $board[bo_table];
 		$list[$i][content] = $list[$i][wr_content] = "";

@@ -33,6 +33,21 @@ if ($mw_basic[cf_must_notice_down]) {
     }
 }
 
+if ($mw_basic['cf_exam'] and $mw_basic['cf_exam_download']) {
+    $tmp_notice = @explode("\n", trim($board['bo_notice']));
+    $tmp_notice = @array_map("trim", $tmp_notice);
+    $tmp_notice = @array_filter($tmp_notice, "strlen");
+
+    foreach ((array)$tmp_notice as $tmp_id) {
+        $tmp = sql_fetch(" select * from {$mw_exam['info_table']} where bo_table = '{$bo_table}' and wr_id = '{$tmp_id}' ");
+        if ($tmp) {
+            $tmp = sql_fetch(" select * from {$mw_exam['answer_table']} where ex_id = '{$tmp['ex_id']}' and mb_id = '{$member['mb_id']}' ");
+            if (!$tmp)
+                alert("공지에 등록된 시험을 모두 치루셔야 다운로드 하실 수 있습니다.");
+        }
+    }
+}
+
 $is_per = true;
 $is_buy = false;
 $is_per_msg = '예외오류';
@@ -190,10 +205,12 @@ if ($mw_basic[cf_download_log]) { // 다운로드 기록
 
 $g4[title] = "$group[gr_subject] > $board[bo_subject] > " . conv_subject($write[wr_subject], 255) . " > 다운로드";
 
-if (preg_match("/^utf/i", $g4[charset]) && preg_match("/msie/i", $_SERVER[HTTP_USER_AGENT]))
+if (preg_match("/^utf/i", $g4[charset]) && mw_ie()) {
     $original = urlencode($file[bf_source]);
-else
+}
+else {
     $original = $file[bf_source];
+}
 
 @include_once("$board_skin_path/download.tail.skin.php");
 

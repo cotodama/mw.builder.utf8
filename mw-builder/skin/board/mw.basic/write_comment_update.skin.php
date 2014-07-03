@@ -27,6 +27,9 @@ sql_query($sql);
 // 익명
 if ($mw_basic[cf_anonymous]) {
     sql_query(" update $write_table set wr_anonymous = '$wr_anonymous' where wr_id = '$comment_id' ");
+    if ($mw_basic[cf_anonymous_nopoint] && $wr_anonymous && $w == 'c') {
+        delete_point($member[mb_id], $bo_table, $comment_id, '코멘트');
+    }
 }
 
 // 짧은 글주소 사용

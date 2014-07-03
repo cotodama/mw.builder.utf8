@@ -183,3 +183,7 @@ while ($row = sql_fetch_array($qry)) {
 // 일반회원 공지글 수정시 공지 내려가는 현상 보완 (그누보드 버그)
 $is_notice = preg_match("/[^0-9]{0,1}{$write['wr_id']}[\r]{0,1}/", $board['bo_notice']);
 
+if ($mw_category['ca_level_write'] && $mw_category['ca_level_write'] > $member['mb_level']) {
+    alert("{$sca} 분류의 글작성권한이 없습니다.");
+}
+

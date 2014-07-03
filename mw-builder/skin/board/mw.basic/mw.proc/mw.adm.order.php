@@ -51,7 +51,7 @@ switch ($item) {
         break;
 }
 
-$sql = "select wr_id, wr_num from {$write_table} where wr_is_comment = 0 and wr_reply = '' order by $sql_order";
+$sql = "select wr_id, wr_num from {$write_table} where wr_is_comment = 0 order by $sql_order";
 $qry = sql_query($sql);
 while ($row = sql_fetch_array($qry)) {
     $data[] = $row;
@@ -63,7 +63,7 @@ foreach ($data as $row) {
     $wr_num--;
     //$row[wr_num] *= -1;
 
-    $sql = "update {$write_table} set wr_num = '{$wr_num}' where wr_id = '{$row[wr_id]}'";
+    $sql = "update {$write_table} set wr_num = '{$wr_num}' where wr_num = '{$row[wr_num]}'";
     sql_query($sql);
 }
 

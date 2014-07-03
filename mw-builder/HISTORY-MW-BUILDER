@@ -1,3 +1,19 @@
+1.5.2 (14.07.04)
+    : 파일 교체 후 관리자-배추빌더-업그레이드 실행해주세요.
+    : 그누보드 최신버전 4.37.11 (14.05.26) 탑재
+    : 배추스킨 최신버전 2.6.3 (14.07.04) 탑재
+    : 변수 충돌 오류 수정 (동키님 제안)
+    : 퍼머링크 (seo url) 지원
+
+    HISTORY-MW-BUILDER
+    adm/mw.builder/mw.config.form.php
+    adm/mw.builder/mw.config.update.php
+    lib/mw.latest.*
+    lib/mw.common.lib.php
+    lib/mw.builder.lib.php
+    skin/latest/*
+    mw.upgrade.php
+ 
 1.5.1 (14.05.30)
     : 그누보드 최신버전 4.37.11 (14.05.26) 탑재
     : 배추스킨 최신버전 2.5.8 (14.05.30) 탑재

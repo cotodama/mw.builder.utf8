@@ -329,7 +329,7 @@ function fwrite_check(f) {
         }
     }
 
-    f.action = "./write_update.php";
+    f.action = "<?php echo $g4['bbs_path']?>/write_update.php";
 }
 </script>
 

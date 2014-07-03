@@ -20,10 +20,8 @@ $style_name = "mw-latest-list-img-$bo_table-$rows-$subject_len";
 <div class="<?php echo $style_name?>">
 <div style="border:1px solid #fff">
 <div class="subject">
-    <div class="bo_table"><a href="<?php echo $g4['bbs_path']?>/board.php?bo_table=<?php
-        echo $bo_table?>"><?php echo $board['bo_subject']?></a></div>
-    <div class="list"><a href="<?php echo $g4['bbs_path']?>/board.php?bo_table=<?php
-        echo $bo_table?>"><img src="<?php echo $latest_skin_path?>/img/l.gif" aling="absmiddle"> 목록</a></div>
+    <div class="bo_table"><a href="<?php echo mw_builder_seo_url($bo_table)?>"><?php echo $board['bo_subject']?></a></div>
+    <div class="list"><a href="<?php echo mw_builder_seo_url($bo_table)?>"><img src="<?php echo $latest_skin_path?>/img/l.gif" aling="absmiddle"> 목록</a></div>
 </div>
 <table border="0" cellpadding="0" cellspacing="0" align="center">
 <tr>
@@ -39,7 +37,7 @@ for ($i=0; $i<$rows; $i++) {
 
     $list[$i]['subject'] = mw_builder_reg_str($list[$i]['subject']);
     $list[$i]['title'] = mw_title_tag(mw_builder_reg_str($list[$i]['wr_subject']));
-    $list[$i]['href'] = "{$g4['bbs_path']}/board.php?bo_table={$tmp_table}&wr_id={$list[$i]['wr_id']}";
+    $list[$i]['href'] = mw_builder_seo_url($tmp_table, $list[$i]['wr_id']);
     ?>
     <td align=center valign=top class=file>
         <div class="post-img"><a href="<?php echo $list[$i]['href']?>" title="<?php

@@ -49,6 +49,7 @@ $mw['temp_table']         = $g4['table_prefix']."mw_temp";
 $mw['bomb_table']         = $g4['table_prefix']."mw_bomb";
 $mw['move_table']         = $g4['table_prefix']."mw_move";
 $mw['jump_log_table']     = $g4['table_prefix']."mw_jump_log";
+$mw['category_table']     = $g4['table_prefix']."mw_category";
 
 $default_charset = '';
 if (preg_match("/^utf/i", $g4['charset']))
@@ -311,6 +312,14 @@ mw_mkdir($thumb3_path);
 mw_mkdir($thumb4_path);
 mw_mkdir($thumb5_path);
 
+if ($wr_id) {
+    $thumb_file = mw_thumb_jpg($thumb_path.'/'.$wr_id);
+    $thumb2_file = mw_thumb_jpg($thumb2_path.'/'.$wr_id);
+    $thumb3_file = mw_thumb_jpg($thumb3_path.'/'.$wr_id);
+    $thumb4_file = mw_thumb_jpg($thumb4_path.'/'.$wr_id);
+    $thumb5_file = mw_thumb_jpg($thumb5_path.'/'.$wr_id);
+}
+
 $watermark_path = "{$file_path}/watermark";
 mw_mkdir($watermark_path);
 
@@ -351,4 +360,62 @@ if (!$pc_skin_path)
     $pc_skin_path = $board_skin_path;
 
 $ss_key_name = "ss_key_{$bo_table}";
+
+$mw_category_list = array();
+$mw_category = array();
+if ($sca) {
+    $mw_category = mw_category_info($sca);
+
+    if ($mw_category['ca_type'])
+        $mw_basic['cf_type'] = $mw_category['ca_type'];
+
+    if ($mw_category['ca_level_list'] && $mw_is_list && $mw_category['ca_level_list'] > $member['mb_level']) {
+        alert("{$sca} 분류의 목록을 볼 권한이 없습니다.");
+    }
+
+    if ($mw_category['ca_level_view'] && $mw_is_view && $mw_category['ca_level_view'] > $member['mb_level']) {
+        alert("{$sca} 분류의 내용을 볼 권한이 없습니다.");
+    }
+
+    if ($mw_category['ca_level_write'] && $mw_is_write && $mw_category['ca_level_write'] > $member['mb_level']) {
+        alert("{$sca} 분류의 글작성 권한이 없습니다.");
+    }
+}
+
+// 쓰기버튼 항상 출력
+if ($mw_basic[cf_write_button])
+    $write_href = "./write.php?bo_table=$bo_table";
+
+if ($list_href) $list_href = mw_bbs_path($list_href);
+if ($search_href) $search_href = mw_bbs_path($search_href);
+if ($write_href) $write_href = mw_bbs_path($write_href);
+if ($update_href) $update_href = mw_bbs_path($update_href);
+if ($reply_href) $reply_href = mw_bbs_path($reply_href);
+if ($delete_href) $delete_href = mw_bbs_path($delete_href);
+if ($prev_part_href) $prev_part_href = mw_bbs_path($prev_part_href);
+if ($next_part_href) $next_part_href = mw_bbs_path($next_part_href);
+if ($prev_href) $prev_href = mw_bbs_path($prev_href);
+if ($next_href) $next_href = mw_bbs_path($next_href);
+
+if ($mw_basic['cf_seo_url'])
+{
+    //$mw_basic['cf_umz'] = null;
+    $mw_basic['cf_shorten'] = 1;
+
+    $list_href = mw_seo_url($bo_table, 0);
+    if ($page)
+        $list_href .= '?page='.$page;
+
+    if ($search_href)
+        $search_href = mw_seo_url($bo_table, 0, "&page={$page}".$qstr);
+
+    if ($prev_part_href) $prev_part_href = mw_seo_bbs_path($prev_part_href);
+    if ($next_part_href) $next_part_href = mw_seo_bbs_path($next_part_href);
+    if ($prev_href) $prev_href = mw_seo_bbs_path($prev_href);
+    if ($next_href) $next_href = mw_seo_bbs_path($next_href);
+}
+
+$rss_href = '';
+if ($board['bo_use_rss_view']) $rss_href = $g4['bbs_path']."/rss.php?bo_table=$bo_table";
+
 

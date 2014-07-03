@@ -32,6 +32,7 @@ if (!$bo_table)
 if (!$token or get_session("ss_config_token") != $token) 
     die("토큰 에러로 실행 불가합니다.");
 
+// 원본 이미지 크기 다시 계산
 $sql = " select * from $g4[board_file_table] where bo_table = '$bo_table' and bf_width = 0 ";
 $sql.= " and ( ";
 $sql.= " right(lower(bf_source), 3) = 'jpg' ";
@@ -44,6 +45,7 @@ while ($row = sql_fetch_array($qry)) {
     sql_query(" update $g4[board_file_table] set bf_width = '$size[0]', bf_height = '$size[1]', bf_type = '$size[2]' where bo_table = '$bo_table' and wr_id = '$row[wr_id]' and bf_no = '$row[bf_no]' ");
 }
 
+// 전체 썸네일 삭제
 $files = glob("{$thumb_path}/*"); array_map('unlink', $files);
 $files = glob("{$thumb2_path}/*"); array_map('unlink', $files);
 $files = glob("{$thumb3_path}/*"); array_map('unlink', $files);
@@ -56,64 +58,23 @@ while ($write = sql_fetch_array($qry)) {
     $wr_id = $write[wr_id];
     $wr_content = $write[wr_content];
 
-    $thumb_file = mw_thumb_jpg("$thumb_path/{$wr_id}");
-    $thumb2_file = mw_thumb_jpg("$thumb2_path/{$wr_id}");
-    $thumb3_file = mw_thumb_jpg("$thumb3_path/{$wr_id}");
-    $thumb4_file = mw_thumb_jpg("$thumb4_path/{$wr_id}");
-    $thumb5_file = mw_thumb_jpg("$thumb5_path/{$wr_id}");
- 
-    $file = mw_get_first_file($bo_table, $wr_id, true);
-    if (!empty($file)) {
-        $source_file = "$file_path/{$file[bf_file]}";
-        mw_make_thumbnail($mw_basic[cf_thumb_width], $mw_basic[cf_thumb_height], $source_file,
-            "{$thumb_file}", $mw_basic[cf_thumb_keep]);
-        mw_make_thumbnail($mw_basic[cf_thumb2_width], $mw_basic[cf_thumb2_height], $source_file,
-            "{$thumb2_file}", $mw_basic[cf_thumb2_keep]);
-        mw_make_thumbnail($mw_basic[cf_thumb3_width], $mw_basic[cf_thumb3_height], $source_file,
-            "{$thumb3_file}", $mw_basic[cf_thumb3_keep]);
-        mw_make_thumbnail($mw_basic[cf_thumb4_width], $mw_basic[cf_thumb4_height], $source_file,
-            "{$thumb4_file}", $mw_basic[cf_thumb4_keep]);
-        mw_make_thumbnail($mw_basic[cf_thumb5_width], $mw_basic[cf_thumb5_height], $source_file,
-            "{$thumb5_file}", $mw_basic[cf_thumb5_keep]);
-    }
-    else {
-        $is_thumb = false;
-        preg_match_all("/<img.*src=\"(.*)\"/iU", $wr_content, $matchs);
-        for ($i=0, $m=count($matchs[1]); $i<$m; ++$i) {
-            $mat = $matchs[1][$i];
-            if (strstr($mat, "mw.basic.comment.image")) $mat = '';
-            if (strstr($mat, "mw.emoticon")) $mat = '';
-            if (preg_match("/cheditor[0-9]\/icon/i", $mat)) $mat = '';
-            if ($mat) {
-                $mat = str_replace($g4[url], "..", $mat);
-                mw_make_thumbnail($mw_basic[cf_thumb_width], $mw_basic[cf_thumb_height], $mat,
-                    "{$thumb_file}", $mw_basic[cf_thumb_keep]);
-                mw_make_thumbnail($mw_basic[cf_thumb2_width], $mw_basic[cf_thumb2_height], $mat,
-                    "{$thumb2_file}", $mw_basic[cf_thumb2_keep]);
-                mw_make_thumbnail($mw_basic[cf_thumb3_width], $mw_basic[cf_thumb3_height], $mat,
-                    "{$thumb3_file}", $mw_basic[cf_thumb3_keep]);
-                mw_make_thumbnail($mw_basic[cf_thumb4_width], $mw_basic[cf_thumb4_height], $mat,
-                    "{$thumb4_file}", $mw_basic[cf_thumb4_keep]);
-                mw_make_thumbnail($mw_basic[cf_thumb5_width], $mw_basic[cf_thumb5_height], $mat,
-                    "{$thumb5_file}", $mw_basic[cf_thumb5_keep]);
-                $is_thumb = true;
-                break;
-            } // if
-        } // for
-        if (!$is_thumb) {
-            if (file_exists($thumb_file)) unlink($thumb_file);
-            if (file_exists($thumb2_file)) unlink($thumb2_file);
-            if (file_exists($thumb3_file)) unlink($thumb3_file);
-            if (file_exists($thumb4_file)) unlink($thumb4_file);
-            if (file_exists($thumb5_file)) unlink($thumb5_file);
-        } // if
-    } // if
+    $thumb_file = mw_thumb_jpg($thumb_path.'/'.$wr_id);
+    $thumb2_file = mw_thumb_jpg($thumb2_path.'/'.$wr_id);
+    $thumb3_file = mw_thumb_jpg($thumb3_path.'/'.$wr_id);
+    $thumb4_file = mw_thumb_jpg($thumb4_path.'/'.$wr_id);
+    $thumb5_file = mw_thumb_jpg($thumb5_path.'/'.$wr_id);
 
-    if (!file_exists($thumb_file)) {
-        if (preg_match("/youtu/i", $write['wr_link1'])) mw_get_youtube_thumb($wr_id, $write['wr_link1'], $write['wr_datetime']);
-        else if (preg_match("/youtu/i", $write['wr_link2'])) mw_get_youtube_thumb($wr_id, $write['wr_link2'], $write['wr_datetime']);
-        else if (preg_match("/vimeo/i", $write['wr_link1'])) mw_get_vimeo_thumb($wr_id, $write['wr_link1'], $write['wr_datetime']);
-        else if (preg_match("/vimeo/i", $write['wr_link2'])) mw_get_vimeo_thumb($wr_id, $write['wr_link2'], $write['wr_datetime']);
+    $is_thumb = mw_make_thumbnail_row($bo_table, $wr_id, $wr_content, true);
+
+    if (!$is_thumb) {
+        if (preg_match("/youtu/i", $write['wr_link1']))
+            mw_get_youtube_thumb($wr_id, $write['wr_link1'], $write['wr_datetime']);
+        else if (preg_match("/youtu/i", $write['wr_link2']))
+            mw_get_youtube_thumb($wr_id, $write['wr_link2'], $write['wr_datetime']);
+        else if (preg_match("/vimeo/i", $write['wr_link1']))
+            mw_get_vimeo_thumb($wr_id, $write['wr_link1'], $write['wr_datetime']);
+        else if (preg_match("/vimeo/i", $write['wr_link2']))
+            mw_get_vimeo_thumb($wr_id, $write['wr_link2'], $write['wr_datetime']);
     }
 }
 

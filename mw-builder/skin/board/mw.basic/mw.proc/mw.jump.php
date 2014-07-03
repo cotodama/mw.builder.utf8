@@ -58,7 +58,7 @@ $(document).ready(function () {
             "wr_id":"<?php echo $wr_id?>"
         }, function (str) {
             if (str == "ok") {
-                location.href = "./board.php?bo_table=<?php echo $bo_table?>&wr_id=<?php echo $wr_id?>&page=1";
+                location.href = "<?php echo mw_seo_url($bo_table, $wr_id)?>&page=1";
             }
             else {
                 alert(str);
