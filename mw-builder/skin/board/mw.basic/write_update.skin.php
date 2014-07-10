@@ -168,7 +168,7 @@ if ($mw_basic[cf_resize_original]) {
     }
 
     // 원본 강제 리사이징 (에디터)
-    preg_match_all("/<img.*src=\\\"(.*)\\\"/iUs", stripslashes($wr_content), $matchs);
+    preg_match_all("/<img.*src=\\\"(.*)\\\"/iUs", stripslashes($_POST[wr_content]), $matchs);
     for ($i=0, $m=count($matchs[1]); $i<$m; ++$i) {
         $mat = $matchs[1][$i];
         if (strstr($mat, "mw.basic.comment.image")) $mat = '';
@@ -204,7 +204,7 @@ if ($mw_basic[cf_change_image_size] && $member[mb_level] >= $mw_basic[cf_change_
 }
 
 // 썸네일 생성
-$is_thumb = mw_make_thumbnail_row($bo_table, $wr_id, $wr_content, true);
+$is_thumb = mw_make_thumbnail_row($bo_table, $wr_id, $_POST['wr_content'], true);
 
 // 원본 워터마크
 for ($i=0, $m=sizeof($watermark_files); $i<$m; $i++) // 기존 원터마크 파일 삭제
@@ -243,7 +243,7 @@ if (!($w == "u" || $w == "cu") && $config[cf_email_use])
         else if (strstr($html, "html2"))
             $tmp_html = 2;
 
-        $wr_content = conv_content(stripslashes($wr_content), $tmp_html);
+        $wr_content = conv_content(stripslashes($_POST[wr_content]), $tmp_html);
 
         $warr = array( ""=>"입력", "u"=>"수정", "r"=>"답변", "c"=>"코멘트", "cu"=>"코멘트 수정" );
         $str = $warr[$w];
@@ -325,7 +325,7 @@ if ($w == "" && trim($mw_basic[cf_memo_id]) && $is_admin != "super")
     }
 }
 
-if ($mw_basic[cf_type] == 'desc') {
+if ($mw_basic[cf_type] == 'desc' && $mw_basic[cf_desc_use] && $mw_basic[cf_desc_use] <= $member[mb_level]) {
     $sql = " update $write_table set ";
     $sql.= " wr_contents_preview = '$wr_contents_preview' ";
     $sql.= " where wr_id = '$wr_id' ";

@@ -397,6 +397,20 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
     </div>
 
     <div class="cf_item">
+	<div class="cf_title"> <input type=checkbox name=chk[cf_desc_use] value=1>&nbsp; 요약형 별도입력 </div>
+	<div class="cf_content">
+            <select name="cf_desc_use" id="cf_desc_use">
+            <option value="0">사용안함</option>
+            <?php for ($i=1; $i<=10; $i++) { ?>
+            <option value="<?php echo $i?>"><?php echo $i?>레벨 이상</option>
+            <?php } ?>
+            </select>
+	    <span class="cf_info">(글작성시 컨텐츠 요약 항목을 별도로 입력합니다.)</span>
+            <script> $("#cf_desc_use").val("<?php echo $mw_basic['cf_desc_use']?>"); </script>
+	</div>
+    </div>
+
+    <div class="cf_item">
 	<div class="cf_title"> <input type=checkbox name=chk[cf_attribute] value=1>&nbsp; 속성 </div>
 	<div class="cf_content">
 	    <select name=cf_attribute onchange="attchg(this.value)">
@@ -2645,6 +2659,20 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
     </div>
 
     <div class="cf_item">
+	<div class="cf_title"> <input type=checkbox name=chk[cf_watermark_type] value=1>&nbsp; 워터마크 타입</div>
+	<div class="cf_content">
+            <select name="cf_watermark_type">
+            <option value=""></option>
+            <option value="jpg">jpg</option>
+            <option value="png">png</option>
+            </select>
+	    <script>
+            document.cf_form.cf_watermark_type.value = '<?=$mw_basic[cf_watermark_type]?>';
+            </script>
+        </div>
+    </div>
+
+    <div class="cf_item">
 	<div class="cf_title"> <input type=checkbox disabled>&nbsp; 워터마크 재생성 </div>
 	<div class="cf_content">
 	    워터마크를 모두 다시 생성합니다. <span class="cf_info">(본문)</span>
@@ -2843,6 +2871,7 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 
 <div id="tabs-7" class="tabs"> <!-- 플러그인 -->
 
+    <!--
     <div class="cf_item">
 	<div class="cf_title"> <input type=checkbox name=chk[cf_seo_url] value=1>&nbsp; SEO URL </div>
 	<div class="cf_content">
@@ -2851,6 +2880,7 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 	    <script> document.cf_form.cf_seo_url.checked = <?=$mw_basic[cf_seo_url]?>; </script>
 	</div>
     </div>
+    -->
 
     <div class="cf_item">
 	<div class="cf_title"> <input type=checkbox name=chk[cf_umz] value=1>&nbsp; 짧은링크 </div>

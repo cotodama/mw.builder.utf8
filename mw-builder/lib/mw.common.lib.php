@@ -189,11 +189,15 @@ function mw_get_list($write_row, $board, $skin_path, $subject_len=40)
         $list['icon_link'] = "<img src='$skin_path/img/icon_link.gif' align='absmiddle'>";
 
     // 분류명 링크
-    //$list['ca_name_href'] = "$bbs_path/board.php?bo_table=$board[bo_table]&sca=".urlencode($list['ca_name']);
-    $list['ca_name_href'] = mw_builder_seo_url($board[bo_table])."&sca=".urlencode($list['ca_name']);
+    if (function_exists("mw_builder_seo_url"))
+        $list['ca_name_href'] = mw_builder_seo_url($board[bo_table])."&sca=".urlencode($list['ca_name']);
+    else
+        $list['ca_name_href'] = "$bbs_path/board.php?bo_table=$board[bo_table]&sca=".urlencode($list['ca_name']);
 
-    //$list['href'] = "$bbs_path/board.php?bo_table=$board[bo_table]&wr_id=$list[wr_id]" . $qstr;
-    $list['href'] = mw_builder_seo_url($board['bo_table'], $list['wr_id'], $qstr);
+    if (function_exists("mw_builder_seo_url"))
+        $list['href'] = mw_builder_seo_url($board['bo_table'], $list['wr_id'], $qstr);
+    else
+        $list['href'] = "$bbs_path/board.php?bo_table=$board[bo_table]&wr_id=$list[wr_id]" . $qstr;
 
     //$list['href'] = "$bbs_path/board.php?bo_table=$board[bo_table]&wr_id=$list[wr_id]";
     if ($board['bo_use_comment'])
@@ -447,69 +451,4 @@ function mw_html_entities($str)
     return $str;
 }
 
-function mw_builder_seo_url($bo_table, $wr_id=0, $qstr='')
-{
-    global $g4;
-    global $mw;
-
-    $url = $g4['bbs_path'].'/board.php?bo_table='.$bo_table;
-
-    if ($wr_id)
-        $url .= '&wr_id='.$wr_id;
-
-    if ($qstr)
-        $url .= $qstr;
-
-    if ($mw['config']['cf_seo_url'])
-    {
-        $url = $g4['url'].'/b/'.$bo_table;
-
-        if ($wr_id)
-            $url .= '-'.$wr_id;
-
-        if ($qstr)
-            $url .= '?'.$qstr;
-    }
-
-    return $url;
-}
-
-function mw_builder_seo_page($pg_id)
-{
-    global $g4;
-    global $mw;
-
-    $url = $g4['url'].'/page?pg_id='.$pg_id;
-
-    if ($mw['config']['cf_seo_url']) {
-        $url = $g4['url'].'/page_'.$pg_id;
-    }
-
-    return $url;
-}
-
-
-function mw_builder_seo_main($gr_id)
-{
-    global $g4;
-    global $mw;
-
-    $url = $g4['url'].'/?mw_main='.$gr_id;
-
-    if ($mw['config']['cf_seo_url']) {
-        $url = $g4['url'].'/main_'.$gr_id;
-    }
-
-    return $url;
-}
-
-function mw_builder_seo_sign()
-{
-    global $mw;
-
-    if ($mw['config']['cf_seo_url'])
-        return '?';
-    else
-        return '&';
-}
 

@@ -1,3 +1,35 @@
+ver 2.6.4 (14.07.11)
+    : 글작성시 외부이미지 썸네일 생성 오류 (oolloo님 제안)
+    : 퍼머링크 사용시 포인트 차감 메시지 경로 오류 (금광님 제안)
+    : 관련글, 최신글 퍼머링크 적용
+    : 전체목록보이기 사용시 하단 퍼머링크 오류
+    : 워터마크 파일 jpg/png 선택옵션 추가 (흰발톱님 제안)
+    : 제목색 기본색 출력 안되는 오류 해결 (금광님 제안)
+    : 컨텐츠 요약창 출력여부 레벨 설정 (금광님 제안)
+    : 네이버 신디케이션 지원 (설정방법: http://www.miwit.com/b/mw_tip-3891 )
+
+    mw.basic/HISTORY
+    mw.basic/mw.adm/mw.config.php
+    mw.basic/mw.adm/mw.config.update.php
+    mw.basic/mw.adm/mw.upgrade.php
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/mw.proc/mw.adm.thumb.remake.php
+    mw.basic/mw.proc/mw.file.viewer.php
+    mw.basic/mw.proc/mw.seo.php
+    mw.basic/mw.proc/naver_syndi.php
+    mw.basic/view.skin.php
+    mw.basic/view_head.skin.php
+    mw.basic/list.skin.php
+    mw.basic/write.skin.php
+    mw.basic/write.head.skin.php
+    mw.basic/write_update.skin.php
+    mw.basic/write_update.head.skin.php
+    mw.basic/write_update.tail.skin.php
+    mw.basic/write_comment_update.head.skin.php
+    mw.basic/write_comment_update.tail.skin.php
+    mw.basic/delete.skin.php
+    mw.basic/delete_all.skin.php
+
 ver 2.6.3 (14.07.04)
     : 퍼머링크 (seo url) 지원
     : 썸네일 재생성 오류 수정 (oolloo님 제안)

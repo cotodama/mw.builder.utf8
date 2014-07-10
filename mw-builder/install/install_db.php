@@ -3,6 +3,8 @@ set_time_limit(0);
 
 include_once ("../config.php");
 include_once ("../mw.config.php");
+include_once ("../lib/mw.permalink.lib.php");
+include_once ("../lib/mw.common.lib.php");
 
 // 파일이 존재한다면 설치할 수 없다.
 if (file_exists("../dbconfig.php")) {
@@ -264,6 +266,39 @@ $sql = " insert into $g4[member_table]
                 ";
 @mysql_query($sql);
 
+// 1.00.09 - data/log 삽입
+// 디렉토리 생성
+$dir_arr = array ("../extend",
+                  "../data",
+                  "../data/file",
+                  "../data/log",
+                  "../data/member",
+                  "../data/session",
+                  "../data/$g4[cheditor4]");
+for ($i=0; $i<count($dir_arr); $i++) 
+{
+    @mkdir($dir_arr[$i], 0707);
+    @chmod($dir_arr[$i], 0707);
+}
+
+// data 디렉토리 및 하위 디렉토리에서는 .htaccess .htpasswd .php .phtml .html .htm .inc .cgi .pl 파일을 실행할수 없게함.
+$f = fopen("../data/.htaccess", "w");
+$str = <<<EOD
+<FilesMatch "\.(htaccess|htpasswd|[Pp][Hh][Pp]|[Pp]?[Hh][Tt][Mm][Ll]?|[Ii][Nn][Cc]|[Cc][Gg][Ii]|[Pp][Ll])">
+Order allow,deny 
+Deny from all
+</FilesMatch>
+EOD;
+fwrite($f, $str);
+fclose($f);
+
+// session 디렉토리는 웹에서 일절 접근하지 못하도록 함 
+$f = fopen("../data/session/.htaccess", "w");
+$str = "Deny from all";
+fwrite($f, $str);
+fclose($f);
+
+
 // 배추빌더
 include("../mw.upgrade.php");
 
@@ -302,38 +337,6 @@ echo "<script>document.frminstall2.job3.value='DB설정값 변환 완료';</scri
 
 flush(); usleep(50000); 
 
-
-// 1.00.09 - data/log 삽입
-// 디렉토리 생성
-$dir_arr = array ("../extend",
-                  "../data",
-                  "../data/file",
-                  "../data/log",
-                  "../data/member",
-                  "../data/session",
-                  "../data/$g4[cheditor4]");
-for ($i=0; $i<count($dir_arr); $i++) 
-{
-    @mkdir($dir_arr[$i], 0707);
-    @chmod($dir_arr[$i], 0707);
-}
-
-// data 디렉토리 및 하위 디렉토리에서는 .htaccess .htpasswd .php .phtml .html .htm .inc .cgi .pl 파일을 실행할수 없게함.
-$f = fopen("../data/.htaccess", "w");
-$str = <<<EOD
-<FilesMatch "\.(htaccess|htpasswd|[Pp][Hh][Pp]|[Pp]?[Hh][Tt][Mm][Ll]?|[Ii][Nn][Cc]|[Cc][Gg][Ii]|[Pp][Ll])">
-Order allow,deny 
-Deny from all
-</FilesMatch>
-EOD;
-fwrite($f, $str);
-fclose($f);
-
-// session 디렉토리는 웹에서 일절 접근하지 못하도록 함 
-$f = fopen("../data/session/.htaccess", "w");
-$str = "Deny from all";
-fwrite($f, $str);
-fclose($f);
 
 @rename("../install", "../install.bak");
 //-------------------------------------------------------------------------------------------------

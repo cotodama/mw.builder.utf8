@@ -27,6 +27,9 @@ $mw_is_write = false;
 
 include_once("$board_skin_path/mw.lib/mw.skin.basic.lib.php");
 
+if ($board['bo_use_list_view'] && $wr_id)
+    include($board_skin_path.'/mw.proc/mw.seo.php');
+
 mw_bomb();
 
 // 실명인증 & 성인인증
@@ -546,7 +549,7 @@ else if ($mw_basic[cf_type] == "gall")
     // 제목스타일
     if ($mw_basic[cf_subject_style]) {
         $style .= " style='font-family:{$list[$i][wr_subject_font]}; ";
-        if ($list[$i][wr_subject_color] != $mw_basic[cf_subject_style_color_default])
+        if ($list[$i][wr_subject_color])
             $style .= " color:{$list[$i][wr_subject_color]}";
 
         if ($list[$i][wr_subject_bold]) {
@@ -651,7 +654,7 @@ else if ($mw_basic[cf_type] == "gall")
         // 제목스타일
         if ($mw_basic[cf_subject_style]) {
             $style .= " style='font-family:{$list[$i][wr_subject_font]}; ";
-            if ($list[$i][wr_subject_color] != $mw_basic[cf_subject_style_color_default])
+            if ($list[$i][wr_subject_color])
                 $style .= " color:{$list[$i][wr_subject_color]}";
 
             if ($list[$i][wr_subject_bold])

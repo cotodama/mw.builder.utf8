@@ -24,7 +24,8 @@ if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
 // 거꾸로 읽는 이유는 답변글부터 삭제가 되어야 하기 때문임
 for ($i=count($tmp_array)-1; $i>=0; $i--) 
 {
-    $write = sql_fetch(" select * from $write_table where wr_id = '{$tmp_array[$i]}' ");
+    $wr_id = $tmp_array[$i];
+    $write = sql_fetch(" select * from $write_table where wr_id = '{$wr_id}' ");
 
     if ($is_admin == "super") // 최고관리자 통과
         ;
@@ -62,6 +63,9 @@ for ($i=count($tmp_array)-1; $i>=0; $i--)
     } 
     else
         continue;   // 나머지는 삭제 불가
+
+    $w = 'd';
+    include($board_skin_path.'/mw.proc/naver_syndi.php');
 
     mw_delete_row($board, $write, "no");
 }

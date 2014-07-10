@@ -62,3 +62,5 @@ if ($mw_basic[cf_image_outline]) {
         }
     }
 }
+
+include_once($board_skin_path.'/mw.proc/naver_syndi.php');

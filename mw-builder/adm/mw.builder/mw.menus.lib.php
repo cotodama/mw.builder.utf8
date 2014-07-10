@@ -23,6 +23,7 @@ if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
 
 include_once("$g4[path]/lib/mw.cache.lib.php");
 include_once("$g4[path]/lib/mw.host.lib.php");
+include_once("$g4[path]/lib/mw.permalink.lib.php");
 
 function mw_get_group_row($row) {
     global $g4, $mw;
@@ -57,7 +58,7 @@ function mw_get_middle_menu_row($row) {
     global $g4, $mw;
     $mw_mmenu = array();
     $mw_mmenu = $row;
-    $mw_mmenu[mm_url] = mw_builder_seo_main($row[gr_id])."?mw_menu=$row[mm_id]";
+    $mw_mmenu[mm_url] = mw_builder_seo_main($row[gr_id]).mw_builder_seo_sign()."mw_menu=$row[mm_id]";
     if ($row[mm_smove]) { // 첫번째 소메뉴로 바로 이동
 	$row2 = sql_fetch("select * from $mw[menu_small_table] where mm_id = '$row[mm_id]' order by ms_order limit 1");
 	$mw_mmenu[mm_url] = mw_builder_seo_url($row2[bo_table]);

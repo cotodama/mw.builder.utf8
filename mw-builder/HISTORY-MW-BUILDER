@@ -1,3 +1,27 @@
+1.5.3 (14.07.11)
+    : 파일 교체 후 관리자-배추빌더-업그레이드 실행해주세요.
+    : 파일 교체 후 관리자-배추빌더-캐쉬삭제 실행해주세요.
+    : 그누보드 최신버전 4.37.13 (14.07.08) 탑재
+    : 배추스킨 최신버전 2.6.4 (14.07.11) 탑재
+    : www 로만 접속 옵션 사용시 m. 서브도메인 제외 (금광님 제안)
+    : 게시판 경로 자동변경 오류 수정 (재아님 제안)
+    : 권한없는 글 클릭시 로그인 경로 오류 (홍반장님 제안)
+    : 설치오류 (맥스님 제안) 
+    : 퍼머링크 코멘트 새창 오류 수정 
+    : 퍼머링크 미사용시 중메뉴 링크 오류 (위즈위드님 제안)
+    : 하위 디렉토리 퍼머링크 사용시 소메뉴 게시판 링크 오류 (맥스님 제안)
+    : 코멘트글 이동변환 오류 수정 (재아님 제안)
+
+    HISTORY-MW-BUILDER
+    install/install_db.php
+    adm/mw.builder/mw.menus.lib.php
+    lib/mw.permalink.lib.php
+    lib/mw.common.lib.php
+    lib/mw.builder.lib.php
+    extend/mw.builder.extend.php
+    b/login.php
+    b/board.php
+ 
 1.5.2 (14.07.04)
     : 파일 교체 후 관리자-배추빌더-업그레이드 실행해주세요.
     : 그누보드 최신버전 4.37.11 (14.05.26) 탑재
@@ -8,6 +32,7 @@
     HISTORY-MW-BUILDER
     adm/mw.builder/mw.config.form.php
     adm/mw.builder/mw.config.update.php
+    adm/mw.builder/mw.menus.lib.php
     lib/mw.latest.*
     lib/mw.common.lib.php
     lib/mw.builder.lib.php

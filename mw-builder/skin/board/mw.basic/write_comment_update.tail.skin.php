@@ -109,3 +109,5 @@ if ($file_upload_msg)
 if ($mw_basic[cf_image_outline]) {
     mw_image_outline($dest_file);
 }
+
+include_once($board_skin_path.'/mw.proc/naver_syndi.php');

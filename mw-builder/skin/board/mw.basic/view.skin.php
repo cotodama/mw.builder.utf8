@@ -943,7 +943,7 @@ if ($mw_basic[cf_attribute] == 'qna' && !$view[is_notice]) {
     <td class=mw_basic_view_related>
         <h3>
             관련글
-            <a href="board.php?bo_table=<?=$bo_table2?>&sfl=wr_subject||wr_content,1&sop=or&stx=<?=urlencode(str_replace(",", " ", $view[wr_related]))?>">[더보기]</a>
+            <a href="<?=mw_seo_url($bo_table2, 0, "&sfl=wr_subject||wr_content,1&sop=or&stx=".urlencode(str_replace(",", " ", $view[wr_related])))?>">[더보기]</a>
         </h3>
     </td>
 </tr>
@@ -973,7 +973,7 @@ if ($mw_basic[cf_latest_table]) {
     <td class=mw_basic_view_latest>
         <h3>
             <?=$view[name]?> 님의 <?=$bo_subject?> 최신글
-            <a href="board.php?bo_table=<?=$bo_table?>&sfl=mb_id,1&stx=<?=$write[mb_id]?>">[더보기]</a>
+            <a href="<?=mw_seo_url($bo_table, 0, "&sfl=mb_id,1&stx=$write[mb_id]")?>">[더보기]</a>
         </h3>
     </td>
 </tr>

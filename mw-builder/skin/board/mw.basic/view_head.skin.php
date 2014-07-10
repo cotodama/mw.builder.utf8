@@ -184,7 +184,10 @@ else
     }
 }
 
+include($pc_skin_path.'/mw.proc/mw.file.viewer.php');
+
 // 파일 출력
+/*
 if ($mw_basic[cf_social_commerce]) {
     $file_start = 2;
 }
@@ -316,6 +319,7 @@ if ($mw_basic[cf_watermark_use] && file_exists($mw_basic[cf_watermark_path]))
 
 if (!$mw_basic[cf_zzal] && !strstr($view[content], "{이미지:") && !$write['wr_lightbox'])// 파일 출력  
     $view[content] = $file_viewer . $view[content]; 
+*/
 
 if ($write[wr_singo] && $write[wr_singo] >= $mw_basic[cf_singo_number] && $mw_basic[cf_singo_write_block]) {
     $content = " <div class='singo_info'> 신고가 접수된 게시물입니다. (신고수 : $write[wr_singo]회)<br/>";
@@ -400,6 +404,7 @@ if ($write_href && $mw_basic[cf_write_notice]) {
 // 스킨설정버튼
 $config_href = "javascript:mw_config()";
 
+/*
 $view[rich_content] = preg_replace("/{이미지\:([0-9]+)[:]?([^}]*)}/ie", "mw_view_image(\$view, '\\1', '\\2')", $view[content]);
 
 if ($mw_basic[cf_no_img_ext]) { // 이미지 확대 사용 안함
@@ -452,6 +457,7 @@ else {
 
 // 추천링크 방지
 $view[rich_content] = preg_replace("/bbs\/good\.php\?/i", "#", $view[rich_content]);
+*/
 
 
 // 조회수, 추천수, 비추천수 컴마
@@ -519,7 +525,7 @@ if ($mw_basic[cf_attribute] != "1:1" && (!$prev_href || !$next_href))
     }
 }
 
-$view[rich_content] = preg_replace_callback("/\[code\](.*)\[\/code\]/iUs", "_preg_callback", $view[rich_content]);
+//$view[rich_content] = preg_replace_callback("/\[code\](.*)\[\/code\]/iUs", "_preg_callback", $view[rich_content]);
 
 // 리워드
 if ($mw_basic[cf_reward]) {
@@ -576,7 +582,7 @@ else
 }
 
 // 자동치환
-$view[rich_content] = mw_reg_str($view[rich_content]);
+//$view[rich_content] = mw_reg_str($view[rich_content]);
 $view[wr_subject] = mw_reg_str($view[wr_subject]);
 $view[wr_subject] = bc_code($view[wr_subject], 0, 0);
 
@@ -613,8 +619,8 @@ $row = sql_fetch(" select count(*) as cnt from $write_table where wr_is_comment 
 $new_count = $row[cnt];
 
 // 이미지 링크
-$view[rich_content] = preg_replace("/\[\<a\s*href\=\"(http|https|ftp)\:\/\/([^[:space:]]+)\.(gif|png|jpg|jpeg|bmp)\"\s*[^\>]*\>.*\<\/a\>\]/iUs", "<img src='$1://$2.$3' id='target_resize_image[]' onclick='image_window(this);'>", $view[rich_content]);
-$view[rich_content] = preg_replace("/\[(http|https|ftp)\:\/\/([^[:space:]]+)\.(gif|png|jpg|jpeg|bmp)\]/iUs", "<img src='$1://$2.$3' id='target_resize_image[]' onclick='image_window(this);'>", $view[rich_content]);
+//$view[rich_content] = preg_replace("/\[\<a\s*href\=\"(http|https|ftp)\:\/\/([^[:space:]]+)\.(gif|png|jpg|jpeg|bmp)\"\s*[^\>]*\>.*\<\/a\>\]/iUs", "<img src='$1://$2.$3' id='target_resize_image[]' onclick='image_window(this);'>", $view[rich_content]);
+//$view[rich_content] = preg_replace("/\[(http|https|ftp)\:\/\/([^[:space:]]+)\.(gif|png|jpg|jpeg|bmp)\]/iUs", "<img src='$1://$2.$3' id='target_resize_image[]' onclick='image_window(this);'>", $view[rich_content]);
 
 // 최고, 그룹관리자라면 글 복사, 이동 가능
 $copy_href = $move_href = "";
@@ -624,7 +630,7 @@ if ($write[wr_reply] == "" && ($is_admin == "super" || $is_admin == "group")) {
 }
 
 // 배추코드
-$view[rich_content] = bc_code($view[rich_content], 1, 0);
+/*$view[rich_content] = bc_code($view[rich_content], 1, 0);
 if (strstr($write[wr_option], "html")) {
     $view[rich_content] = mw_tag_debug($view[rich_content]);
 }
@@ -632,7 +638,7 @@ $view[rich_content] = mw_set_sync_tag($view[rich_content]);
 
 if ($mw_basic[cf_iframe_level] && $mw_basic[cf_iframe_level] <= $mb[mb_level]) {
     $view[rich_content] = mw_special_tag($view[rich_content]);
-}
+}*/
 
 if ($mw_basic[cf_umz]) { // 짧은 글주소 사용 
     //if ($write[wr_umz] == "") {
@@ -775,6 +781,7 @@ if ($mw_basic[cf_sns])
     ob_end_clean();
 }
 
+/*
 $google_map_code = null;
 $google_map_is_view = false;
 if ($mw_basic[cf_google_map] && trim($write[wr_google_map])) {
@@ -836,9 +843,12 @@ if ($mw_basic[cf_contents_shop] == '2' and $write[wr_contents_price]) // 배추 
 
 $view[rich_content] = mw_youtube_content($view[rich_content]);
 
+*/
+
 if (function_exists("mw_moa_read"))
     mw_moa_read($member['mb_id'], $bo_table, $wr_id);
 
+/*
 $ob_exam = '';
 $ob_exam_flag = false;
 if ($mw_basic['cf_exam']) {
@@ -868,6 +878,7 @@ if ($mw_basic['cf_marketdb'] and $write['wr_marketdb']) {
         }
     }
 }
+*/
 
 if (!$mw_basic['cf_time_view'])
     $mw_basic['cf_time_view'] = "Y-m-d (w) H:i";

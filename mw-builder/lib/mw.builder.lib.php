@@ -21,6 +21,7 @@
 
 if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
 
+include_once("$g4[path]/lib/mw.permalink.lib.php");
 include_once("$g4[path]/lib/mw.common.lib.php");
 include_once("$g4[path]/lib/outlogin.lib.php");
 include_once("$g4[path]/lib/poll.lib.php");
@@ -208,9 +209,18 @@ else if ($mw[config][cf_www]) { // www 로만 접속
     mw_sub_domain_only("www");
 }
 
-if ($mw['config']['cf_seo_url'] && strstr($_SERVER['REQUEST_URI'], $g4['bbs'].'/board.php')) {
-    goto_url2(mw_builder_seo_url($bo_table, $wr_id, $qstr));
+if ($mw['config']['cf_seo_url'] && strstr($_SERVER['REQUEST_URI'], $g4['bbs'].'/board.php'))
+{
+    $seo_etc = $qstr;
+    if ($cwin) $seo_etc .= '&cwin='.$cwin;
+
+    if ($write['wr_is_comment']) {
+        $wr_id = $write['wr_parent'];
+        $seo_etc = '#c_'.$write['wr_id'];
+    }
+    goto_url2(mw_builder_seo_url($bo_table, $wr_id, $seo_etc));
 }
+
 if ($mw['config']['seo_url'] && strstr($_SERVER['REQUEST_URI'], '/page.php')) {
     goto_url2(mw_builder_seo_page($pg_id));
 }

@@ -22,7 +22,9 @@
 if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
 
 mw_delete_row($board, $write);
-@include_once("$board_skin_path/delete.tail.skin.php");
+include_once("$board_skin_path/delete.tail.skin.php");
+$w = 'd';
+include_once($board_skin_path.'/mw.proc/naver_syndi.php');
 goto_url(mw_seo_url($bo_table, 0, "&page=$page" . $qstr));
 
 exit;

@@ -144,6 +144,7 @@ if (is_null($mw_basic[cf_desc_len])) {
     $sql = "alter table $mw[basic_config_table] add cf_desc_len int default '150' not null";
     sql_query($sql, false);
 }
+    sql_query("alter table $mw[basic_config_table] add cf_desc_use tinyint default '0' not null", false);
 
 // 권한에 따른 쓰기버튼 출력 옵션 v.1.0.2
 if (is_null($mw_basic[cf_write_button])) {
@@ -823,6 +824,7 @@ if (is_null($mw_basic[cf_watermark_path])) {
     sql_query("alter table $mw[basic_config_table] add cf_watermark_position varchar(20) default 'center' not null", false);
     sql_query("alter table $mw[basic_config_table] add cf_watermark_transparency tinyint default 100 not null", false);
 }
+    sql_query("alter table $mw[basic_config_table] add cf_watermark_type varchar(3) default 'jpg' not null", false);
 
 // 업로더수익
 if (is_null($mw_basic[cf_contents_shop_uploader])) {

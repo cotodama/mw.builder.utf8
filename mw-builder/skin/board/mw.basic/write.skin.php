@@ -785,7 +785,7 @@ if ($mw_basic['cf_include_write_main'] && is_file($mw_basic['cf_include_write_ma
 </tr>
 <tr><td colspan=2 height=1 bgcolor=#e7e7e7></td></tr>
 
-<? if ($mw_basic[cf_type] == 'desc' or $mw_basic[cf_contents_shop] == '2') { ?>
+<? if (($mw_basic[cf_type] == 'desc' && $mw_basic[cf_desc_use] && $mw_basic[cf_desc_use] <= $member[mb_level]) or $mw_basic[cf_contents_shop] == '2') { ?>
 <tr>
 <td class=mw_basic_write_title>· 컨텐츠 요약</td>
 <td class=mw_basic_write_content>

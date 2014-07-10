@@ -31,9 +31,11 @@ function mw_sub_domain_only($sub_domain="")
     if (!$g4[cookie_domain]) return false;
     if (!$_SERVER[HTTP_HOST]) return false;
 
-    $diff = substr($_SERVER[HTTP_HOST], 0, strlen($sub_domain)+1);
-
+    //$diff = substr($_SERVER[HTTP_HOST], 0, strlen($sub_domain)+1);
     //if ($diff != $sub_domain.".") {
+
+    if (mw_get_sub_domain() == 'm') return;
+
     if ($_SERVER[HTTP_HOST] != $sub_domain.$g4[cookie_domain]) {
         goto_url2("http://".$sub_domain.$g4[cookie_domain].$_SERVER[REQUEST_URI]);
     }

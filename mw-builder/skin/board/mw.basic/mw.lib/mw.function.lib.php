@@ -75,7 +75,7 @@ function mw_related($related, $field="wr_id, wr_subject, wr_content, wr_datetime
     $list = array();
     $i = 0;
     while ($row = sql_fetch_array($qry)) {
-        $row[href] = "$g4[bbs_path]/board.php?bo_table=$bo_table2&wr_id=$row[wr_id]";
+        $row[href] = mw_seo_url($bo_table2, $row[wr_id]);
         $row[comment] = $row[wr_comment] ? "<span class='comment'>($row[wr_comment])</span>" : "";
         $row[subject] = get_text($row[wr_subject]);
         $row[subject] = mw_reg_str($row[subject]);
@@ -108,7 +108,7 @@ function mw_view_latest($field="wr_id, wr_subject, wr_content, wr_datetime, wr_c
     $list = array();
     $i = 0;
     for ($i=0; $row=sql_fetch_array($qry); $i++) {
-        $row[href] = "$g4[bbs_path]/board.php?bo_table=$bo_table2&wr_id=$row[wr_id]";
+        $row[href] = mw_seo_url($bo_table2, $row[wr_id]);
         //$row[comment] = $row[wr_comment] ? "<span class='comment'>($row[wr_comment])</span>" : "";
         $row[comment] = $row[wr_comment] ? "<span class='comment'>+$row[wr_comment]</span>" : "";
         $row[subject] = get_text($row[wr_subject]);
@@ -511,7 +511,11 @@ function mw_watermark_file($source_file)
         , $mw_basic[cf_watermark_position]
         , $mw_basic[cf_watermark_transparency]);
 
-    @imagejpeg($target, $watermark_file, $mw_basic[cf_resize_quality]);
+    if ($mw_basic['cf_watermark_type'] == 'png')
+        @imagepng($target, $watermark_file);
+    else 
+        @imagejpeg($target, $watermark_file, $mw_basic[cf_resize_quality]);
+
     @chmod($watermark_file, 0606);
     @imagedestroy($source);
     @imagedestroy($target);
@@ -2995,6 +2999,7 @@ function mw_write_icon($row)
 function mw_list_link($row)
 {
     global $g4; 
+    global $mw; 
     global $board_skin_path; 
     global $board; 
     global $mw_basic; 
@@ -3005,8 +3010,10 @@ function mw_list_link($row)
     global $bo_table;
     global $qstr;
 
-    if ($mw_basic['cf_seo_url']) {
+    $sign = '&';
+    if ($mw['config']['cf_seo_url']) {
         $row['href'] = mw_seo_url($bo_table, $row['wr_id'], $qstr);
+        $sign = '?';
     }
 
     // 링크로그
@@ -3084,7 +3091,7 @@ function mw_list_link($row)
                 }
                 else {
                     $href = "javascript:if (confirm('글을 읽으시면 {$board['bo_read_point']} 포인트 차감됩니다.";
-                    $href.= "\\n\\n현재 포인트: {$member['mb_point']}p\\n\\n')) location.href = '{$row['href']}&point=1'";
+                    $href.= "\\n\\n현재 포인트: {$member['mb_point']}p\\n\\n')) location.href = '{$row['href']}{$sign}point=1'";
                     $row['href'] = $href;
                 }
             }
@@ -3237,13 +3244,29 @@ function mw_make_thumbnail_row ($bo_table, $wr_id, $wr_content, $remote=false)
     global $g4;
     global $mw_basic;
     global $file_path;
+    global $thumb_path;
+    global $thumb2_path;
+    global $thumb3_path;
+    global $thumb4_path;
+    global $thumb5_path;
+    /*
     global $thumb_file;
     global $thumb2_file;
     global $thumb3_file;
     global $thumb4_file;
     global $thumb5_file;
+    */
+    global $is_admin;
 
     $is_thumb = false;
+
+    if (!$thumb_file) {
+        $thumb_file = mw_thumb_jpg($thumb_path.'/'.$wr_id);
+        $thumb2_file = mw_thumb_jpg($thumb2_path.'/'.$wr_id);
+        $thumb3_file = mw_thumb_jpg($thumb3_path.'/'.$wr_id);
+        $thumb4_file = mw_thumb_jpg($thumb4_path.'/'.$wr_id);
+        $thumb5_file = mw_thumb_jpg($thumb5_path.'/'.$wr_id);
+    }
 
     if (is_file($thumb_file)) unlink($thumb_file);
     if (is_file($thumb2_file)) unlink($thumb2_file);
@@ -3351,12 +3374,18 @@ function mw_make_thumbnail_all ($source_file)
     }
 }
 
-function mw_seo_url($bo_table, $wr_id=0, $qstr='')
+if (!function_exists("mw_seo_url")) {
+function mw_seo_url($bo_table, $wr_id, $qstr, $mobile=1)
 {
     global $g4;
+    global $mw;
     global $mw_basic;
+    global $mw_mobile;
 
-    $url = $g4['bbs_path']."/board.php?bo_table=".$bo_table;
+    $url = $g4['url'];
+
+    if ($bo_table)
+        $url .= '/'.$g4['bbs'].'/board.php?bo_table='.$bo_table;
 
     if ($wr_id)
         $url .= "&wr_id=".$wr_id;
@@ -3364,53 +3393,40 @@ function mw_seo_url($bo_table, $wr_id=0, $qstr='')
     if ($qstr)
         $url .= $qstr;
 
-    $seo_path = '/b/';
-    if (mw_is_mobile_builder())
-        $seo_path = '/m/b/';
-
-    if ($mw_basic['cf_seo_url'])
-    {
-        $url = $g4['url'].$seo_path.$bo_table;
-
-        if ($wr_id)
-            $url .= '-'.$wr_id;
-
-        if ($qstr)
-            $url .= '?'.$qstr;
-    }
-
     return $url;
-}
+}}
 
+if (!function_exists("mw_bbs_path")) {
 function mw_bbs_path($path)
 {
     global $g4;
 
-    if (mw_is_mobile_builder()) {
-        $path = preg_replace("/\.\//iUs", $g4['path'].'/plugin/mobile/', $path);
-    }
-    else {
-        $path = preg_replace("/\.\//iUs", $g4['bbs_path'].'/', $path);
-    }
+    $path = preg_replace("/\.\//iUs", $g4['bbs_path'].'/', $path);
 
     return $path;
-}
+}}
 
+if (!function_exists("mw_seo_bbs_path")) {
 function mw_seo_bbs_path($path)
 {
     global $g4;
     global $bo_table;
 
-    if (mw_is_mobile_builder()) {
-        $path = str_replace('../../plugin/mobile/board.php?bo_table='.$bo_table, mw_seo_url($bo_table).'?', $path);
-    }
-    else {
-        $path = str_replace('../board.php?bo_table='.$bo_table, mw_seo_url($bo_table).'?', $path);
-    }
+    $path = str_replace('../board.php?bo_table='.$bo_table, mw_seo_url($bo_table).'?', $path);
 
     return $path;
+}}
+
+function mw_path_to_url($content)
+{
+    global $g4;
+
+    $content = str_replace($g4['path'].'/data/', $g4['url'].'/data/', $content);
+
+    return $content;
 }
 
+if (!function_exists("mw_is_mobile_builder")) {
 function mw_is_mobile_builder()
 {
     $is_mobile = false;
@@ -3421,5 +3437,6 @@ function mw_is_mobile_builder()
         $is_mobile = true;
 
     return $is_mobile;
-}
+}}
+
 

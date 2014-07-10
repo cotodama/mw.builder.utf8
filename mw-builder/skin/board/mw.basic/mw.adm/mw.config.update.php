@@ -265,6 +265,7 @@ bo_table = '$bo_table'
 ,cf_comment_secret = '$cf_comment_secret'
 ,cf_comment_secret_no = '$cf_comment_secret_no'
 ,cf_desc_len = '$cf_desc_len'
+,cf_desc_use = '$cf_desc_use'
 ,cf_write_button = '$cf_write_button'
 ,cf_subject_link = '$cf_subject_link'
 ,cf_comment_ban = '$cf_comment_ban'
@@ -389,7 +390,6 @@ bo_table = '$bo_table'
 ,cf_exif = '$cf_exif'
 ,cf_no_img_ext = '$cf_no_img_ext'
 ,cf_print = '$cf_print'
-,cf_seo_url = '$cf_seo_url'
 ,cf_umz = '$cf_umz'
 ,cf_umz2 = '$cf_umz2'
 ,cf_shorten = '$cf_shorten'
@@ -476,6 +476,7 @@ bo_table = '$bo_table'
 ,cf_watermark_path = '$cf_watermark_path'
 ,cf_watermark_position = '$cf_watermark_position'
 ,cf_watermark_transparency = '$cf_watermark_transparency'
+,cf_watermark_type = '$cf_watermark_type'
 ,cf_kcb_id = '$cf_kcb_id'
 ,cf_kcb_list = '$cf_kcb_list'
 ,cf_kcb_read = '$cf_kcb_read'
@@ -640,6 +641,7 @@ if ($chk[cf_download_popup_msg]) $sql .= ", cf_download_popup_msg = '$cf_downloa
 if ($chk[cf_uploader_point]) $sql .= ", cf_uploader_day = '$cf_uploader_day', cf_uploader_point = '$cf_uploader_point' ";
 if ($chk[cf_norobot_image]) $sql .= ", cf_norobot_image = '$cf_norobot_image' ";
 if ($chk[cf_desc_len]) $sql .= ", cf_desc_len = '$cf_desc_len' ";
+if ($chk[cf_desc_use]) $sql .= ", cf_desc_use = '$cf_desc_use' ";
 if ($chk[cf_write_button]) $sql .= ", cf_write_button = '$cf_write_button' ";
 if ($chk[cf_subject_link]) $sql .= ", cf_subject_link = '$cf_subject_link' ";
 if ($chk[cf_comment_ban]) $sql .= ", cf_comment_ban = '$cf_comment_ban' ";
@@ -802,7 +804,6 @@ if ($chk[cf_css]) $sql .= ", cf_css = '$cf_css' ";
 if ($chk[cf_exif]) $sql .= ", cf_exif = '$cf_exif' ";
 if ($chk[cf_no_img_ext]) $sql .= ", cf_no_img_ext = '$cf_no_img_ext' ";
 if ($chk[cf_print]) $sql .= ", cf_print = '$cf_print' ";
-if ($chk[cf_seo_url]) $sql .= ", cf_seo_url = '$cf_seo_url' ";
 if ($chk[cf_umz]) $sql .= ", cf_umz = '$cf_umz' ";
 if ($chk[cf_umz]) $sql .= ", cf_umz2 = '$cf_umz2' ";
 if ($chk[cf_shorten]) $sql .= ", cf_shorten = '$cf_shorten' ";
@@ -921,6 +922,7 @@ if ($chk[cf_watermark_use]) {
 if ($chk[cf_watermark_path]) $sql .= ", cf_watermark_path = '$cf_watermark_path' ";
 if ($chk[cf_watermark_position]) $sql .= ", cf_watermark_position = '$cf_watermark_position' ";
 if ($chk[cf_watermark_transparency]) $sql .= ", cf_watermark_transparency = '$cf_watermark_transparency' ";
+if ($chk[cf_watermark_type]) $sql .= ", cf_watermark_type = '$cf_watermark_type' ";
 if ($chk[cf_kcb_id]) $sql .= ", cf_kcb_id = '$cf_kcb_id' ";
 if ($chk[cf_kcb_type]) $sql .= ", cf_kcb_type = '$cf_kcb_type' ";
 if ($chk[cf_kcb_list]) {
