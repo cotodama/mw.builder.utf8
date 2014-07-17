@@ -17,8 +17,11 @@ function mw_builder_seo_url($bo_table, $wr_id=0, $qstr='', $mobile=1)
     global $mw_basic;
     global $mw_mobile;
 
-    //$url = $g4['bbs_path']."/board.php?bo_table=".$bo_table;
     $url = $g4['url'];
+
+    if (!$mobile && $mw_mobile['m_subdomain'])
+        $url = preg_replace("/^http:\/\/m\./", "http://", $url);
+
     if ($bo_table)
         $url .= '/'.$g4['bbs'].'/board.php?bo_table='.$bo_table;
 
@@ -38,6 +41,9 @@ function mw_builder_seo_url($bo_table, $wr_id=0, $qstr='', $mobile=1)
     if ($mw['config']['cf_seo_url'])
     {
         $url = $g4['url'];
+
+        if (!$mobile && $mw_mobile['m_subdomain'])
+            $url = preg_replace("/^http:\/\/m\./", "http://", $url);
 
         if ($bo_table)
             $url .= $seo_path.$bo_table;

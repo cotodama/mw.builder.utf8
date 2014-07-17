@@ -1,3 +1,27 @@
+ver 2.6.5 (14.07.18)
+    : 코멘트 댓글주소 퍼머링크 적용 (홍반장님 제안)
+    : 배추스킨설정-짧은링크-자체도메인 체크 해제되지 않는 문제 (홍반장님 제안)
+    : 다운로드 권한 링크 오류 수정 (금광님, 엑노님 제안)
+    : 퍼머링크 글주소 표기 오류 수정 (에듀프레소님 제안)
+    : 링크 포인트 차감시 안내 메시지 출력 (물깊은님 제안)
+    : 갤러리형 썸네일에 new 표시 (열뽕님 제안)
+    : 다운로드 로그 쪽지 전송에 퍼머링크 적용
+    : 글등록 알림 퍼머링크 적용
+    : 신고시 퍼머핑크 적용
+
+    mw.basic/HISTORY
+    mw.basic/mw.proc/mw.get.comment.url.php
+    mw.basic/mw.proc/mw.download.log.php
+    mw.basic/mw.proc/mw.seo.php
+    mw.basic/mw.proc/mw.btn.singo.update.php
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/img/icon_gall_new.png
+    mw.basic/view_head.php
+    mw.basic/view.skin.php
+    mw.basic/list.skin.php
+    mw.basic/write_update.skin.php
+    mw.basic/style.common.css
+ 
 ver 2.6.4 (14.07.11)
     : 글작성시 외부이미지 썸네일 생성 오류 (oolloo님 제안)
     : 퍼머링크 사용시 포인트 차감 메시지 경로 오류 (금광님 제안)
@@ -13,6 +37,7 @@ ver 2.6.4 (14.07.11)
     mw.basic/mw.adm/mw.config.update.php
     mw.basic/mw.adm/mw.upgrade.php
     mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/mw.lib/mw.skin.basic.lib.php
     mw.basic/mw.proc/mw.adm.thumb.remake.php
     mw.basic/mw.proc/mw.file.viewer.php
     mw.basic/mw.proc/mw.seo.php

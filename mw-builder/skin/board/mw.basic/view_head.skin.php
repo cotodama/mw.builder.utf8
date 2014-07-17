@@ -607,12 +607,13 @@ if ($is_admin) {
 } else // 관리자가 아니라면 IP 주소를 감춘후 보여줍니다.
     $ip = preg_replace("/([0-9]+).([0-9]+).([0-9]+).([0-9]+)/", "\\1.♡.\\3.\\4", $write[wr_ip]);
 
-// 짧은 글주소 사용 - 자체도메인
-$shorten = '';
-if ($mw_basic['cf_seo_url'])
-    $shorten = mw_seo_url($bo_table, $wr_id);
-else if ($mw_basic[cf_shorten])
+$shorten = set_http("{$g4[url]}/{$g4[bbs]}/board.php?bo_table={$bo_table}&wr_id={$wr_id}");
+
+if ($mw_basic[cf_shorten])
     $shorten = "$g4[url]/$bo_table/$wr_id";
+
+if ($mw['config']['cf_seo_url'])
+    $shorten = mw_seo_url($bo_table, $wr_id);
 
 $new_time = date("Y-m-d H:i:s", $g4[server_time] - ($board[bo_new] * 3600));
 $row = sql_fetch(" select count(*) as cnt from $write_table where wr_is_comment = 0 and wr_datetime >= '$new_time' ");

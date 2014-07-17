@@ -222,6 +222,8 @@ CREATE TABLE `$g4[config_table]` (
   `cf_link_target` varchar(255) NOT NULL DEFAULT '',
   `cf_delay_sec` int(11) NOT NULL DEFAULT '0',
   `cf_filter` text NOT NULL,
+  `cf_syndi_token` varchar(255) NOT NULL,
+  `cf_syndi_except` text NOT NULL,
   `cf_possible_ip` text NOT NULL,
   `cf_intercept_ip` text NOT NULL,
   `cf_register_skin` varchar(255) NOT NULL DEFAULT 'basic',

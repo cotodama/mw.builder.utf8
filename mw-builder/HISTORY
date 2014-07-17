@@ -1,3 +1,38 @@
+4.37.14 (2014.07.16)
+    : 네이버 신디케이션 수정
+      홈페이지 제목이나 게시판 제목에 &등의 특수문자가 존재하는 경우의 오류를 수정
+
+        bbs/ping.php
+
+4.37.13 (2014.07.08)
+    : 네이버 신디케이션 적용
+
+      추가된 필드를 생성하기 위하여 관리자 > 기본환경설정을 한번 이상 실행하고 진행하시기 바랍니다.
+
+      신디케이션을 적용하는 방법에 대해서는 아래 링크의 내용을 참고하시기 바랍니다.
+      http://sir.co.kr/bbs/board.php?bo_table=faq&wr_id=41
+
+      알림) 글 한개 작성시 신디케이션 수집 문서 수가 2개씩 올라가는 현상은 아직 해결하지 못하였습니다.
+
+        adm/config_form.php
+        adm/config_form_update.php
+        lib/naver_syndi.lib.php (신규)
+        bbs/ping.php (신규)
+
+        bbs/write_update.php 에서는 아래 코드가 추가 되었습니다.
+
+            include_once($g4['path'] . '/lib/naver_syndi.lib.php');
+            ...
+            // 게시판그룹접근사용을 하지 않아야 하고 비회원 글읽기가 가능해야 하며 비밀글이 아니어야 합니다.
+            if (!$group['gr_use_access'] && $board['bO_read_level'] < 2 && !$secret) {
+                naver_syndi_ping($bo_table, $wr_id);
+            }
+
+4.37.12 (2014.07.07)
+    : cheditor에서 이미지 파일을 업로드 할때 파일이 업로드 이전에 삭제되는 오류가 있어 수정 (HSEngine님께서 알려 주셨습니다.)
+
+        cheditor5/imageUpload/upload.php
+
 4.37.11 (2014.05.26)
     : SQL Injection 취약점이 발견되어 수정 (한국인터넷진흥원에서 알려주셨습니다.)
 

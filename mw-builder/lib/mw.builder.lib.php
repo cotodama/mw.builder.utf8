@@ -285,3 +285,9 @@ if (!$g4['title']) {
 
 $logout_url = urlencode("./login.php");
 
+if (!$is_member && $_GET['url'] && preg_match("/wr_id=[0-9]+/iUs", $_GET['url'])) {
+    $_GET['url'] = preg_replace("/^\.\//", "/bbs/", $_GET['url']);
+    $url = $_GET['url'];
+    $urlencode = urlencode($url);
+}
+

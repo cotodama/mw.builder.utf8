@@ -3030,6 +3030,48 @@ function mw_list_link($row)
             $row['link_target'][$j] = '_blank';
     }
 
+    $link_href = $row['link_href'][1];
+    $link_point = 0;
+
+    if ($mw_basic['cf_link_point']
+        && $row['link_href'][1]
+        && ($row['wr_link_write'] or $mw_basic['cf_link_board'])
+        && !$is_admin
+        && !($row['mb_id'] && $row['mb_id'] == $member['mb_id']))
+    {
+        $link_point = $mw_basic['cf_link_point'];
+
+        if (!$is_member) {
+            $link_href = "javascript:alert('글을 읽으시면 {$mw_basic['cf_link_point']} 포인트 차감됩니다.";
+            $link_href.= "\\n\\n로그인해주세요.')";
+        }
+        else {
+            $sql = " select * from {$g4['point_table']} ";
+            $sql.= "  where mb_id = '{$member['mb_id']}' ";
+            $sql.= "    and po_rel_table = '{$bo_table}' ";
+            $sql.= "    and po_rel_id = '{$row['wr_id']}' ";
+            $sql.= "    and po_rel_action = '링크'";
+            $tmp = sql_fetch($sql);
+            if (!$tmp) {
+                if (!$is_admin && $mw_basic['cf_link_point'] + $member['mb_point'] < 0) {
+                    $href = "javascript:alert('포인트가 부족합니다.\\n\\n";
+                    $href.= "- 읽기 포인트: {$mw_basic['cf_link_point']}p\\n- 현재 포인트: {$member['mb_point']}p')";
+                    $link_href = $href;
+                }
+                else {
+                    $href = "#;\" onclick= \"if (confirm('글을 읽으시면 {$mw_basic['cf_link_point']} 포인트 차감됩니다.";
+                    $href.= "\\n\\n현재 포인트: {$member['mb_point']}p\\n\\n')) {";
+                    if ($row['link_target'][1] == '_blank')
+                        $href.= "window.open('{$row['link_href'][1]}');";
+                    else 
+                        $href.= "location.href = '{$row['link_href'][1]}';";
+                    $href.= "  }\"";
+                    $link_href = $href;
+                }
+            }
+        }
+    }
+
     // 링크게시판
     if ($mw_basic['cf_link_board'] && $row['link_href'][1]) {
         //if (!$is_admin && $member['mb_id'] && $row['mb_id'] != $member['mb_id'])
@@ -3038,7 +3080,9 @@ function mw_list_link($row)
         else if ($row['icon_secret'])
             ;
         else if ($member['mb_level'] >= $mw_basic['cf_link_board']) {
-            if ($row['link_target'][1] == '_blank')
+            if ($link_point)
+                $row['href'] = $link_href;
+            else if ($row['link_target'][1] == '_blank')
                 $row['href'] = "javascript:void(window.open('{$row['link_href'][1]}'))";    
             else
                 $row['href'] = $row['link_href'][1];
@@ -3056,7 +3100,9 @@ function mw_list_link($row)
             ;
         else if ($mw_basic['cf_read_level'] && $row['wr_read_level']) {
             if ($row['wr_read_level'] <= $member['mb_level']) {
-                if ($row['link_target'][1] == '_blank')
+                if ($link_point)
+                    $row['href'] = $link_href;
+                else if ($row['link_target'][1] == '_blank')
                     $row['href'] = "javascript:void(window.open('{$row['link_href'][1]}'))";    
                 else
                     $row['href'] = $row['link_href'][1];
@@ -3065,7 +3111,9 @@ function mw_list_link($row)
                 $row['href'] = "javascript:void(alert('권한이 없습니다.'))";
         }
         else if ($member['mb_level'] >= $board['bo_read_level']) {
-            if ($row['link_target'][1] == '_blank')
+            if ($link_point)
+                $row['href'] = $link_href;
+            else if ($row['link_target'][1] == '_blank')
                 $row['href'] = "javascript:void(window.open('{$row['link_href'][1]}'))";    
             else
                 $row['href'] = $row['link_href'][1];
@@ -3078,11 +3126,17 @@ function mw_list_link($row)
     // 글읽기 포인트 결제 안내
     else if ($board['bo_read_point'] < 0 && $row['mb_id'] != $member['mb_id'] && !$is_admin && $mw_basic['cf_read_point_message']) {
         if (!$is_member) {
-            $href = "javascript:alert('글을 읽으시면 {$board['bo_read_point']} 포인트 차감됩니다.\\n\\n로그인해주세요.')";
+            $href = "javascript:alert('글을 읽으시면 {$board['bo_read_point']} 포인트 차감됩니다.";
+            $href.= "\\n\\n로그인해주세요.')";
             $row['href'] = $href;
         }
         else {
-            $tmp = sql_fetch(" select * from {$g4['point_table']} where mb_id = '{$member['mb_id']}' and po_rel_table = '{$bo_table}' and po_rel_id = '{$row['wr_id']}' and po_rel_action = '읽기'");
+            $sql = " select * from {$g4['point_table']} ";
+            $sql.= "  where mb_id = '{$member['mb_id']}' ";
+            $sql.= "    and po_rel_table = '{$bo_table}' ";
+            $sql.= "    and po_rel_id = '{$row['wr_id']}' ";
+            $sql.= "    and po_rel_action = '읽기'";
+            $tmp = sql_fetch($sql);
             if (!$tmp) {
                 if (!$is_admin && $board['bo_read_point'] && $board['bo_read_point'] + $member['mb_point'] < 0) {
                     $href = "javascript:alert('포인트가 부족합니다.\\n\\n";
@@ -3091,7 +3145,8 @@ function mw_list_link($row)
                 }
                 else {
                     $href = "javascript:if (confirm('글을 읽으시면 {$board['bo_read_point']} 포인트 차감됩니다.";
-                    $href.= "\\n\\n현재 포인트: {$member['mb_point']}p\\n\\n')) location.href = '{$row['href']}{$sign}point=1'";
+                    $href.= "\\n\\n현재 포인트: {$member['mb_point']}p\\n\\n')) ";
+                    $href.= "location.href = '{$row['href']}{$sign}point=1'";
                     $row['href'] = $href;
                 }
             }
@@ -3375,7 +3430,7 @@ function mw_make_thumbnail_all ($source_file)
 }
 
 if (!function_exists("mw_seo_url")) {
-function mw_seo_url($bo_table, $wr_id, $qstr, $mobile=1)
+function mw_seo_url($bo_table, $wr_id, $qstr='', $mobile=1)
 {
     global $g4;
     global $mw;

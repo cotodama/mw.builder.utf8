@@ -1,2 +1,2 @@
 <?php
-header("location: ../bbs/login.php?url=".$_GET['url']);
+header("location: ../bbs/login.php?url=".urlencode($_GET['url']));

@@ -281,7 +281,7 @@ if ($is_category && $mw_basic[cf_category_tab]) {
         <? if ($print_href) { ?><a href="<?=$print_href?>"><img src="<?=$board_skin_path?>/img/btn_print.gif" align=absmiddle title='인쇄'></a><?}?>
     </td>
 </tr>
-<? if ($mw_basic[cf_shorten]) { ?>
+<? if ($mw['config']['cf_seo_url'] or $mw_basic['cf_shorten']) { ?>
 <tr><td height=1 bgcolor=#E7E7E7></td></tr>
 <tr>
     <td height=30 class=mw_basic_view_title>
@@ -1288,7 +1288,7 @@ function file_download(link, no) {
             echo "alert('$alert_msg'); return;\n";
         } else {
             echo "alert('$alert_msg\\n\\n회원이시라면 로그인 후 이용해 보십시오.');\n";
-            echo "location.href = './login.php?wr_id=$wr_id$qstr&url=".urlencode("$g4[bbs_path]/board.php?bo_table=$bo_table&wr_id=$wr_id")."';\n";
+            echo "location.href = './login.php?url=".urlencode("$g4[bbs_path]/board.php?bo_table=$bo_table&wr_id=$wr_id")."';\n";
             echo "return;";
         }
     }

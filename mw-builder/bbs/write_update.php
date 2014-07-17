@@ -1,6 +1,7 @@
 <?
 $g4[title] = $wr_subject . "글입력";
 include_once("./_common.php");
+include_once($g4['path'] . '/lib/naver_syndi.lib.php');
 
 // 090710
 if (substr_count($wr_content, "&#") > 50) {
@@ -468,6 +469,10 @@ else if ($w == "u")
     }
 }
 
+// 게시판그룹접근사용을 하지 않아야 하고 비회원 글읽기가 가능해야 하며 비밀글이 아니어야 합니다.
+if (!$group['gr_use_access'] && $board['bo_read_level'] < 2 && !$secret) {
+    naver_syndi_ping($bo_table, $wr_id);
+}
 
 //------------------------------------------------------------------------------
 // 가변 파일 업로드

@@ -26,7 +26,7 @@ $savefile = SAVE_DIR . '/' . $filename;
 
 // 파일의 확장자가 이미지가 아니라면 삭제
 if (!preg_match("/.(gif|jpe?g|png)$/i", $savefile))
-    unlink($savefile);
+    die("-ERR: File Format!");
 
 move_uploaded_file($tempfile, $savefile);
 $imgsize = getimagesize($savefile);

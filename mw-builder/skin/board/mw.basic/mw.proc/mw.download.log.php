@@ -115,7 +115,7 @@ table caption { font-size:13px; color:#555; font-weight:bold; text-decoration:no
 
   제목 : <?=get_text($write[wr_subject])?>
 
-  주소 : <?=set_http("$g4[url]/$g4[bbs]/board.php?bo_table=$bo_table&wr_id=$wr_id")?>
+  주소 : <?=mw_seo_url($bo_table, $wr_id)?>
 </textarea>
     <input type="submit" value="전송"/>
     </form>

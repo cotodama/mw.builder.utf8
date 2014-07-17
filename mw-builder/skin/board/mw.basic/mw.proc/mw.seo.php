@@ -16,7 +16,7 @@ if ($next_href) $next_href = mw_bbs_path($next_href);
 if ($mw['config']['cf_seo_url'])
 {
     //$mw_basic['cf_umz'] = null;
-    $mw_basic['cf_shorten'] = 1;
+    //$mw_basic['cf_shorten'] = 1;
 
     $list_href = mw_seo_url($bo_table, 0);
     if ($page)

@@ -54,11 +54,13 @@ if ($mw_basic[cf_singo] == '1') {
     if ($wr_id != $parent_id)
         $comment = "&_c={$wr_id}#c_{$wr_id}";
 
+    $url = mw_seo_url($bo_table, $parent_id, $comment);
+
     $me_memo = "게시물 신고가 접수되었습니다.\n
     분류 : {$category}
     내용 : {$content}
 
-    주소 : {$g4[url]}/{$g4[bbs]}/board.php?bo_table=$bo_table&wr_id=$parent_id$comment";
+    주소 : {$url}";
 
     $tmp_list = explode(",", $me_recv_mb_id);
     $me_recv_mb_id_list = "";

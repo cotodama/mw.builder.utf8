@@ -1639,4 +1639,15 @@ img {
     cursor:pointer;
 }
 
+.icon_gall_new {
+    position:absolute;
+    width:54px;
+    height:80px;
+    margin:-10px 0 0 -17px;
+    display:none;
+}
+
+.gall-checkbox {
+    padding:0 0 5px 0;
+}
 

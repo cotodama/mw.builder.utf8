@@ -249,7 +249,8 @@ if (!($w == "u" || $w == "cu") && $config[cf_email_use])
         $str = $warr[$w];
 
         $subject = "'{$board[bo_subject]}' 게시판에 {$str}글이 올라왔습니다.";
-        $link_url = "$g4[url]/$g4[bbs]/board.php?bo_table=$bo_table&wr_id=$wr_id&$qstr";
+        //$link_url = "$g4[url]/$g4[bbs]/board.php?bo_table=$bo_table&wr_id=$wr_id&$qstr";
+        $link_url = mw_seo_url($bo_table, $wr_id);
 
         include_once("$g4[path]/lib/mailer.lib.php");
 
@@ -301,7 +302,7 @@ if ($w == "" && $mw_basic[cf_sms_id] && $mw_basic[cf_sms_pw] && trim($mw_basic[c
 if ($w == "" && trim($mw_basic[cf_memo_id]) && $is_admin != "super")
 {
     $me_memo = "{$board[bo_subject]} 게시판에 [{$wr_name}] 님이 글을 올리셨습니다.\n\n";
-    $me_memo.= "$g4[url]/$g4[bbs]/board.php?bo_table=$bo_table&wr_id=$wr_id";
+    $me_memo.= mw_seo_url($bo_table, $wr_id);
 
     $list = explode(",", $mw_basic[cf_memo_id]);
     for ($i=0, $m=count($list); $i<$m; $i++) {

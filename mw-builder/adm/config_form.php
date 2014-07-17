@@ -19,6 +19,13 @@ if (!trim($config[cf_privacy])) {
     $config[cf_privacy] = "해당 홈페이지에 맞는 개인정보취급방침을 입력합니다.";
 }
 
+// 신디케이션 연동키(token) 필드가 없다면 연동키 필드와 신디케이션 제외게시판 필드를 만든다.
+if (!isset($config['cf_syndi_token'])) {
+    sql_query(" ALTER TABLE `$g4[config_table]` 
+                    ADD `cf_syndi_token` VARCHAR(255) NOT NULL AFTER `cf_filter`,
+                    ADD `cf_syndi_except` TEXT NOT NULL AFTER `cf_syndi_token` ", true);
+}
+
 $g4['title'] = "기본환경설정";
 include_once ("./admin.head.php");
 ?>
@@ -201,6 +208,16 @@ include_once ("./admin.head.php");
     <td>단어 필터링
         <?=help("입력된 단어가 포함된 내용은 게시할 수 없습니다.\n\n단어와 단어 사이는 ,로 구분합니다.")?></td>
     <td colspan=3><textarea class=ed name='cf_filter' rows='7' style='width:99%;'><?=$config[cf_filter]?> </textarea></td>
+</tr>
+<tr class='ht'>
+    <td>네이버 신디케이션 연동키</td>
+    <td colspan=3><input type=text class=ed name='cf_syndi_token' size='80' itemname='네이버 신디케이션 연동키' value='<?=$config[cf_syndi_token]?>'>
+        <?=help("네이버 신디케이션 연동키(token)을 입력하면 네이버 신디케이션을 사용할수 있습니다.<br>연동키는 <a href='http://webmastertool.naver.com/' target='_blank'>네이버 웹마스터도구</a> > 네이버 신디케이션에서 발급할수 있습니다.")?></td>
+</tr>
+<tr class='ht'>
+    <td>신디케이션 제외게시판</td>
+    <td colspan=3><input type=text class=ed name='cf_syndi_except' size='80' itemname='네이버 신디케이션 제외게시판' value='<?=$config[cf_syndi_except]?>'>
+        <?=help("네이버 신디케이션에서 제외할 게시판의 아이디를 | 구분하여 입력하십시오.")?></td>
 </tr>
 <tr><td colspan=4 class=line2></td></tr>
 <tr><td colspan=4 class=ht></td></tr>

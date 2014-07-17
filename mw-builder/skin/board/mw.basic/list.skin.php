@@ -564,10 +564,10 @@ else if ($mw_basic[cf_type] == "gall")
 ?>
     <td width="<?=$td_width?>%" class="mw_basic_list_gall <?=$class?>">
         <? if ($is_checkbox) { ?>
-        <div style="text-align:left; width:<?=$set_width+18?>px; margin:0 auto 0 auto;'"><!--
+        <div style="text-align:left; width:<?=$set_width+18?>px; margin:0 auto 0 auto;'" class="gall-checkbox"><!--
             --><input type="checkbox" name="chk_wr_id[]" value="<?=$list[$i][wr_id]?>"></div>
         <? } ?>
-        <div><a href="<?=$list[$i][href]?>"><img src="<?=$thumb_file?>" <?=$thumb_width?> <?=$thumb_height?> align=absmiddle></a></div>
+        <div><? if ($list[$i][icon_new]) { echo "<div class='icon_gall_new'><img src='{$pc_skin_path}/img/icon_gall_new.png'></div>"; } ?><a href="<?=$list[$i][href]?>"><img src="<?=$thumb_file?>" <?=$thumb_width?> <?=$thumb_height?> align=absmiddle></a></div>
         <div class="mw_basic_list_subject_gall"
             <? if (!$mw_basic[cf_thumb_keep]) echo "style='width:".($set_width+10)."px; text-align:left;'"; ?>>
         <? if ($is_category && $list[$i][ca_name]) { ?>
@@ -612,7 +612,7 @@ else if ($mw_basic[cf_type] == "gall")
 
     <!-- 썸네일 -->
     <td class=mw_basic_list_thumb><!-- 여백제거
-        --><a href="<?=$list[$i][href]?>"><img src="<?=$thumb_file?>" width=<?=$mw_basic[cf_thumb_width]?> height=<?=$mw_basic[cf_thumb_height]?> align=absmiddle></a><!--
+        --><? if ($list[$i][icon_new]) { echo "<div class='icon_gall_new'><img src='{$pc_skin_path}/img/icon_gall_new.png'></div>"; } ?><a href="<?=$list[$i][href]?>"><img src="<?=$thumb_file?>" width=<?=$mw_basic[cf_thumb_width]?> height=<?=$mw_basic[cf_thumb_height]?> align=absmiddle></a><!--
     --></td>
     <? } ?>
 
@@ -621,6 +621,8 @@ else if ($mw_basic[cf_type] == "gall")
         <?
         if ($mw_basic[cf_type] == "desc" && file_exists($thumb_file)) {
             echo "<div class=mw_basic_list_thumb>";
+            if ($list[$i][icon_new])
+                echo "<div class='icon_gall_new'><img src='{$pc_skin_path}/img/icon_gall_new.png'></div>";
             echo "<a href=\"{$list[$i][href]}\"><img src=\"{$thumb_file}\" width={$mw_basic[cf_thumb_width]} height={$mw_basic[cf_thumb_height]} align=absmiddle></a>";
             echo "</div>";
         }
@@ -985,6 +987,26 @@ function mw_qna(sw) {
 }
 </script>
 <? } ?>
+
+<script>
+$(window).load(function () {
+    $(".icon_gall_new").each(function () {
+        var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
+        <? if ($mw_basic['cf_type'] == 'gall') { ?>
+        var wt = $(this).closest('td').width();
+        var wi = $(this).next().find("img").width();
+        var ma = (wt-wi)/2-22;
+        if (!g4_is_ie) {
+            $(this).css('margin-left', ma+'px');
+        }
+        <? } else if ($mw_basic['cf_type'] == 'thumb') { ?>
+        if (is_chrome)
+            $(this).css('margin-left', '-10px');
+        <? } ?>
+        $(this).css('display', 'block');
+    });
+});
+</script>
 
 <style type="text/css">
 <?=$mw_basic[cf_css]?>
