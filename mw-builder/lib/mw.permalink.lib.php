@@ -1,6 +1,24 @@
 <?php
 if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
 
+if (is_file($g4['path'].'/lib/mw.host.lib.php'))
+    include_once($g4['path'].'/lib/mw.host.lib.php');
+
+function mw_seo_except($bo_table)
+{
+    global $mw;
+
+    if (!$bo_table) return false;
+
+    $list = explode(',', $mw['config']['cf_seo_except']);
+    $list = array_filter($list, 'trim');
+
+    if (in_array($bo_table, $list))
+        return true;
+
+    return false;
+}
+
 function mw_seo_url($bo_table, $wr_id=0, $qstr='', $mobile=1)
 {
     global $g4;
@@ -22,8 +40,17 @@ function mw_builder_seo_url($bo_table, $wr_id=0, $qstr='', $mobile=1)
     if (!$mobile && $mw_mobile['m_subdomain'])
         $url = preg_replace("/^http:\/\/m\./", "http://", $url);
 
+    if (($mobile && mw_is_mobile_builder()) or ($mobile == 2))  {
+        if ($mw_mobile['m_subdomain'] && !preg_match("/^http:\/\/m\./", $url)) {
+            $url = mw_sub_domain_url("m", $url);
+        }
+        $seo_path = '/plugin/mobile';
+    }
+    else
+        $seo_path = '/'.$g4['bbs'];
+
     if ($bo_table)
-        $url .= '/'.$g4['bbs'].'/board.php?bo_table='.$bo_table;
+        $url .= $seo_path.'/board.php?bo_table='.$bo_table;
 
     if ($wr_id)
         $url .= "&wr_id=".$wr_id;
@@ -31,19 +58,33 @@ function mw_builder_seo_url($bo_table, $wr_id=0, $qstr='', $mobile=1)
     if ($qstr)
         $url .= $qstr;
 
-    $seo_path = '/b/';
+    /*
     if ($mobile && mw_is_mobile_builder())
         $seo_path = '/m/b/';
 
     if ($mobile == 2)
         $seo_path = '/m/b/';
+    */
 
     if ($mw['config']['cf_seo_url'])
     {
+        if (mw_seo_except($bo_table))
+            return $url;
+
         $url = $g4['url'];
 
         if (!$mobile && $mw_mobile['m_subdomain'])
             $url = preg_replace("/^http:\/\/m\./", "http://", $url);
+
+        $seo_path = '/b/';
+
+        if (($mobile && mw_is_mobile_builder()) or ($mobile == 2))  {
+            if ($mw_mobile['m_subdomain'] && !preg_match("/^http:\/\/m\./", $url)) {
+                $url = mw_sub_domain_url("m", $url);
+            }
+            $url.= '/m/';
+            $seo_path = 'b/';
+        }
 
         if ($bo_table)
             $url .= $seo_path.$bo_table;

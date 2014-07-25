@@ -225,6 +225,7 @@ bo_table = '$bo_table'
 ,cf_comment_page_rows = '$cf_comment_page_rows'
 ,cf_comment_page_first = '$cf_comment_page_first'
 ,cf_comment_html = '$cf_comment_html'
+,cf_comment_mention = '$cf_comment_mention'
 ,cf_comment_emoticon = '$cf_comment_emoticon'
 ,cf_post_emoticon = '$cf_post_emoticon'
 ,cf_comment_specialchars = '$cf_comment_specialchars'
@@ -614,6 +615,7 @@ if ($chk[cf_jump_level]) {
 }
 if ($chk[cf_search_level]) $sql .= ", cf_search_level = '$cf_search_level' ";
 if ($chk[cf_comment_html]) $sql .= ", cf_comment_html = '$cf_comment_html' ";
+if ($chk[cf_comment_mention]) $sql .= ", cf_comment_mention = '$cf_comment_mention' ";
 if ($chk[cf_singo]) $sql .= ", cf_singo = '$cf_singo' ";
 if ($chk[cf_singo_id]) $sql .= ", cf_singo_id = '$cf_singo_id' ";
 if ($chk[cf_memo_id]) $sql .= ", cf_memo_id = '$cf_memo_id' ";

@@ -1853,7 +1853,7 @@ function fwrite_check(f) {
     if ($is_dhtml_editor && $mw_basic[cf_editor] == "cheditor") {
         echo cheditor3('wr_content');
 
-        if ($mw_basic[cf_type] == 'desc' or $mw_basic[cf_contents_shop] == '2') {
+        if (($mw_basic[cf_type] == 'desc' && $mw_basic[cf_desc_use] && $mw_basic[cf_desc_use] <= $member[mb_level]) or $mw_basic[cf_contents_shop] == '2') {
             echo cheditor3('wr_contents_preview');
         }
     }

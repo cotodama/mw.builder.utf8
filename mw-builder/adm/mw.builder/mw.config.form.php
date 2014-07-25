@@ -114,6 +114,8 @@ table.tconfig tbody td:nth-child(2) { width:30%; color:#868686; padding:5px 10px
     <td>
 	<input type=checkbox name=cf_seo_url value=1 <?=$cf_seo_url?>> 사용
         (추가 설정 필요, <a href="http://www.miwit.com/b/mw_tip-3870" target="_blank">설정방법 클릭!</a>) 
+        <div style="padding:5px 0 5px 0">제외게시판 : (제외할 게시판ID 를 컴마, 로 구분해서 입력해주세요.) </div>
+        <div><textarea name="cf_seo_except" style="width:300px; height:100px;"><?php echo $mw['config']['cf_seo_except']?></textarea></div>
     </td>
 </tr>
 <tr class='ht'>

@@ -485,7 +485,7 @@ for ($i=0; $i<$to_record; $i++) {
             <? if ($mw_basic[cf_comment_nogood]) { ?>
                 <span class="mw_basic_comment_nogood"><a onclick="mw_comment_good(<?=$list[$i][wr_id]?>, 'nogood')"><img src="<?=$board_skin_path?>/img/thumbs_down.png" alt="반대"/> 반대</a>
                 <span id="mw_comment_nogood_<?=$list[$i][wr_id]?>"><?=$list[$i][wr_nogood]?></span></span><? } ?>
-            <? if ($list[$i][is_reply]) { echo "<span class='mw_basic_comment_reply'><a href=\"javascript:comment_box('{$comment_id}', 'c');\">답글쓰기</a></span>"; } ?>
+            <? if ($list[$i][is_reply]) { echo "<span class='mw_basic_comment_reply'><a href=\"javascript:comment_box('{$comment_id}', 'c', '{$list[$i][wr_name]}');\">답글쓰기</a></span>"; } ?>
         </div>
 
         <div id='edit_<?=$comment_id?>' style='display:none;'></div><!-- 수정 -->
@@ -957,7 +957,7 @@ function fviewcomment_submit(f)
     return true;
 }
 
-function comment_box(comment_id, work)
+function comment_box(comment_id, work, mb_nick)
 {
     var el_id;
     // 코멘트 아이디가 넘어오면 답변, 수정
@@ -982,6 +982,16 @@ function comment_box(comment_id, work)
         $("#"+el_id).css("display", "");
         $("#"+el_id).html(save_html);
 
+        <?php if ($mw_basic['cf_comment_mention']) { ?>
+        if (mb_nick != undefined) {
+            <?php if ($is_comment_editor && $mw_basic['cf_editor'] == "cheditor") { ?>
+                $("#tx_wr_content").val("[@"+mb_nick+"] ");
+            <?php } else { ?>
+                $("#wr_content").val("[@"+mb_nick+"] ");
+            <?php } ?>
+        }
+        <?php } ?>
+
         // 코멘트 수정
         if (work == 'cu')
         {
@@ -1005,7 +1015,6 @@ function comment_box(comment_id, work)
                 $("#wr_secret").attr("checked", "true");
             if ($("#html_"+comment_id).val() == '1')
                 $("#wr_html").attr("checked", "true");
-            
         }
 
         $("#comment_id").val(comment_id);
@@ -1024,8 +1033,6 @@ function comment_box(comment_id, work)
 	<? /*if (file_exists("$g4[bbs_path]/kcaptcha_session.php") && $is_guest && !$write_error) { ?> imageClick();<? }*/ ?>
 	<? if (file_exists("$g4[bbs_path]/kcaptcha_session.php") && $is_guest && !$write_error) { ?> $.kcaptcha_run(); <? } ?>
     }
-
-
 }
 
 <? if ($is_admin) { ?>

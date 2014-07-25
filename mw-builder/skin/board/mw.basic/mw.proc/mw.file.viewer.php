@@ -173,6 +173,7 @@ else {
     preg_match_all("/<img\s+name='target_resize_image\[\]' onclick='image_window\(this\)'.*src=\"(.*)\"/iUs", $data, $matchs);
     for ($i=0; $i<count($matchs[1]); $i++) {
         $match = $matchs[1][$i];
+        $match = preg_replace("/\?.*$/iUs", "", $match);
         $no_www = str_replace("www.", "", $g4[url]);
         $path = "";
         if (strstr($match, $g4[url])) {
@@ -188,9 +189,11 @@ else {
         else
             $size = @getimagesize($match);
         if ($size[0] && $size[1]) {
+            $match = $matchs[1][$i];
             $match = str_replace("/", "\/", $match);
             $match = str_replace(".", "\.", $match);
             $match = str_replace("+", "\+", $match);
+            $match = str_replace("?", "\?", $match);
             $pattern = "/(onclick=[\'\"]{0,1}image_window\(this\)[\'\"]{0,1}) (.*)(src=\"$match\")/iU";
             $replacement = "onclick='mw_image_window(this, $size[0], $size[1])' $2$3";
 

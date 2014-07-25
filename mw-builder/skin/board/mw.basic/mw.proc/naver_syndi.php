@@ -27,7 +27,7 @@ if (strstr($write['wr_option'], $secret)) return;
 if ($mw_basic['cf_contents_shop'] == '2' and $wr_contents_price) return;
 if ($mw_basic['cf_contents_shop'] == '2' and $write['wr_contents_price']) return;
 
-include_once($mw_syndi_path.'/_config.php');
+include($mw_syndi_path.'/_config.php');
 include_once($mw_syndi_path.'/_lib.php');
 
 if (!$wr_content)
@@ -37,4 +37,3 @@ if ($mw_syndi['comment'] && $comment_id)
     mw_syndi_set_feed($bo_table, $comment_id, $wr_content, $w); // 코멘트
 else
     mw_syndi_set_feed($bo_table, $wr_id, $wr_content, $w); // 원글
-

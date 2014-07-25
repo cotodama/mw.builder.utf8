@@ -53,12 +53,12 @@ if ($mw_basic['cf_jump_point']) {
 $(document).ready(function () {
     $("#btn_jump").click(function () {
         if (!confirm("<?php echo $msg?>")) return;
-        $.get("<?php echo $board_skin_path?>/mw.proc/mw.jump.update.php", {
+        $.get("<?php echo $pc_skin_path?>/mw.proc/mw.jump.update.php", {
             "bo_table":"<?php echo $bo_table?>",
             "wr_id":"<?php echo $wr_id?>"
         }, function (str) {
             if (str == "ok") {
-                location.href = "<?php echo mw_seo_url($bo_table, $wr_id)?>&page=1";
+                location.href = "<?php echo mw_seo_url($bo_table, $wr_id, "&page=1")?>";
             }
             else {
                 alert(str);

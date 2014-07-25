@@ -50,6 +50,7 @@ $mw['bomb_table']         = $g4['table_prefix']."mw_bomb";
 $mw['move_table']         = $g4['table_prefix']."mw_move";
 $mw['jump_log_table']     = $g4['table_prefix']."mw_jump_log";
 $mw['category_table']     = $g4['table_prefix']."mw_category";
+$mw['level_table']        = $g4['table_prefix']."mw_level";
 
 $default_charset = '';
 if (preg_match("/^utf/i", $g4['charset']))
@@ -388,4 +389,12 @@ if ($mw_basic[cf_write_button])
 
 include($board_skin_path.'/mw.proc/mw.seo.php');
 
+// 권한별 설정
+$sql = "select * from {$mw['level_table']} ";
+$sql.= " where bo_table = '{$bo_table}' and mb_level = '{$member['mb_level']}' and cf_use = '1' ";
+$mw_basic_level = sql_fetch($sql);
+if ($mw_basic_level) {
+    $mw_basic['cf_write_day'] = $mw_basic_level['cf_write_day'];
+    $mw_basic['cf_write_day_count'] = $mw_basic_level['cf_write_day_count'];
+}
 

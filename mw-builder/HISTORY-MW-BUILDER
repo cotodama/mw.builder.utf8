@@ -1,3 +1,22 @@
+1.5.5 (14.07.25)
+    : 파일 교체 후 관리자-배추빌더-업그레이드 실행해주세요.
+    : 파일 교체 후 관리자-배추빌더-캐쉬삭제 실행해주세요.
+    : 그누보드 최신버전 4.37.16 (14.07.18) 탑재
+    : 배추스킨 최신버전 2.6.6 (14.07.25) 탑재
+    : 퍼머링크 제외게시판 설정 (홍반장님 제안)
+    : 플러그인 변수명 출돌 오류 (위즈위드님 제안)
+    : 회원가입통계에 이메일 미인증 회원 제외
+    : 모바일 링크 개선
+
+    HISTORY-MW-BUILDER
+    adm/mw.builder/_common.php
+    adm/mw.builder/mw.member.count.php
+    adm/mw.builder/mw.config.form.php
+    adm/mw.builder/mw.config.update.php
+    lib/mw.permarlink.lib.php
+    lib/mw.builder.lib.php
+    mw.upgrade.php
+ 
 1.5.4 (14.07.18)
     : 그누보드 최신버전 4.37.14 (14.07.16) 탑재
     : 배추스킨 최신버전 2.6.5 (14.07.18) 탑재

@@ -1317,3 +1317,14 @@ if (is_null($mw_basic[cf_talent_market])) {
 
     sql_query("alter table {$mw['basic_config_table']} add cf_seo_url varchar(1) not null", false);
 
+    sql_query("alter table {$mw['basic_config_table']} add cf_comment_mention varchar(1) not null", false);
+
+    $sql = "create table if not exists {$mw['level_table']} (
+        bo_table varchar(20) not null,
+        mb_level tinyint not null,
+        cf_use varchar(1) not null,
+        cf_write_day int not null,
+        cf_write_day_count int not null,
+        primary key (bo_table, mb_level)) ".$default_charset;
+    sql_query($sql, false);
+

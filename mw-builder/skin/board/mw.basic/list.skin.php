@@ -999,6 +999,9 @@ $(window).load(function () {
         if (!g4_is_ie) {
             $(this).css('margin-left', ma+'px');
         }
+        if (navigator.appVersion.indexOf("MSIE 10") !== -1) {
+            $(this).css('margin-left', ma+'px');
+        }
         <? } else if ($mw_basic['cf_type'] == 'thumb') { ?>
         if (is_chrome)
             $(this).css('margin-left', '-10px');

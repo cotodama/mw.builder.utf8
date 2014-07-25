@@ -209,7 +209,7 @@ else if ($mw[config][cf_www]) { // www 로만 접속
     mw_sub_domain_only("www");
 }
 
-if ($mw['config']['cf_seo_url'] && strstr($_SERVER['REQUEST_URI'], $g4['bbs'].'/board.php'))
+if ($mw['config']['cf_seo_url'] && $bo_table && !mw_seo_except($bo_table) && strstr($_SERVER['REQUEST_URI'], $g4['bbs'].'/board.php'))
 {
     $seo_etc = $qstr;
     if ($cwin) $seo_etc .= '&cwin='.$cwin;

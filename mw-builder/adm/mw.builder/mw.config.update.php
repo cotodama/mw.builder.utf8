@@ -33,6 +33,7 @@ $sql = " update $mw[config_table]
 		cf_member		= '$cf_member',
 		cf_sub_domain_off	= '$cf_sub_domain_off',
 		cf_seo_url	        = '$cf_seo_url',
+		cf_seo_except	        = '$cf_seo_except',
 		cf_popular_cache	= '$cf_popular_cache',
 		cf_default_group	= '$cf_default_group',
 		cf_member_skin_head	= '$cf_member_skin_head',

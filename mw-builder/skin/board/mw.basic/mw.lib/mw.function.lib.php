@@ -603,7 +603,7 @@ function mw_set_sync_tag($content) {
             }
         }
 
-        preg_match_all("/width=[\"\']?([0-9]+)[\"\']?\s.*height=[\"\']?([0-9]+)[\"\'\s>]/iUs", $content, $matchs);
+        preg_match_all("/width=[\"\']?([0-9]+)[\"\']?\s+height=[\"\']?([0-9]+)[\"\'\s>]/iUs", $content, $matchs);
         for ($i=0, $m=count($matchs[1]); $i<$m; $i++) {
             if ($matchs[1][$i] > $board[bo_image_width]) {
                 $height = mw_width_ratio($matchs[1][$i], $matchs[2][$i], $board[bo_image_width]);
@@ -2450,10 +2450,14 @@ function mw_jwplayer($url, $opt="")
         $url = str_replace("../..", $g4[url], $url);
         $url = str_replace("..", $g4[url], $url);
     }
-    if ($mw_basic['cf_player_size']) {
+    if (mw_is_mobile_builder()) {
+        $opt .= ", width:'100%' ";
+    }
+    elseif ($mw_basic['cf_player_size']) {
         $size = explode("x", $mw_basic['cf_player_size']);
         $opt .= ", width:'{$size[0]}', height:'{$size[1]}' ";
     }
+
     $buffer .= " file:'{$url}' {$opt} }); </script>";
 
     $jwplayer_count++;
@@ -3009,6 +3013,10 @@ function mw_list_link($row)
     global $write;
     global $bo_table;
     global $qstr;
+    global $page;
+
+    if (!$qstr && $page)
+        $qstr = "&page=".$page;
 
     $sign = '&';
     if ($mw['config']['cf_seo_url']) {

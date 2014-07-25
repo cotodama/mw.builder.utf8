@@ -1527,6 +1527,15 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
     </div>
 
     <div class="cf_item">
+	<div class="cf_title"> <input type=checkbox name=chk[cf_comment_mention] value=1>&nbsp; 코멘트 언급 </div>
+	<div class="cf_content">
+	    <input type=checkbox name=cf_comment_mention value=1> 사용
+            <span class="cf_info">(코멘트 답글 사용시 닉네임이 자동 삽입됩니다.)</span>
+	    <script> document.cf_form.cf_comment_mention.checked = "<?=$mw_basic[cf_comment_mention]?>"; </script>
+	</div>
+    </div>
+ 
+    <div class="cf_item">
 	<div class="cf_title"> <input type=checkbox name=chk[cf_comment_html] value=1>&nbsp; 코멘트 html </div>
 	<div class="cf_content">
 	    <input type=checkbox name=cf_comment_html value=1> 허용 
@@ -1720,6 +1729,8 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
             <?php if ($mw_basic['cf_write_day_ip']) { ?>
             <script> $("#cf_write_day_ip").attr("checked", "checked"); </script>
             <?php } ?>
+            <input type="button" value="권한별설정"
+                onclick="window.open('mw.level.php?bo_table=<?=$bo_table?>', 'level', 'width=600,height=600')">
 	</div>
     </div>
 

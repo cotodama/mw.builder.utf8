@@ -558,7 +558,7 @@ img {
     font-family:verdana,arial;
     font-size:10px;
     font-weight:bold;
-    color:#ff4800;
+    color:#008dcc;
 }
 
 /* 비추천수 */
@@ -568,7 +568,7 @@ img {
     font-family:verdana,arial;
     font-size:10px;
     font-weight:bold;
-    color:#008dcc;
+    color:#ff4800;
 }
 
 /* 페이지 번호 */

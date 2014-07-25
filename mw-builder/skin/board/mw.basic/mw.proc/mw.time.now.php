@@ -32,6 +32,7 @@ if (!$bo_table) die("bo_table 이 없습니다.");
 if (!$wr_id) die("wr_id 이 없습니다.");
 
 sql_query("update $write_table set wr_datetime='$g4[time_ymdhis]' where wr_id='$wr_id'");
+sql_query("update {$g4['board_new_table']} set bn_datetime='{$g4['time_ymdhis']}' where bo_table = '{$bo_table}' and wr_id='{$wr_id}'");
 
 // 시간순 정렬
 if ($renum == "1") {
@@ -54,4 +55,3 @@ if ($renum == "1") {
     }
 }
 
-?>

@@ -202,6 +202,7 @@ if (!$row)
 
 @mysql_query("alter table $mw[config_table] add `cf_sub_domain_off` varchar(1) not null default ''");
 @mysql_query("alter table $mw[config_table] add `cf_seo_url` varchar(1) not null default ''");
+@mysql_query("alter table $mw[config_table] add `cf_seo_except` text not null default ''");
 
 @mysql_query("alter table $g4[board_table] change `bo_count_delete` `bo_count_delete` tinyint not null default '1'");
 @mysql_query("alter table $g4[board_table] change `bo_count_modify` `bo_count_modify` tinyint not null default '1'");
