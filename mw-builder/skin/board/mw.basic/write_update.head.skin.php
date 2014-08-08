@@ -21,6 +21,11 @@
 
 if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가 
 
+$mw_is_list = false;
+$mw_is_view = false;
+$mw_is_write = true;
+$mw_is_comment = false;
+
 include_once("$board_skin_path/mw.lib/mw.skin.basic.lib.php");
 include_once("$board_skin_path/mw.lib/mw.sms.lib.php");
 include_once("$g4[path]/lib/etc.lib.php");

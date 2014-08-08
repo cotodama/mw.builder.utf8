@@ -457,16 +457,46 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
     attchg(document.cf_form.cf_attribute.value);
     </script>
 
+    <?php
+    if (!trim($mw_basic['cf_gender_m']) and !trim($mw_basic['cf_gender_w'])) {
+        $mw_basic['cf_gender_m'] = 'lvwc';
+        $mw_basic['cf_gender_w'] = 'lvwc';
+    }
+    ?>
 
     <div class="cf_item">
 	<div class="cf_title"> <input type=checkbox name=chk[cf_gender] value=1>&nbsp; 접근가능 성별 </div>
 	<div class="cf_content">
-            <select name="cf_gender">
-                <option value=""> 모두 </option>
-                <option value="M"> 남자만 </option>
-                <option value="F"> 여자만 </option>
-            </select>
-            <script> document.cf_form.cf_gender.value = "<?=$mw_basic[cf_gender]?>"; </script>
+            남자 :
+            <input type="checkbox" name="cf_gender_m_list" value="1"> 목록
+            <input type="checkbox" name="cf_gender_m_view" value="1"> 읽기
+            <input type="checkbox" name="cf_gender_m_write" value="1"> 쓰기
+            <input type="checkbox" name="cf_gender_m_comment" value="1"> 댓글
+            <br/>
+            여자 :
+            <input type="checkbox" name="cf_gender_w_list" value="1"> 목록
+            <input type="checkbox" name="cf_gender_w_view" value="1"> 읽기
+            <input type="checkbox" name="cf_gender_w_write" value="1"> 쓰기
+            <input type="checkbox" name="cf_gender_w_comment" value="1"> 댓글
+            <script>
+            $("input[name=cf_gender_m_list]").attr("checked", <?php
+                if (strstr($mw_basic['cf_gender_m'], 'l')) echo "true"; else echo "false"; ?>);
+            $("input[name=cf_gender_m_view]").attr("checked", <?php
+                if (strstr($mw_basic['cf_gender_m'], 'v')) echo "true"; else echo "false"; ?>);
+            $("input[name=cf_gender_m_write]").attr("checked", <?php
+                if (strstr($mw_basic['cf_gender_m'], 'w')) echo "true"; else echo "false"; ?>);
+            $("input[name=cf_gender_m_comment]").attr("checked", <?php
+                if (strstr($mw_basic['cf_gender_m'], 'c')) echo "true"; else echo "false"; ?>);
+
+            $("input[name=cf_gender_w_list]").attr("checked", <?php
+                if (strstr($mw_basic['cf_gender_w'], 'l')) echo "true"; else echo "false"; ?>);
+            $("input[name=cf_gender_w_view]").attr("checked", <?php
+                if (strstr($mw_basic['cf_gender_w'], 'v')) echo "true"; else echo "false"; ?>);
+            $("input[name=cf_gender_w_write]").attr("checked", <?php
+                if (strstr($mw_basic['cf_gender_w'], 'w')) echo "true"; else echo "false"; ?>);
+            $("input[name=cf_gender_w_comment]").attr("checked", <?php
+                if (strstr($mw_basic['cf_gender_w'], 'c')) echo "true"; else echo "false"; ?>);
+            </script>
 	</div>
     </div>
 
@@ -1779,6 +1809,7 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
             <br>
 	    <input type=checkbox name=cf_sns_kakao value=1> 카카오톡 <span class="cf_info">(모바일에서만)</span>
 	    <input type=checkbox name=cf_sns_kakaostory value=1> 카카오스토리 <span class="cf_info">(모바일에서만)</span>
+	    <input type=checkbox name=cf_sns_line value=1> 라인 <span class="cf_info">(모바일에서만)</span>
 	    <script>
             document.cf_form.cf_sns_twitter.checked = '<? echo strstr($mw_basic[cf_sns], '/twitter/')?'1':''; ?>';
             //document.cf_form.cf_sns_me2day.checked = '<? echo strstr($mw_basic[cf_sns], '/me2day/')?'1':''; ?>';
@@ -1791,6 +1822,7 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
             document.cf_form.cf_sns_google_plus.checked = '<? echo strstr($mw_basic[cf_sns], '/google_plus/')?'1':''; ?>';
             document.cf_form.cf_sns_kakao.checked = '<? echo strstr($mw_basic[cf_sns], '/kakao/')?'1':''; ?>';
             document.cf_form.cf_sns_kakaostory.checked = '<? echo strstr($mw_basic[cf_sns], '/kakaostory/')?'1':''; ?>';
+            document.cf_form.cf_sns_line.checked = '<? echo strstr($mw_basic[cf_sns], '/line/')?'1':''; ?>';
             </script>
 	</div>
     </div>

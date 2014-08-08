@@ -21,6 +21,8 @@
 
 if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
 
+$mw_is_comment = true;
+
 include_once("$board_skin_path/mw.lib/mw.skin.basic.lib.php");
 
 define('SECRET_COMMENT', "비밀글 입니다.");
@@ -112,6 +114,15 @@ if (function_exists("mw_cash_is_membership")) {
         ;
     else if ($is_membership != "ok")
         $is_comment_write = false;
+}
+
+if (!$is_admin && $member['mb_sex'] == 'F' && !strstr($mw_basic['cf_gender_w'], 'c')) {
+    $is_comment_write = false;
+    $write_error = "readonly onclick=\"alert('여자는 댓글작성 권한이 없습니다.'); return false;\"";
+}
+if (!$is_admin && $member['mb_sex'] == 'M' && !strstr($mw_basic['cf_gender_m'], 'c')) {
+    $is_comment_write = false;
+    $write_error = "readonly onclick=\"alert('남자는 댓글작성 권한이 없습니다.'); return false;\"";
 }
 
 if ($cwin==1) {

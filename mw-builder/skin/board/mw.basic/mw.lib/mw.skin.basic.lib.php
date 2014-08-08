@@ -133,8 +133,28 @@ if ($mw_basic['cf_board_member'] && !$is_admin)
 }
 
 // 접근권한:나이, 성별
-if (!$is_admin && $mw_basic['cf_gender'] && $mw_basic['cf_gender'] == 'M' && $member['mb_sex'] != 'M') { alert("남자만 접근 가능합니다."); }
-if (!$is_admin && $mw_basic['cf_gender'] && $mw_basic['cf_gender'] == 'F' && $member['mb_sex'] != 'F') { alert("여자만 접근 가능합니다."); }
+if (!trim($mw_basic['cf_gender_m']) and !trim($mw_basic['cf_gender_w'])) {
+    $mw_basic['cf_gender_m'] = 'lvwc';
+    $mw_basic['cf_gender_w'] = 'lvwc';
+}
+
+if (!$is_admin &&  $member['mb_sex'] == 'M') {
+    if ($mw_is_list && !strstr($mw_basic['cf_gender_m'], 'l')) alert("남자는 접근할 수 없습니다.");
+    if ($mw_is_view && !strstr($mw_basic['cf_gender_m'], 'v')) alert("남자는 읽을 수 없습니다.");
+    if ($mw_is_write && !strstr($mw_basic['cf_gender_m'], 'w')) alert("남자는 글작성 권한이 없습니다.");
+    if ($mw_is_comment && !strstr($mw_basic['cf_gender_m'], 'c')) alert("남자는 댓글작성 권한이 없습니다.");
+}
+
+if (!$is_admin &&  $member['mb_sex'] == 'F') {
+    if ($mw_is_list && !strstr($mw_basic['cf_gender_w'], 'l')) alert("여자는 접근할 수 없습니다.");
+    if ($mw_is_view && !strstr($mw_basic['cf_gender_w'], 'v')) alert("여자는 읽을 수 없습니다.");
+    if ($mw_is_write && !strstr($mw_basic['cf_gender_w'], 'w')) alert("여자는 글작성 권한이 없습니다.");
+    if ($mw_is_comment && !strstr($mw_basic['cf_gender_w'], 'c')) alert("여자는 댓글작성 권한이 없습니다.");
+}
+
+//if (!$is_admin && $mw_basic['cf_gender'] && $mw_basic['cf_gender'] == 'M' && $member['mb_sex'] != 'M') { alert("남자만 접근 가능합니다."); }
+//if (!$is_admin && $mw_basic['cf_gender'] && $mw_basic['cf_gender'] == 'F' && $member['mb_sex'] != 'F') { alert("여자만 접근 가능합니다."); }
+
 if (!$is_admin) mw_basic_age($mw_basic['cf_age']);
 
 // 접근설정: 날짜
@@ -287,14 +307,16 @@ if ($mw_basic['cf_attribute'] == "1:1" && !$is_admin && $wr_id && $w != "u")
     $prev_href = "";
     if ($prev['wr_id']) {
         $prev_wr_subject = get_text(cut_str($prev['wr_subject'], 255));
-        $prev_href = "./board.php?bo_table={$board['bo_table']}&wr_id={$prev['wr_id']}&page=$page" . $qstr;
+        //$prev_href = "./board.php?bo_table={$board['bo_table']}&wr_id={$prev['wr_id']}&page=$page" . $qstr;
+        $prev_href = mw_seo_url($board['bo_table'], $prev['wr_id'], "&page=$page" . $qstr);
     }
 
     // 다음글 링크
     $next_href = "";
     if ($next['wr_id']) {
         $next_wr_subject = get_text(cut_str($next['wr_subject'], 255));
-        $next_href = "./board.php?bo_table={$board['bo_table']}&wr_id={$next['wr_id']}&page=$page" . $qstr;
+        //$next_href = "./board.php?bo_table={$board['bo_table']}&wr_id={$next['wr_id']}&page=$page" . $qstr;
+        $next_href = mw_seo_url($board['bo_table'], $next['wr_id'], "&page=$page" . $qstr);
     }
 }
 

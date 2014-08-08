@@ -1328,3 +1328,5 @@ if (is_null($mw_basic[cf_talent_market])) {
         primary key (bo_table, mb_level)) ".$default_charset;
     sql_query($sql, false);
 
+    sql_query("alter table $mw[basic_config_table] add cf_gender_m varchar(4) not null default 'lvwc'", false);
+    sql_query("alter table $mw[basic_config_table] add cf_gender_w varchar(4) not null default 'lvwc'", false);

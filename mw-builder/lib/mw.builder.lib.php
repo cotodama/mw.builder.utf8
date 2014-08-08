@@ -212,7 +212,8 @@ else if ($mw[config][cf_www]) { // www 로만 접속
 if ($mw['config']['cf_seo_url'] && $bo_table && !mw_seo_except($bo_table) && strstr($_SERVER['REQUEST_URI'], $g4['bbs'].'/board.php'))
 {
     $seo_etc = $qstr;
-    if ($cwin) $seo_etc .= '&cwin='.$cwin;
+    $seo_etc.= mw_seo_query();
+    //if ($cwin) $seo_etc .= '&cwin='.$cwin;
 
     if ($write['wr_is_comment']) {
         $wr_id = $write['wr_parent'];

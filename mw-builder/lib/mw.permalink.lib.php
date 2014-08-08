@@ -23,7 +23,9 @@ function mw_seo_url($bo_table, $wr_id=0, $qstr='', $mobile=1)
 {
     global $g4;
     global $mw;
+    global $mw_basic;
     global $mw_mobile;
+    global $is_admin;
 
     return mw_builder_seo_url($bo_table, $wr_id, $qstr, $mobile);
 }
@@ -55,16 +57,11 @@ function mw_builder_seo_url($bo_table, $wr_id=0, $qstr='', $mobile=1)
     if ($wr_id)
         $url .= "&wr_id=".$wr_id;
 
+    if ($qstr == '?') $qstr = '';
+
+
     if ($qstr)
         $url .= $qstr;
-
-    /*
-    if ($mobile && mw_is_mobile_builder())
-        $seo_path = '/m/b/';
-
-    if ($mobile == 2)
-        $seo_path = '/m/b/';
-    */
 
     if ($mw['config']['cf_seo_url'])
     {
@@ -96,6 +93,13 @@ function mw_builder_seo_url($bo_table, $wr_id=0, $qstr='', $mobile=1)
             $url .= '?'.$qstr;
     }
 
+    $url = preg_replace("/&page=0(&)/", "$1", $url);
+    $url = preg_replace("/&page=0$/", '', $url);
+    $url = preg_replace("/&page=1(&)/", "$1", $url);
+    $url = preg_replace("/&page=1$/", '', $url);
+    $url = str_replace("?&", '?', $url);
+    $url = preg_replace("/\?$/", "", $url);
+
     return $url;
 }
 
@@ -111,34 +115,6 @@ function mw_is_mobile_builder()
     return $is_mobile;
 }
 
-
-/*function mw_builder_seo_url($bo_table, $wr_id=0, $qstr='', $mobile=1)
-{
-    global $g4;
-    global $mw;
-
-    $url = $g4['bbs_path'].'/board.php?bo_table='.$bo_table;
-
-    if ($wr_id)
-        $url .= '&wr_id='.$wr_id;
-
-    if ($qstr)
-        $url .= $qstr;
-
-    if ($mw['config']['cf_seo_url'])
-    {
-        $url = $g4['url'].'/b/'.$bo_table;
-
-        if ($wr_id)
-            $url .= '-'.$wr_id;
-
-        if ($qstr)
-            $url .= '?'.$qstr;
-    }
-
-    return $url;
-}
-*/
 
 function mw_builder_seo_page($pg_id)
 {
@@ -198,14 +174,44 @@ function mw_seo_bbs_path($path)
     global $g4;
     global $bo_table;
 
+    $wr_id = null;
+
+    if (preg_match("/&wr_id=([0-9]+)&/iUs", $path, $mat)) {
+        $wr_id = $mat[1];
+        $path = str_replace('&wr_id='.$wr_id, '', $path);
+    }
+
+    $path = preg_replace("/&page=[01]?[&$]?/i", '', $path);
+
     if (mw_is_mobile_builder()) {
-        $path = str_replace('../../plugin/mobile/board.php?bo_table='.$bo_table, mw_seo_url($bo_table).'?', $path);
+        $path = str_replace('../../plugin/mobile/board.php?bo_table='.$bo_table, mw_seo_url($bo_table, $wr_id).'?', $path);
     }
     else {
-        $path = str_replace('../board.php?bo_table='.$bo_table, mw_seo_url($bo_table).'?', $path);
+        $path = str_replace('../board.php?bo_table='.$bo_table, mw_seo_url($bo_table, $wr_id).'?', $path);
     }
+
+    $path = preg_replace("/\?$/", "", $path);
 
     return $path;
 }
 
+function mw_seo_query()
+{
+    global $_SERVER;
+
+    $ret = null;
+    $rev = array('bo_table', 'wr_id', 'page', 'stx', 'sfl', 'sca', 'sst', 'sod', 'sop', 'spt');
+
+    $qry = explode("&", $_SERVER["QUERY_STRING"]);
+    foreach ((array)$qry as $item) {
+        $var = explode("=", $item);
+
+        if (!in_array($var[0], $rev)) {
+            $ret .= $var[0] . '=' . $var[1];
+        }
+    }
+    $ret = '&'.$ret;
+
+    return $ret;
+}
 

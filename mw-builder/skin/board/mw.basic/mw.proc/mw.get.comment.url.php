@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Bechu-Basic Skin for Gnuboard4
  *
@@ -30,17 +30,17 @@ header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
 header("Cache-Control: pre-check=0, post-check=0, max-age=0"); // HTTP/1.1
 header("Pragma: no-cache"); // HTTP/1.0
 
-if ($mw['config']['cf_seo_url']) {
-    $comment_url = mw_seo_url($bo_table, $write['wr_parent'], '#c_'.$write['wr_id']);
-}
-else if ($mw_basic[cf_umz] && substr(trim($write[wr_umz]), 0, 10) != "http://umz") {
-    $comment_url = "$g4[url]/$g4[bbs]/board.php?bo_table=$bo_table&wr_id=$write[wr_parent]#c_".$write[wr_id];
-    $umz = umz_get_url($comment_url);
-    sql_query("update $write_table set wr_umz = '$umz' where wr_id = '{$write[wr_id]}'");
+$comment_url = mw_seo_url($bo_table, $write['wr_parent'], '#c_'.$write['wr_id']);
+
+if ($mw_basic[cf_umz])
+{
+    $umz = $write[wr_umz];
+    if (!$umz) {
+        $comment_url = "$g4[url]/$g4[bbs]/board.php?bo_table=$bo_table&wr_id=$write[wr_parent]#c_".$write[wr_id];
+        $umz = umz_get_url($comment_url);
+        sql_query("update $write_table set wr_umz = '$umz' where wr_id = '{$write[wr_id]}'");
+    }
     $comment_url = $umz;
-}
-else if ($mw_basic[cf_umz]) {
-    $comment_url = $write[wr_umz];
 }
 
 $board_skin_path = substr($board_skin_path, 9, strlen($board_skin_path));

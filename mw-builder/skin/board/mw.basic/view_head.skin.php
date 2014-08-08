@@ -331,7 +331,7 @@ if ($write[wr_singo] && $write[wr_singo] >= $mw_basic[cf_singo_number] && $mw_ba
 
     $view[wr_subject] = "신고가 접수된 게시물입니다.";
     $view[subject] = $view[wr_subject];
-    $view[content] = $content;
+    $view[rich_content] = $content;
 }
 
 if ($mw_basic[cf_include_view_top] && is_file($mw_basic[cf_include_view_top])) {
@@ -688,6 +688,12 @@ if ($mw_basic[cf_sns])
 
     $facebook_like_href = urlencode($view_url);
 
+    $line_url = "http://line.me/R/msg/text/?".urlencode(set_utf8($view[wr_subject]))."%0D%0A".$sns_url;
+
+    if (!strstr(strtolower($_SERVER['HTTP_USER_AGENT']), "mobile")) {
+        $line_url = "#;\" onclick=\"alert('모바일 기기에서만 작동합니다.')\"";
+    }
+
     ob_start();
     ?>
     <!--<a href="http://twitter.com/share" class="twitter-share-button" data-count="horizontal">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>-->
@@ -754,6 +760,9 @@ if ($mw_basic[cf_sns])
         <? } ?>
         <? if (strstr($mw_basic[cf_sns], '/kakao/')) { ?>
         <div><a href="<?=$kakao_url?>"><img src="<?=$pc_skin_path?>/img/send_kakaotalk.png" valign="middle"></a></div>
+        <? } ?>
+        <? if (strstr($mw_basic[cf_sns], '/line/')) { ?>
+        <div><a href="<?=$line_url?>"><img src="<?=$pc_skin_path?>/img/send_line.png" valign="middle"></a></div>
         <? } ?>
     <? } ?>
 

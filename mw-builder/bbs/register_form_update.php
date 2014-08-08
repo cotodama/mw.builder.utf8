@@ -52,6 +52,7 @@ $mb_email = trim(strip_tags(mysql_real_escape_string($_POST[mb_email])));
 $mb_homepage = trim(strip_tags(mysql_real_escape_string($_POST[mb_homepage])));
 $mb_email = str_replace('\\', '', $mb_email);
 $mb_homepage = str_replace('\\', '', $mb_homepage);
+$mb_homepage = addslashes($mb_homepage);
 
 if ($w == '' || $w == 'u') 
 {

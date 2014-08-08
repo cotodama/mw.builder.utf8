@@ -3438,7 +3438,7 @@ function mw_make_thumbnail_all ($source_file)
 }
 
 if (!function_exists("mw_seo_url")) {
-function mw_seo_url($bo_table, $wr_id, $qstr='', $mobile=1)
+function mw_seo_url($bo_table, $wr_id=0, $qstr='', $mobile=1)
 {
     global $g4;
     global $mw;
@@ -3475,7 +3475,18 @@ function mw_seo_bbs_path($path)
     global $g4;
     global $bo_table;
 
-    $path = str_replace('../board.php?bo_table='.$bo_table, mw_seo_url($bo_table).'?', $path);
+    $wr_id = null;
+
+    if (preg_match("/&wr_id=([0-9]+)&/iUs", $path, $mat)) {
+        $wr_id = $mat[1];
+        $path = str_replace('&wr_id='.$wr_id, '', $path);
+    }
+
+    $path = preg_replace("/&page=[01]?[&$]?/i", '', $path);
+
+    $path = str_replace('../board.php?bo_table='.$bo_table, mw_seo_url($bo_table, $wr_id).'?', $path);
+
+    $path = preg_replace("/\?$/", "", $path);
 
     return $path;
 }}

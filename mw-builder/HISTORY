@@ -1,3 +1,21 @@
+4.37.17 (2014.07.31)
+    : 회원가입시 홈페이지에 ' 가 포함되면 발생하던 오류 수정 (한국인터넷진흥원을 통해 김범수님이 알려주셨습니다.)
+    : 최고관리자의 자동로그인 기능에서 대소문자 문제로 인한 우회 취약점을 해결 (한국인터넷진흥원을 통해 김범수님이 알려주셨습니다.)
+    : POST 요청을 통해 $_FILES, $_SERVER 등의 글로벌 변수를 오버라이트 하는 취약점을 해결 (한국인터넷진흥원을 통해 김범수님이 알려주셨습니다.)
+
+        bbs/register_form_update.php 에 한줄 추가
+
+            $mb_homepage = addslashes($mb_homepage);
+
+        common.php 를 아래 코드로 수정
+
+            //if ($tmp_mb_id != $config['cf_admin'])
+            if (strtolower($tmp_mb_id) != strtolower($config['cf_admin']))
+
+        common.php 에 아래 코드를 추가
+
+            if (isset($_POST[$ext_arr[$i]])) unset($_POST[$ext_arr[$i]]);
+
 4.37.16 (2014.07.18)
     : 네이버 신디케이션의 토큰 길이가 112가 아닌 경우가 확인되어 코드 수정
 

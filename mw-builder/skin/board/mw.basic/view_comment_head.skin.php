@@ -211,6 +211,6 @@ if (!$mw_basic['cf_time_comment'])
 $row['datetime2'] = mw_get_date($row['wr_datetime'], $mw_basic['cf_time_comment']);
 
 if ($row[del_link])
-    $row[del_link] = str_replace('./', $g4['bbs_path'].'/', $row[del_link]);
+    $row[del_link] = mw_bbs_path($row[del_link]);
 
 return true;

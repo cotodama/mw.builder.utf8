@@ -67,6 +67,26 @@ if ($cf_hot_view)
 if ($cf_hot_write)
     $cf_hot_print .= 'w';
 
+$cf_gender_m = '';
+if ($cf_gender_m_list)
+    $cf_gender_m .= 'l';
+if ($cf_gender_m_view)
+    $cf_gender_m .= 'v';
+if ($cf_gender_m_write)
+    $cf_gender_m .= 'w';
+if ($cf_gender_m_comment)
+    $cf_gender_m .= 'c';
+
+$cf_gender_w = '';
+if ($cf_gender_w_list)
+    $cf_gender_w .= 'l';
+if ($cf_gender_w_view)
+    $cf_gender_w .= 'v';
+if ($cf_gender_w_write)
+    $cf_gender_w .= 'w';
+if ($cf_gender_w_comment)
+    $cf_gender_w .= 'c';
+
 $cf_board_stime = $cf_board_etime = "";
 
 if ($cf_board_stime_hour and $cf_board_stime_minute)
@@ -99,6 +119,7 @@ if ($cf_sns_facebook_good) $cf_sns.= '/facebook_good/';
 if ($cf_sns_google_plus) $cf_sns.= '/google_plus/';
 if ($cf_sns_kakao) $cf_sns.= '/kakao/';
 if ($cf_sns_kakaostory) $cf_sns.= '/kakaostory/';
+if ($cf_sns_line) $cf_sns.= '/line/';
 
 $cf_include_head_page = '';
 if ($cf_include_head_list) $cf_include_head_page.= '/l/';
@@ -192,7 +213,8 @@ bo_table = '$bo_table'
 ,cf_attribute = '$cf_attribute'
 ,cf_ccl = '$cf_ccl'
 ,cf_age = '$cf_age'
-,cf_gender = '$cf_gender'
+,cf_gender_m = '$cf_gender_m'
+,cf_gender_w = '$cf_gender_w'
 ,cf_board_sdate = '$cf_board_sdate'
 ,cf_board_edate = '$cf_board_edate'
 ,cf_board_stime = '$cf_board_stime'
@@ -556,7 +578,11 @@ if ($chk[cf_qna_point_use]) {
     $sql .= ", cf_qna_enough = '$cf_qna_enough' ";
 }
 if ($chk[cf_ccl]) $sql .= ", cf_ccl = '$cf_ccl' ";
-if ($chk[cf_gender]) $sql .= ", cf_gender = '$cf_gender' ";
+//if ($chk[cf_gender]) $sql .= ", cf_gender = '$cf_gender' ";
+if ($chk[cf_gender]) {
+    $sql .= ", cf_gender_m = '$cf_gender_m' ";
+    $sql .= ", cf_gender_w = '$cf_gender_w' ";
+}
 if ($chk[cf_board_date]) {
     $sql .= ", cf_board_sdate = '$cf_board_sdate' ";
     $sql .= ", cf_board_edate = '$cf_board_edate' ";

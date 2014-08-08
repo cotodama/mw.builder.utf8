@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * MW Builder for Gnuboard4
  *
@@ -66,9 +66,9 @@ function fvisit_submit(ymd, gr_id, bo_table)
         <input type=button class=btn1 value=' 월 ' onclick="fvisit_submit('m', document.fvisit.gr_id.value, document.fvisit.bo_table.value);">
         <input type=button class=btn1 value=' 년 ' onclick="fvisit_submit('y', document.fvisit.gr_id.value, document.fvisit.bo_table.value);">
         &nbsp;&nbsp;
-        <a href="<?=$PHP_SELF?>?<?=$qstr?>&ymd=<?=$ymd?>">전체</a>
-        <? if ($gr_id) { ?> > <a href="<?=$PHP_SELF?>?gr_id=<?=$gr_id?>&ymd=<?=$ymd?>&<?=$qstr?>"><?=$group[gr_subject]?></a> <? } ?>
-        <? if ($bo_table) { ?> > <a href="<?=$PHP_SELF?>?gr_id=<?=$gr_id?>&bo_table=<?=$bo_table?>&ymd=<?=$ymd?>&<?=$qstr?>"><?=$board[bo_subject]?></a> <? } ?>
+        <a href="<?=$_SERVER[PHP_SELF]?>?<?=$qstr?>&ymd=<?=$ymd?>">전체</a>
+        <? if ($gr_id) { ?> > <a href="<?=$_SERVER[PHP_SELF]?>?gr_id=<?=$gr_id?>&ymd=<?=$ymd?>&<?=$qstr?>"><?=$group[gr_subject]?></a> <? } ?>
+        <? if ($bo_table) { ?> > <a href="<?=$_SERVER[PHP_SELF]?>?gr_id=<?=$gr_id?>&bo_table=<?=$bo_table?>&ymd=<?=$ymd?>&<?=$qstr?>"><?=$board[bo_subject]?></a> <? } ?>
     </td>
 </tr>
 </table>
@@ -86,8 +86,8 @@ function fvisit_submit(ymd, gr_id, bo_table)
 <tr class='bgcol1 bold col1 ht center'>
     <td>년-월-일</td>
     <td>그룹</td>
-    <td>게시판</td>
-    <td>방문자수</td>
+    <td><?=subject_sort_link('bo_table', $qstr)?>게시판</a></td>
+    <td><?=subject_sort_link('cnt', $qstr)?>방문자수</a></td>
     <td>비율(%)</td>
     <td>그래프</td>
 </tr>
@@ -124,8 +124,12 @@ switch ($ymd) {
 $sql = " select $sql_select
           $sql_common
           $sql_search
-          $sql_group
-          order by gr_id, bo_table, visit_date";
+          $sql_group";
+
+if ($sst && $sod)
+    $sql.= " order by {$sst} {$sod} ";
+else
+    $sql.= " order by gr_id, bo_table, visit_date";
 $qry = sql_query($sql);
 
 
@@ -154,13 +158,13 @@ foreach ($data as $row) {
     $date_link = "";
     switch ($ymd) {
         case "y":
-            $date_link = "$PHP_SELF?fr_date=$row[visit_date]-01-01&to_date=$row[visit_date]-12-31&ymd=m&gr_id=$gr_id&bo_table=$bo_table";
+            $date_link = "$_SERVER[PHP_SELF]?fr_date=$row[visit_date]-01-01&to_date=$row[visit_date]-12-31&ymd=m&gr_id=$gr_id&bo_table=$bo_table";
             break;
         case "m":
-            $date_link = "$PHP_SELF?fr_date=$row[visit_date]-01&to_date=$row[visit_date]-31&ymd=d&gr_id=$gr_id&bo_table=$bo_table";
+            $date_link = "$_SERVER[PHP_SELF]?fr_date=$row[visit_date]-01&to_date=$row[visit_date]-31&ymd=d&gr_id=$gr_id&bo_table=$bo_table";
             break;
         default:
-            $date_link = "$PHP_SELF?fr_date=$row[visit_date]&to_date=$row[visit_date]&ymd=d&gr_id=$gr_id&bo_table=$bo_table";
+            $date_link = "$_SERVER[PHP_SELF]?fr_date=$row[visit_date]&to_date=$row[visit_date]&ymd=d&gr_id=$gr_id&bo_table=$bo_table";
             break;
     }
 

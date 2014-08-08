@@ -28,6 +28,7 @@ if ($sop != "and" && $sop != "or")
 $mw_is_list = false;
 $mw_is_view = false;
 $mw_is_write = true;
+$mw_is_comment = false;
 
 include_once("$board_skin_path/mw.lib/mw.skin.basic.lib.php");
 

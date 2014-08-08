@@ -1,3 +1,37 @@
+ver 2.6.8 (14.08.08)
+    : 성별에 따른 세부 접근권한 설정 (청해님 제안)
+    : 문자알림 회신번호에 하이픈 있는 경우 발송안되는 문제 해결 (물깊은님 제안)
+    : 모바일 코멘트 삭제 오류
+
+    mw.basic/HISTORY
+    mw.basic/mw.adm/mw.config.php
+    mw.basic/mw.adm/mw.config.update.php
+    mw.basic/mw.adm/mw.upgrade.php
+    mw.basic/mw.lib/mw.skin.basic.lib.php
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/mw.proc/mw.seo.php
+    mw.basic/list.skin.php
+    mw.basic/view.skin.php
+    mw.basic/view_comment.skin.php
+    mw.basic/view_comment.head.skin.php
+    mw.basic/write.head.skin.php
+    mw.basic/write_update.head.skin.php
+    mw.basic/delete_comment.head.skin.php
+ 
+ver 2.6.7 (14.08.01)
+    : 네이버 라인 공유버튼 추가 (기능탭-SNS 퍼가기에서 설정)
+    : 퍼머링크, 엄지 미사용시 댓글주소 안나오는 문제 (나뭇잎님 제안)
+    : 글쓰기 페이지 목록 버튼 링크 오류 수정 (나뭇잎님 제안)
+    : 신고게시물 본문 출력 오류 
+
+    mw.basic/HISTORY
+    mw.basic/mw.adm/mw.config.php
+    mw.basic/mw.adm/mw.config.update.php
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/mw.proc/mw.get.comment.url.php
+    mw.basic/img/send_line.png
+    mw.basic/view_head.skin.php
+ 
 ver 2.6.6 (14.07.25)
     : 글작성 제한 권한별 설정
     : 퍼머링크 사용시 전체목록보이기 페이지 오류

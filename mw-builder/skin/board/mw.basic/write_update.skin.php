@@ -289,12 +289,16 @@ if ($w == "" && $mw_basic[cf_sms_id] && $mw_basic[cf_sms_pw] && trim($mw_basic[c
             $strDest[] = $hp;
         }
     }
-    $strCallBack = $mw_basic[cf_hp_reply];
+    $strCallBack = str_replace("-", "", $mw_basic[cf_hp_reply]);
     if (!$strCallBack)
         $strCallBack = '0000';
     $strData = "{$board[bo_subject]} 게시판에 {$wr_name} 님이 글을 올리셨습니다.";
-    if ($umz)
-        $strData .= " $umz";
+
+    $umz = umz_get_url(mw_seo_url($bo_table, $wr_id));
+    if ($umz) {
+        sql_query("update $write_table set wr_umz = '$umz' where wr_id = '$wr_id'");   
+        $strData .= "\n$umz";
+    }
     include("$board_skin_path/mw.proc/mw.proc.sms.php");
 }
 
