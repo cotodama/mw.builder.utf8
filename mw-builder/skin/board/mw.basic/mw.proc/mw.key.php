@@ -27,6 +27,11 @@ $board['bo_use_list_view'] = false;
             <div class="fbox">
                 <input type="password" size="20" name="wr_key_password" id="wr_key_password">
                 <input type="submit" value="확인" class="btn">
+                <?php if ($is_admin) { ?>
+                <input type="submit" value="skip (관리자)" class="btn">
+                <?php } else if ($write['mb_id'] and $write['mb_id'] == $member['mb_id']) { ?>
+                <input type="submit" value="skip (본인)" class="btn">
+                <?php } ?>
             </div>
         </div>
     </fieldset>
@@ -37,6 +42,10 @@ $board['bo_use_list_view'] = false;
 function check_key() {
     $.get("<?php echo $pc_skin_path?>/mw.proc/mw.key.update.php", $("#fkey").serialize(), function (str) {
         if (str == "ok") {
+            location.reload();
+        }
+        else if (str == "self") {
+            alert("글쓴이 본인 통과");
             location.reload();
         }
         else if (str == "admin") {

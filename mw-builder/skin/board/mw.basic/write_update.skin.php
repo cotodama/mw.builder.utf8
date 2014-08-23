@@ -603,3 +603,9 @@ if ($mw_basic['cf_key_level'] && $mw_basic['cf_key_level'] <= $member['mb_level'
     }
 }
 
+// 숨김링크
+if ($mw_basic['cf_hidden_link'] && $mw_basic['cf_hidden_link'] <= $member['mb_level']) {
+    sql_query("update {$write_table} set wr_hidden_link1 = '{$wr_hidden_link1}' where wr_id = '{$wr_id}' ");
+    sql_query("update {$write_table} set wr_hidden_link2 = '{$wr_hidden_link2}' where wr_id = '{$wr_id}' ");
+}
+

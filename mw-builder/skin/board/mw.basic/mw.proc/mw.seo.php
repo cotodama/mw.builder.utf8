@@ -1,7 +1,6 @@
 <?php
 if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
 
-
 if ($list_href) $list_href = mw_bbs_path($list_href);
 if ($search_href) $search_href = mw_bbs_path($search_href);
 if ($write_href) $write_href = mw_bbs_path($write_href);

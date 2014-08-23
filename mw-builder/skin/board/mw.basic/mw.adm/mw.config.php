@@ -736,6 +736,19 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 	    <span class="cf_info">(게시물에 별도로 첨부된 링크 클릭시 포인트를 적용합니다. 플러스 마이너스 가능.)</span>
 	</div>
     </div>
+
+    <div class="cf_item">
+	<div class="cf_title"> <input type=checkbox name=chk[cf_hidden_link] value=1>&nbsp; 숨김링크 </div>
+	<div class="cf_content">
+            <select name="cf_hidden_link">
+            <? for ($i=0; $i<=10; $i++) { ?>
+            <option value="<?=$i?>"> <?=$i?> </option>
+            <? } ?>
+            </select> 레벨 이상
+	    <span class="cf_info">(보이는 링크와 실제 이동되는 링크를 다르게합니다. 0이면 사용안함)</span> 
+	    <script> document.cf_form.cf_hidden_link.value = '<?=$mw_basic[cf_hidden_link]?>'; </script>
+	</div>
+    </div>
  
     <div class="cf_item">
 	<div class="cf_title"> <input type=checkbox name=chk[cf_list_shuffle] value=1>&nbsp; 게시물 목록 셔플 </div>
@@ -840,6 +853,19 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
             </select>
 	    <span class="cf_info">(사용안함 선택시 관리자를 제외한 누구도 게시판 내에서 검색할 수 없습니다. 1레벨은 비회원.)</span>
             <script> document.cf_form.cf_search_level.value = "<?=$mw_basic[cf_search_level]?>"; </script>
+	</div>
+    </div>
+
+    <div class="cf_item">
+	<div class="cf_title"> <input type=checkbox name=chk[cf_rss] value=1>&nbsp; 전용 RSS </div>
+	<div class="cf_content">
+	    <input type=checkbox name=cf_rss value=1> 사용
+	    <span class="cf_info">(배추스킨 전용 RSS. 게시판 설정에서 RSS 사용에 먼저 체크해주세요.)</span>
+            <br>
+            출력 갯수 :
+            <input type="text" size="10" class="ed" name="cf_rss_limit" value="<?=$mw_basic[cf_rss_limit]?>"> 개
+
+	    <script> document.cf_form.cf_rss.checked = <?=$mw_basic[cf_rss]?>; </script>
 	</div>
     </div>
 

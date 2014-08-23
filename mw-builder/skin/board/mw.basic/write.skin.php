@@ -1434,6 +1434,13 @@ if ($w == "") {
         <input type="checkbox" name="wr_link_write" value="1" <? if ($write[wr_link_write]) echo "checked"; ?> >
          본문 출력 없이 링크로 바로 이동
     <? } ?>
+    <?php if ($mw_basic['cf_hidden_link'] && $mw_basic['cf_hidden_link'] <= $member['mb_level']) { ?>
+    <div>
+        <input type="text" size=50 name="wr_hidden_link<?=$i?>" id="wr_hidden_link<?=$i?>" itemname="숨김링크 #<?=$i?>" value="<?=$write["wr_hidden_link{$i}"]?>" class="mw_basic_text"> (숨김링크)
+    </div>
+
+    <?php } ?>
+
 </td>
 </tr>
 <tr><td colspan=2 height=1 bgcolor=#e7e7e7></td></tr>

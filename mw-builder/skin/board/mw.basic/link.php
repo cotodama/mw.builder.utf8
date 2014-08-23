@@ -77,5 +77,11 @@ if ($mw_basic[cf_link_log]) { // 링크 기록
     $qry = sql_query($sql);
 }
 
-goto_url(set_http($write["wr_link{$no}"]));
+$url = set_http($write["wr_link{$no}"]);
+
+if ($mw_basic['cf_hidden_link'] && $write["wr_hidden_link{$no}"]) {
+    $url = set_http($write["wr_hidden_link{$no}"]);
+}
+
+goto_url($url);
 

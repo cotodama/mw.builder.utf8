@@ -132,7 +132,21 @@ if ($board[bo_read_point] < 0 && $view[mb_id] != $member[mb_id] && !$point && $i
         set_session("ss_view_{$bo_table}_{$wr_id}", '');
         unset($_SESSION["ss_view_{$bo_table}_{$wr_id}"]);
 
-        echo "<script type='text/javascript'>if (confirm('글을 읽으시면 $board[bo_read_point] 포인트 차감됩니다.\\n\\n현재포인트 : $member[mb_point]p\\n\\n')) location.href = '{$_SERVER["REQUEST_URI"]}&point=1'; else history.back();</script>";
+        $sign = '&';
+        if ($mw['config']['cf_seo_url']) {
+            $url = mw_seo_url($bo_table, $wr_id, $qstr);
+            $sign = '?';
+        }
+
+        echo <<<HEREDOC
+        <script>
+        if (confirm("글을 읽으시면 $board[bo_read_point] 포인트 차감됩니다.\\n\\n현재포인트 : {$member['mb_point']}p\\n\\n"))
+            location.href = '{$_SERVER['REQUEST_URI']}{$sign}point=1';
+        else
+            history.back();
+        </script>
+HEREDOC;
+        include_once($g4['path']."/tail.sub.php");
         exit;
     }
 } 
@@ -514,14 +528,14 @@ if ($mw_basic[cf_attribute] != "1:1" && (!$prev_href || !$next_href))
     $prev_href = "";
     if ($prev[wr_id]) {
         $prev_wr_subject = get_text(cut_str($prev[wr_subject], 255));
-        $prev_href = mw_seo_url($bo_table, $prev[wr_id], "&page=$page" . $qstr);
+        $prev_href = mw_seo_url($bo_table, $prev[wr_id], $qstr);
     }
 
     // 다음글 링크
     $next_href = "";
     if ($next[wr_id]) {
         $next_wr_subject = get_text(cut_str($next[wr_subject], 255));
-        $next_href = mw_seo_url($bo_table, $next[wr_id], "&page=$page" . $qstr);
+        $next_href = mw_seo_url($bo_table, $next[wr_id], $qstr);
     }
 }
 

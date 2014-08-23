@@ -36,6 +36,7 @@ function mw_builder_seo_url($bo_table, $wr_id=0, $qstr='', $mobile=1)
     global $mw;
     global $mw_basic;
     global $mw_mobile;
+    global $is_admin;
 
     $url = $g4['url'];
 
@@ -97,6 +98,8 @@ function mw_builder_seo_url($bo_table, $wr_id=0, $qstr='', $mobile=1)
     $url = preg_replace("/&page=0$/", '', $url);
     $url = preg_replace("/&page=1(&)/", "$1", $url);
     $url = preg_replace("/&page=1$/", '', $url);
+    //$url = preg_replace("/&page=(&)/", "$1", $url);
+    //$url = preg_replace("/&page=$/", '', $url);
     $url = str_replace("?&", '?', $url);
     $url = preg_replace("/\?$/", "", $url);
 
@@ -121,7 +124,7 @@ function mw_builder_seo_page($pg_id)
     global $g4;
     global $mw;
 
-    $url = $g4['url'].'/page?pg_id='.$pg_id;
+    $url = $g4['url'].'/page.php?pg_id='.$pg_id;
 
     if ($mw['config']['cf_seo_url']) {
         $url = $g4['url'].'/page_'.$pg_id;

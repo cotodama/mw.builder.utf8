@@ -1,3 +1,95 @@
+4.37.21 (2014.08.21)
+    : 이 패치를 적용하신다면 어제 올린 4.37.20 버전 패치는 따로 하지 않으셔도 됩니다.
+      zip.skin.php 의 역할이 사라져 버려 삭제를 하게 되었습니다.
+      이미 패치를 하여 이상없이 사용하시는 분들께서는 그냥 사용하셔도 좋습니다.
+    : juso.sir.co.kr 도로명주소에서 다음 주소 서비스로 변경 되었습니다.
+      SIR의 도로명주소 서비스는 2014.10.31 까지만 지원할 예정입니다.
+      http://sir.co.kr/bbs/board.php?bo_table=co_notice&wr_id=1160
+
+        adm/member_form.php - 이전 코드는 주석 처리되어 있으므로 참고하세요.
+        bbs/zip.db - 삭제 되었습니다.
+        bbs/zip.php - 대부분의 코드가 변경 되었으므로 새로 교체하세요.
+        js/zip.js - 대부분의 코드가 변경 되었으므로 새로 교체하세요.
+
+        js/common.js - 아래의 코드가 수정 되었습니다.
+            //win_open(url, "winZip", "left=50,top=50,width=616,height=460,scrollbars=1");
+            win_open(url, "winZip", "left=50,top=50,width=483,height=600,scrollbars=1");
+
+        skin/member/basic/register_form.skin.php - 이전 코드는 주석 처리되어 있으므로 참고하세요.
+        skin/member/basic/zip.skin.php - 삭제 되었습니다.
+
+4.37.20 (2014.08.20)
+    : 이 패치를 적용하신다면 어제 올린 4.37.19 버전 패치는 따로 하지 않으셔도 됩니다.
+    : juso.sir.co.kr 도로명주소에서 다음 주소 서비스로 변경 되었습니다.
+      SIR의 도로명주소 서비스는 2014.10.31 까지만 지원할 예정입니다.
+      http://sir.co.kr/bbs/board.php?bo_table=co_notice&wr_id=1160
+
+        bbs/zip.db - 삭제 되었습니다.
+
+        js/zip.js - 대부분의 코드가 변경 되었으므로 새로 교체하세요.
+            $(function() {
+                var el_id = document.getElementById("daum_juso_wrap");
+                new daum.Postcode({
+                    oncomplete: function(data) {
+                        var address1 = data.address1,
+                            address2 = "";
+                        if(data.addressType == "R"){        //도로명이면
+                            address2 = data.address2;
+                        }
+                        put_data2(data.postcode1, data.postcode2, address1, "", address2, data.addressType);
+                    },
+                    width : "100%",
+                    height : "100%"
+                }).embed(el_id);
+            });
+
+        bbs/zip.php - 아래의 코드가 추가 되었습니다.
+            if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']=='on') {   //https 통신
+                echo '<script src="https://spi.maps.daum.net/imap/map_js_init/postcode.js"></script>'.PHP_EOL;
+            } else {  //http 통신
+                echo '<script src="http://dmaps.daum.net/map_js_init/postcode.js"></script>'.PHP_EOL;
+            }
+            echo '<script src="'.$g4['path'].'/js/zip.js"></script>'.PHP_EOL;
+
+        js/common.js - 아래의 코드가 수정 되었습니다.
+            //win_open(url, "winZip", "left=50,top=50,width=616,height=460,scrollbars=1");
+            win_open(url, "winZip", "left=50,top=50,width=483,height=600,scrollbars=1");
+
+        adm/member_form.php - 이전 코드는 주석 처리되어 있으므로 참고하세요.
+        skin/member/basic/register_form.skin.php - 이전 코드는 주석 처리되어 있으므로 참고하세요.
+        skin/member/basic/zip.skin.php - 대부분의 코드가 변경 되었으므로 새로 교체하세요.
+
+
+4.37.19 (2014.08.19)
+    : juso.sir.co.kr 도로명주소에서 다음 주소 서비스로 변경 되었습니다.
+      SIR의 도로명주소 서비스는 2014.10.31 까지만 지원할 예정입니다.
+      http://sir.co.kr/bbs/board.php?bo_table=co_notice&wr_id=1160
+
+        bbs/zip.db - 삭제 되었습니다.
+        js/zip.js - 삭제 되었습니다.
+
+        bbs/zip.php - 아래의 코드가 추가 되었습니다.
+            if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']=='on') {   //https 통신
+                $g4['daum_juso_js'] = "<script src=\"https://spi.maps.daum.net/imap/map_js_init/postcode.js\"></script>";
+            } else {  //http 통신 
+                $g4['daum_juso_js'] = "<script src=\"http://dmaps.daum.net/map_js_init/postcode.js\"></script>";
+            }
+
+        js/common.js - 아래의 코드가 수정 되었습니다.
+            //win_open(url, "winZip", "left=50,top=50,width=616,height=460,scrollbars=1");
+            win_open(url, "winZip", "left=50,top=50,width=483,height=600,scrollbars=1");
+
+        adm/member_form.php - 이전 코드는 주석 처리되어 있으므로 참고하세요.
+        skin/member/basic/register_form.skin.php - 이전 코드는 주석 처리되어 있으므로 참고하세요.
+        skin/member/basic/zip.skin.php - 대부분의 코드가 변경 되었으므로 새로 교체하세요.
+
+4.37.18 (2014.08.11)
+    : SQL Injection 취약점이 발견되어 수정 (한국인터넷진흥원을 통하여 laughfool님이 알려주셨습니다.)
+
+        bbs/register_form_update.php
+
+            $mb_email = addslashes($mb_email);
+
 4.37.17 (2014.07.31)
     : 회원가입시 홈페이지에 ' 가 포함되면 발생하던 오류 수정 (한국인터넷진흥원을 통해 김범수님이 알려주셨습니다.)
     : 최고관리자의 자동로그인 기능에서 대소문자 문제로 인한 우회 취약점을 해결 (한국인터넷진흥원을 통해 김범수님이 알려주셨습니다.)

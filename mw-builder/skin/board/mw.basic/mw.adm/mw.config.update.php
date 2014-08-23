@@ -303,6 +303,7 @@ bo_table = '$bo_table'
 ,cf_default_category = '$cf_default_category'
 ,cf_link_board = '$cf_link_board'
 ,cf_link_target_level = '$cf_link_target_level'
+,cf_hidden_link = '$cf_hidden_link'
 ,cf_link_write = '$cf_link_write'
 ,cf_link_point = '$cf_link_point'
 ,cf_bomb_level = '$cf_bomb_level'
@@ -386,6 +387,8 @@ bo_table = '$bo_table'
 ,cf_name_title = '$cf_name_title'
 ,cf_attach_count = '$cf_attach_count'
 ,cf_related_table = '$cf_related_table'
+,cf_rss = '$cf_rss'
+,cf_rss_limit = '$cf_rss_limit'
 ,cf_latest_table = '$cf_latest_table'
 ,cf_anonymous = '$cf_anonymous'
 ,cf_anonymous_nopoint = '$cf_anonymous_nopoint'
@@ -682,6 +685,7 @@ if ($chk[cf_delete_log]) $sql .= ", cf_delete_log = '$cf_delete_log' ";
 if ($chk[cf_post_history_level]) $sql .= ", cf_post_history_level = '$cf_post_history_level' ";
 if ($chk[cf_link_board]) $sql .= ", cf_link_board = '$cf_link_board' ";
 if ($chk[cf_link_target_level]) $sql .= ", cf_link_target_level = '$cf_link_target_level' ";
+if ($chk[cf_hidden_link]) $sql .= ", cf_hidden_link = '$cf_hidden_link' ";
 if ($chk[cf_link_write]) $sql .= ", cf_link_write = '$cf_link_write' ";
 if ($chk[cf_link_point]) $sql .= ", cf_link_point = '$cf_link_point' ";
 if ($chk[cf_bomb_level]) {
@@ -822,6 +826,10 @@ if ($chk[cf_nogood_level]) $sql .= ", cf_nogood_level = '$cf_nogood_level' ";
 if ($chk[cf_name_title]) $sql .= ", cf_name_title = '$cf_name_title' ";
 if ($chk[cf_attach_count]) $sql .= ", cf_attach_count = '$cf_attach_count' ";
 if ($chk[cf_related_table]) $sql .= ", cf_related_table = '$cf_related_table' ";
+if ($chk[cf_rss]) {
+    $sql .= ", cf_rss = '$cf_rss' ";
+    $sql .= ", cf_rss_limit = '$cf_rss_limit' ";
+}
 if ($chk[cf_latest_table]) $sql .= ", cf_latest_table = '$cf_latest_table' ";
 if ($chk[cf_anonymous]) {
     $sql .= ", cf_anonymous = '$cf_anonymous' ";

@@ -10,6 +10,10 @@ if ($write['wr_key_password'] == sql_password($wr_key_password)) {
     set_session($ss_key_name."_".$write['wr_id'], TRUE);
     die("ok");
 }
+else if ($write['mb_id'] and $write['mb_id'] == $member['mb_id']) {
+    set_session($ss_key_name."_".$write['wr_id'], TRUE);
+    die("self");
+}
 else if ($is_admin) {
     set_session($ss_key_name."_".$write['wr_id'], TRUE);
     die("admin");

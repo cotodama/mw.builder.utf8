@@ -55,10 +55,15 @@ $list = array();
 for ($i=0; $row = sql_fetch_array($qry); ++$i) {
     $row[num] = $total_count - ($page - 1) * $rows - $i;
     $mb = get_member($row[mb_id], "mb_nick, mb_name, mb_email, mb_homepage");
-    if ($mb)
+    if ($mb) {
         $row[name] = get_sideview($row[mb_id], $board[bo_use_name]?$mb[mb_name]:$mb[mb_nick], $mb[mb_email], $mb[mb_homepage]);
-    else
-        $row[name] = $row[mb_id];
+    }
+    else {
+        if ($is_admin)
+            $row[name] = $row[mb_id];
+        else 
+            $row[name] = preg_replace("/([0-9]+).([0-9]+).([0-9]+).([0-9]+)/", "\\1.♡.\\3.\\4", $row[mb_id]);
+    }
     $list[$i] = $row;
 }
 

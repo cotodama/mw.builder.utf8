@@ -127,7 +127,7 @@ include_once("./admin.head.php");
 </tr>
 <tr class='ht'>
     <td>주소</td>
-    <td colspan=3>
+    <!-- <td colspan=3>
         <input type=text class=ed name='mb_zip1' size=4 maxlength=3 readonly itemname='우편번호 앞자리' value='<? echo $mb[mb_zip1] ?>'> -
         <input type=text class=ed name='mb_zip2' size=4 maxlength=3 readonly itemname='우편번호 뒷자리' value='<? echo $mb[mb_zip2] ?>'>
         <a href="javascript:;" onclick="win_zip('fmember', 'mb_zip1', 'mb_zip2', 'mb_addr1', 'mb_addr2', 'mb_addr3', 'mb_addr_jibeon');"><img src='<?=$g4[bbs_img_path]?>/btn_zip.gif' align=absmiddle border=0></a>
@@ -136,6 +136,15 @@ include_once("./admin.head.php");
         <br><input type=text class=ed name='mb_addr3' size=40 itemname='참고항목' value='<? echo $mb[mb_addr3] ?>'> 참고항목
         <br><input type="hidden" name="mb_addr_jibeon" value="<?=$mb['mb_addr_jibeon']; ?>">
             <span id="mb_addr_jibeon"><?=($mb['mb_addr_jibeon'] ? '지번주소 : '.$mb['mb_addr_jibeon'] : ''); ?></span>
+    </td> -->
+    <td colspan=3>
+        <input type="hidden" name="mb_addr_jibeon" value="<?=$mb['mb_addr_jibeon']; ?>">
+        <input type=text class=ed name='mb_zip1' size=4 maxlength=3 itemname='우편번호 앞자리' value='<? echo $mb[mb_zip1] ?>'> -
+        <input type=text class=ed name='mb_zip2' size=4 maxlength=3 itemname='우편번호 뒷자리' value='<? echo $mb[mb_zip2] ?>'>
+        <a href="javascript:;" onclick="win_zip('fmember', 'mb_zip1', 'mb_zip2', 'mb_addr1', 'mb_addr2', 'mb_addr3', 'mb_addr_jibeon');"><img src='<?=$g4[bbs_img_path]?>/btn_zip.gif' align=absmiddle border=0></a>
+        <br><input type=text class=ed name='mb_addr1' size=40 value='<? echo $mb[mb_addr1] ?>'> 기본주소
+        <br><input type=text class=ed name='mb_addr2' size=40 itemname='상세주소' value='<? echo $mb[mb_addr2] ?>'> 상세주소
+        <br><input type=text class=ed name='mb_addr3' size=40 itemname='참고항목' value='<? echo $mb[mb_addr3] ?>'> 참고항목
     </td>
 </tr>
 <tr class='ht'>
