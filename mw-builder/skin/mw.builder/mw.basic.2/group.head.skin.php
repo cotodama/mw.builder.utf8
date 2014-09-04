@@ -148,6 +148,8 @@ function fsearchbox_submit(f)
 </tr>
 </table>
 
+<div id="head-fixed">
+
 <table width=100% height=70 border=0 cellpadding=0 cellspacing=0 align=center>
 <tr>
     <td width=10 style="background:url(<?=$mw_group_skin_head_path?>/img/<?=$group[gr_theme]?>/mw-bar-left.gif) no-repeat;"></td>
@@ -190,6 +192,19 @@ function fsearchbox_submit(f)
     <td width=10 style="background:url(<?=$mw_group_skin_head_path?>/img/<?=$group[gr_theme]?>/mw-bar-right.gif) no-repeat;"></td>
 </tr>
 </table>
+
+</div><!-- head-fixed -->
+
+<div id="head-fixed-back" class="head-fixed-back" style="display:none;"></div>
+
+<script src="<?php echo $g4['path']?>/js/mw.head.fixed.js"></script>
+<script>
+$(window).ready(function () {
+    $(window).bind('scroll', function () {
+        head_fixed.run(<?php echo $group_width?>, 80);
+    });
+});
+</script>
 
 <?php if ($mm_id) { // 좌측 소메뉴 출력 ?>
 <table width=100% border=0 cellpadding=0 cellspacing=0 style="margin-top:10px;">

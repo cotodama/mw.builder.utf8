@@ -1,3 +1,22 @@
+1.5.8 (14.09.05)
+    : 그누보드 최신버전 4.37.21 (2014.08.21) 탑재
+    : 배추스킨 최신버전 2.7.2 (14.09.05) 탑재
+    : 그룹스킨 include 전 파일존재여부검사 (에누리쇼핑님 제안)
+    : 비밀글 썸네일 대체 출력 (태양이님 제안)
+    : 상단 메뉴 고정
+    : 탭 최신글 (mw.tab) 선택 게시판 랜덤 로드
+
+    HISTORY-MW-BUILDER
+    lib/mw.latest.*
+    img/lock.png
+    js/mw.head.fixed.js 
+    skin/latest/mw.tab/latest.skin.php
+    skin/mw.builder/mw.basic.1/group.head.skin.php
+    skin/mw.builder/mw.basic.2/group.head.skin.php
+    skin/mw.builder/mw.basic.3/group.head.skin.php
+    head.php
+    tail.php
+
 1.5.7 (14.08.22)
     : 그누보드 최신버전 4.37.21 (2014.08.21) 탑재
     : 배추스킨 최신버전 2.7.0 (14.08.22) 탑재

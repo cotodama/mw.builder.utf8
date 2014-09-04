@@ -53,8 +53,17 @@ function mw_latest($skin_dir="", $bo_table, $rows=10, $subject_len=40, $is_img=0
             $row = sql_fetch("select * from {$g4[write_prefix]}{$file[$i]['bo_table']} where wr_id = '{$file[$i]['wr_id']}'");
             $row = mw_get_list($row, $board, $latest_skin_path, $subject_len);
 
+            /*if ($row['wr_view_block'])
+                $file[$i]['path'] = "$latest_skin_path/img/noimage.gif";*/
+
             if ($row['wr_view_block'])
-                $file[$i]['path'] = "$latest_skin_path/img/noimage.gif";
+                $file[$i]['path'] = $g4['path']."/img/lock.png";
+
+            if ($row['icon_secret'])
+                $file[$i]['path'] = $g4['path']."/img/lock.png";
+
+            if ($row['wr_key_password'])
+                $file[$i]['path'] = $g4['path']."/img/lock.png";
 
             $file[$i]['wr_subject'] = $row['wr_subject'];
             $file[$i]['subject'] = conv_subject($row['wr_subject'], $subject_len, "…");
@@ -64,9 +73,9 @@ function mw_latest($skin_dir="", $bo_table, $rows=10, $subject_len=40, $is_img=0
 
         if (count($file) < $is_img) {
             for ($i=count($file); $i<$is_img; $i++) {
-                $file[$i][path] = "$latest_skin_path/img/noimage.gif";
-                $file[$i][subject] = "...";
-                $file[$i][href] = "#";
+                $file[$i]['path'] = $latest_skin_path."/img/noimage.gif";
+                $file[$i]['subject'] = "...";
+                $file[$i]['href'] = "#";
             }   
         }
 	mw_cache_write($cache_file_file, $file);

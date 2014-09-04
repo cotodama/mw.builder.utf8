@@ -84,7 +84,8 @@ function tab_<?php echo $mw_tab_cnt?>_over_action(i) {
     document.getElementById("latest-tab-<?php echo $mw_tab_cnt?>-" + i).style.display = "block"; 
 }
 
-document.getElementById("tab-<?php echo $mw_tab_cnt?>-0").className = "tab-on"; 
-document.getElementById("latest-tab-<?php echo $mw_tab_cnt?>-0").style.display = "block"; 
+<?php $r = rand(0, count($bo_tables)-1); ?>
+document.getElementById("tab-<?php echo $mw_tab_cnt?>-<?php echo $r?>").className = "tab-on"; 
+document.getElementById("latest-tab-<?php echo $mw_tab_cnt?>-<?php echo $r?>").style.display = "block"; 
 </script>
 

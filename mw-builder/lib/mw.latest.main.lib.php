@@ -77,8 +77,17 @@ function mw_latest_main($skin_dir="", $bo_tables, $rows=10, $subject_len=40, $mi
 		$row = sql_fetch("select * from $g4[write_prefix]$row[bo_table] where wr_id = '$row[wr_id]'");
                 $row = mw_get_list($row, $board_list[$row[bo_table]], $latest_skin_path, $subject_len);
 
+                /*if ($row['wr_view_block'])
+                    $file[$i][path] = "$latest_skin_path/img/noimage.gif";*/
+
                 if ($row['wr_view_block'])
-                    $file[$i][path] = "$latest_skin_path/img/noimage.gif";
+                    $file[$i]['path'] = $g4['path']."/img/lock.png";
+
+                if ($row['icon_secret'])
+                    $file[$i]['path'] = $g4['path']."/img/lock.png";
+
+                if ($row['wr_key_password'])
+                    $file[$i]['path'] = $g4['path']."/img/lock.png";
 
                 $file[$i]['wr_subject'] = $row['wr_subject'];
 		$file[$i]['subject'] = conv_subject($row['wr_subject'], $subject_len, "…");

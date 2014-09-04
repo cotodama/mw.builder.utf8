@@ -1,3 +1,31 @@
+ver 2.7.2 (14.09.05)
+    : 게시물별 비밀번호 입력창 뒤로가기 버튼 추가 (신비님 제안)
+    : 유니코드 제어 문자 (& #8238) 글작성시 체크 (AndroidGame님 제안)
+    : 첨부 이미지가 있는 경우 유투브 썸네일 저장안함
+    : 검색폼 상단표시 사용시 글작성 페이지에서 검색 안되는 문제 해결 (하태영님 제안)
+    : 코멘트 언급 닉네임 bold 처리
+    : 비밀글등에 lock 이미지 적용
+
+    mw.basic/HISTORY
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/mw.proc/mw.key.php
+    mw.basic/mw.proc/mw.search.top.php
+    mw.basic/img/lock.png
+    mw.basic/list.skin.php
+    mw.basic/write_update.skin.php
+    mw.basic/view_comment_head.skin.php
+    mw.basic/style.common.php
+ 
+ver 2.7.1 (14.08.29)
+    : 유투브 공유주소 본문 삽입시 썸네일 생성 (먹는언니님 제안)
+    : 링크 바로 이동에 label 적용
+
+    mw.basic/HISTORY
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/list.skin.php
+    mw.basic/write_update.skin.php
+    mw.basic/write.skin.php
+ 
 ver 2.7.0 (14.08.22)
     : 숨김링크 - 링크 보이는 주소, 실제 이동주소 별도 설정
     : 비회원 추천목록 ip 일부 가림 (메모님 제안)

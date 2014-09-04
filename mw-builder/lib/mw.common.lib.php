@@ -215,7 +215,7 @@ function mw_get_list($write_row, $board, $skin_path, $subject_len=40)
 
     $list['icon_secret'] = "";
     if (strstr($list['wr_option'], "secret"))
-        $list['icon_secret'] = "<img src='$skin_path/img/icon_secret.gif' align='absmiddle'>";
+        $list['icon_secret'] = "<img src='{$skin_path}/img/icon_secret.gif' align='absmiddle'>";
 
     // 링크
     for ($i=1; $i<=$g4['link_count']; $i++) 
@@ -229,7 +229,7 @@ function mw_get_list($write_row, $board, $skin_path, $subject_len=40)
     $list['file'] = get_file($board['bo_table'], $list['wr_id']);
 
     if ($list['file']['count'])
-        $list['icon_file'] = "<img src='$skin_path/img/icon_file.gif' align='absmiddle'>";
+        $list['icon_file'] = "<img src='{$skin_path}/img/icon_file.gif' align='absmiddle'>";
 
     return $list;
 }

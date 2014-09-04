@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Bechu-Basic Skin for Gnuboard4
  *
@@ -21,24 +21,21 @@
 
 if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
 
-
 if (!$is_admin && (!$mw_basic['cf_search_level'] || $mw_basic['cf_search_level'] > $member['mb_level'])) return;
 
-if ($mw_basic[cf_search_top]) {
+if (!$mw_basic['cf_search_top']) return;
 ?>
 <div id="search_top">
-<!-- 링크 버튼, 검색 -->
-<form name=fsearchtop method=get action="<?=$_SERVER[PHP_SELF]?>">
-<input type=hidden name=bo_table value="<?=$bo_table?>">
-<input type=hidden name=sca value="<?=$sca?>">
-<input type=hidden name=sfl value="wr_subject||wr_content">
-<input type=hidden name=sop value="and">
-<div class="search_top_box">
-    <input type=text name=stx maxlength=50 itemname="검색어" required value='<?=$stx?>' class="search_top_stx">
-    <input type=submit value="검색" class="search_top_button">
+    <form name=fsearchtop method=get action="<?php echo $g4['bbs_path']?>/board.php">
+        <input type="hidden" name="bo_table" value="<?php echo $bo_table?>">
+        <input type="hidden" name="sca" value="<?php echo $sca?>">
+        <input type="hidden" name="sfl" value="wr_subject||wr_content">
+        <input type="hidden" name="sop" value="and">
+        <div class="search_top_box">
+            <input type="text" name="stx" maxlength="50" itemname="검색어" required
+                value="<?php echo $stx?>" class="search_top_stx">
+            <input type="submit" value="검색" class="search_top_button">
+        </div>
+    </form>
 </div>
-</form>
-</div>
-<? } ?>
-
 

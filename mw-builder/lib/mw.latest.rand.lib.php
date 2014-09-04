@@ -66,6 +66,15 @@ function mw_latest_rand($skin_dir="", $bo_table, $rows=10, $subject_len=40, $is_
 		$row2 = sql_fetch("select * from $g4[write_prefix]$row[bo_table] where wr_id = '$row[wr_id]'");
 		$row2 = mw_get_list($row2, $board, $latest_skin_path, $subject_len);
 
+                if ($row2['wr_view_block'])
+                    $file[$i]['path'] = $g4['path']."/img/lock.png";
+
+                if ($row2['icon_secret'])
+                    $file[$i]['path'] = $g4['path']."/img/lock.png";
+
+                if ($row2['wr_key_password'])
+                    $file[$i]['path'] = $g4['path']."/img/lock.png";
+
                 $file[$i]['wr_subject'] = $row['wr_subject'];
                 $file[$i][subject] = conv_subject($row2[wr_subject], $subject_len, "…");
                 $file[$i][wr_comment] = $row2[wr_comment];

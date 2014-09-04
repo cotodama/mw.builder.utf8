@@ -420,7 +420,6 @@ img {
 #mw_basic .mw_basic_list_subject {
     word-break:break-all;
     text-align:left;
-    *height:28px;
     padding:5px 0 5px 0;
     color:#3d5b7a;
     text-decoration:none;

@@ -221,11 +221,25 @@ if ($mw_basic[cf_watermark_use] && file_exists($mw_basic[cf_watermark_path]))
 
 // 생성된 썸네일이 없고, 유튜브 링크를 사용할 경우
 // 유튜브 섬네일 가져오기
-if (!file_exists("$thumb_path/{$wr_id}")) {
+if (!$is_thumb && !is_file("{$thumb_path}/{$wr_id}")) {
     if (preg_match("/youtu/i", $wr_link1)) mw_get_youtube_thumb($wr_id, $wr_link1);
     else if (preg_match("/youtu/i", $wr_link2)) mw_get_youtube_thumb($wr_id, $wr_link2);
     else if (preg_match("/vimeo/i", $wr_link1)) mw_get_vimeo_thumb($wr_id, $wr_link1);
     else if (preg_match("/vimeo/i", $wr_link2)) mw_get_vimeo_thumb($wr_id, $wr_link2);
+    else {
+        $pt = mw_youtube_pattern($wr_content);
+        if ($pt) {
+            preg_match($pt, $wr_content, $mat);
+            mw_get_youtube_thumb($wr_id, $mat[1]);
+        }
+        else {
+            $pt = mw_vimeo_pattern($wr_content);
+            if ($pt) {
+                preg_match($pt, $wr_content, $mat);
+                mw_get_vimeo_thumb($wr_id, $mat[1]);
+            }
+        }
+    }
 }
 
 // 메일발송 사용 (수정글은 발송하지 않음)

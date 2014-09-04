@@ -11,9 +11,11 @@ else {
 }
 
 if ($mg_id) {
-    include_once($mw_group_skin_head_path."/group.head.skin.php");
+    if (is_file($mw_group_skin_head_path."/group.head.skin.php"))
+        include_once($mw_group_skin_head_path."/group.head.skin.php");
 }
 else if (is_member_page()) {
-    include_once($mw_member_skin_head_path."/member.head.skin.php");
+    if (is_file($mw_member_skin_head_path."/member.head.skin.php"))
+        include_once($mw_member_skin_head_path."/member.head.skin.php");
 }
 

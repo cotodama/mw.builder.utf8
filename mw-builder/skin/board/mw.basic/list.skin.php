@@ -497,6 +497,20 @@ if (!file_exists($thumb_file))
         else if (preg_match("/youtu/i", $list[$i]['link'][2])) mw_get_youtube_thumb($list[$i]['wr_id'], $list[$i]['link'][2]);
         else if (preg_match("/vimeo/i", $list[$i]['link'][1])) mw_get_vimeo_thumb($list[$i]['wr_id'], $list[$i]['link'][1]);
         else if (preg_match("/vimeo/i", $list[$i]['link'][2])) mw_get_vimeo_thumb($list[$i]['wr_id'], $list[$i]['link'][2]);
+        else {
+            $pt = mw_youtube_pattern($list[$i]['wr_content']);
+            if ($pt) {
+                preg_match($pt, $list[$i]['wr_content'], $mat);
+                mw_get_youtube_thumb($list[$i]['wr_id'], $mat[1]);
+            }
+            else {
+                $pt = mw_vimeo_pattern($list[$i]['wr_content']);
+                if ($pt) {
+                    preg_match($pt, $list[$i]['wr_content'], $mat);
+                    mw_get_vimeo_thumb($list[$i]['wr_id'], $mat[1]);
+                }
+            }
+        }
     }
 }
 else {
@@ -527,8 +541,12 @@ else if ($mw_basic[cf_type] == "gall")
 {
     if ($list[$i][is_notice]) continue;
 
-    if (!file_exists($thumb_file) || $list[$i][icon_secret] || $list[$i][wr_view_block]) {
+    if (!is_file($thumb_file)) {
         $thumb_file = mw_get_noimage();
+        $thumb_width = "width='$mw_basic[cf_thumb_width]'";
+        $thumb_height = "height='$mw_basic[cf_thumb_height]'";
+    } else if ($list[$i][icon_secret] || $list[$i][wr_view_block] || $list[$i][wr_key_password]) {
+        $thumb_file = $board_skin_path.'/img/lock.png';
         $thumb_width = "width='$mw_basic[cf_thumb_width]'";
         $thumb_height = "height='$mw_basic[cf_thumb_height]'";
     } else {
@@ -609,7 +627,9 @@ else if ($mw_basic[cf_type] == "gall")
     <? } ?>
 
     <? if ($mw_basic[cf_type] == "thumb") { ?>
-    <? if (!file_exists($thumb_file) || $list[$i][icon_secret] || $list[$i][wr_view_block]) $thumb_file = mw_get_noimage(); ?>
+    <? if (!is_file($thumb_file)) $thumb_file = mw_get_noimage(); ?>
+    <? if ($list[$i][icon_secret] || $list[$i][wr_view_block] || $list[$i][wr_key_password])
+        $thumb_file = $board_skin_path.'/img/lock.png'; ?>
 
     <!-- 썸네일 -->
     <td class=mw_basic_list_thumb><!-- 여백제거

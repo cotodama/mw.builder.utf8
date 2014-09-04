@@ -27,6 +27,7 @@ $board['bo_use_list_view'] = false;
             <div class="fbox">
                 <input type="password" size="20" name="wr_key_password" id="wr_key_password">
                 <input type="submit" value="확인" class="btn">
+                <input type="button" value="뒤로" class="btn" onclick="history.back()">
                 <?php if ($is_admin) { ?>
                 <input type="submit" value="skip (관리자)" class="btn">
                 <?php } else if ($write['mb_id'] and $write['mb_id'] == $member['mb_id']) { ?>

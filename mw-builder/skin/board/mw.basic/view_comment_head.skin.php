@@ -213,4 +213,7 @@ $row['datetime2'] = mw_get_date($row['wr_datetime'], $mw_basic['cf_time_comment'
 if ($row[del_link])
     $row[del_link] = mw_bbs_path($row[del_link]);
 
+
+$row[content] = preg_replace("/(\[@[^\]]+\])/iUs", "<span style='font-weight:bold;'>\\1</span>", $row[content]);
+
 return true;

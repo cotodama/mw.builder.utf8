@@ -1431,8 +1431,8 @@ if ($w == "") {
         <script> fwrite.wr_link<?=$i?>_target.value = "<?=$write["wr_link{$i}_target"]?>"; </script>
     <? } ?>
     <? if ($mw_basic[cf_link_write] && $mw_basic[cf_link_write] <= $member[mb_level] && $i == 1) { ?>
-        <input type="checkbox" name="wr_link_write" value="1" <? if ($write[wr_link_write]) echo "checked"; ?> >
-         본문 출력 없이 링크로 바로 이동
+        <input type="checkbox" name="wr_link_write" id="wr_link_write" value="1" <? if ($write[wr_link_write]) echo "checked"; ?> >
+        <label for="wr_link_write">본문 출력 없이 링크로 바로 이동<label>
     <? } ?>
     <?php if ($mw_basic['cf_hidden_link'] && $mw_basic['cf_hidden_link'] <= $member['mb_level']) { ?>
     <div>
