@@ -86,6 +86,7 @@ while ($write = sql_fetch_array($qry))
     $row['title'] = htmlspecialchars($write['wr_subject']);
     $row['author'] = htmlspecialchars($write['wr_name']);
     $row['link'] = mw_seo_url($bo_table, $write['wr_id']);
+    $row['link'] = str_replace("&", "&amp;", $row['link']);
     
     $row['pubdate'] = date("c", strtotime($write['wr_datetime']));
     if ($write['wr_last'])

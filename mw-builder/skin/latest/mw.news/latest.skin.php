@@ -71,6 +71,8 @@ $style_name = "mw-latest-side-$bo_table-$rows-$subject_len";
                         $list[$i]['href'] = mw_builder_seo_url($bo_table, $list[$i]['wr_id']); ?>
                     <li><a href="<?php echo $list[$i]['href']?>" title="<?php
                         echo $list[$i]['title']?>"><?php echo cut_str($list[$i]['subject'], $subject_len)?></a>
+                        <?php echo $list[$i]['icon_secret']?>
+                        <?php echo $list[$i]['icon_new']?>
                         <span class='comment'><?php echo $list[$i]['wr_comment']?'+'.$list[$i]['wr_comment']:''?></span></li>
                     <?php } ?>
                 </ul>

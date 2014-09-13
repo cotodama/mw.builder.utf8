@@ -73,6 +73,10 @@ if ($qry) {
     $sql.= " , mb_id = '{$member['mb_id']}' ";
     $sql.= " , jp_datetime = '{$g4['time_ymdhis']}' ";
     sql_query($sql);
+
+    $sql = " update {$g4['board_new_table']} set bn_datetime = '{$g4['time_ymdhis']}' ";
+    $sql.= " where bo_table = '{$bo_table}' and wr_id = '{$wr_id}' ";
+    sql_query($sql);
 }
 
 echo "ok";

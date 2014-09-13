@@ -1,3 +1,14 @@
+ver 2.7.3 (14.09.12)
+    : 배추스킨전용RSS 주소표시오류 수정 (부멉님 제안)
+    : 새글점프시 최근게시물 테이블에도 적용
+    : 공지전용 섬네일
+
+    mw.basic/HISTORY
+    mw.basic/mw.proc/mw.jump.update.pnp
+    mw.basic/img/notice.png
+    mw.basic/list.skin.php
+    mw.basic/rss.php
+ 
 ver 2.7.2 (14.09.05)
     : 게시물별 비밀번호 입력창 뒤로가기 버튼 추가 (신비님 제안)
     : 유니코드 제어 문자 (& #8238) 글작성시 체크 (AndroidGame님 제안)

@@ -110,6 +110,10 @@ function mw_get_list($write_row, $board, $skin_path, $subject_len=40)
     global $page;
     global $mw;
 
+    $skin_path = str_replace("../", "", $skin_path);
+    $skin_path = str_replace("./", "", $skin_path);
+    $skin_path = $g4['url'].'/'.$skin_path;
+
     //$t = get_microtime();
     $bbs_path = "$g4[url]/$g4[bbs]";
 

@@ -190,8 +190,9 @@ function mw_seo_bbs_path($path)
         $path = str_replace('../../plugin/mobile/board.php?bo_table='.$bo_table, mw_seo_url($bo_table, $wr_id).'?', $path);
     }
     else {
-        $path = str_replace('../board.php?bo_table='.$bo_table, mw_seo_url($bo_table, $wr_id).'?', $path);
+        $path = str_replace('../bbs/board.php?bo_table='.$bo_table, mw_seo_url($bo_table, $wr_id).'?', $path);
     }
+
 
     $path = preg_replace("/\?$/", "", $path);
 

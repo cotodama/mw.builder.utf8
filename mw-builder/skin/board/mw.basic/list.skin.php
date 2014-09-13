@@ -545,11 +545,13 @@ else if ($mw_basic[cf_type] == "gall")
         $thumb_file = mw_get_noimage();
         $thumb_width = "width='$mw_basic[cf_thumb_width]'";
         $thumb_height = "height='$mw_basic[cf_thumb_height]'";
-    } else if ($list[$i][icon_secret] || $list[$i][wr_view_block] || $list[$i][wr_key_password]) {
+    }
+    else if ($list[$i][icon_secret] || $list[$i][wr_view_block] || $list[$i][wr_key_password]) {
         $thumb_file = $board_skin_path.'/img/lock.png';
         $thumb_width = "width='$mw_basic[cf_thumb_width]'";
         $thumb_height = "height='$mw_basic[cf_thumb_height]'";
-    } else {
+    }
+    else {
         $thumb_width = "";
         $thumb_height = "";
     }
@@ -578,6 +580,9 @@ else if ($mw_basic[cf_type] == "gall")
     }
 
     $list[$i][subject] = "<span{$style}>{$list[$i][subject]}</span></a>";
+
+    if (strstr($board['bo_notice'], $list[$i]['wr_id']."\n") && $thumb_file == mw_get_noimage())
+        $thumb_file = $board_skin_path.'/img/notice.png';
 
     if (($line_number+1)%$colspan==1) echo "<tr>";
 ?>
@@ -630,6 +635,9 @@ else if ($mw_basic[cf_type] == "gall")
     <? if (!is_file($thumb_file)) $thumb_file = mw_get_noimage(); ?>
     <? if ($list[$i][icon_secret] || $list[$i][wr_view_block] || $list[$i][wr_key_password])
         $thumb_file = $board_skin_path.'/img/lock.png'; ?>
+
+    <? if (strstr($board['bo_notice'], $list[$i]['wr_id']."\n") && $thumb_file == mw_get_noimage())
+        $thumb_file = $board_skin_path.'/img/notice.png'; ?>
 
     <!-- 썸네일 -->
     <td class=mw_basic_list_thumb><!-- 여백제거
