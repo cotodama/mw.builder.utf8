@@ -285,7 +285,7 @@ if ($is_category && $mw_basic[cf_category_tab]) {
 <div class="category_tab">
 <ul>
     <? if (!$mw_basic[cf_default_category]) { ?>
-    <li <? if (!$sca) echo "class='selected'";?>><div><a href="<?=$g4[bbs_path]?>/board.php?bo_table=<?=$bo_table?>">전체</a></div></li>
+    <li <? if (!$sca) echo "class='selected'";?>><div><a href="<?php echo mw_seo_url($bo_table)?>">전체</a></div></li>
     <? } ?>
     <? for ($i=0, $m=sizeof($category_list); $i<$m; $i++) { ?>
     <li <? if (urldecode($sca) == $category_list[$i]) echo "class='selected'";?>><div><a 

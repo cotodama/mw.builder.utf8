@@ -87,6 +87,16 @@ if ($cf_gender_w_write)
 if ($cf_gender_w_comment)
     $cf_gender_w .= 'c';
 
+$cf_age_opt = '';
+if ($cf_age_list)
+    $cf_age_opt .= 'l';
+if ($cf_age_view)
+    $cf_age_opt .= 'v';
+if ($cf_age_write)
+    $cf_age_opt .= 'w';
+if ($cf_age_comment)
+    $cf_age_opt .= 'c';
+
 $cf_board_stime = $cf_board_etime = "";
 
 if ($cf_board_stime_hour and $cf_board_stime_minute)
@@ -193,6 +203,38 @@ while ($row = sql_fetch_array($qry))
     sql_query($sql);
 }
 
+if (!empty($mw_cash)) {
+    sql_query("delete from {$mw['cash_grade_table']} where bo_table = '{$bo_table}' ");
+
+    $sql_common = "   gd_list = '{$gd_list_}' ";
+    $sql_common.= " , gd_read = '{$gd_read_}' ";
+    $sql_common.= " , gd_write = '{$gd_write_}' ";
+    $sql_common.= " , gd_comment = '{$gd_comment_}' ";
+    $sql_common.= " , bo_table = '{$bo_table}' ";
+    $sql_common.= " , gd_id = '0' ";
+
+    sql_query("insert into {$mw['cash_grade_table']} set {$sql_common} ");
+
+    $sql = " select * from {$mw_cash['grade_table']} where gd_use = '1' order by gd_cash ";
+    $qry = sql_query($sql);
+    while ($row = sql_fetch_array($qry))
+    {
+        $gd_list = "gd_list_".$row['gd_id']; $gd_list = $$gd_list;
+        $gd_read = "gd_read_".$row['gd_id']; $gd_read = $$gd_read;
+        $gd_write = "gd_write_".$row['gd_id']; $gd_write = $$gd_write;
+        $gd_comment = "gd_comment_".$row['gd_id']; $gd_comment = $$gd_comment;
+
+        $sql_common = "   gd_list = '{$gd_list}' ";
+        $sql_common.= " , gd_read = '{$gd_read}' ";
+        $sql_common.= " , gd_write = '{$gd_write}' ";
+        $sql_common.= " , gd_comment = '{$gd_comment}' ";
+        $sql_common.= " , bo_table = '{$bo_table}' ";
+        $sql_common.= " , gd_id = '{$row['gd_id']}' ";
+
+        sql_query("insert into {$mw['cash_grade_table']} set {$sql_common} ");
+    }
+}
+
 $sql = "update $mw[basic_config_table] set
 bo_table = '$bo_table'
 ,cf_type = '$cf_type'
@@ -212,7 +254,9 @@ bo_table = '$bo_table'
 ,cf_noimage_path = '$cf_noimage_path'
 ,cf_attribute = '$cf_attribute'
 ,cf_ccl = '$cf_ccl'
+,cf_cash_grade_use = '$cf_cash_grade_use'
 ,cf_age = '$cf_age'
+,cf_age_opt = '$cf_age_opt'
 ,cf_gender_m = '$cf_gender_m'
 ,cf_gender_w = '$cf_gender_w'
 ,cf_board_sdate = '$cf_board_sdate'
@@ -298,6 +342,7 @@ bo_table = '$bo_table'
 ,cf_link_log = '$cf_link_log'
 ,cf_post_history = '$cf_post_history'
 ,cf_delete_log = '$cf_delete_log'
+,cf_comment_delete_log = '$cf_comment_delete_log'
 ,cf_post_history_level = '$cf_post_history_level'
 ,cf_comment_default = '$cf_comment_default'
 ,cf_default_category = '$cf_default_category'
@@ -341,6 +386,7 @@ bo_table = '$bo_table'
 ,cf_thumb_jpg = '$cf_thumb_jpg'
 ,cf_image_save_close = '$cf_image_save_close'
 ,cf_image_outline = '$cf_image_outline'
+,cf_image_remote_save = '$cf_image_remote_save'
 ,cf_only_one = '$cf_only_one'
 ,cf_must_notice = '$cf_must_notice'
 ,cf_must_notice_read = '$cf_must_notice_read'
@@ -581,6 +627,7 @@ if ($chk[cf_qna_point_use]) {
     $sql .= ", cf_qna_enough = '$cf_qna_enough' ";
 }
 if ($chk[cf_ccl]) $sql .= ", cf_ccl = '$cf_ccl' ";
+if ($chk[cf_cash_grade_use]) $sql .= ", cf_cash_grade_use = '$cf_cash_grade_use' ";
 //if ($chk[cf_gender]) $sql .= ", cf_gender = '$cf_gender' ";
 if ($chk[cf_gender]) {
     $sql .= ", cf_gender_m = '$cf_gender_m' ";
@@ -595,7 +642,10 @@ if ($chk[cf_board_time]) {
     $sql .= ", cf_board_etime = '$cf_board_etime' ";
 }
 if ($chk[cf_board_week]) $sql .= ", cf_board_week = '$cf_board_week' ";
-if ($chk[cf_age]) $sql .= ", cf_age = '$cf_age' ";
+if ($chk[cf_age]) {
+    $sql .= ", cf_age = '$cf_age' ";
+    $sql .= ", cf_age_opt = '$cf_age_opt' ";
+}
 if ($chk[cf_hot]) {
     $sql .= ", cf_hot = '$cf_hot' ";
     $sql .= ", cf_hot_basis = '$cf_hot_basis' ";
@@ -682,6 +732,7 @@ if ($chk[cf_download_log]) $sql .= ", cf_download_log = '$cf_download_log' ";
 if ($chk[cf_link_log]) $sql .= ", cf_link_log = '$cf_link_log' ";
 if ($chk[cf_post_history]) $sql .= ", cf_post_history = '$cf_post_history' ";
 if ($chk[cf_delete_log]) $sql .= ", cf_delete_log = '$cf_delete_log' ";
+if ($chk[cf_comment_delete_log]) $sql .= ", cf_comment_delete_log = '$cf_comment_delete_log' ";
 if ($chk[cf_post_history_level]) $sql .= ", cf_post_history_level = '$cf_post_history_level' ";
 if ($chk[cf_link_board]) $sql .= ", cf_link_board = '$cf_link_board' ";
 if ($chk[cf_link_target_level]) $sql .= ", cf_link_target_level = '$cf_link_target_level' ";
@@ -737,6 +788,7 @@ if ($chk[cf_image_outline]) {
     $sql .= ", cf_image_outline = '$cf_image_outline' ";
     $sql .= ", cf_image_outline_color = '$cf_image_outline_color' ";
 }
+if ($chk[cf_image_remote_save]) $sql .= ", cf_image_remote_save = '$cf_image_remote_save' ";
 if ($chk[cf_only_one]) $sql .= ", cf_only_one = '$cf_only_one' ";
 if ($chk[cf_must_notice]) {
     $sql .= ", cf_must_notice = '$cf_must_notice' ";

@@ -21,6 +21,9 @@
 
 if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
 
+$mw_is_view = false;
+$mw_is_list = false;
+$mw_is_write = false;
 $mw_is_comment = true;
 
 include_once("$board_skin_path/mw.lib/mw.skin.basic.lib.php");
@@ -123,6 +126,17 @@ if (!$is_admin && $member['mb_sex'] == 'F' && !strstr($mw_basic['cf_gender_w'], 
 if (!$is_admin && $member['mb_sex'] == 'M' && !strstr($mw_basic['cf_gender_m'], 'c')) {
     $is_comment_write = false;
     $write_error = "readonly onclick=\"alert('남자는 댓글작성 권한이 없습니다.'); return false;\"";
+}
+
+if (!$is_admin && $mw_basic['cf_cash_grade_use'] && !$grade['gd_comment']) {
+    $is_comment_write = false;
+    $write_error = "readonly onclick=\"alert('[{$my_cash_grade['gd_name']}] 등급은 권한이 없습니다. '); return false;\"";
+}
+
+if (!$is_admin && $mw_basic['cf_age'] && strstr($mw_basic['cf_age_opt'], 'c')) {
+    $msg = mw_basic_age($mw_basic['cf_age'], "comment");
+    $is_comment_write = false;
+    $write_error = "readonly onclick=\"alert('{$msg}'); return false;\"";
 }
 
 if ($cwin==1) {

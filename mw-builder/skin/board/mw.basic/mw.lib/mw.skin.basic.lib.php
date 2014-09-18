@@ -51,6 +51,7 @@ $mw['move_table']         = $g4['table_prefix']."mw_move";
 $mw['jump_log_table']     = $g4['table_prefix']."mw_jump_log";
 $mw['category_table']     = $g4['table_prefix']."mw_category";
 $mw['level_table']        = $g4['table_prefix']."mw_level";
+$mw['cash_grade_table']   = $g4['table_prefix']."mw_cash_grade";
 
 $default_charset = '';
 if (preg_match("/^utf/i", $g4['charset']))
@@ -155,7 +156,13 @@ if (!$is_admin &&  $member['mb_sex'] == 'F') {
 //if (!$is_admin && $mw_basic['cf_gender'] && $mw_basic['cf_gender'] == 'M' && $member['mb_sex'] != 'M') { alert("남자만 접근 가능합니다."); }
 //if (!$is_admin && $mw_basic['cf_gender'] && $mw_basic['cf_gender'] == 'F' && $member['mb_sex'] != 'F') { alert("여자만 접근 가능합니다."); }
 
-if (!$is_admin) mw_basic_age($mw_basic['cf_age']);
+if (!$is_admin) {
+    if ($mw_is_list && strstr($mw_basic['cf_age_opt'], 'l')) mw_basic_age($mw_basic['cf_age']);
+    if ($mw_is_view && strstr($mw_basic['cf_age_opt'], 'v')) mw_basic_age($mw_basic['cf_age']);
+    if ($mw_is_write && strstr($mw_basic['cf_age_opt'], 'w')) mw_basic_age($mw_basic['cf_age']);
+    if ($mw_is_comment && strstr($mw_basic['cf_age_opt'], 'c')) mw_basic_age($mw_basic['cf_age']);
+}
+
 
 // 접근설정: 날짜
 if (!$is_admin && $mw_basic['cf_board_sdate'] && $mw_basic['cf_board_sdate'] > $g4['time_ymd']) {
@@ -403,6 +410,31 @@ if ($sca) {
     if ($mw_category['ca_level_write'] && $mw_is_write && $mw_category['ca_level_write'] > $member['mb_level']) {
         alert("{$sca} 분류의 글작성 권한이 없습니다.");
     }
+}
+
+if ($mw_basic['cf_cash_grade_use'] && !$is_admin)
+{
+    $my_cash_grade = mw_cash_grade($member['mb_id']);
+    if (!$my_cash_grade) {
+        $my_cash_grade['gd_id'] = 0;
+        $my_cash_grade['gd_name'] = "일반";
+    }
+
+    $sql = " select * from {$mw['cash_grade_table']} ";
+    $sql.= " where bo_table = '{$bo_table}' and gd_id = '{$my_cash_grade['gd_id']}'";
+    $grade = sql_fetch($sql);
+
+    if ($mw_is_list && !$grade['gd_list'])
+        alert("[{$my_cash_grade['gd_name']}] 등급은 권한이 없습니다. ");
+
+    if ($mw_is_read && !$grade['gd_read'])
+        alert("[{$my_cash_grade['gd_name']}] 등급은 권한이 없습니다. ");
+
+    if ($mw_is_write && !$grade['gd_write'])
+        alert("[{$my_cash_grade['gd_name']}] 등급은 권한이 없습니다. ");
+
+    if ($mw_is_comment && !$grade['gd_comment'])
+        alert("[{$my_cash_grade['gd_name']}] 등급은 권한이 없습니다. ");
 }
 
 // 쓰기버튼 항상 출력

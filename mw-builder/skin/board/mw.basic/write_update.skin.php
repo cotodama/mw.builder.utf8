@@ -204,7 +204,7 @@ if ($mw_basic[cf_change_image_size] && $member[mb_level] >= $mw_basic[cf_change_
 }
 
 // 썸네일 생성
-$is_thumb = mw_make_thumbnail_row($bo_table, $wr_id, $_POST['wr_content'], true);
+$is_thumb = mw_make_thumbnail_row($bo_table, $wr_id, $_POST['wr_content'], $mw_basic['cf_image_remote_save']);
 
 // 원본 워터마크
 for ($i=0, $m=sizeof($watermark_files); $i<$m; $i++) // 기존 원터마크 파일 삭제

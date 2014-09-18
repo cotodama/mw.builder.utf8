@@ -1,3 +1,14 @@
+1.6.0 (14.09.19)
+    : 그누보드 최신버전 4.37.21 (2014.08.21) 탑재
+    : 배추스킨 최신버전 2.7.4 (14.09.19) 탑재
+    : 팝업창 중메뉴, 소메뉴 설정
+    : 팝업창 사용자URL 설정
+
+    HISTORY-MW-BUILDER
+    adm/mw.builder/mw.popup.form.php
+    adm/mw.builder/mw.popup.update.php
+    lib/mw.popup.lib.php
+
 1.5.9 (14.09.12)
     : 그누보드 최신버전 4.37.21 (2014.08.21) 탑재
     : 배추스킨 최신버전 2.7.3 (14.09.12) 탑재

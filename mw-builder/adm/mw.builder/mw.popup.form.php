@@ -24,6 +24,45 @@ include_once("./_common.php");
 
 auth_check($auth[$sub_menu], "w");
 
+header("Content-Type: text/html; charset=$g4[charset]");
+$gmnow = gmdate("D, d M Y H:i:s") . " GMT";
+header("Expires: 0"); // rfc2616 - Section 14.21
+header("Last-Modified: " . $gmnow);
+header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
+header("Cache-Control: pre-check=0, post-check=0, max-age=0"); // HTTP/1.1
+header("Pragma: no-cache"); // HTTP/1.0
+
+if (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == "xmlhttprequest")
+{
+    if ($gr_id)
+    {
+        $sql = "select * from {$mw['menu_middle_table']} where gr_id = '{$gr_id}' order by mm_order ";
+        $qry = sql_query($sql);
+        $opt = "<option value=''>모두</option>";
+
+        while ($row = sql_fetch_array($qry)) {
+            $opt .= "<option value=\"{$row['mm_id']}\">{$row['mm_name']}</option>\n";
+        }
+
+        echo "중 : <select name=\"mm_id\" id=\"mm_id\">{$opt}</select>";
+        exit;
+    }
+    else if ($mm_id)
+    {
+        $sql = "select * from {$mw['menu_small_table']} where mm_id = '{$mm_id}' order by ms_order ";
+        $qry = sql_query($sql);
+        $opt = "<option value=''>모두</option>";
+
+        while ($row = sql_fetch_array($qry)) {
+            $opt .= "<option value=\"{$row['ms_id']}\">{$row['ms_name']}</option>\n";
+        }
+
+        echo "소 : <select name=\"ms_id\" id=\"ms_id\">{$opt}</select>";
+        exit;
+    }
+    exit;
+}
+
 $token = get_token();
 
 $html_title = "팝업창";
@@ -61,6 +100,9 @@ sql_query("alter table $mw[popup_table] drop pp_start_time", false);
 sql_query("alter table $mw[popup_table] drop pp_end_time", false);
 sql_query("alter table $mw[popup_table] change pp_start pp_start datetime not null", false);
 sql_query("alter table $mw[popup_table] change pp_end pp_end datetime not null", false);
+sql_query("alter table $mw[popup_table] add mm_id int not null after gr_id", false);
+sql_query("alter table $mw[popup_table] add ms_id int not null after mm_id", false);
+sql_query("alter table $mw[popup_table] add pp_url varchar(255) not null after ms_id", false);
 
 
 $g4[title] = $html_title;
@@ -80,8 +122,8 @@ echo cheditor1('pp_content', '100%', '250');
 // 아래 css 는 date picker 의 화면을 맞추는 코드입니다.
 ?>
 
-<link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/themes/base/jquery-ui.css" rel="stylesheet" />
-<style type="text/css">
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/themes/base/jquery-ui.css" rel="stylesheet" />
+<style>
 <!--
 .ui-datepicker { font:12px dotum; }
 .ui-datepicker select.ui-datepicker-month, 
@@ -89,8 +131,8 @@ echo cheditor1('pp_content', '100%', '250');
 .ui-datepicker-trigger { margin:0 0 -5px 2px; }
 -->
 </style>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/jquery-ui.min.js"></script>
-<script type="text/javascript">
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/jquery-ui.min.js"></script>
+<script>
 /* Korean initialisation for the jQuery calendar extension. */
 /* Written by DaeKwon Kang (ncrash.dk@gmail.com). */
 jQuery(function($){
@@ -194,7 +236,7 @@ jQuery(function($){
         <option value="<?=$t?>:59:59"> <?=$t?>시 59분 </option>
         <? } ?>
         </select>
-        <script type="text/javascript"> fpopup.pp_end_time.value = "<?=substr($pp[pp_end], 11, 10)?>"; </script>
+        <script> fpopup.pp_end_time.value = "<?=substr($pp[pp_end], 11, 10)?>"; </script>
     </td>
 </tr>
 <tr class='ht'>
@@ -232,30 +274,93 @@ jQuery(function($){
     </td>
 </tr>
 <tr class='ht'>
-    <td>적용 그룹</td>
+    <td>적용 메뉴</td>
     <td>
+        대 : 
 	<select name="gr_id" id="gr_id" itemname="적용그룹">
 	<option value=""> 모두 </option>
 	<option value="index"> 인덱스 </option>
-	<?
+	<?php
 	$sql = "select * from $g4[group_table] order by gr_id";
 	$qry = sql_query($sql);
 	while ($row = sql_fetch_array($qry)) {
 	?>
 	<option value="<?=$row[gr_id]?>"> <?=$row[gr_subject]?> </option>
-	<? } ?>
-	<select>
-	<script type="text/javascript"> document.fpopup.gr_id.value = "<?=$pp[gr_id]?>";</script>
+	<?php } ?>
+	</select>
+
+        <div id="mm_select"></div>
+        <div id="ms_select"></div>
+
+	<script>
+        $(document).ready(function () {
+            $("#gr_id").val("<?php echo $pp['gr_id']?>");
+
+            gr_select("<?php echo $pp['mm_id']?>");
+
+            $("#gr_id").bind("change", gr_select);
+
+            function gr_select(mm_id) {
+                if (!$("#gr_id").val() && !mm_id) {
+                    $("#ms_id").remove();
+                    $("#mm_id").remove();
+                    $("#ms_select").html('');
+                    $("#mm_select").html('');
+                    return;
+                }
+                $.get("<?php echo $_SERVER['PHP_SELF']?>", { "gr_id" : $("#gr_id").val() }, function (str) {
+                    if (!str) return;
+                    $("#mm_id").unbind("change");
+                    $("#ms_select").html('');
+                    $("#mm_select").html('');
+                    $("#mm_select").html(str);
+                    if (mm_id) {
+                        $("#mm_id").val(mm_id);
+                        mm_select("<?php echo $pp['ms_id']?>");
+                    }
+                    $("#mm_id").bind("change", mm_select);
+                });
+            }
+
+            function mm_select(ms_id) {
+                if (!$("#mm_id").val() && !ms_id) {
+                    $("#ms_id").remove();
+                    $("#ms_select").html('');
+                    return;
+                }
+                $.get("<?php echo $_SERVER['PHP_SELF']?>", { "mm_id" : $("#mm_id").val() }, function (str) {
+                    if (!str) return;
+                    $("#ms_select").html(str);
+                    if (ms_id)
+                        $("#ms_id").val(ms_id);
+                });
+            }
+
+            function ms_select() {
+            }
+
+        });
+
+        </script>
     </td>
     <td>적용레벨</td>
     <td>
-	<?=get_member_level_select("mb_level", 1, $member[mb_level], $pp[mb_level])?>
+	<?php echo get_member_level_select("mb_level", 1, $member[mb_level], $pp[mb_level])?>
     </td>
-
+</tr>
+<tr class='ht'>
+    <td>적용 URL</td>
+    <td colspan="3">
+        <input type="text" class="ed" name="pp_url"
+            style="width:97%" maxlength="200" itemname="적용 URL" value="<?php echo $pp['pp_url']?>">
+    </td>
 </tr>
 <tr class='ht'>
     <td>제목</td>
-    <td colspan=3><input type='text' class=ed name=pp_subject style="width:97%" maxlength=200 required itemname='제목' value='<?=$pp[pp_subject]?>'></td>
+    <td colspan="3">
+        <input type="text" class="ed" name="pp_subject"
+            style="width:97%" maxlength="200" required itemname="제목" value="<?php echo $pp['pp_subject']?>">
+    </td>
 </tr>
 <tr class='ht'>
     <td>내용</td>
@@ -272,7 +377,7 @@ jQuery(function($){
     <input type=button class=btn1 value='  목  록  ' onclick="document.location.href='<?=$mw[admin_path]?>/mw.popup.php?<?=$qstr?>';">
 </form>
 
-<script type="text/javascript">
+<script>
 document.fpopup.pp_subject.focus();
 
 function fpopup_check(f)

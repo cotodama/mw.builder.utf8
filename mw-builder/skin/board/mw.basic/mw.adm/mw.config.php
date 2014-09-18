@@ -509,13 +509,30 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
             $age_type = $match[2];
             ?>
             <input type="text" class="ed" size="3" name="cf_age" value="<?=$age?>">세
-            <select name="cf_age_type">
+            <select name="cf_age_type" id="cf_age_type">
                 <option value=""></option>
                 <option value="+">이상 접근가능</option>
                 <option value="-">미만 접근가능</option>
                 <option value="=">만 접근가능</option>
             </select>
-            <script> document.cf_form.cf_age_type.value = "<?=$age_type?>"; </script>
+
+            <input type="checkbox" name="cf_age_list" value="1"> 목록
+            <input type="checkbox" name="cf_age_view" value="1"> 읽기
+            <input type="checkbox" name="cf_age_write" value="1"> 쓰기
+            <input type="checkbox" name="cf_age_comment" value="1"> 댓글
+
+            <script>
+            $("#cf_age_type").val("<?=$age_type?>");
+
+            $("input[name=cf_age_list]").attr("checked", <?php
+                if (strstr($mw_basic['cf_age_opt'], 'l')) echo "true"; else echo "false"; ?>);
+            $("input[name=cf_age_view]").attr("checked", <?php
+                if (strstr($mw_basic['cf_age_opt'], 'v')) echo "true"; else echo "false"; ?>);
+            $("input[name=cf_age_write]").attr("checked", <?php
+                if (strstr($mw_basic['cf_age_opt'], 'w')) echo "true"; else echo "false"; ?>);
+            $("input[name=cf_age_comment]").attr("checked", <?php
+                if (strstr($mw_basic['cf_age_opt'], 'c')) echo "true"; else echo "false"; ?>);
+            </script>
 	</div>
     </div>
 
@@ -2508,9 +2525,11 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
     <div class="cf_item">
 	<div class="cf_title"> <input type=checkbox name=chk[cf_delete_log] value=1>&nbsp; 삭제글 남김 </div>
 	<div class="cf_content">
-	    <input type=checkbox name=cf_delete_log value=1> 사용
+	    <input type=checkbox name=cf_delete_log value=1> 원글 사용,
+	    <input type=checkbox name=cf_comment_delete_log value=1> 코멘트 사용 
 	    <span class="cf_info">(글을 삭제하면 "삭제되었습니다" 로 변경, 선택삭제는 그냥 삭제됨)</span>
 	    <script> document.cf_form.cf_delete_log.checked = "<?=$mw_basic[cf_delete_log]?>"; </script>
+	    <script> document.cf_form.cf_comment_delete_log.checked = "<?=$mw_basic[cf_comment_delete_log]?>"; </script>
 	</div>
     </div>
 
@@ -2847,6 +2866,14 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 	</div>
     </div>
 
+    <div class="cf_item">
+	<div class="cf_title"> <input type=checkbox name=chk[cf_image_remote_save] value=1>&nbsp; 외부이미지 </div>
+	<div class="cf_content">
+	    <input type=checkbox name=cf_image_remote_save value=1> 사용
+            <span class="cf_info">(본문에 외부이미지 링크가 있을 경우 파일을 우리서버에 저장합니다.)</span>
+	    <script> document.cf_form.cf_image_remote_save.checked = '<?=$mw_basic[cf_image_remote_save]?>'; </script>
+	</div>
+    </div>
 
 
     <div class="block"></div>
@@ -3320,6 +3347,108 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
             <input type="text" size="50" name="cf_not_membership_msg" class="ed" value="<?=$mw_basic[cf_not_membership_msg]?>"><br>
             이동 경로 :
             <input type="text" size="50" name="cf_not_membership_url" class="ed" value="<?=$mw_basic[cf_not_membership_url]?>">
+	</div>
+    </div>
+
+    <div class="cf_item">
+	<div class="cf_title"> <input type=checkbox disabled>&nbsp; 등급별 권한 </div>
+	<div class="cf_content" height=80>
+            <input type="checkbox" name="cf_cash_grade_use" id="cf_cash_grade_use" value="1"> 사용
+            <input type="button" value="등급설정" class="btn1" onclick="window.open('<?php
+                echo $g4['admin_path']?>/mw.cash/mw.grade.php')">
+            <script>
+            $("#cf_cash_grade_use").attr("checked", <?php echo $mw_basic['cf_cash_grade_use']?"true":"false"?>);
+            </script>
+            <style>
+            .mw_grade { background-color:#ccc; }
+            .mw_grade td { background-color:#eee; text-align:center; }
+            </style>
+            <table border="0" cellpadding="3" cellspacing="1" class="mw_grade">
+            <tr>
+                <td width="120">등급명</td>
+                <td>목록</td>
+                <td>읽기</td>
+                <td>쓰기</td>
+                <td>댓글</td>
+            </tr>
+            <?php
+            $sql = " select * from {$mw['cash_grade_table']} where bo_table = '{$bo_table}' and gd_id = '0' ";
+            $ro2 = sql_fetch($sql);
+            if (!$ro2) {
+                sql_query("insert into {$mw['cash_grade_table']} set bo_table = '{$bo_table}', gd_id = '0'  ");
+                $ro2 = sql_fetch($sql);
+            }
+            ?>
+                <tr>
+                    <td>일반</td>
+                    <td>
+                        <input type="checkbox" name="gd_list_<?php echo $row['gd_id']?>"
+                            id="gd_list_<?php echo $row['gd_id']?>" value="1">
+                        <script> $("#gd_list_<?php echo $row['gd_id']?>").attr("checked", <?php
+                            echo $ro2['gd_list']?"true":"false"?>); </script>
+                    </td>
+                    <td>
+                        <input type="checkbox" name="gd_read_<?php echo $row['gd_id']?>"
+                            id="gd_read_<?php echo $row['gd_id']?>" value="1">
+                        <script> $("#gd_read_<?php echo $row['gd_id']?>").attr("checked", <?php
+                            echo $ro2['gd_read']?"true":"false"?>); </script>
+                    </td>
+                    <td>
+                        <input type="checkbox" name="gd_write_<?php echo $row['gd_id']?>"
+                            id="gd_write_<?php echo $row['gd_id']?>" value="1">
+                        <script> $("#gd_write_<?php echo $row['gd_id']?>").attr("checked", <?php
+                            echo $ro2['gd_write']?"true":"false"?>); </script>
+                    </td>
+                    <td>
+                        <input type="checkbox" name="gd_comment_<?php echo $row['gd_id']?>"
+                            id="gd_comment_<?php echo $row['gd_id']?>" value="1">
+                        <script> $("#gd_comment_<?php echo $row['gd_id']?>").attr("checked", <?php
+                            echo $ro2['gd_comment']?"true":"false"?>); </script>
+                    </td>
+                </tr>
+            <?php
+            $sql = " select * from {$mw_cash['grade_table']} where gd_use = '1' order by gd_cash ";
+            $qry = sql_query($sql);
+            while ($row = sql_fetch_array($qry))
+            {
+                $sql = " select * from {$mw['cash_grade_table']} where bo_table = '{$bo_table}' and gd_id = '{$row['gd_id']}' ";
+                $ro2 = sql_fetch($sql);
+                if (!$ro2) {
+                    sql_query("insert into {$mw['cash_grade_table']} set bo_table = '{$bo_table}', gd_id = '{$row['gd_id']}'  ");
+                    $ro2 = sql_fetch($sql);
+                }
+            ?>
+                <tr>
+                    <td><?php echo $row['gd_name']?></td>
+                    <td>
+                        <input type="checkbox" name="gd_list_<?php echo $row['gd_id']?>"
+                            id="gd_list_<?php echo $row['gd_id']?>" value="1">
+                        <script> $("#gd_list_<?php echo $row['gd_id']?>").attr("checked", <?php
+                            echo $ro2['gd_list']?"true":"false"?>); </script>
+                    </td>
+                    <td>
+                        <input type="checkbox" name="gd_read_<?php echo $row['gd_id']?>"
+                            id="gd_read_<?php echo $row['gd_id']?>" value="1">
+                        <script> $("#gd_read_<?php echo $row['gd_id']?>").attr("checked", <?php
+                            echo $ro2['gd_read']?"true":"false"?>); </script>
+                    </td>
+                    <td>
+                        <input type="checkbox" name="gd_write_<?php echo $row['gd_id']?>"
+                            id="gd_write_<?php echo $row['gd_id']?>" value="1">
+                        <script> $("#gd_write_<?php echo $row['gd_id']?>").attr("checked", <?php
+                            echo $ro2['gd_write']?"true":"false"?>); </script>
+                    </td>
+                    <td>
+                        <input type="checkbox" name="gd_comment_<?php echo $row['gd_id']?>"
+                            id="gd_comment_<?php echo $row['gd_id']?>" value="1">
+                        <script> $("#gd_comment_<?php echo $row['gd_id']?>").attr("checked", <?php
+                            echo $ro2['gd_comment']?"true":"false"?>); </script>
+                    </td>
+                </tr>
+                <?php
+            }
+            ?>
+            </table>
 	</div>
     </div>
 

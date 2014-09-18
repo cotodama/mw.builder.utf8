@@ -1,3 +1,21 @@
+ver 2.7.4 (14.09.19)
+    : 파일 교체후 반드시 [배추스킨설정] 에서 [설정다시읽기]를 실행해주세요.
+    : 퍼머링크 전체목록보이기 사용시 페이지 번호 적용 안되는 문제 해결
+    : [컨텐츠샵] 캐쉬 등급별 사용권한
+    : 외부이미지 저장 옵션 처리 (맹맹님 제안)
+    : 삭제글남김 기능 원글,댓글 옵션설정 (AndroidGame님 제안)
+    : 접근 나이제한 목록,읽기,쓰기,댓글 세부 설정 (부멉님 제안)
+
+    mw.basic/HISTORY
+    mw.basic/mw.adm/mw.config.php
+    mw.basic/mw.adm/mw.config.update.php
+    mw.basic/mw.adm/mw.upgrade.php
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/mw.lib/mw.skin.basic.lib.php
+    mw.basic/list.skin.php
+    mw.basic/write_update.skin.php
+    mw.basic/view_comment.skin.php
+ 
 ver 2.7.3 (14.09.12)
     : 배추스킨전용RSS 주소표시오류 수정 (부멉님 제안)
     : 새글점프시 최근게시물 테이블에도 적용

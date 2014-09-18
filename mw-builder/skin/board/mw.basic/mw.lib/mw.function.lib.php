@@ -1577,8 +1577,14 @@ function mw_delete_row($board, $write, $save_log=false, $save_message='삭제되
         }
     }
 
+    $delete_log = false;
+    if (($write['wr_is_comment'] && $mw_basic['cf_comment_delete_log'])
+        or (!$write['wr_is_comment'] && $mw_basic['cf_delete_log'])) {
+        $delete_log = true;
+    }
+
     // 게시글 삭제
-    if ($save_log != 'no' && ($mw_basic[cf_delete_log] || $save_log)) {
+    if ($save_log != 'no' && ($delete_log || $save_log)) {
         if ($mw_basic[cf_post_history]) {
             //$wr_name2 = $board[bo_use_name] ? $member[mb_name] : $member[mb_nick];
             $sql = "insert into $mw[post_history_table]
@@ -1594,6 +1600,7 @@ function mw_delete_row($board, $write, $save_log=false, $save_message='삭제되
                            ,ph_datetime = '$g4[time_ymdhis]'";
             sql_query($sql);
         }
+
         $sql = " update $write_table
                     set wr_subject = '$save_message'
                         ,wr_content = '$save_message'
@@ -1602,7 +1609,8 @@ function mw_delete_row($board, $write, $save_log=false, $save_message='삭제되
                         ,wr_link2 = ''
                   where wr_id = '$write[wr_id]'";
         sql_query($sql);
-    } else {
+    }
+    else {
         // 원글삭제
         sql_query(" delete from $write_table where wr_parent = '$write[wr_id]' ");
         sql_query(" delete from $write_table where wr_id = '$write[wr_id]' ");
@@ -1717,9 +1725,18 @@ function mw_anonymous_nick($mb_id, $wr_ip='')
 // 19+ : 19세 이상
 // 19- : 19세 미만 
 // 19= : 19세만 
-function mw_basic_age($value)
+function mw_basic_age($value, $type='alert')
 {
-    global $g4, $member;
+    global $g4;
+    global $member;
+    global $mw_is_list;
+    global $mw_is_read;
+    global $mw_is_write;
+    global $mw_is_comment;
+    global $is_admin;
+    global $mw_basic;
+
+    if (!$value) return;
 
     if (!$member[mb_birth])
         $member_age = 0;
@@ -1732,15 +1749,21 @@ function mw_basic_age($value)
 
     switch ($age_type) {
         case "+" :
-            if ($member_age < $age) alert("나이 {$age}세 이상만 접근 가능합니다.");
+            if ($member_age < $age) $msg = "나이 {$age}세 이상만 접근 가능합니다.";
             break;
         case "-" :
-            if ($member_age >= $age) alert("나이 {$age}세 미만만 접근 가능합니다.");
+            if ($member_age >= $age) $msg = "나이 {$age}세 미만만 접근 가능합니다.";
             break;
         case "=" :
-            if ($member_age != $age) alert("나이 {$age}세만 접근 가능합니다.");
+            if ($member_age != $age) $msg = "나이 {$age}세만 접근 가능합니다.";
             break;
     }
+
+    if ($type == 'alert') {
+        alert($msg);
+    }
+
+    return $msg;
 }
 
 function mw_basic_move_cate($bo_table, $wr_id)
@@ -3059,8 +3082,8 @@ function mw_list_link($row)
     global $qstr;
     global $page;
 
-    if (!$qstr && $page)
-        $qstr = "&page=".$page;
+    if (!strstr($qstr, "page=") && $page > 1)
+        $qstr .= "&page=".$page;
 
     $sign = '&';
     if ($mw['config']['cf_seo_url']) {

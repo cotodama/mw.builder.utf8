@@ -1339,3 +1339,22 @@ if (is_null($mw_basic[cf_talent_market])) {
     sql_query("alter table {$write_table} add wr_hidden_link1 varchar(255) not null default ''", false);
     sql_query("alter table {$write_table} add wr_hidden_link2 varchar(255) not null default ''", false);
 
+    sql_query("alter table $mw[basic_config_table] add cf_cash_grade_use varchar(1) not null", false);
+
+    if ($mw_cash['grade_table']) {
+        $sql = "create table if not exists {$mw['cash_grade_table']} (
+            bo_table varchar(20) not null,
+            gd_id int not null,
+            gd_list varchar(1) not null default '1',
+            gd_read varchar(1) not null default '1',
+            gd_write varchar(1) not null default '1',
+            gd_comment varchar(1) not null default '1',
+            primary key (bo_table, gd_id)
+        )";
+        sql_query($sql, false);
+    }
+
+    sql_query("alter table {$mw[basic_config_table]} add cf_image_remote_save varchar(1) not null default '1'", false);
+    sql_query("alter table {$mw[basic_config_table]} add cf_comment_delete_log varchar(1) not null default ''", false);
+
+    sql_query("alter table {$mw[basic_config_table]} add cf_age_opt varchar(4) not null default 'lvwc'", false);
