@@ -101,6 +101,25 @@ function unhtmlspecialchars($str)
     return $str;
 }
 
+function mw_get_skin_config($bo_table)
+{
+    global $g4;
+    global $is_admin;
+
+    $config_table = $g4['table_prefix']."mw_basic_config";
+
+    $f = array();
+    $f[] = "cf_singo_number";
+
+    $sql_f = implode(", ", $f);
+
+    $sql = "select {$sql_f} from {$config_table} where bo_table = '{$bo_table}' ";
+    //if ($is_admin) echo "$sql<br>\n";
+    $row = sql_fetch($sql, false);
+
+    return $row;
+}
+
 // 게시물 정보($write_row)를 출력하기 위하여 $list로 가공된 정보를 복사 및 가공
 function mw_get_list($write_row, $board, $skin_path, $subject_len=40)
 {
@@ -109,6 +128,7 @@ function mw_get_list($write_row, $board, $skin_path, $subject_len=40)
     global $qstr;
     global $page;
     global $mw;
+    global $is_admin;
 
     $skin_path = str_replace("../", "", $skin_path);
     $skin_path = str_replace("./", "", $skin_path);
@@ -120,6 +140,20 @@ function mw_get_list($write_row, $board, $skin_path, $subject_len=40)
     // 배열전체를 복사
     $list = $write_row;
     unset($write_row);
+
+    global $basic_skin_config;
+    $mw_basic = $basic_skin_config[$board['bo_table']];
+    if (empty($mw_basic)) {
+        $basic_skin_config[$board['bo_table']] = mw_get_skin_config($board['bo_table']); 
+        $mw_basic = $basic_skin_config[$board['bo_table']];
+    }
+
+    $list['wr_singo_lock'] = false;
+    if ($list['wr_singo'] && $list['wr_singo'] >= $mw_basic['cf_singo_number']) {
+        $list['wr_subject'] = "신고가 접수된 게시물입니다.";
+        $list['wr_content'] = "신고가 접수된 게시물입니다.";
+        $list['wr_singo_lock'] = true;
+    }
 
     $list['is_notice'] = preg_match("/[^0-9]{0,1}{$list['wr_id']}[\r]{0,1}/",$board['bo_notice']);
 

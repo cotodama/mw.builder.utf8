@@ -75,6 +75,9 @@ function mw_latest_rand($skin_dir="", $bo_table, $rows=10, $subject_len=40, $is_
                 if ($row2['wr_key_password'])
                     $file[$i]['path'] = $g4['path']."/img/lock.png";
 
+                if ($row2['wr_singo_lock'])
+                    $file[$i]['path'] = $g4['path']."/img/lock.png";
+
                 $file[$i]['wr_subject'] = $row['wr_subject'];
                 $file[$i][subject] = conv_subject($row2[wr_subject], $subject_len, "…");
                 $file[$i][wr_comment] = $row2[wr_comment];

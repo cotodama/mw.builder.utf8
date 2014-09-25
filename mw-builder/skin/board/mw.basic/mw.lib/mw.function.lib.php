@@ -3562,7 +3562,8 @@ function mw_path_to_url($content)
 {
     global $g4;
 
-    $content = str_replace($g4['path'].'/data/', $g4['url'].'/data/', $content);
+    //$content = str_replace($g4['path'].'/data/', $g4['url'].'/data/', $content);
+    $content = str_replace('../data/', $g4['url'].'/data/', $content);
 
     return $content;
 }
@@ -3580,4 +3581,129 @@ function mw_is_mobile_builder()
     return $is_mobile;
 }}
 
+function mw_is_rate($bo_table, $wr_id)
+{
+    global $g4;
+    global $member;
+    global $mw_basic;
+    global $write;
+    global $mw;
+    global $is_admin;
+
+    // 사용안함
+    if (!$mw_basic['cf_rate_level'])
+        return "평가기능을 사용중이 아닙니다.";
+
+    // 사용권한
+    if ($mw_basic['cf_rate_level'] > $member['mb_level'])
+        return "평가할 권한이 없습니다.";
+
+    if ($member['mb_id'])
+        $mb_id = $member['mb_id'];
+    else
+        $mb_id = $_SERVER['REMOTE_ADDR'];
+
+    // 글쓴이 평가 금지
+    if (!empty($write) && ($write['mb_id'] == $mb_id) || $write['wr_ip'] == $mb_id)
+        return "글쓴이 본인은 평가할 수 없습니다.";
+
+    $write_table = $g4['write_prefix'].$bo_table;
+
+    // 이미 평가 했는지 검사
+    $sql = " select * from {$write_table} ";
+    $sql.= "  where wr_parent = '{$wr_id}' ";
+    $sql.= "    and wr_rate > 0 ";
+    $sql.= "    and (mb_id = '{$mb_id}' or wr_ip = '{$mb_id}') ";
+    $row = sql_fetch($sql);
+
+    if ($row)
+        return "이미 평가하셨습니다.";
+
+    // 다운로드 한사람만 평가가능
+    if ($mw_basic['cf_rate_down']) {
+        $sql = " select * from {$mw['download_log_table']} where bo_table = '{$bo_table}' and wr_id = '{$wr_id}' and mb_id = '{$mb_id}' ";
+        $row = sql_fetch($sql);
+
+        if (!$row)
+            return "다운로드 후 평가해주세요.";
+    }
+
+    // 구매자만 평가가능
+    if ($mw_basic['cf_rate_buy'])
+    {
+        // 컨텐츠샵 (다운로드 한 사람만 평가가능으로 대체)
+
+        // 소셜커머스
+        if ($mw_basic['cf_social_commerce']) {
+            $sql = " select pr_id from {$mw_soc['product_table']} ";
+            $sql.= "  where bo_table = '{$bo_table}' ";
+            $sql.= "    and wr_id = '{$wr_id}' ";
+            $product = sql_fetch($sql);
+
+            $sql = " select or_id from {$mw_soc['order_table']} ";
+            $sql.= "  where pr_id = '{$product['pr_id']}' ";
+            $sql.= "    and mb_id = '{$mb_id}' ";
+            $sql.= "    and (or_status = '1' or or_status = '2') ";
+            $order = sql_fetch($sql);
+
+            if (!$order)
+                return "구매 하신분만 평가 가능합니다.";
+        }
+
+        // 재능마켓
+        if ($mw_basic['cf_talent_market']) {
+            $sql = " select pr_id from {$mw_talent_market['product_table']} ";
+            $sql.= "  where bo_table = '{$bo_table}' ";
+            $sql.= "    and wr_id = '{$wr_id}' ";
+            $product = sql_fetch($sql);
+
+            $sql = " select or_id from {$mw_talent_market['order_table']} ";
+            $sql.= "  where pr_id = '{$product['pr_id']}' ";
+            $sql.= "    and buyer_id = '{$mb_id}' ";
+            $sql.= "    and or_status = '4' ";
+            $order = sql_fetch($sql);
+
+            if (!$order)
+                return "구매결정 하신분만 평가 가능합니다.";
+        }
+    }
+
+    return '';
+}
+
+function mw_rate($bo_table, $wr_id)
+{
+    global $mw_basic;
+    global $g4;
+
+    $write_table = $g4['write_prefix'].$bo_table;
+    $sql = " select count(*) as cnt, sum(wr_rate) as rate ";
+    $sql.= "   from {$write_table} ";
+    $sql.= "  where wr_parent = '{$wr_id}' ";
+    $sql.= "    and wr_is_comment = '1' ";
+    $sql.= "    and wr_rate > 0 ";
+    $row = sql_fetch($sql);
+
+    $wr_rate = round($row['rate'] / $row['cnt'], 2);
+
+    sql_query(" update {$write_table} set wr_rate = '{$wr_rate}' where wr_id = '{$wr_id}' ");
+
+    return $row['cnt'];
+}
+
+function mw_rate_count($bo_table, $wr_id)
+{
+    global $mw_basic;
+    global $g4;
+
+    $write_table = $g4['write_prefix'].$bo_table;
+    $sql = " select count(*) as cnt ";
+    $sql.= "   from {$write_table} ";
+    $sql.= "  where wr_parent = '{$wr_id}' ";
+    $sql.= "    and wr_is_comment = '1' ";
+    $sql.= "    and wr_rate > 0 ";
+    $row = sql_fetch($sql);
+
+    return $row['cnt'];
+}
 

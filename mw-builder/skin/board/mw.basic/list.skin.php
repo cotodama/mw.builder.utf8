@@ -648,7 +648,14 @@ else if ($mw_basic[cf_type] == "gall")
     <!-- 글제목 -->
     <td class=mw_basic_list_subject>
         <?
-        if ($mw_basic[cf_type] == "desc" && file_exists($thumb_file)) {
+        if ($mw_basic[cf_type] == "desc" && is_file($thumb_file)) {
+
+            if ($list[$i][icon_secret] || $list[$i][wr_view_block] || $list[$i][wr_key_password])
+                $thumb_file = $board_skin_path.'/img/lock.png'; 
+
+            if (strstr($board['bo_notice'], $list[$i]['wr_id']."\n") && $thumb_file == mw_get_noimage())
+                $thumb_file = $board_skin_path.'/img/notice.png';
+
             echo "<div class=mw_basic_list_thumb>";
             if ($list[$i][icon_new])
                 echo "<div class='icon_gall_new'><img src='{$pc_skin_path}/img/icon_gall_new.png'></div>";

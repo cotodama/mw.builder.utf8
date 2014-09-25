@@ -52,11 +52,20 @@ if ($mw_basic['cf_jump_point']) {
 <script>
 $(document).ready(function () {
     $("#btn_jump").click(function () {
-        if (!confirm("<?php echo $msg?>")) return;
+        if (!confirm("<?php echo $msg?>")) {
+            return;
+        }
+        if (!Date.now) {
+            Date.now = function() { return new Date().getTime(); };
+        }
+        var t = Date.now() ;
+
         $.get("<?php echo $pc_skin_path?>/mw.proc/mw.jump.update.php", {
             "bo_table":"<?php echo $bo_table?>",
-            "wr_id":"<?php echo $wr_id?>"
-        }, function (str) {
+            "wr_id":"<?php echo $wr_id?>",
+            "t":t
+        },
+        function (str) {
             if (str == "ok") {
                 location.href = "<?php echo mw_seo_url($bo_table, $wr_id, "&page=1")?>";
             }

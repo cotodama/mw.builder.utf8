@@ -91,6 +91,12 @@ if ($cf_filter) {
     }
 }
 
+$mw_syndi_path = $g4['path'].'/plugin/naver-syndi';
+if (is_file($mw_syndi_path.'/_config.php')) {
+    include_once($mw_syndi_path.'/_config.php');
+    include_once($mw_syndi_path.'/_lib.php');
+}
+
 if ($is_all_delete or $is_all_move) {
     $all_board_sql = "select * from $g4[board_table] ";
     $all_board_qry = sql_query($all_board_sql);
@@ -112,6 +118,10 @@ if ($is_all_delete or $is_all_move) {
                 $config[cf_intercept_ip] = trim($config[cf_intercept_ip]) . "\n$all_write_row[wr_ip]";
                 sql_query("update $g4[config_table] set cf_intercept_ip = '$config[cf_intercept_ip]'");
             }
+
+            if (function_exists('mw_syndi_set_feed'))
+                mw_syndi_set_feed($all_board_row['bo_table'], $all_write_row['wr_id'], '', 'd');
+
         } // write row
     } // board row
 }

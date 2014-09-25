@@ -216,4 +216,28 @@ if ($row[del_link])
 
 $row[content] = preg_replace("/(\[@[^\]]+\])/iUs", "<span style='font-weight:bold;'>\\1</span>", $row[content]);
 
+if ($mw_basic['cf_rate_level'] && $row['wr_rate'] > 0) {
+    ob_start();
+    ?>
+    <div id="star_rate_<?php echo $row['wr_id']?>" style="margin:0 0 10px 0;"></div>
+    <script>
+    $(document).ready(function () {
+        $("#star_rate_<?php echo $row['wr_id']?>").mw_star_rate({
+            path : "<?php echo $pc_skin_path?>/mw.js/mw.star.rate/",
+            star : "star1",
+            default_value : <?php echo round($row['wr_rate'], 1)?>,
+            readonly : true,
+            readonly_msg : '',
+            half : true,
+            max : 5,
+        });
+    });
+    </script>
+    <?
+    $rate = ob_get_contents();
+    ob_end_clean();
+
+    $row['content'] = $rate . $row['content'];
+}
+
 return true;

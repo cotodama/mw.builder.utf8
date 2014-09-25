@@ -203,7 +203,7 @@ while ($row = sql_fetch_array($qry))
     sql_query($sql);
 }
 
-if (!empty($mw_cash)) {
+if ($mw_cash['grade_table']) {
     sql_query("delete from {$mw['cash_grade_table']} where bo_table = '{$bo_table}' ");
 
     $sql_common = "   gd_list = '{$gd_list_}' ";
@@ -303,6 +303,10 @@ bo_table = '$bo_table'
 ,cf_jump_count = '$cf_jump_count'
 ,cf_jump_point = '$cf_jump_point'
 ,cf_jump_days = '$cf_jump_days'
+,cf_rate_level = '$cf_rate_level'
+,cf_rate_point = '$cf_rate_point'
+,cf_rate_down = '$cf_rate_down'
+,cf_rate_buy = '$cf_rate_buy'
 ,cf_singo = '$cf_singo'
 ,cf_singo_id = '$cf_singo_id'
 ,cf_memo_id = '$cf_memo_id'
@@ -691,6 +695,12 @@ if ($chk[cf_jump_level]) {
     $sql .= ", cf_jump_count = '$cf_jump_count' ";
     $sql .= ", cf_jump_point = '$cf_jump_point' ";
     $sql .= ", cf_jump_days = '$cf_jump_days' ";
+}
+if ($chk[cf_rate_level]) {
+    $sql .= ", cf_rate_level = '$cf_rate_level' ";
+    $sql .= ", cf_rate_point = '$cf_rate_point' ";
+    $sql .= ", cf_rate_down = '$cf_rate_down' ";
+    $sql .= ", cf_rate_buy = '$cf_rate_buy' ";
 }
 if ($chk[cf_search_level]) $sql .= ", cf_search_level = '$cf_search_level' ";
 if ($chk[cf_comment_html]) $sql .= ", cf_comment_html = '$cf_comment_html' ";

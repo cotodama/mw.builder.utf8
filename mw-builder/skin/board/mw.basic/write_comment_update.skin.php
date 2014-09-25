@@ -52,3 +52,12 @@ if (!$is_member) {
     set_cookie("mw_cookie_homepage", $wr_homepage, -1*$g4[server_time]);
 }
 
+if (mw_is_rate($bo_table, $write['wr_id']) == '') {
+    sql_query(" update {$write_table} set  wr_rate = '{$wr_rate}' where wr_id = '$comment_id' ", false);
+    if ($mw_basic['cf_rate_point'])
+        insert_point($member['mb_id'], $mw_basic['cf_rate_point'], "평가 참여 점수", $bo_table, $write['wr_id'], '@rate');
+
+    mw_rate($bo_table, $write['wr_id']);
+}
+
+

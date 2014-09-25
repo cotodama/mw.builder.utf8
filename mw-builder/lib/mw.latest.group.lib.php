@@ -75,6 +75,9 @@ function mw_latest_group($skin_dir="", $gr_id, $rows=10, $subject_len=40, $is_im
             if ($row['wr_key_password'])
                 $file[$i]['path'] = $g4['path']."/img/lock.png";
 
+            if ($row['wr_singo_lock'])
+                $file[$i]['path'] = $g4['path']."/img/lock.png";
+
             $file[$i]['wr_subject'] = $row['wr_subject'];
             $file[$i]['subject'] = conv_subject($row['wr_subject'], $subject_len, "…");
             $file[$i]['wr_comment'] = $row['wr_comment'];

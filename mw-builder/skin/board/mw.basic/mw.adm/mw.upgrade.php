@@ -1358,3 +1358,12 @@ if (is_null($mw_basic[cf_talent_market])) {
     sql_query("alter table {$mw[basic_config_table]} add cf_comment_delete_log varchar(1) not null default ''", false);
 
     sql_query("alter table {$mw[basic_config_table]} add cf_age_opt varchar(4) not null default 'lvwc'", false);
+
+    sql_query("alter table {$mw['basic_config_table']} add cf_rate_level tinyint not null default 0", false);
+    sql_query("alter table {$mw['basic_config_table']} add cf_rate_point int not null default 0", false);
+    sql_query("alter table {$mw['basic_config_table']} add cf_rate_down varchar(1) not null default ''", false);
+    sql_query("alter table {$mw['basic_config_table']} add cf_rate_buy varchar(1) not null default ''", false);
+
+    sql_query("alter table {$write_table} add wr_rate decimal(3,2) not null", false);
+
+

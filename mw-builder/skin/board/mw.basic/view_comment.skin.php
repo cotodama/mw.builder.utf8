@@ -161,6 +161,9 @@ if ($mw_basic[cf_comment_period] > 0) {
 echo bc_code($mw_basic[cf_comment_head]);
 ?>
 
+<link rel="stylesheet" href="<?php echo $pc_skin_path?>/mw.js/mw.star.rate/jquery.mw.star.rate.css" type="text/css">
+<script src="<?php echo $pc_skin_path?>/mw.js/mw.star.rate/jquery.mw.star.rate.js"></script>
+
 <? if ($mw_basic[cf_source_copy] && $cwin) { // 출처 자동 복사 ?>
 <script type="text/javascript" src="<?=$board_skin_path?>/mw.js/autosourcing.open.compact.js"></script>
 <style type="text/css">
@@ -606,10 +609,38 @@ if ($is_comment_editor && $mw_basic[cf_editor] == "cheditor") {
 }
 ?>
 
+
+<a name="c_write"></a>
+
 <div style="padding:5px 0 0 0;">
 <a href="javascript:comment_box('', 'c');"><img src="<?=$board_skin_path?>/img/btn_comment_insert.gif" border=0></a>
 <? if ($is_admin) { ?><img src="<?=$board_skin_path?>/img/btn_comment_all_delete.gif" border=0 onclick="comment_all_delete()" style="cursor:pointer;"><? } ?>
 </div>
+
+<?php if ($mw_basic['cf_rate_level'] && $mw_basic['cf_rate_level'] <= $member['mb_level']) { ?>
+<div id="rate_ajax"></div>
+<script>
+$(document).ready(function() {
+    comment_rate_run();
+});
+
+function comment_rate_run()
+{
+    if (!Date.now) {
+        Date.now = function() { return new Date().getTime(); };
+    }
+    var t = Date.now() ;
+
+    $.get("<?php echo $board_skin_path?>/mw.proc/mw.rate.php", {
+        "bo_table" : "<?php echo $bo_table?>",
+        "wr_id" : "<?php echo $wr_id?>",
+        "t" : t
+    }, function (html) {
+        $("#rate_ajax").html(html);
+    });
+}
+</script>
+<?php } //cf_rate_level?>
 
 <div id=mw_basic_comment_write>
 
@@ -629,6 +660,8 @@ if ($is_comment_editor && $mw_basic[cf_editor] == "cheditor") {
 <? if ($is_comment_editor) { ?>
 <input type=hidden name=html        value='html1'>
 <? } ?>
+
+<input type="hidden" name="wr_rate" id="wr_rate" value="0">
 
 <?php
 if (!$is_member) {

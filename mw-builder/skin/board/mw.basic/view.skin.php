@@ -348,6 +348,7 @@ for ($i=0; $i<count($view[file]); $i++) {
         <? if ($good_href) { ?>
         <img src="<?=$board_skin_path?>/img/btn_down_good.png" align="absmiddle" style="cursor:pointer;" onclick="mw_good_act_nocancel('good')"/>
         <? } ?>
+        <a href="#c_write"><img src="<?=$board_skin_path?>/img/btn_down_comment.png" align="absmiddle"/></a>
     </td>
 </tr>
 <?
@@ -731,6 +732,30 @@ if ($bomb) {
     </td>
 </tr>
 <? } ?>
+
+<?php if ($mw_basic['cf_rate_level'] && $write['wr_rate'] > 0) { ?>
+<?php
+$rate_count = mw_rate($bo_table, $wr_id);
+?>
+<tr>
+    <td>
+        <div id="view_rate_box"> 
+            <div><strong>종합평점</strong> (참여 <?php echo $rate_count?>명)</div>
+            <div id="view_rate"></div>
+        </div> 
+        <script>
+        $(document).ready(function () {
+            $("#view_rate").mw_star_rate({
+                path : "<?php echo $pc_skin_path?>/mw.js/mw.star.rate/",
+                default_value : <?php echo round($write['wr_rate'], 1)?>,
+                readonly : true,
+                readonly_msg : '',
+            });
+        });
+        </script>
+    </td>
+</tr>
+<?php } ?>
 
 <?
 if ($is_signature && $signature && !$view[wr_anonymous] && $mw_basic[cf_attribute] != "anonymous") // 서명출력
@@ -1305,8 +1330,12 @@ function file_download(link, no) {
 
     if (<?=$mw_basic[cf_download_popup]?>)
         win_open("<?=$board_skin_path?>/mw.proc/download.popup.skin.php?bo_table=<?=$bo_table?>&wr_id=<?=$wr_id?>&no="+no, "download_popup", "width=<?=$mw_basic[cf_download_popup_w]?>,height=<?=$mw_basic[cf_download_popup_h]?>,scrollbars=yes");
-    else
+    else {
+        if (typeof comment_rate_run == 'function') {
+            comment_rate_run();
+        }
         document.location.href=link;
+    }
 }
 </script>
 

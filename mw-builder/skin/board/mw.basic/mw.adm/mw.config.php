@@ -2254,6 +2254,36 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 	</div>
     </div>
 
+    <div class="cf_item">
+	<div class="cf_title"> <input type=checkbox name=chk[cf_rate_level] value=1>&nbsp; 별점평가</div>
+	<div class="cf_content">
+            <select name="cf_rate_level" id="cf_rate_level">
+            <option value="0">사용안함</option>
+            <?php for ($i=1; $i<=10; $i++) { ?>
+            <option value="<?php echo $i?>"><?php echo $i?> 레벨</option>
+            <?php } ?>
+            </select> 이상 평가 가능,
+                포인트 :
+                <input type="text" class="ed" name="cf_rate_point" size="4" numeric value="<?=$mw_basic['cf_rate_point']?>"> p
+                <span class="cf_info">(마이너스 입력시 차감)</span>
+            <div>
+                <input type="checkbox" name="cf_rate_down" id="cf_rate_down" value="1">
+                <label for="cf_rate_down">다운로드 한 사람만 평가 가능</label>
+                <span class="cf_info">(다운로드 로그 사용시)</span>
+            </div>
+            <div>
+                <input type="checkbox" name="cf_rate_buy" id="cf_rate_buy" value="1">
+                <label for="cf_rate_buy">구매자만 평가 가능</label>
+                <span class="cf_info">(소셜커머스, 재능마켓)</span>
+            </div>
+	    <script>
+            $("select[name=cf_rate_level]").val("<?php echo $mw_basic['cf_rate_level']?>");
+            $("input[name=cf_rate_down]").attr("checked", <?php echo $mw_basic['cf_rate_down']?'true':'false'?>);
+            $("input[name=cf_rate_buy]").attr("checked", <?php echo $mw_basic['cf_rate_buy']?'true':'false'?>);
+            </script>
+	</div>
+    </div>
+
     <div class="block"></div>
 
 </div> <!-- tabs-3 -->
@@ -3350,6 +3380,8 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 	</div>
     </div>
 
+    <?php if ($mw_cash['grade_table']) { ?>
+
     <div class="cf_item">
 	<div class="cf_title"> <input type=checkbox disabled>&nbsp; 등급별 권한 </div>
 	<div class="cf_content" height=80>
@@ -3373,10 +3405,10 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
             </tr>
             <?php
             $sql = " select * from {$mw['cash_grade_table']} where bo_table = '{$bo_table}' and gd_id = '0' ";
-            $ro2 = sql_fetch($sql);
+            $ro2 = sql_fetch($sql, false);
             if (!$ro2) {
-                sql_query("insert into {$mw['cash_grade_table']} set bo_table = '{$bo_table}', gd_id = '0'  ");
-                $ro2 = sql_fetch($sql);
+                sql_query("insert into {$mw['cash_grade_table']} set bo_table = '{$bo_table}', gd_id = '0'  ", false);
+                $ro2 = sql_fetch($sql, false);
             }
             ?>
                 <tr>
@@ -3408,14 +3440,14 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
                 </tr>
             <?php
             $sql = " select * from {$mw_cash['grade_table']} where gd_use = '1' order by gd_cash ";
-            $qry = sql_query($sql);
+            $qry = sql_query($sql, false);
             while ($row = sql_fetch_array($qry))
             {
                 $sql = " select * from {$mw['cash_grade_table']} where bo_table = '{$bo_table}' and gd_id = '{$row['gd_id']}' ";
-                $ro2 = sql_fetch($sql);
+                $ro2 = sql_fetch($sql, false);
                 if (!$ro2) {
-                    sql_query("insert into {$mw['cash_grade_table']} set bo_table = '{$bo_table}', gd_id = '{$row['gd_id']}'  ");
-                    $ro2 = sql_fetch($sql);
+                    sql_query("insert into {$mw['cash_grade_table']} set bo_table = '{$bo_table}', gd_id = '{$row['gd_id']}'  ", false);
+                    $ro2 = sql_fetch($sql, false);
                 }
             ?>
                 <tr>
@@ -3451,6 +3483,7 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
             </table>
 	</div>
     </div>
+    <?php } ?>
 
     <div class="block"></div>
 </div> <!-- tabs-8 -->

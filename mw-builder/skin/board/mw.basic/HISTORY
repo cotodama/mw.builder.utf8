@@ -1,3 +1,27 @@
+ver 2.7.5 (14.09.26)
+    : 별점 평가 (브라운아이즈님 제안)
+    : 배추스킨전용 RSS 사용시 에디터 첨부 이미지 경로 오류수정 (부멉님 제안)
+    : 새글점프 ajax 갱신 잘되게 처리 (마사지스타님 제안)
+    : 회원차단 및 삭제시 신디연동
+    : 첨부파일 다운로드 링크 우측에 댓글쓰기 버튼 추가
+
+    mw.basic/HISTORY
+    mw.basic/mw.adm/mw.config.php
+    mw.basic/mw.adm/mw.config.update.php
+    mw.basic/mw.adm/mw.upgrade.php
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/mw.proc/mw.jump.php
+    mw.basic/mw.proc/mw.jump.update.pnp
+    mw.basic/mw.proc/mw.intercept.update.php
+    mw.basic/mw.proc/mw.rate.php
+    mw.basic/mw.js/mw.star.rate/*
+    mw.basic/img/btn_down_comment.png
+    mw.basic/view.skin.php
+    mw.basic/view_comment.skin.php
+    mw.basic/view_comment_head.skin.php
+    mw.basic/write_comment_update.skin.php
+    mw.basic/style.common.css
+ 
 ver 2.7.4 (14.09.19)
     : 파일 교체후 반드시 [배추스킨설정] 에서 [설정다시읽기]를 실행해주세요.
     : 퍼머링크 전체목록보이기 사용시 페이지 번호 적용 안되는 문제 해결
