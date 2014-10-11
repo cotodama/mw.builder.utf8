@@ -365,7 +365,8 @@ if ($mw_basic[cf_contents_shop]) {
 if ($mw_basic[cf_subject_style] && $mw_basic[cf_subject_style_level] <= $member[mb_level]) {
     $sql = "update $write_table set ";
     $sql.= "   wr_subject_font = '$wr_subject_font' ";
-    $sql.= " , wr_subject_color = '$wr_subject_color' ";
+    if ($wr_subject_color != $mw_basic['cf_subject_style_color_default'])
+        $sql.= " , wr_subject_color = '$wr_subject_color' ";
     $sql.= " , wr_subject_bold = '$wr_subject_bold' ";
     $sql.= " where wr_id = '$wr_id'";
     sql_query($sql);

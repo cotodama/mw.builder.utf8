@@ -34,9 +34,9 @@ if ($write['wr_key_password'] && !get_session($ss_key_name."_".$write['wr_id']))
     return;
 }
 ?>
-<script type="text/javascript">
-document.title = "<?=strip_tags(addslashes($view[wr_subject]))?>";
-</script>
+<link href="<?php echo $pc_skin_path?>/mw.css/font-awesome-4.2.0/css/font-awesome.css" rel="stylesheet">
+
+<script> document.title = "<?=strip_tags(addslashes($view[wr_subject]))?>"; </script>
 <!--
 <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet" />
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/jquery-ui.min.js"></script>
@@ -136,7 +136,7 @@ include_once("$board_skin_path/mw.proc/mw.list.hot.skin.php");
 <!-- 분류 셀렉트 박스, 게시물 몇건, 관리자화면 링크 -->
 <table width="100%">
 <tr height="25">
-    <td width="30%">
+    <td>
         <form name="fcategory_view" method="get" style="margin:0;">
         <? if ($is_category && !$mw_basic[cf_category_tab]) { ?>
             <select name=sca onchange="location='<?=$category_location?>'+this.value;">
@@ -147,29 +147,7 @@ include_once("$board_skin_path/mw.proc/mw.list.hot.skin.php");
         </form>
     </td>
     <td align="right">
-        <? if ($mw_basic[cf_social_commerce]) { ?>
-        <span class=mw_basic_total style="cursor:pointer;" onclick="win_open('<?=$social_commerce_path?>/order_list.php?bo_table=<?=$bo_table?>', 'order_list', 'width=800,height=600,scrollbars=1');">[주문내역]</span>
-        <? } ?>
-        <? include("$board_skin_path/mw.proc/mw.smart-alarm-config.php") ?>
-        <span class=mw_basic_total>총 게시물 <?=number_format($total_count)?>건, 최근 <?=number_format($new_count)?> 건</span>
-        <? if ($is_admin && $mw_basic[cf_collect] == 'rss' && file_exists("$g4[path]/plugin/rss-collect/_lib.php")) {?>
-        <img src="<?=$g4[path]?>/plugin/rss-collect/img/btn_collect.png" align="absmiddle" style="cursor:pointer;" onclick="win_open('<?=$g4[path]?>/plugin/rss-collect/config.php?bo_table=<?=$bo_table?>', 'rss_collect', 'width=800,height=600,scrollbars=1')">
-        <? } ?>
-        <? if ($is_admin && $mw_basic[cf_collect] == 'youtube' && file_exists("$g4[path]/plugin/youtube-collect/_lib.php")) {?>
-        <img src="<?=$g4[path]?>/plugin/youtube-collect/img/btn_collect.png" align="absmiddle" style="cursor:pointer;" onclick="win_open('<?=$g4[path]?>/plugin/youtube-collect/config.php?bo_table=<?=$bo_table?>', 'youtube_collect', 'width=800,height=600,scrollbars=1')">
-        <? } ?>
-        <a style="cursor:pointer" class="tooltip"
-            title="읽기:<?=$board[bo_read_point]?>,
-쓰기:<?=$board[bo_write_point]?><?
-if ($mw_basic[cf_contents_shop_write]) { echo " ($mw_cash[cf_cash_name]$mw_basic[cf_contents_shop_write_cash]$mw_cash[cf_cash_unit])"; } ?>,
-댓글:<?=$board[bo_comment_point]?>,
-다운:<?=$board[bo_download_point]?>"><!--
-        --><img src='<?=$board_skin_path?>/img/btn_info.gif' border=0 align=absmiddle></a>
-        <? if ($mw_basic[cf_social_commerce] && $rss_href && file_exists("$social_commerce_path/img/xml.png")) { ?>
-            <a href='<?=$social_commerce_path?>/xml.php?bo_table=<?=$bo_table?>'><img src='<?=$social_commerce_path?>/img/xml.png' border=0 align=absmiddle></a>
-        <? } else if ($rss_href) { ?><a href='<?=$rss_href?>'><img src='<?=$board_skin_path?>/img/btn_rss.gif' border=0 align=absmiddle></a><?}?>
-        <? if ($is_admin == "super") { ?><a href="<?=$config_href?>"><img src="<?=$board_skin_path?>/img/btn_config.gif" title="스킨설정" border="0" align="absmiddle"></a><?}?>
-        <? if ($admin_href) { ?><a href="<?=$admin_href?>"><img src="<?=$board_skin_path?>/img/btn_admin.gif" title="관리자" width="63" height="22" border="0" align="absmiddle"></a><?}?>
+        <?php include($pc_skin_path."/mw.proc/mw.top.button.php")?>
     </td>
 </tr>
 <tr><td height=5></td></tr>
@@ -194,24 +172,41 @@ ob_start();
 <table width=100%>
 <tr height=35>
     <td>
-        <? if ($search_href) { echo "<a href=\"$search_href\"><img src='$board_skin_path/img/btn_search_list.gif' border='0' align='absmiddle'></a> "; } ?>
-        <? echo "<a href=\"$list_href\"><img src='$board_skin_path/img/btn_list.gif' border='0' align='absmiddle'></a> "; ?>
+        <?php
+        if ($prev_href)
+            //echo "<input type=image src=\"$board_skin_path/img/btn_prev.gif\" onclick=\"location.href='$prev_href'\" title=\"$prev_wr_subject\" accesskey='b'>&nbsp;";
+            echo "<a class=\"fa-button\" href=\"$prev_href\" title=\"$prev_wr_subject\" accesskey='b'><i class=\"fa fa-chevron-left\"></i> 이전글</a>&nbsp;";
 
-        <? if ($write_href) { echo "<a href=\"$write_href\"><img src='$board_skin_path/img/btn_write.gif' border='0' align='absmiddle'></a> "; } ?>
-        <? if ($reply_href) { echo "<a href=\"$reply_href\"><img src='$board_skin_path/img/btn_reply.gif' border='0' align='absmiddle'></a> "; } ?>
-
-        <? if ($update_href) { echo "<a href=\"$update_href\"><img src='$board_skin_path/img/btn_update.gif' border='0' align='absmiddle'></a> "; } ?>
-        <? if ($delete_href) { echo "<a href=\"$delete_href\"><img src='$board_skin_path/img/btn_delete.gif' border='0' align='absmiddle'></a> "; } ?>
-
-        <? //if ($good_href) { echo "<a href=\"$good_href\" target='hiddenframe'><img src='$board_skin_path/img/btn_good.gif' border='0' align='absmiddle'></a> "; } ?>
-        <? //if ($nogood_href) { echo "<a href=\"$nogood_href\" target='hiddenframe'><img src='$board_skin_path/img/btn_nogood.gif' border='0' align='absmiddle'></a> "; } ?>
-
-        <? //if ($scrap_href) { echo "<a href=\"javascript:;\" onclick=\"win_scrap('$scrap_href');\"><img src='$board_skin_path/img/btn_scrap.gif' border='0' align='absmiddle'></a> "; } ?>
-
+        if ($next_href) 
+            //echo "<input type=image href=\"$board_skin_path/img/btn_next.gif\" onclick=\"location.href='$next_href'\" title=\"$next_wr_subject\" accesskey='n'>&nbsp;";
+            echo "<a class=\"fa-button\" href=\"$next_href\" title=\"$next_wr_subject\" accesskey='b'><i class=\"fa fa-chevron-right\"></i> 다음글</a>&nbsp;";
+        ?>
     </td>
     <td align=right>
-        <? if ($prev_href) { echo "<input type=image src=\"$board_skin_path/img/btn_prev.gif\" onclick=\"location.href='$prev_href'\" title=\"$prev_wr_subject\" accesskey='b'>&nbsp;"; } ?>
-        <? if ($next_href) { echo "<input type=image src=\"$board_skin_path/img/btn_next.gif\" onclick=\"location.href='$next_href'\" title=\"$next_wr_subject\" accesskey='n'>&nbsp;"; } ?>
+        <?php
+        if ($search_href) {
+            //echo "<a href=\"$search_href\"><img src='$board_skin_path/img/btn_search_list.gif' border='0' align='absmiddle'></a> "; 
+            echo "<a class=\"fa-button\" href=\"$search_href\"><i class=\"fa fa-search\"></i> 검색목록</a> "; 
+        }
+        //echo "<a href=\"$list_href\"><img src='$board_skin_path/img/btn_list.gif' border='0' align='absmiddle'></a> ";
+        echo "<a class=\"fa-button\" href=\"$list_href\"><i class=\"fa fa-list\"></i> 목록</a> ";
+
+        if ($update_href)
+            //echo "<a href=\"$update_href\"><img src='$board_skin_path/img/btn_update.gif' border='0' align='absmiddle'></a> ";
+            echo "<a class=\"fa-button\" href=\"$update_href\"><i class=\"fa fa-cut\"></i> 수정</a> ";
+
+        if ($delete_href)
+            //echo "<a href=\"$delete_href\"><img src='$board_skin_path/img/btn_delete.gif' border='0' align='absmiddle'></a> ";
+            echo "<a class=\"fa-button\" href=\"$delete_href\"><i class=\"fa fa-remove\"></i> 삭제</a> ";
+
+        if ($reply_href)
+            //echo "<a href=\"$reply_href\"><img src='$board_skin_path/img/btn_reply.gif' border='0' align='absmiddle'></a> ";
+            echo "<a class=\"fa-button\" href=\"$reply_href\"><i class=\"fa fa-reply\"></i> 답변</a> ";
+
+        if ($write_href)
+            //echo "<a href=\"$write_href\"><img src='$board_skin_path/img/btn_write.gif' border='0' align='absmiddle'></a> ";
+            echo "<a class=\"fa-button primary\" href=\"$write_href\"><i class=\"fa fa-pencil\"></i> 글쓰기</a> ";
+       ?>
     </td>
 </tr>
 </table>
@@ -239,9 +234,10 @@ if ($is_category && $mw_basic[cf_category_tab]) {
 
 <!-- 제목, 글쓴이, 날짜, 조회, 추천, 비추천 -->
 <table width="100%" cellspacing="0" cellpadding="0">
-<tr><td height=2 class=mw_basic_line_color></td></tr>
+<tr><td height=1 class=mw_basic_line_color></td></tr>
 <tr>
     <td class=mw_basic_view_subject>
+        <?php echo $mw_admin_button?>
         <? if ($view[wr_is_mobile]) echo "<img src='$board_skin_path/img/icon_mobile.png' class='mobile_icon'>"; ?>
         <? if ($is_category) { echo ($category_name ? "[$view[ca_name]] " : ""); } ?>
         <h1><?=cut_hangul_last(get_text($view[wr_subject]))?> <?=$view[icon_secret]?></h1>
@@ -416,75 +412,7 @@ if ($mw_basic['cf_include_file_tail'] && is_file($mw_basic['cf_include_file_tail
     include_once($mw_basic['cf_include_file_tail']);
     echo "</td></tr>";
 } 
-
-if ($is_admin || $history_href || $is_singo_admin) { ?>
-<tr><td height=1 bgcolor=#E7E7E7></td></tr>
-<tr>
-    <td height=40 class="func_buttons">
-        <?
-        ob_start();
-        if ($is_singo_admin && $view[mb_id] != $member[mb_id]) { 
-            echo "<span><a href=\"javascript:btn_intercept('{$write[mb_id]}', '{$write[wr_ip]}')\">";
-            echo "<img src='$board_skin_path/img/btn_intercept.gif' border='0' align='absmiddle'></a></span>"; 
-        }
-        if ($history_href) {
-            echo "<span><a href=\"$history_href\"><img src='$board_skin_path/img/btn_history.gif' border='0' align='absmiddle'></a></span>";
-        }
-	if ($is_admin) {
-            if ($download_log_href) {
-                echo "<span><a href=\"$download_log_href\"><img src='$board_skin_path/img/btn_download_log.gif' border='0' align='absmiddle'></a></span>";
-            }
-            if ($link_log_href) {
-                echo "<span><a href=\"$link_log_href\"><img src='$board_skin_path/img/btn_link_log.gif' border='0' align='absmiddle'></a></span>";
-            }
-            if ($copy_href) {
-                echo "<span><a href=\"$copy_href\"><img src='$board_skin_path/img/btn_copy.gif' border='0' align='absmiddle'></a></span>";
-            }
-            if ($move_href) {
-                echo "<span><a href=\"$move_href\"><img src='$board_skin_path/img/btn_move.gif' border='0' align='absmiddle'></a></span>";
-            }
-            if ($is_category) {
-                echo "<span><a href=\"javascript:mw_move_cate_one();\"><img src=\"$board_skin_path/img/btn_select_cate.gif\" border=\"0\" align='absmiddle'></a></span>";
-            }
-            if ($nosecret_href) {
-                echo "<span><a href=\"$nosecret_href\"><img src='$board_skin_path/img/btn_nosecret.gif' border='0' align='absmiddle'></a></span>";
-            }
-            if ($secret_href) {
-                echo "<span><a href=\"$secret_href\"><img src='$board_skin_path/img/btn_secret.gif' border='0' align='absmiddle'></a></span>";
-            }
-
-            echo "<span><a href=\"javascript:btn_now()\"><img src='$board_skin_path/img/btn_now.gif' border='0' align='absmiddle'></a></span>";
-
-            if ($view[is_notice]) $btn_notice = '_off'; else $btn_notice = ''; 
-            echo "<span><a href=\"javascript:btn_notice()\"><img src='$board_skin_path/img/btn_notice{$btn_notice}.gif'";
-            echo " border='0' align='absmiddle'></a></span>"; 
-
-            if ($view[wr_comment_hide]) $btn_comment_hide = '_no'; else $btn_comment_hide = ''; 
-            echo "<span><img src='$board_skin_path/img/btn_comment_hide{$btn_comment_hide}.gif' ";
-            echo "onclick='btn_comment_hide()' style='cursor:pointer' align='absmiddle'></span>";
-
-            if ($is_admin == "super") {
-                echo "<span><img src=\"$board_skin_path/img/btn_member_email.gif\" style=\"cursor:pointer;\" ";
-                echo "onclick=\"void(mw_member_email())\" align=\"absmiddle\"></span>"; 
-            }
-
-            $row = sql_fetch("select * from $mw[popup_notice_table] where bo_table = '$bo_table' and wr_id = '$wr_id'", false);
-            if ($row) { $btn_popup = '_off'; $is_popup = true; } else { $btn_popup = ''; $is_popup = false; }
-            echo "<span><a href=\"javascript:btn_popup()\"><img src='$board_skin_path/img/btn_popup{$btn_popup}.png' border='0' align='absmiddle'></a></span>"; 
-
-            echo "<span><a href=\"javascript:void(btn_copy_new())\"><img src='$board_skin_path/img/btn_copy_new.png' border='0' align='absmiddle'></a></span>"; 
-
-            if ($write[wr_view_block]) { $btn_block = '_off'; } else { $btn_block = ''; }
-            echo "<span><a href=\"javascript:btn_view_block()\"><img src='$board_skin_path/img/btn_view_block{$btn_block}.png' ";
-            echo "border='0' align='absmiddle'></a></span>"; 
-        }
-        $mw_admin_button = ob_get_contents();
-        ob_end_flush();
-        ?>
-        <div class="block"></div>
-    </td>
-</tr>
-<? } ?>
+?>
 
 <? if ($mw_basic[cf_social_commerce]) { ?>
 <tr>
@@ -668,7 +596,12 @@ if ($bomb) {
 
             <script type="text/javascript">
             function mw_good_load() {
-                $.get("<?=$board_skin_path?>/mw.proc/mw.good.php?bo_table=<?=$bo_table?>&wr_id=<?=$wr_id?>", function (data) {
+                if (!Date.now) {
+                    Date.now = function() { return new Date().getTime(); };
+                }
+                var t = Date.now() ;
+
+                $.get("<?=$board_skin_path?>/mw.proc/mw.good.php?bo_table=<?=$bo_table?>&wr_id=<?=$wr_id?>&t="+t, function (data) {
                     $("#mw_good").html(data);
                 });
             }
@@ -735,7 +668,9 @@ if ($bomb) {
 
 <?php if ($mw_basic['cf_rate_level'] && $write['wr_rate'] > 0) { ?>
 <?php
-$rate_count = mw_rate($bo_table, $wr_id);
+$rate = mw_rate($bo_table, $wr_id);
+$rate_count = $rate['cnt'];
+$write['wr_rate'] = $rate['rate'];
 ?>
 <tr>
     <td>
@@ -916,19 +851,14 @@ if ($mw_basic[cf_attribute] == 'qna' && !$view[is_notice]) {
 <?  if ($mw_basic[cf_sns] or (($board[bo_use_good] or $board[bo_use_nogood]) and $mw_basic[cf_view_good] and $member[mb_level] >= $mw_basic[cf_view_good]) or $scrap_href) { ?>
 <tr>
     <td>
-        <? if (($board[bo_use_good] or $board[bo_use_nogood]) and $mw_basic[cf_view_good] and $member[mb_level] >= $mw_basic[cf_view_good]) { ?>
-        <div class="view_good"><input type="button" value="추천(비) 회원목록" class="btn1"
-            onclick="win_open('<?=$board_skin_path?>/mw.proc/mw.good.list.php?bo_table=<?=$bo_table?>&wr_id=<?=$wr_id?>', 'good_list',
-            'width=600,height=500,scrollbars=1');"/></div>
-        <? } ?>
-
-        <?
+        <?php
         if ($scrap_href) {
             $sql = " select count(*) as cnt from $g4[scrap_table] where bo_table = '$bo_table' and wr_id = '$wr_id' ";
             $row = sql_fetch($sql);
             $scrap_count = $row[cnt];
             ?>
-            <div class="scrap_button"><input type="button" class="btn1" id="scrap_button" value="스크랩 +<?=$scrap_count?>" onclick="scrap_ajax()"></div>
+            <div class="scrap_button"><button class="fa-button" id="scrap_button" onclick="scrap_ajax()">
+                <i class="fa fa-paperclip"></i> 스크랩 +<span id="scrap_count"><?=$scrap_count?></span></button></div>
             <script type="text/javascript">
             function scrap_ajax() {
                 $.get("<?=$board_skin_path?>/mw.proc/mw.scrap.php", {
@@ -941,18 +871,26 @@ if ($mw_basic[cf_attribute] == 'qna' && !$view[is_notice]) {
                         alert(tmp[1]);
                         return;
                     }
-                    $("#scrap_button").val("스크랩 +" + tmp[0]);
+                    $("#scrap_count").text(tmp[0]);
                     $("#scrap_button").effect("highlight", {}, 3000);
                 });
             }
             </script>
+        <?php } ?>
+
+        <? if (($board[bo_use_good] or $board[bo_use_nogood]) and $mw_basic[cf_view_good] and $member[mb_level] >= $mw_basic[cf_view_good]) { ?>
+        <div class="view_good"><button type="button" class="fa-button" onclick="win_open(
+            '<?=$board_skin_path?>/mw.proc/mw.good.list.php?bo_table=<?=$bo_table?>&wr_id=<?=$wr_id?>',
+            'good_list',
+            'width=600,height=500,scrollbars=1');"/>
+            <i class="fa fa-thumbs-o-up"></i> 목록</button></div>
         <? } ?>
 
-        <? if ($mw_basic[cf_sns]) { ?>
+        <?php if ($mw_basic[cf_sns]) { ?>
         <div class="sns"> <?=$view_sns?> </div>
-        <? } else { ?>
+        <?php } else { ?>
         <style>.jump { margin:10px 0 0 5px } </style>
-        <? } ?>
+        <?php } ?>
 
         <div class="jump">
         <?php require($board_skin_path."/mw.proc/mw.jump.php") ?>
@@ -1018,12 +956,6 @@ if ($mw_basic[cf_latest_table]) {
 
 
 </table>
-<? if ($is_admin) { ?>
-<div style="padding:10px 0 0 0;" class="func_buttons">
-    <?=$mw_admin_button?>
-    <div class="block"></div>
-</div>
-<? } ?>
 <br>
 
 <?
@@ -1456,7 +1388,6 @@ function mw_move_cate_one() {
 
 <?=$mw_basic[cf_css]?>
 </style>
-
 <?
 // 팝업공지
 $sql = "select * from $mw[popup_notice_table] where bo_table = '$bo_table' order by wr_id desc";

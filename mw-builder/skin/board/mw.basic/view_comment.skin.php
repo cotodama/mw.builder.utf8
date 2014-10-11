@@ -160,7 +160,6 @@ if ($mw_basic[cf_comment_period] > 0) {
 
 echo bc_code($mw_basic[cf_comment_head]);
 ?>
-
 <link rel="stylesheet" href="<?php echo $pc_skin_path?>/mw.js/mw.star.rate/jquery.mw.star.rate.css" type="text/css">
 <script src="<?php echo $pc_skin_path?>/mw.js/mw.star.rate/jquery.mw.star.rate.js"></script>
 
@@ -184,6 +183,7 @@ var char_max = parseInt(<?=$comment_max?>); // 최대
 </script>
 
 <? if ($cwin==1) { ?>
+<link href="<?php echo $pc_skin_path?>/mw.css/font-awesome-4.2.0/css/font-awesome.css" rel="stylesheet">
 <script type="text/javascript" src="<?="$board_skin_path/mw.js/mw_image_window.js"?>"></script>
 <table width=100% cellpadding=10 align=center><tr><td>
 <?}?>
@@ -613,8 +613,10 @@ if ($is_comment_editor && $mw_basic[cf_editor] == "cheditor") {
 <a name="c_write"></a>
 
 <div style="padding:5px 0 0 0;">
-<a href="javascript:comment_box('', 'c');"><img src="<?=$board_skin_path?>/img/btn_comment_insert.gif" border=0></a>
-<? if ($is_admin) { ?><img src="<?=$board_skin_path?>/img/btn_comment_all_delete.gif" border=0 onclick="comment_all_delete()" style="cursor:pointer;"><? } ?>
+<a href="javascript:comment_box('', 'c');" class="fa-button"><i class="fa fa-pencil"></i> 코멘트입력</a>
+<?php if ($is_admin) { ?>
+    <button class="fa-button" onclick="comment_all_delete()"><i class="fa fa-remove"></i> 코멘트삭제</button>
+<?php } ?>
 </div>
 
 <?php if ($mw_basic['cf_rate_level'] && $mw_basic['cf_rate_level'] <= $member['mb_level']) { ?>
@@ -669,55 +671,128 @@ if (!$is_member) {
     if (!$email) $email = get_cookie("mw_cookie_email");
     if (!$homepage) $homepage = get_cookie("mw_cookie_homepage");
 }
-
-if ($is_guest && !$write_error) {
 ?>
-<div style="padding:0 0 2px 0;">
-    이름 <input type=text maxlength=20 size=10 name="wr_name" value="<?php echo $name?>" itemname="이름" required class=mw_basic_text <?=$write_error?>>
-    패스워드 <input type=password maxlength=20 size=10 name="wr_password" itemname="패스워드" required class=mw_basic_text <?=$write_error?>>
-</div>
+
+<table border="0" cellpadding="0" cellspacing="0" style="margin-left:10px;">
+<?php if ($is_guest && !$write_error) { ?>
+<tr>
+    <td width="80"> 이름 </td>
+    <td style="padding:3px 0 3px 0;">
+        <input type=text maxlength=20 style="width:80px;" name="wr_name" value="<?php echo $name?>" itemname="이름" required class="mw_basic_text" <?=$write_error?>>
+    </td>
+</tr>
+<tr>
+    <td> 비밀번호 </td>
+    <td style="padding:3px 0 3px 0;">
+        <input type=password maxlength=20 style="width:80px;" name="wr_password" itemname="패스워드" required class=mw_basic_text <?=$write_error?>>
+    </td>
+</tr>
 <?}?>
 
-<div style="padding:2px 0 2px 0;">
-    <? if (!$is_comment_editor) { ?>
-    <? /* ?>
-    <span style="cursor: pointer;" onclick="textarea_decrease('wr_content', 10);"><img src="<?=$board_skin_path?>/img/btn_up.gif" align=absmiddle></span>
-    <span style="cursor: pointer;" onclick="textarea_original('wr_content', 5);"><img src="<?=$board_skin_path?>/img/btn_init.gif" align=absmiddle></span>
-    <span style="cursor: pointer;" onclick="textarea_increase('wr_content', 10);"><img src="<?=$board_skin_path?>/img/btn_down.gif" align=absmiddle></span>
-    <? */ ?>
-    <? if ($mw_basic[cf_comment_html]) echo "<input type=\"checkbox\" id=\"wr_html\" name=\"html\" value=\"html2\"> <label for='wr_html'>html</label>"; ?>
-    <? } ?>
+<? if (file_exists("$g4[bbs_path]/kcaptcha_session.php") && $is_guest && !$write_error) { ?>
+<tr>
+    <td> 자동등록방지 </td>
+    <td style="padding:3px 0 3px 0;">
+        <script type="text/javascript"> var md5_norobot_key = ''; </script>
+        <table border=0 cellpadding=0 cellspacing=0 style="padding:2px 0 2px 0;">
+        <tr>
+            <td>
+                <input title="우측의 글자를 입력하세요." type="input" name="wr_key" style="width:80px;" itemname="자동등록방지" required class="mw_basic_text">
+                우측의 글자를 입력하세요.
+            </td>
+            <td width=85>
+                <img id="kcaptcha_image" style="position:absolute; margin-top:-50px;"/>
+            </td>
 
-    <?php
-    if (!$is_comment_editor && ($comment_min || $comment_max)) {
-        echo "(";
-        if ($comment_min > 0) { echo "$comment_min 글자 이상 "; }
-        if ($comment_max > 0) { echo "$comment_max 글자 까지 "; }
-        echo " 작성하실수 있습니다, ";
-        echo "현재 <span id=char_count>0</span> 글자 작성하셨습니다.) ";
-    }
-    ?>
-</div>
+        </tr>
+        </table>
+        <? } elseif ($is_norobot) { ?>
+        <table border=0 cellpadding=0 cellspacing=0 style="padding:2px 0 2px 0;">
+        <tr>
+            <td width=85>
+                <?
+                // 이미지 생성이 가능한 경우 자동등록체크코드를 이미지로 만든다.
+                if (function_exists("imagecreate") && $mw_basic[cf_norobot_image]) {
+                    echo "<img src=\"$g4[bbs_path]/norobot_image.php?{$g4['server_time']}\" border=0 align=absmiddle>";
+                    $norobot_msg = "* 왼쪽의 자동등록방지 코드를 입력하세요.";
+                }
+                else {
+                    echo $norobot_str;
+                    $norobot_msg = "* 왼쪽의 글자중 <FONT COLOR='red'>빨간글자</font>만 순서대로 입력하세요.";
+                }
+                ?>
+            </td>
+            <td>
+                <input title="왼쪽의 글자중 빨간글자만 순서대로 입력하세요." type=text size=10 name=wr_key itemname="자동등록방지" required class=mw_basic_text <?=$write_error?>>
+                <?=$norobot_msg?>
+            </td>
+        </tr>
+        </table>
+        <?}?>
+    </td>
+</tr>
+
+
+
+<tr>
+    <td colspan="2" style="line-height:30px;">
+        <? if (!$is_comment_editor) { ?>
+        <? /* ?>
+        <span style="cursor: pointer;" onclick="textarea_decrease('wr_content', 10);"><img src="<?=$board_skin_path?>/img/btn_up.gif" align=absmiddle></span>
+        <span style="cursor: pointer;" onclick="textarea_original('wr_content', 5);"><img src="<?=$board_skin_path?>/img/btn_init.gif" align=absmiddle></span>
+        <span style="cursor: pointer;" onclick="textarea_increase('wr_content', 10);"><img src="<?=$board_skin_path?>/img/btn_down.gif" align=absmiddle></span>
+        <? */ ?>
+        <? if ($mw_basic[cf_comment_html]) echo "<input type=\"checkbox\" id=\"wr_html\" name=\"html\" value=\"html2\"> <label for='wr_html'>html</label>"; ?>
+        <? } ?>
+
+        <? if (!$write_error && !$mw_basic[cf_comment_secret_no]) { ?>
+        <input type=checkbox id="wr_secret" name="wr_secret" value="secret" <? if ($mw_basic[cf_comment_secret]) echo "checked" ?>>
+        <label for="wr_secret">비밀글 </label>
+        <? } ?>
+
+        <? if ($mw_basic[cf_anonymous]) {?>
+        <input type="checkbox" name="wr_anonymous" id="wr_anonymous" value="1">
+        <label for="wr_anonymous">익명</label>
+        <? } ?>
+        
+        <?php
+        if (!$is_comment_editor && ($comment_min || $comment_max)) {
+            echo "<input type='checkbox' disabled>";
+            if ($comment_min > 0) { echo "$comment_min 글자 이상 "; }
+            if ($comment_max > 0) { echo "$comment_max 글자 까지 "; }
+            echo " 작성하실수 있습니다, ";
+            echo "현재 <span id=char_count>0</span> 글자 작성하셨습니다. ";
+        }
+        ?>
+
+    </td>
+</tr>
+</table>
 
 <table width=98% cellpadding=0 cellspacing=0 border=0>
 <tr>
     <td>
         <? if (!$is_comment_editor || $mw_basic[cf_editor] != "cheditor") { ?>
         <textarea id="wr_content" name="wr_content" rows="6" itemname="내용" required
-            <? if (!$write_error) { ?>
-                <? if ($is_comment_editor && $mw_basic[cf_editor] == "geditor") echo "geditor gtag=off "; //mode=off"; ?>
-            <? } else echo $write_error?>
-            <? if (!$is_comment_editor && ($comment_min || $comment_max)) { ?>onkeyup="check_byte('wr_content', 'char_count');"<?}?> class=mw_basic_textarea style='width:98%; word-break:break-all;' ><?=$mw_basic[cf_comment_default]?></textarea>
-            <? if (!$is_comment_editor && ($comment_min || $comment_max)) { ?><script type="text/javascript"> check_byte('wr_content', 'char_count'); </script><?}?>
-        <? } ?>
-        <? if ($is_comment_editor && $mw_basic[cf_editor] == "cheditor") echo "<textarea name='wr_content' id='tx_wr_content'>$mw_basic[cf_comment_default]</textarea>\n" ?>
-    </td>
-    <td width=60 align=center id="btn_submit">
-        <div><input type="image" id="btn_comment_submit" src="<?=$board_skin_path?>/img/btn_comment_ok.gif" border=0 accesskey='s' <?=$write_error?>></div>
-        <? if ($good_href || $nogood_href) { // 추천, 비추천?>
-        <div style="margin-top:5px;"><img src="<?=$board_skin_path?>/img/btn_comment_good_ok.gif" border=0 onclick="mw_good_act('good')" style="cursor:pointer"></div>
-        <div style="margin-top:5px;"><img src="<?=$board_skin_path?>/img/btn_comment_n_good_ok.gif" border=0 onclick="good_submit(fviewcomment, 'good')" style="cursor:pointer"></div>
-        <? } ?>
+            <?php
+            if (!$write_error) { 
+                if ($is_comment_editor && $mw_basic[cf_editor] == "geditor") echo "geditor gtag=off "; //mode=off";
+            }
+            else
+                echo $write_error;
+
+            if (!$is_comment_editor && ($comment_min || $comment_max)) {
+                echo " onkeyup=\"check_byte('wr_content', 'char_count');\" ";
+            }
+            ?>
+            class=mw_basic_textarea style="width:100%; word-break:break-all;"><?=$mw_basic[cf_comment_default]?></textarea>
+        <?php if (!$is_comment_editor && ($comment_min || $comment_max)) { ?>
+        <script> check_byte('wr_content', 'char_count'); </script><?}?>
+        <?php } ?>
+        <?php
+        if ($is_comment_editor && $mw_basic[cf_editor] == "cheditor")
+            echo "<textarea name='wr_content' id='tx_wr_content'>{$mw_basic[cf_comment_default]}</textarea>\n";
+        ?>
     </td>
 </tr>
 </table>
@@ -768,53 +843,56 @@ $(document).ready(function () {
 </script>
 <? } ?>
 
+<div style="height:40px; clear:both;">
+    <div class="comment_submit_button">
+        <div><button class="fa-button primary center" accesskey="s" id="btn_comment_submit" style="width:100px;"><i class="fa fa-comment"></i> 입력</button></div>
+        <?php if ($good_href || $nogood_href) { // 추천, 비추천?>
+        <div><button class="fa-button" onclick="mw_good_act('good')"><i class="fa fa-thumbs-o-up"></i> 추천</button></div>
+        <div><button class="fa-button" onclick="good_submit(fviewcomment, 'good')"><i class="fa fa-thumbs-o-up"></i> + <i class="fa fa-comment-o"></i></button></div>
+        <?php } //good_href ?>
+    </div>
 
-<div style="padding:2px 0 2px 0;">
-    <? if (!$write_error && !$mw_basic[cf_comment_secret_no]) { ?>
-    <input type=checkbox id="wr_secret" name="wr_secret" value="secret" <? if ($mw_basic[cf_comment_secret]) echo "checked" ?>>
-    <label for="wr_secret">비밀글 (체크하면 글쓴이만 내용을 확인할 수 있습니다.)</label>
-    <? } ?>
-    <? if ($mw_basic[cf_anonymous]) {?>
-    <input type="checkbox" name="wr_anonymous" id="wr_anonymous" value="1">
-    <label for="wr_anonymous">익명</label>
-    <? } ?>
-    <? if ($mw_basic[cf_comment_emoticon] && !$is_comment_editor && !$write_error) {?>
-    <span class=mw_basic_comment_emoticon><a href="javascript:win_open('<?=$board_skin_path?>/mw.proc/mw.emoticon.skin.php?bo_table=<?=$bo_table?>','emo','width=600,height=400,scrollbars=yes')">☞ 이모티콘</a></span>
-    <? } ?>
-            <? if ($mw_basic[cf_comment_specialchars]) {?>
-            <span class=mw_basic_comment_emoticon><a href="#;" onclick="specialchars()">☞특수문자</a></span>
-            <style>
-            #mw_basic_special_characters {
-                display:none;
-                border:1px solid #ddd;
-                background-color:#fff;
-                padding:10px;
-                position:absolute;
-                margin:0 0 0 100px;
-                z-index:99999999;
-            }
-            #mw_basic_special_characters table td {
-                padding:3px;
-                cursor:pointer;
-            }
-            </style>
-            <div id="mw_basic_special_characters">hi</div>
-            <script>
-            function specialchars() {
-                $.get("<?=$board_skin_path?>/mw.proc/mw.special.characters.php", function (str) {
-                    $("#mw_basic_special_characters").html(str);
-                    $("#mw_basic_special_characters table td").click(function () {
-                        $("#wr_content").val($("#wr_content").val()+$(this).text());
-                        $("#mw_basic_special_characters").toggle();
-                    });
-                });
+    <div class="comment_function">
+    <?php if ($mw_basic[cf_comment_emoticon] && !$is_comment_editor && !$write_error) {?>
+    <button type="button" class="fa-button" onclick="win_open('<?=$board_skin_path?>/mw.proc/mw.emoticon.skin.php?bo_table=<?=$bo_table?>','emo','width=600,height=400,scrollbars=yes')" style="*margin-right:10px;"><i class="fa fa-smile-o"></i> 이모티콘</button>
+    <?php } //comment_emoticon ?>
+
+    <?php if ($mw_basic[cf_comment_specialchars]) {?>
+    <button type="button" class="fa-button" onclick="specialchars()"><i class="fa fa-magic"></i> 특수문자</button>
+    <style>
+    #mw_basic_special_characters {
+        display:none;
+        border:1px solid #ddd;
+        background-color:#fff;
+        padding:10px;
+        position:absolute;
+        margin:0 0 0 100px;
+        z-index:99999999;
+    }
+    #mw_basic_special_characters table td {
+        padding:3px;
+        cursor:pointer;
+    }
+    </style>
+    <div id="mw_basic_special_characters">hi</div>
+    <script>
+    function specialchars() {
+        $.get("<?=$board_skin_path?>/mw.proc/mw.special.characters.php", function (str) {
+            $("#mw_basic_special_characters").html(str);
+            $("#mw_basic_special_characters table td").click(function () {
+                $("#wr_content").val($("#wr_content").val()+$(this).text());
                 $("#mw_basic_special_characters").toggle();
-            }
-            </script>
-            <? } ?>
-    <? if ($mw_basic[cf_comment_file] && $mw_basic[cf_comment_file] <= $member['mb_level'] && !$write_error) { ?>
-    <span class=mw_basic_comment_file onclick="$('#comment_file_layer').toggle('slow');">☞ 첨부파일</span>
-    <? } ?>
+            });
+        });
+        $("#mw_basic_special_characters").toggle();
+    }
+    </script>
+    <?php }//comment_specialchars ?>
+
+    <?php if ($mw_basic[cf_comment_file] && $mw_basic[cf_comment_file] <= $member['mb_level'] && !$write_error) { ?>
+    <button type="button" class="fa-button" onclick="$('#comment_file_layer').toggle('slow');"><i class="fa fa-save"></i> 첨부파일</button>
+    <?php } // comment_file ?>
+    </div>
 </div>
 
 <? if ($mw_basic[cf_comment_file] && $mw_basic[cf_comment_file] <= $member['mb_level']) { ?>
@@ -824,51 +902,15 @@ $(document).ready(function () {
 </div>
 <? } ?>
 
-<? if (file_exists("$g4[bbs_path]/kcaptcha_session.php") && $is_guest && !$write_error) { ?>
-<script type="text/javascript"> var md5_norobot_key = ''; </script>
-<table border=0 cellpadding=0 cellspacing=0 style="padding:2px 0 2px 0;">
-<tr>
-    <td width=85>
-	<img id='kcaptcha_image'/>
-    </td>
-    <td>
-	<input title="왼쪽의 글자를 입력하세요." type="input" name="wr_key" size="10" itemname="자동등록방지" required class=ed>
-	왼쪽의 글자를 입력하세요.
-    </td>
-</tr>
-</table>
-<? } elseif ($is_norobot) { ?>
-<table border=0 cellpadding=0 cellspacing=0 style="padding:2px 0 2px 0;">
-<tr>
-    <td width=85>
-        <?
-        // 이미지 생성이 가능한 경우 자동등록체크코드를 이미지로 만든다.
-        if (function_exists("imagecreate") && $mw_basic[cf_norobot_image]) {
-            echo "<img src=\"$g4[bbs_path]/norobot_image.php?{$g4['server_time']}\" border=0 align=absmiddle>";
-            $norobot_msg = "* 왼쪽의 자동등록방지 코드를 입력하세요.";
-        }
-        else {
-            echo $norobot_str;
-            $norobot_msg = "* 왼쪽의 글자중 <FONT COLOR='red'>빨간글자</font>만 순서대로 입력하세요.";
-        }
-        ?>
-    </td>
-    <td>
-        <input title="왼쪽의 글자중 빨간글자만 순서대로 입력하세요." type=text size=10 name=wr_key itemname="자동등록방지" required class=mw_basic_text <?=$write_error?>>
-        <?=$norobot_msg?>
-    </td>
-</tr>
-</table>
-<?}?>
-
 </form>
 
 </div>
+<div style="height:7px; line-height:0; font-size:0; clear:both;"></div>
 </div> <!-- 코멘트 입력 끝 -->
 
-<script type="text/javascript" src="<?="$g4[path]/js/jquery.kcaptcha.js"?>"></script>
+<script src="<?="$g4[path]/js/jquery.kcaptcha.js"?>"></script>
 
-<script type="text/javascript">
+<script>
 var save_before = '';
 var save_html = document.getElementById('mw_basic_comment_write').innerHTML;
 function good_submit(f, good) {
@@ -1011,7 +1053,11 @@ function fviewcomment_submit(f)
         }
     }
 
-    $("#btn_submit").html($("#loading").html());
+    //$("#btn_submit").html($("#loading").html());
+    $(".comment_submit_button i").addClass("fa-spin fa-circle-o-notch");
+    $(".comment_submit_button button").attr("disabled", "true");
+    $(".comment_submit_button button").css("cursor", "not-allowed");
+
     return true;
 }
 

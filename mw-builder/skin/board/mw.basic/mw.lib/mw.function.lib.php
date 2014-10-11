@@ -656,14 +656,21 @@ function mw_get_sync_tag($content, $tag) {
 // 엄지 짧은링크 얻기
 function umz_get_url($url) {
     global $mw_basic;
+    global $is_admin;
+
     $surl = $mw_basic[cf_umz2];
-    if (!$surl)
+    if ($surl == 'my') {
+        $surl = $mw_basic['cf_umz_domain'];
+    }
+    else if (!$surl) {
         $surl = "umz.kr";
+    }
     $url2 = urlencode($url);
-    $fp = @fsockopen ("umz.miwit.com", 80, $errno, $errstr, 30);
+    $fp = @fsockopen ($surl, 80, $errno, $errstr, 30);
     if (!$fp) return false;
+
     fputs($fp, "POST /plugin/shorten/update.php?url=$url2 HTTP/1.0\r\n");
-    fputs($fp, "Host: $surl:80\r\n");
+    fputs($fp, "Host: $surl\r\n");
     fputs($fp, "\r\n");
     while (trim($buffer = fgets($fp,1024)) != "") $header .= $buffer;
     while (!feof($fp)) $buffer .= fgets($fp,1024);
@@ -2731,7 +2738,7 @@ function mw_youtube($url, $q=0)
         $width = $board['bo_image_width'];
     }
 
-    $you = "<iframe width='{$width}' height='{$height}' src='{$src}' frameborder='0' ";
+    $you = "<iframe width='{$width}' height='{$height}' src='{$src}&wmode=transparent' frameborder='0' ";
     $you.= "webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>";
 
     return $you;
@@ -3037,32 +3044,51 @@ function mw_write_icon($row)
     global $quiz_id, $bomb_id, $vote_id;
 
     $write_icon = '';
-    $style =  "align=absmiddle style=\"border-bottom:2px solid #fff;\"";
+    $style =  "align=\"absmiddle\" style=\"border-bottom:2px solid #fff;\" class=\"write_icon\"";
 
     if ($row['wr_kcb_use'])
-        $write_icon = "<img src=\"{$pc_skin_path}/img/icon_kcb.png\" {$style}>&nbsp;";
-    elseif (in_array($row['wr_id'], $quiz_id))
-        $write_icon = "<img src=\"{$quiz_path}/img/icon_quiz.png\" {$style}>&nbsp;";
+        $write_icon = "<img src=\"{$pc_skin_path}/img/icon_kcb.png\" {$style}>";
     elseif (in_array($row['wr_id'], $bomb_id))
-        $write_icon = "<img src=\"{$pc_skin_path}/img/icon_bomb.gif\" {$style}>&nbsp;";
-    elseif (in_array($row['wr_id'], $vote_id))
-        $write_icon = "<img src=\"{$pc_skin_path}/img/icon_vote.png\" {$style}>&nbsp;";
-    elseif ($row['wr_is_mobile'])
-        $write_icon = "<img src=\"{$pc_skin_path}/img/icon_mobile.png\" {$style} width=\"13\" height=\"12\">&nbsp;";
-    elseif (strstr($row['wr_link1'], "youtu"))
-        $write_icon = "<img src=\"{$pc_skin_path}/img/icon_youtube.png\" width=\"13\" height=\"12\">&nbsp;";
+        $write_icon = "<img src=\"{$pc_skin_path}/img/icon_bomb.gif\" {$style}>";
     elseif ($row['wr_key_password'])
-        $write_icon = "<img src=\"{$pc_skin_path}/img/icon_key.png\" {$style} width=\"13\" height=\"12\">&nbsp;";
+        $write_icon = "<img src=\"{$pc_skin_path}/img/icon_key.png\" {$style} width=\"13\" height=\"12\">";
+    elseif (in_array($row['wr_id'], $quiz_id))
+        $write_icon = "<img src=\"{$quiz_path}/img/icon_quiz.png\" {$style}>";
+    elseif (in_array($row['wr_id'], $vote_id))
+        $write_icon = "<img src=\"{$pc_skin_path}/img/icon_vote.png\" {$style}>";
+    elseif (strstr($row['wr_link1'], "youtu"))
+        $write_icon = "<img src=\"{$pc_skin_path}/img/icon_youtube.png\" {$style} width=\"13\" height=\"12\">";
+    elseif ($row['wr_is_mobile'])
+        $write_icon = "<img src=\"{$pc_skin_path}/img/icon_mobile.png\" {$style} width=\"13\" height=\"12\">";
     else
-        $write_icon = "<img src=\"{$pc_skin_path}/img/icon_subject.gif\" width=\"13\" height=\"12\">&nbsp;";
+        $write_icon = "<img src=\"{$pc_skin_path}/img/icon_subject.gif\" {$style} width=\"13\" height=\"12\">";
+
+    // ---- font awesome
+
+    if ($row['wr_kcb_use'])
+        $write_icon = "<img src=\"{$pc_skin_path}/img/icon_kcb.png\" {$style}>";
+    elseif (in_array($row['wr_id'], $bomb_id))
+        $write_icon = "<i class='fa fa-bomb'></i>&nbsp;";
+    elseif ($row['wr_key_password'])
+        $write_icon = "<i class='fa fa-key'></i>&nbsp;";
+    elseif (in_array($row['wr_id'], $quiz_id))
+        $write_icon = "<i class='fa fa-question'></i>&nbsp;";
+    elseif (in_array($row['wr_id'], $vote_id))
+        $write_icon = "<i class='fa fa-bar-chart'></i>&nbsp;";
+    elseif (strstr($row['wr_link1'], "youtu"))
+        $write_icon = "<i class='fa fa-youtube'></i>&nbsp;";
+    elseif ($row['wr_is_mobile'])
+        $write_icon = "<i class='fa fa-mobile' style='font-size:15px;'></i>&nbsp;";
+    else
+        $write_icon = "<i class='fa fa-file-text-o' style='font-size:10px; margin-top:5px;'></i>&nbsp;";
 
     // ---- 
 
     if ($is_singo)
-        $write_icon = "<img src=\"{$pc_skin_path}/img/icon_red.png\" {$style}>&nbsp;";
+        $write_icon = "<img src=\"{$pc_skin_path}/img/icon_red.png\" {$style}>";
 
     if ($row['wr_view_block'])
-        $write_icon = "<img src=\"{$pc_skin_path}/img/icon_view_block.png\" {$style}>&nbsp;";
+        $write_icon = "<img src=\"{$pc_skin_path}/img/icon_view_block.png\" {$style}>";
 
     return $write_icon;
 }
@@ -3589,13 +3615,15 @@ function mw_is_rate($bo_table, $wr_id)
     global $write;
     global $mw;
     global $is_admin;
+    global $talent_market_path;
+    global $social_commerce_path;
 
     // 사용안함
     if (!$mw_basic['cf_rate_level'])
         return "평가기능을 사용중이 아닙니다.";
 
     // 사용권한
-    if ($mw_basic['cf_rate_level'] > $member['mb_level'])
+    if (!$is_admin && $mw_basic['cf_rate_level'] > $member['mb_level'])
         return "평가할 권한이 없습니다.";
 
     if ($member['mb_id'])
@@ -3604,7 +3632,7 @@ function mw_is_rate($bo_table, $wr_id)
         $mb_id = $_SERVER['REMOTE_ADDR'];
 
     // 글쓴이 평가 금지
-    if (!empty($write) && ($write['mb_id'] == $mb_id) || $write['wr_ip'] == $mb_id)
+    if (!$is_admin && !empty($write) && ($write['mb_id'] == $mb_id) || $write['wr_ip'] == $mb_id)
         return "글쓴이 본인은 평가할 수 없습니다.";
 
     $write_table = $g4['write_prefix'].$bo_table;
@@ -3620,7 +3648,7 @@ function mw_is_rate($bo_table, $wr_id)
         return "이미 평가하셨습니다.";
 
     // 다운로드 한사람만 평가가능
-    if ($mw_basic['cf_rate_down']) {
+    if (!$is_admin && $mw_basic['cf_rate_down']) {
         $sql = " select * from {$mw['download_log_table']} where bo_table = '{$bo_table}' and wr_id = '{$wr_id}' and mb_id = '{$mb_id}' ";
         $row = sql_fetch($sql);
 
@@ -3629,12 +3657,13 @@ function mw_is_rate($bo_table, $wr_id)
     }
 
     // 구매자만 평가가능
-    if ($mw_basic['cf_rate_buy'])
+    if (!$is_admin && $mw_basic['cf_rate_buy'])
     {
         // 컨텐츠샵 (다운로드 한 사람만 평가가능으로 대체)
 
         // 소셜커머스
         if ($mw_basic['cf_social_commerce']) {
+            include_once($social_commerce_path."/_config.php");
             $sql = " select pr_id from {$mw_soc['product_table']} ";
             $sql.= "  where bo_table = '{$bo_table}' ";
             $sql.= "    and wr_id = '{$wr_id}' ";
@@ -3652,6 +3681,7 @@ function mw_is_rate($bo_table, $wr_id)
 
         // 재능마켓
         if ($mw_basic['cf_talent_market']) {
+            include_once($talent_market_path."/_config.php");
             $sql = " select pr_id from {$mw_talent_market['product_table']} ";
             $sql.= "  where bo_table = '{$bo_table}' ";
             $sql.= "    and wr_id = '{$wr_id}' ";
@@ -3675,6 +3705,7 @@ function mw_rate($bo_table, $wr_id)
 {
     global $mw_basic;
     global $g4;
+    global $is_admin;
 
     $write_table = $g4['write_prefix'].$bo_table;
     $sql = " select count(*) as cnt, sum(wr_rate) as rate ";
@@ -3684,11 +3715,12 @@ function mw_rate($bo_table, $wr_id)
     $sql.= "    and wr_rate > 0 ";
     $row = sql_fetch($sql);
 
-    $wr_rate = round($row['rate'] / $row['cnt'], 2);
+    $wr_rate = @round($row['rate'] / $row['cnt'], 2);
+    $row['rate'] = $wr_rate;
 
     sql_query(" update {$write_table} set wr_rate = '{$wr_rate}' where wr_id = '{$wr_id}' ");
 
-    return $row['cnt'];
+    return $row;
 }
 
 function mw_rate_count($bo_table, $wr_id)

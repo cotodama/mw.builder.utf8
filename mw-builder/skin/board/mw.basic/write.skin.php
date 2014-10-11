@@ -272,6 +272,7 @@ if (!$is_member) {
     if (!$homepage) $homepage = get_cookie("mw_cookie_homepage");
 }
 ?>
+<link href="<?php echo $pc_skin_path?>/mw.css/font-awesome-4.2.0/css/font-awesome.css" rel="stylesheet">
 
 <link rel="stylesheet" href="<?=$board_skin_path?>/style.common.css?<?=filemtime("$board_skin_path/style.common.css")?>" type="text/css">
 <!--
@@ -389,7 +390,7 @@ var char_max = parseInt(<?=$write_max?>); // 최대
 <!-- 분류 셀렉트 박스, 게시물 몇건, 관리자화면 링크 -->
 <table width="100%">
 <tr height="25">
-    <td width="30%">
+    <td>
         <form name="fcategory" method="get" style="margin:0;">
         <? if ($is_category && !$mw_basic[cf_category_tab]) { ?>
             <select name=sca onchange="location='<?=$category_location?>'+this.value;">
@@ -401,28 +402,7 @@ var char_max = parseInt(<?=$write_max?>); // 최대
         </form>
     </td>
     <td align="right">
-        <? if ($mw_basic[cf_social_commerce]) { ?>
-        <span class=mw_basic_total style="cursor:pointer;" onclick="win_open('<?=$social_commerce_path?>/order_list.php?bo_table=<?=$bo_table?>', 'order_list', 'width=800,height=600,scrollbars=1');">[주문내역]</span>
-        <? } ?>
-        <span class=mw_basic_total>총 게시물 <?=number_format($total_count)?>건, 최근 <?=number_format($new_count)?> 건</span>
-        <? if ($is_admin && $mw_basic[cf_collect] == 'rss' && file_exists("$g4[path]/plugin/rss-collect/_lib.php")) {?>
-        <img src="<?=$g4[path]?>/plugin/rss-collect/img/btn_collect.png" align="absmiddle" style="cursor:pointer;" onclick="win_open('<?=$g4[path]?>/plugin/rss-collect/config.php?bo_table=<?=$bo_table?>', 'rss_collect', 'width=800,height=600,scrollbars=1')">
-        <? } ?>
-        <? if ($is_admin && $mw_basic[cf_collect] == 'youtube' && file_exists("$g4[path]/plugin/youtube-collect/_lib.php")) {?>
-        <img src="<?=$g4[path]?>/plugin/youtube-collect/img/btn_collect.png" align="absmiddle" style="cursor:pointer;" onclick="win_open('<?=$g4[path]?>/plugin/youtube-collect/config.php?bo_table=<?=$bo_table?>', 'youtube_collect', 'width=800,height=600,scrollbars=1')">
-        <? } ?>
-        <a style="cursor:pointer" class="tooltip"
-            title="읽기:<?=$board[bo_read_point]?>,
-쓰기:<?=$board[bo_write_point]?><?
-if ($mw_basic[cf_contents_shop_write]) { echo " ($mw_cash[cf_cash_name]$mw_basic[cf_contents_shop_write_cash]$mw_cash[cf_cash_unit])"; } ?>,
-댓글:<?=$board[bo_comment_point]?>,
-다운:<?=$board[bo_download_point]?>"><!--
-        --><img src='<?=$board_skin_path?>/img/btn_info.gif' border=0 align=absmiddle></a>
-        <? if ($mw_basic[cf_social_commerce] && $rss_href && file_exists("$social_commerce_path/img/xml.png")) { ?>
-            <a href='<?=$social_commerce_path?>/xml.php?bo_table=<?=$bo_table?>'><img src='<?=$social_commerce_path?>/img/xml.png' border=0 align=absmiddle></a>
-        <? } else if ($rss_href) { ?><a href='<?=$rss_href?>'><img src='<?=$board_skin_path?>/img/btn_rss.gif' border=0 align=absmiddle></a><?}?>
-        <? if ($is_admin == "super") { ?><a href="<?=$config_href?>"><img src="<?=$board_skin_path?>/img/btn_config.gif" title="스킨설정" border="0" align="absmiddle"></a><?}?>
-        <? if ($admin_href) { ?><a href="<?=$admin_href?>"><img src="<?=$board_skin_path?>/img/btn_admin.gif" title="관리자" width="63" height="22" border="0" align="absmiddle"></a><?}?>
+        <?php include($pc_skin_path."/mw.proc/mw.top.button.php")?>
     </td>
 </tr>
 <tr><td height=5></td></tr>
@@ -780,7 +760,7 @@ if ($mw_basic['cf_include_write_main'] && is_file($mw_basic['cf_include_write_ma
     <? } // if (!$is_dhtml_editor || $mw_basic[cf_editor] != "cheditor") ?>
 
     <? if ($is_dhtml_editor && $mw_basic[cf_editor] == "cheditor") echo cheditor2('wr_content', $content); ?>
-    <div><input type="button" class="btn1" value="임시저장" onclick="mw_save_temp('임시 저장 했습니다.')"/></div>
+    <div><button type="button" class="fa-button" onclick="mw_save_temp('임시 저장 했습니다.')"><i class="fa fa-save"></i> 임시저장</button></div>
 </td>
 </tr>
 <tr><td colspan=2 height=1 bgcolor=#e7e7e7></td></tr>
@@ -1677,8 +1657,10 @@ if ($mw_basic['cf_bbs_banner']) {
 </tr>
 <tr>
     <td width="100%" align="center" valign="top">
-        <input type=image id="btn_submit" src="<?=$board_skin_path?>/img/btn_save.gif" border=0 accesskey='s'>&nbsp;
-        <a href="<?php echo mw_seo_url($bo_table)?>"><img id="btn_list" src="<?=$board_skin_path?>/img/btn_list.gif" border=0></a></td>
+        <!--<input type=image id="btn_submit" src="<?=$board_skin_path?>/img/btn_save.gif" border=0 accesskey='s'>&nbsp;-->
+        <button type="submit" id="btn_submit" class="fa-button" accesskey='s'><i class="fa fa-save"></i> 글저장</button>&nbsp;
+        <a href="<?php echo mw_seo_url($bo_table)?>"><img id="btn_list" src="<?=$board_skin_path?>/img/btn_list.gif" border=0 width=0 height=0></a>
+        <a href="<?php echo mw_seo_url($bo_table)?>" class="fa-button"><i class="fa fa-list"></i> 목록</a></td>
 </tr>
 </table>
 </form>
@@ -1997,7 +1979,9 @@ function fwrite_check(f) {
     }
 
     //document.getElementById('btn_submit').disabled = true;
-    $("#btn_submit").attr("src", $("#loading img").attr("src"));
+    //$("#btn_submit").attr("src", $("#loading img").attr("src"));
+    $("#btn_submit i").addClass("fa-spin fa-circle-o-notch");
+    $("#btn_submit").css("cursor", "not-allowed");
     $("#btn_submit").attr("disabled", "true");
     document.getElementById('btn_list').disabled = true;
 

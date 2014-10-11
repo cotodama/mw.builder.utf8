@@ -438,7 +438,8 @@ if (is_null($mw_basic[cf_subject_style])) {
     sql_query("alter table $mw[basic_config_table] add cf_subject_style tinyint not null", false);
     sql_query("alter table $mw[basic_config_table] add cf_subject_style_level tinyint not null", false);
 }
-    sql_query("alter table $mw[basic_config_table] add cf_subject_style_color_default varchar(10) not null default '#3d5b7a'", false);
+    //sql_query("alter table $mw[basic_config_table] add cf_subject_style_color_default varchar(10) not null default '#3d5b7a'", false);
+    sql_query("alter table $mw[basic_config_table] add cf_subject_style_color_default varchar(10) not null default '#555555'", false);
     sql_query("alter table $mw[basic_config_table] add cf_subject_style_color_picker varchar(1) not null default ''", false);
 
 if (is_null($write[wr_subject_font])) {
@@ -1366,4 +1367,5 @@ if (is_null($mw_basic[cf_talent_market])) {
 
     sql_query("alter table {$write_table} add wr_rate decimal(3,2) not null", false);
 
+    sql_query("alter table {$mw['basic_config_table']} add cf_umz_domain varchar(100) not null default ''", false);
 

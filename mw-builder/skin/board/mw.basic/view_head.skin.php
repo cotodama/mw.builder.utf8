@@ -372,26 +372,26 @@ $next_wr_subject = str_replace("\"", "'", $next_wr_subject);
 
 if ($is_admin && strstr($write[wr_option], "secret")) {
     // 잠금 해제 버튼
-    $nosecret_href = "javascript:btn_nosecret();";
+    $nosecret_href = "btn_nosecret();";
 } else if ($is_admin) {
     // 잠금 버튼
-    $secret_href = "javascript:btn_secret();";
+    $secret_href = "btn_secret();";
 }
 
 // 파일로그
 if ($mw_basic[cf_download_log] && $is_admin) {
-    $download_log_href = "javascript:btn_download_log()";
+    $download_log_href = "btn_download_log()";
 }
 
 // 링크로그
 if ($mw_basic[cf_link_log] && $is_admin) {
-    $link_log_href = "javascript:btn_link_log()";
+    $link_log_href = "btn_link_log()";
 }
 
 
 // 로그버튼
 if ($mw_basic[cf_post_history] && $member[mb_level] >= $mw_basic[cf_post_history_level]) {
-    $history_href = "javascript:btn_history($wr_id)";
+    $history_href = "btn_history($wr_id)";
 }
 
 $is_singo_admin = mw_singo_admin($member[mb_id]);
@@ -658,15 +658,26 @@ if ($mw_basic[cf_iframe_level] && $mw_basic[cf_iframe_level] <= $mb[mb_level]) {
 if ($mw_basic[cf_umz]) { // 짧은 글주소 사용 
     //if ($write[wr_umz] == "") {
     if ($mw_basic[cf_umz2]) {
-        if (substr(trim($write[wr_umz]), 0, strlen($mw_basic[cf_umz2])+7) != "http://$mw_basic[cf_umz2]") {
-            $url = "$g4[url]/$g4[bbs]/board.php?bo_table=$bo_table&wr_id=$wr_id";
+        if ($mw_basic['cf_umz2'] == 'my' && substr(trim($write[wr_umz]), 0, strlen($mw_basic[cf_umz_domain])+7) != "http://$mw_basic[cf_umz_domain]") {
+            //$url = "$g4[url]/$g4[bbs]/board.php?bo_table=$bo_table&wr_id=$wr_id";
+            $url = mw_seo_url($bo_table, $wr_id);
             $umz = umz_get_url($url);
             sql_query("update $write_table set wr_umz = '$umz' where wr_id = '$wr_id'");
             $view[wr_umz] = $umz;
         }
-    } else {
+        else if (substr(trim($write[wr_umz]), 0, strlen($mw_basic[cf_umz2])+7) != "http://$mw_basic[cf_umz2]") {
+            //$url = "$g4[url]/$g4[bbs]/board.php?bo_table=$bo_table&wr_id=$wr_id";
+
+            $url = mw_seo_url($bo_table, $wr_id);
+            $umz = umz_get_url($url);
+            sql_query("update $write_table set wr_umz = '$umz' where wr_id = '$wr_id'");
+            $view[wr_umz] = $umz;
+        }
+    }
+    else {
         if (substr(trim($write[wr_umz]), 0, 10) != "http://umz") {
-            $url = "$g4[url]/$g4[bbs]/board.php?bo_table=$bo_table&wr_id=$wr_id";
+            //$url = "$g4[url]/$g4[bbs]/board.php?bo_table=$bo_table&wr_id=$wr_id";
+            $url = mw_seo_url($bo_table, $wr_id);
             $umz = umz_get_url($url);
             sql_query("update $write_table set wr_umz = '$umz' where wr_id = '$wr_id'");
             $view[wr_umz] = $umz;
@@ -908,4 +919,100 @@ if (!$mw_basic['cf_time_view'])
     $mw_basic['cf_time_view'] = "Y-m-d (w) H:i";
 
 $view['datetime2'] = mw_get_date($write['wr_datetime'], $mw_basic['cf_time_view']);
+
+$mw_admin_button = '';
+if ($is_admin || $history_href || $is_singo_admin)
+{
+    ob_start();
+    ?>
+    <script>
+    $(document).ready(function () {
+        $(".mw_manage_title").mouseenter(function () {
+            $manage_button = $(this);
+            $(".mw_manage").css("top", $manage_button.offset().top);
+            $(".mw_manage").css("left", $manage_button.offset().left - ($(".mw_manage").width()-$manage_button.width()));
+            $(".mw_manage").css("display", "block");
+            $(".mw_manage .item").mouseenter(function () {
+                $(this).css("background-color", "#ddd");
+            });
+            $(".mw_manage .item").mouseleave(function () {
+                $(this).css("background-color", "#fff");
+            });
+        });
+            $(".mw_manage").mouseleave(function () {
+                $(this).css("display", "none");
+            });
+
+    });
+    </script>
+
+    <div class="mw_manage_title"><i class="fa fa-gear"></i> 관리</div>
+    <div class="mw_manage">
+    <?php
+    if ($is_singo_admin && $view[mb_id] != $member[mb_id]) { 
+        echo "<div class=\"item\" onclick=\"btn_intercept('{$write[mb_id]}', '{$write[wr_ip]}')\">
+                <i class=\"fa fa-times-circle\"></i> 회원차단</div> ";
+    }
+    if ($history_href) {
+        echo "<div class=\"item\" onclick=\"$history_href\"><i class=\"fa fa-file\"></i> 변경로그</div>";
+    }
+    if ($is_admin) {
+        if ($download_log_href) {
+            echo "<div class=\"item\" onclick=\"{$download_log_href}\"><i class=\"fa fa-download\"></i> 다운로그</div>";
+        }
+        if ($link_log_href) {
+            echo "<div class=\"item\" onclick=\"{$link_log_href}\"><i class=\"fa fa-link\"></i> 링크로그</div>";
+        }
+        if ($copy_href) {
+            echo "<div class=\"item\" onclick=\"{$copy_href}\"><i class=\"fa fa-copy\"></i> 복사</div>";
+        }
+        if ($move_href) {
+            echo "<div class=\"item\" onclick=\"{$move_href}\"><i class=\"fa fa-arrow-right\"></i> 이동</div>";
+        }
+        if ($is_category) {
+            echo "<div class=\"item\" onclick=\"mw_move_cate_one()\"><i class=\"fa fa-tag\"></i> 분류이동</div>";
+        }
+        if ($nosecret_href) {
+            echo "<div class=\"item\" onclick=\"{$nosecret_href}\"><i class=\"fa fa-unlock\"></i> 잠금해제</div>";
+        }
+        if ($secret_href) {
+            echo "<div class=\"item\" onclick=\"{$secret_href}\"><i class=\"fa fa-lock\"></i> 잠금</div>";
+        }
+
+        echo "<div class=\"item\" onclick=\"btn_now()\"><i class=\"fa fa-refresh\"></i> 시간갱신</div>";
+
+        if ($view[is_notice])
+            echo "<div class=\"item\" onclick=\"btn_notice()\"><i class=\"fa fa-bullhorn\"></i> 공지내림</div>";
+        else 
+            echo "<div class=\"item\" onclick=\"btn_notice()\"><i class=\"fa fa-bullhorn\"></i> 공지올림</div>";
+
+        if ($view[wr_comment_hide])
+            echo "<div class=\"item\" onclick=\"btn_comment_hide()\"><i class=\"fa fa-comment\"></i> 댓글보임</div>";
+        else 
+            echo "<div class=\"item\" onclick=\"btn_comment_hide()\"><i class=\"fa fa-comment-o\"></i> 댓글감춤</div>";
+
+        if ($is_admin == "super") {
+            echo "<div class=\"item\" onclick=\"void(mw_member_email())\"><i class=\"fa fa-envelope\"></i> 메일등록</div>";
+        }
+
+        $row = sql_fetch("select * from $mw[popup_notice_table] where bo_table = '$bo_table' and wr_id = '$wr_id'", false);
+        if ($row)
+            echo "<div class=\"item\" onclick=\"btn_popup()\"><i class=\"fa fa-level-down\"></i> 팝업내림</div>";
+        else 
+            echo "<div class=\"item\" onclick=\"btn_popup()\"><i class=\"fa fa-level-up\"></i> 팝업올림</div>";
+
+        echo "<div class=\"item\" onclick=\"void(btn_copy_new())\"><i class=\"fa fa-upload\"></i> 새글등록</div>";
+
+        if ($write[wr_view_block])
+            echo "<div class=\"item\" onclick=\"btn_view_block()\"><i class=\"fa fa-exclamation-triangle\"></i> 차단해제</div>";
+        else 
+            echo "<div class=\"item\" onclick=\"btn_view_block()\"><i class=\"fa fa-exclamation-triangle\"></i> 보기차단</div>";
+    }
+    ?>
+    </div><!--mw_manage-->
+    <?php
+    $mw_admin_button = ob_get_contents();
+    //ob_end_flush();
+    ob_end_clean();
+}
 

@@ -29,27 +29,18 @@ header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
 header("Cache-Control: pre-check=0, post-check=0, max-age=0"); // HTTP/1.1
 header("Pragma: no-cache"); // HTTP/1.0
 
-if (!$bo_table or !$wr_id) die("데이터가 없습니다.");
+if (!$is_admin)
+    die("권한이 없습니다.");
 
-include("{$board_skin_path}/mw.lib/mw.skin.basic.lib.php");
+if (!$bo_table)
+    die("데이터가 없습니다.");
 
-$readonly = mw_is_rate($bo_table, $wr_id);
-?>
-<div class="rate_box"> 
-    <div>이 게시물을 평가해주세요.</div>
-    <div class="comment_rate"></div>
-</div> 
 
-<script>
-$(".comment_rate").mw_star_rate({
-    path : "<?php echo $g4['url']."/skin/board/".$board['bo_skin']?>/mw.js/mw.star.rate/",
-    star : "star1",
-    default_value : 0,
-    readonly : <?php echo $readonly?'true':'false'?>,
-    readonly_msg : "<?php echo $readonly?>",
-    form_id : "wr_rate",
-    half : true,
-    max : 5
-});
-</script>
+if (!$color)
+    die("데이터가 없습니다.");
 
+$sql = " update {$write_table} set wr_subject_color = '' where lower(wr_subject_color) = '{$color}' ";
+$qry = sql_query($sql);
+
+echo "[$color] 색상 비우기를 완료했습니다.";
+exit;

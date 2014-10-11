@@ -43,10 +43,17 @@ header("Expires: 0"); // rfc2616 - Section 14.21
 header("Pragma: no-cache"); // HTTP/1.0
 */
 ?>
+<?php if (strstr($_SERVER['PHP_SELF'], $g4['admin'])) { ?>
 <!-- <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"> -->
 <html>
+<?php } else { ?>
+<!doctype html>
+<html lang="ko">
+<?php } ?>
 <head>
+<meta charset="<?=$g4['charset']?>">
 <meta http-equiv="content-type" content="text/html; charset=<?=$g4['charset']?>">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title><?=$g4['title']?></title>
 <link rel="stylesheet" href="<?=$g4['path']?>/style.css" type="text/css">
 </head>

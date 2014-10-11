@@ -457,3 +457,4 @@ if ($board['bo_use_rss_view'] && $mw_basic['cf_rss'] && $rss_href)
     $rss_href = $g4['url'].'/skin/board/'.$board['bo_skin'].'/rss.php?bo_table='.$bo_table;
 }
 
+

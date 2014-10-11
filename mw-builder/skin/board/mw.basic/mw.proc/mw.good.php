@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Bechu-Basic Skin for Gnuboard4
  *
@@ -69,12 +69,13 @@ if ($mw_basic[cf_good_graph])
     </div>
     </div>
 
-<?
-} else {
+<?php
+}
+else {
     if (!$board[bo_use_good] || !$board[bo_use_nogood])
         $good_box_width = 100;
     else
-        $good_box_width = 210;
+        $good_box_width = 260;
 ?>
 
     <style type="text/css">
@@ -82,11 +83,22 @@ if ($mw_basic[cf_good_graph])
     .good-box .in { text-align:center; width:<?=$good_box_width?>px; height:30px; margin:0 auto; }
     .good-box span { float:left; margin:5px 0 0 27px; font-size:12px; font-weight:bold; color:#fff; }
     .good-box .gg { width:100px; height:30px; float:left; cursor:pointer; background:url(<?=$img_path?>/btn_good.gif); }
+    .good-box button { float:left; margin-right:7px; font-size:12px; }
+    .good-box button div { padding:5px; }
+    .good-box button i { font-size:15px; margin-right:10px;}
     .good-box .gn { width:100px; height:30px; float:left; cursor:pointer; background:url(<?=$img_path?>/btn_nogood.gif); margin:0 0 0 10px; }
     </style>
     <div class="good-box"><div class="in">
-        <? if ($board[bo_use_good]) { ?><div class="gg" onclick="mw_good_act('good')"><span>추천 : <?=number_format($write[wr_good])?></span></div><? } ?>
-        <? if ($board[bo_use_nogood]) { ?><div class="gn" onclick="mw_good_act('nogood')"><span>비추 : <?=number_format($write[wr_nogood])?></span></div><? } ?>
+        <?php if ($board[bo_use_good]) { ?>
+        <button class="fa-button" onclick="mw_good_act('good')">
+            <div><i class="fa fa-thumbs-up"></i> 추천하기 : <?=number_format($write[wr_good])?></div></button>
+        <!--<div class="gg" onclick="mw_good_act('good')"><span>추천 : <?=number_format($write[wr_good])?></span></div>-->
+        <?php } ?>
+        <?php if ($board[bo_use_nogood]) { ?>
+        <button class="fa-button" onclick="mw_good_act('nogood')">
+            <div><i class="fa fa-thumbs-down"></i> 다른의견 : <?=number_format($write[wr_nogood])?></div></button>
+        <!--<div class="gn" onclick="mw_good_act('nogood')"><span>비추 : <?=number_format($write[wr_nogood])?></span></div>-->
+        <?php } ?>
     </div></div>
 
 <? } ?>

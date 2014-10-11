@@ -112,6 +112,7 @@ $config_href = "javascript:mw_config()";
 
 // 선택옵션으로 인해 셀합치기가 가변적으로 변함
 $colspan = 5;
+if ($is_category) $colspan++;
 if ($is_checkbox) $colspan++;
 if ($is_good) $colspan++;
 if ($is_nogood) $colspan++;
@@ -181,6 +182,7 @@ $new_count = $row[cnt];
 // 제목이 두줄로 표시되는 경우 이 코드를 사용해 보세요.
 // <nobr style='display:block; overflow:hidden; width:000px;'>제목</nobr>
 ?>
+<link href="<?php echo $pc_skin_path?>/mw.css/font-awesome-4.2.0/css/font-awesome.css" rel="stylesheet">
 
 <? if ($mw_basic[cf_type] == "desc" || $mw_basic[cf_type] == "thumb") { // 요약형, 썸네일형일경우 제목 볼드 ?>
 <style type="text/css">
@@ -196,6 +198,13 @@ $new_count = $row[cnt];
     <link rel="stylesheet" href="<?=$social_commerce_path?>/style.css" type="text/css">
     <? } ?>
 <? } ?>
+<? if ($mw_basic[cf_talent_market]) { ?>
+    <? if ($mw_basic[cf_type] == 'gall') { ?>
+    <link rel="stylesheet" href="<?=$talent_market_path?>/style-gall.css" type="text/css">
+    <? } else { ?>
+    <link rel="stylesheet" href="<?=$talent_market_path?>/style.css" type="text/css">
+    <? } ?>
+<? } ?>
 
 <!--
 <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet" />
@@ -207,6 +216,9 @@ $new_count = $row[cnt];
 <script type="text/javascript" src="<?=$board_skin_path?>/mw.js/tooltip.js"></script>
 <? } ?>
 <script type="text/javascript" src="<?="$board_skin_path/mw.js/mw_image_window.js"?>"></script>
+
+<link rel="stylesheet" href="<?php echo $pc_skin_path?>/mw.js/mw.star.rate/jquery.mw.star.rate.css" type="text/css">
+<script src="<?php echo $pc_skin_path?>/mw.js/mw.star.rate/jquery.mw.star.rate.js"></script>
 
 <!-- 게시판 목록 시작 -->
 <table width="<?=$bo_table_width?>" align="center" cellpadding="0" cellspacing="0"><tr><td id=mw_basic>
@@ -232,43 +244,15 @@ include_once("$board_skin_path/mw.proc/mw.list.hot.skin.php");
             <?=$category_option?>
             </select>
         <? } ?>
-        <? if (($mw_basic[cf_type] == "gall" || $mw_basic[cf_social_commerce]) && $is_checkbox) { ?>
+        <? if (($mw_basic[cf_type] == "gall" || $mw_basic[cf_social_commerce] || $mw_basic[cf_talent_market]) && $is_checkbox) { ?>
             <input onclick="if (this.checked) all_checked(true); else all_checked(false);" type=checkbox>
         <?}?>
 
-        <? if ($write_href) { ?>
-            <a href="<?=$write_href?>"><img src="<?=$board_skin_path?>/img/btn_write.gif" border="0" align="absmiddle"></a>
-        <? } ?>
+
         </form>
     </td>
     <td align="right">
-        <? if ($mw_basic[cf_social_commerce]) { ?>
-        <span class=mw_basic_total style="cursor:pointer;" onclick="win_open('<?=$social_commerce_path?>/order_list.php?bo_table=<?=$bo_table?>', 'order_list', 'width=800,height=600,scrollbars=1');">[주문내역]</span>
-        <? } ?>
-        <? if ($mw_basic[cf_talent_market] && $is_admin) { ?>
-        <span class=mw_basic_total style="cursor:pointer;" onclick="win_open('<?=$talent_market_path?>/order_list.php?bo_table=<?=$bo_table?>', 'order_list', 'width=800,height=600,scrollbars=1');">[주문내역]</span>
-        <? } ?>
-
-        <?php include("$board_skin_path/mw.proc/mw.smart-alarm-config.php") ?>
-        <span class=mw_basic_total>총 게시물 <?=number_format($total_count)?>건, 최근 <?=number_format($new_count)?> 건</span>
-        <? if ($is_admin && $mw_basic[cf_collect] == 'rss' && file_exists("$g4[path]/plugin/rss-collect/_lib.php")) {?>
-        <img src="<?=$g4[path]?>/plugin/rss-collect/img/btn_collect.png" align="absmiddle" style="cursor:pointer;" onclick="win_open('<?=$g4[path]?>/plugin/rss-collect/config.php?bo_table=<?=$bo_table?>', 'rss_collect', 'width=800,height=600,scrollbars=1')">
-        <? } ?>
-        <? if ($is_admin && $mw_basic[cf_collect] == 'youtube' && file_exists("$g4[path]/plugin/youtube-collect/_lib.php")) {?>
-        <img src="<?=$g4[path]?>/plugin/youtube-collect/img/btn_collect.png" align="absmiddle" style="cursor:pointer;" onclick="win_open('<?=$g4[path]?>/plugin/youtube-collect/config.php?bo_table=<?=$bo_table?>', 'youtube_collect', 'width=800,height=600,scrollbars=1')">
-        <? } ?>
-        <a style="cursor:pointer" class="tooltip"
-            title="읽기:<?=$board[bo_read_point]?>,
-쓰기:<?=$board[bo_write_point]?><?
-if ($mw_basic[cf_contents_shop_write]) { echo " ($mw_cash[cf_cash_name]$mw_basic[cf_contents_shop_write_cash]$mw_cash[cf_cash_unit])"; } ?>,
-댓글:<?=$board[bo_comment_point]?>,
-다운:<?=$board[bo_download_point]?>"><!--
-        --><img src='<?=$board_skin_path?>/img/btn_info.gif' border=0 align=absmiddle></a>
-        <? if ($mw_basic[cf_social_commerce] && $rss_href && file_exists("$social_commerce_path/img/xml.png")) { ?>
-            <a href='<?=$social_commerce_path?>/xml.php?bo_table=<?=$bo_table?>'><img src='<?=$social_commerce_path?>/img/xml.png' border=0 align=absmiddle></a>
-        <? } else if ($rss_href) { ?><a href='<?=$rss_href?>'><img src='<?=$board_skin_path?>/img/btn_rss.gif' border=0 align=absmiddle></a><?}?>
-        <? if ($is_admin == "super") { ?><a href="<?=$config_href?>"><img src="<?=$board_skin_path?>/img/btn_config.gif" title="스킨설정" border="0" align="absmiddle"></a><?}?>
-        <? if ($admin_href) { ?><a href="<?=$admin_href?>"><img src="<?=$board_skin_path?>/img/btn_admin.gif" title="관리자" width="63" height="22" border="0" align="absmiddle"></a><?}?>
+        <?php include($pc_skin_path."/mw.proc/mw.top.button.php")?>
     </td>
 </tr>
 <tr><td height=5></td></tr>
@@ -306,11 +290,15 @@ if ($is_category && $mw_basic[cf_category_tab]) {
 <input type='hidden' name='sw' id='sw'  value=''>
 
 <table width=100% border=0 cellpadding=0 cellspacing=0>
-<tr><td colspan=<?=$colspan?> height=2 class=mw_basic_line_color></td></tr>
-<? if ($mw_basic[cf_type] != "gall" && !$mw_basic[cf_social_commerce]) { ?>
+<tr><td colspan=<?=$colspan?> height=1 class=mw_basic_line_color></td></tr>
+<? if ($mw_basic[cf_type] != "gall" && !$mw_basic[cf_social_commerce] && !$mw_basic[cf_talent_market]) { ?>
 <tr class=mw_basic_list_title>
-    <? if (!$mw_basic[cf_post_num]) { ?><td width=50>번호</td><? } ?>
     <? if ($is_checkbox) { ?><td width=40><input onclick="if (this.checked) all_checked(true); else all_checked(false);" type=checkbox></td><?}?>
+    <? if (!$mw_basic[cf_post_num]) { ?><td width=40>번호</td><? } ?>
+
+    <? if ($is_category) {?>
+    <td width="80">분류</td>
+    <? }?> 
     <? if ($mw_basic[cf_type] == "thumb") { ?><td width=<?=$mw_basic[cf_thumb_width]+20?>> 이미지 </td><?}?>
     <td>제목</td>
     <? if ($mw_basic[cf_reward]) { ?> <td width=70>충전</td> <?}?>
@@ -326,6 +314,8 @@ if ($is_category && $mw_basic[cf_category_tab]) {
     <? if (!$mw_basic[cf_post_hit]) { ?> <td width=40><?=subject_sort_link('wr_hit', $qstr2, 1)?>조회</a></td> <?}?>
 </tr>
 <tr><td colspan=<?=$colspan?> height=1 class=mw_basic_line_color></td></tr>
+<tr><td colspan=<?=$colspan?> height=3 style="background-color:#efefef;"></td></tr>
+<tr><td colspan=<?=$colspan?> height=3 style=""></td></tr>
 <? } ?>
 <? if ($mw_basic[cf_type] == "gall") { ?> <tr><td colspan=<?=$colspan?> height=10></td></tr> <? } ?>
 
@@ -537,6 +527,11 @@ if ($mw_basic[cf_social_commerce])
     $a = include("$social_commerce_path/list.skin.php");    
     if (!$a) continue;
 }
+else if ($mw_basic[cf_talent_market])
+{
+    $a = include("$talent_market_path/list.skin.php");    
+    if (!$a) continue;
+}
 else if ($mw_basic[cf_type] == "gall")
 {
     if ($list[$i][is_notice]) continue;
@@ -570,7 +565,7 @@ else if ($mw_basic[cf_type] == "gall")
     // 제목스타일
     if ($mw_basic[cf_subject_style]) {
         $style .= " style='font-family:{$list[$i][wr_subject_font]}; ";
-        if ($list[$i][wr_subject_color])
+        if ($list[$i][wr_subject_color] && $wr_id != $list[$i]['wr_id'])
             $style .= " color:{$list[$i][wr_subject_color]}";
 
         if ($list[$i][wr_subject_bold]) {
@@ -598,9 +593,9 @@ else if ($mw_basic[cf_type] == "gall")
             <div style="margin:0 0 5px 0;"><a href="<?=$list[$i][ca_name_href]?>"
                 class=mw_basic_list_category <?php echo $ca_color_style?>>[<?=$list[$i][ca_name]?>]</a></div>
         <? } ?>
-        <?=$write_icon?><a href="<?=$list[$i][href]?>"><?=$list[$i][subject]?></a>
+        <?=$write_icon?> <a href="<?=$list[$i][href]?>"><?=$list[$i][subject]?></a>
         <? if ($list[$i][comment_cnt]) { ?>
-            <a href="<?=$list[$i][comment_href]?>" class=mw_basic_list_comment_count>+<?=$list[$i][wr_comment]?></a>
+            <a href="<?=$list[$i][comment_href]?>" class=mw_basic_list_comment_count><?=$list[$i][wr_comment]?></a>
         <? } ?>
         </div>
     </td>
@@ -609,6 +604,11 @@ else if ($mw_basic[cf_type] == "gall")
 <? } else { // $mw_basic[cf_type] == "gall" ?>
 
 <tr align=center <? if ($list[$i][is_notice]) echo "bgcolor='#f8f8f9'"; ?>>
+
+    <? if ($is_checkbox) { ?>
+    <!-- 관리자용 체크박스 -->
+    <td> <input type=checkbox name=chk_wr_id[] value="<?=$list[$i][wr_id]?>"> </td>
+    <? } ?>
 
     <!-- 글번호 -->
     <? if (!$mw_basic[cf_post_num]) { ?>
@@ -626,11 +626,6 @@ else if ($mw_basic[cf_type] == "gall")
     </td>
     <? } ?>
 
-    <? if ($is_checkbox) { ?>
-    <!-- 관리자용 체크박스 -->
-    <td> <input type=checkbox name=chk_wr_id[] value="<?=$list[$i][wr_id]?>"> </td>
-    <? } ?>
-
     <? if ($mw_basic[cf_type] == "thumb") { ?>
     <? if (!is_file($thumb_file)) $thumb_file = mw_get_noimage(); ?>
     <? if ($list[$i][icon_secret] || $list[$i][wr_view_block] || $list[$i][wr_key_password])
@@ -644,6 +639,12 @@ else if ($mw_basic[cf_type] == "gall")
         --><? if ($list[$i][icon_new]) { echo "<div class='icon_gall_new'><img src='{$pc_skin_path}/img/icon_gall_new.png'></div>"; } ?><a href="<?=$list[$i][href]?>"><img src="<?=$thumb_file?>" width=<?=$mw_basic[cf_thumb_width]?> height=<?=$mw_basic[cf_thumb_height]?> align=absmiddle></a><!--
     --></td>
     <? } ?>
+
+    <?php
+    if ($is_category) {
+        echo "<td><a href=\"{$list[$i][ca_name_href]}\" class=mw_basic_list_category {$ca_color_style}>{$list[$i][ca_name]}</a></td>";
+    }
+    ?>
 
     <!-- 글제목 -->
     <td class=mw_basic_list_subject>
@@ -668,7 +669,7 @@ else if ($mw_basic[cf_type] == "gall")
         echo $list[$i][reply];
         echo $list[$i][icon_reply];
         if ($is_category && $list[$i][ca_name]) {
-            echo "<a href=\"{$list[$i][ca_name_href]}\" class=mw_basic_list_category {$ca_color_style}>[{$list[$i][ca_name]}]</a>&nbsp;";
+            //echo "<a href=\"{$list[$i][ca_name_href]}\" class=mw_basic_list_category {$ca_color_style}>[{$list[$i][ca_name]}]</a>&nbsp;";
         }
 
         if ($mw_basic[cf_read_level] && $list[$i][wr_read_level])
@@ -692,7 +693,7 @@ else if ($mw_basic[cf_type] == "gall")
         // 제목스타일
         if ($mw_basic[cf_subject_style]) {
             $style .= " style='font-family:{$list[$i][wr_subject_font]}; ";
-            if ($list[$i][wr_subject_color])
+            if ($list[$i][wr_subject_color] && $wr_id != $list[$i]['wr_id'])
                 $style .= " color:{$list[$i][wr_subject_color]}";
 
             if ($list[$i][wr_subject_bold])
@@ -705,7 +706,7 @@ else if ($mw_basic[cf_type] == "gall")
         if ($list[$i][comment_cnt])
             //echo " <span class=mw_basic_list_comment_count>{$list[$i][comment_cnt]}</span>";
             //echo " <a href=\"{$list[$i][comment_href]}\" class=mw_basic_list_comment_count>{$list[$i][comment_cnt]}</a>";
-            echo " <a href=\"{$list[$i][comment_href]}\" class=mw_basic_list_comment_count>+{$list[$i][wr_comment]}</a>";
+            echo " <a href=\"{$list[$i][comment_href]}\" class=mw_basic_list_comment_count>{$list[$i][wr_comment]}</a>";
 
         echo " " . $list[$i][icon_update];
         echo " " . $list[$i][icon_new];
@@ -737,11 +738,25 @@ else if ($mw_basic[cf_type] == "gall")
     <? if ($mw_basic[cf_attribute] != "anonymous") { ?> <td><nobr class=mw_basic_list_name><?=$list[$i][name]?></nobr></td> <?}?> <?}?>
     <? if ($mw_basic[cf_attribute] == 'qna') { ?>
         <td class=mw_basic_list_qna_status>
-            <? if ($list[$i]['reply'] ) { ?>
+            <?/* if ($list[$i]['reply'] ) { ?>
                 &nbsp;
             <? } else { ?>
             <div><img src="<?=$board_skin_path?>/img/icon_qna_<?=$list[$i][wr_qna_status]?>.png"></div>
-            <? } ?>
+            <? } */?>
+            <?php
+            if ($list[$i]['reply']) {
+                echo "&nbsp;";
+            }
+            else if ($list[$i]['wr_qna_status'] == 2) {
+                echo "<div class='fa-button center gray' style='width:40px;'> 보류</div>";
+            }
+            else if ($list[$i]['wr_qna_status'] == 1) {
+                echo "<div class='fa-button center gray' style='width:40px;'> 해결</div>";
+            }
+            else {
+                echo "<div class='fa-button center' style='width:40px;'> 미해결</div>";
+            }
+            ?>
         </td>
     <? } ?>
     <? if ($mw_basic[cf_attribute] == 'qna' && $mw_basic[cf_qna_point_use]) { ?> <td class=mw_basic_list_point><?=$list[$i][wr_qna_point]?></span></td> <?}?>
@@ -765,6 +780,87 @@ else if ($mw_basic[cf_type] == "gall")
 
 </form>
 
+<!-- 링크 버튼, 검색 -->
+<table width=100%>
+<tr>
+    <td height="40">
+        <form name="fsearch" method="get">
+
+        <?php if ($is_checkbox) { ?>
+        <script>
+        $(document).ready(function () {
+            $(".mw_manage_list_title").mouseenter(function () {
+                $manage_button = $(this);
+                $(".mw_manage_list").css("top", $manage_button.offset().top);
+                $(".mw_manage_list").css("left", $manage_button.offset().left);
+                $(".mw_manage_list").css("display", "block");
+                $(".mw_manage_list .item").mouseenter(function () {
+                    $(this).css("background-color", "#ddd");
+                });
+                $(".mw_manage_list .item").mouseleave(function () {
+                    $(this).css("background-color", "#fff");
+                });
+            });
+            $(".mw_manage_list").mouseleave(function () {
+                $(this).css("display", "none");
+            });
+        });
+        </script>
+
+        <button class="mw_manage_list_title"><i class="fa fa-gear"></i> 관리</button>
+        <div class="mw_manage_list">
+            <div class="item" onclick="select_delete()"><i class="fa fa-remove"></i> 선택 삭제</div>
+            <div class="item" onclick="select_copy('copy')"><i class="fa fa-copy"></i> 선택 복사</div>
+            <div class="item" onclick="select_copy('move')"><i class="fa fa-arrow-right"></i> 선택 이동</div>
+            <div class="item" onclick="mw_move_cate()"><i class="fa fa-tag"></i> 선택 분류이동</div>
+            <div class="item" onclick="mw_notice('up')"><i class="fa fa-bell-o"></i> 선택 공지올림</div>
+            <div class="item" onclick="mw_notice('down')"><i class="fa fa-bell-slash-o"></i> 선택 공지내림</div>
+            <div class="item" onclick="mw_qna(0)"><i class="fa fa-question"></i> 선택 질문 미해결</div>
+            <div class="item" onclick="mw_qna(1)"><i class="fa fa-mortar-board"></i> 선택 질문 해결</div>
+            <div class="item" onclick="mw_qna(2)"><i class="fa fa-inbox"></i> 선택 질문 보류</div>
+        </div><!--mw_manage-->
+        <?php } // is_checkbox ?>
+
+        <?php if ($is_admin || ($mw_basic['cf_search_level'] && $mw_basic['cf_search_level'] <= $member['mb_level'])) { ?>
+        <input type=hidden name=bo_table value="<?=$bo_table?>">
+        <input type=hidden name=sca value="<?=$sca?>">
+        <select name=sfl>
+            <option value='wr_subject'>제목</option>
+            <option value='wr_content'>내용</option>
+            <option value='wr_subject||wr_content'>제목+내용</option>
+            <? if ($mw_basic[cf_attribute] != "anonymous" && !$mw_basic[cf_anonymous]) { ?>
+            <option value='mb_id,1'>회원아이디</option>
+            <option value='mb_id,0'>회원아이디(코)</option>
+            <option value='wr_name,1'>이름</option>
+            <option value='wr_name,0'>이름(코)</option>
+            <? } ?>
+        </select>
+        <input name=stx maxlength=15 size=10 itemname="검색어" required value='<?=stripslashes($stx)?>'>
+        <select name=sop>
+            <option value=and>and</option>
+            <option value=or>or</option>
+        </select>
+        <button type="submit" class="fa-button"><i class="fa fa-search"></i> 검색</button>
+        <? } ?>
+        </form>
+
+    </td>
+    <td align="right">
+
+        <?php if ($list_href) { ?>
+            <!--<a href="<?=$list_href?>"><img src="<?=$board_skin_path?>/img/btn_list.gif" border="0" align="absmiddle"></a>-->
+            <a class="fa-button" href="<?php echo $list_href?>"><i class="fa fa-list"></i> 목록</a>
+        <?php } ?>
+        <?php if ($write_href) { ?>
+            <!--<a href="<?=$write_href?>"><img src="<?=$board_skin_path?>/img/btn_write.gif" border="0" align="absmiddle"></a>-->
+            <a class="fa-button primary" href="<?php echo $write_href?>"><i class="fa fa-pencil"></i> 글쓰기</a>
+        <?php } ?>
+    </td>
+</tr>
+</table>
+
+
+
 <!-- 페이지 -->
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr>
@@ -784,79 +880,6 @@ else if ($mw_basic[cf_type] == "gall")
         ?>
         <?// if ($next_part_href) { echo "<a href='$next_part_href' class='img'><img src='$board_skin_path/img/btn_search_next.gif' border=0 align=absmiddle title='다음검색'></a>"; } ?>
         <? if ($next_part_href) { echo "<a href='$next_part_href'>다음검색</a>"; } ?>
-    </td>
-</tr>
-</table>
-
-<!-- 링크 버튼, 검색 -->
-<table width=100%>
-<tr>
-    <td height="40">
-        <? if ($list_href) { ?><a href="<?=$list_href?>"><img src="<?=$board_skin_path?>/img/btn_list.gif" border="0" align="absmiddle"></a><? } ?>
-        <? if ($write_href) { ?><a href="<?=$write_href?>"><img src="<?=$board_skin_path?>/img/btn_write.gif" border="0" align="absmiddle"></a><? } ?>
-        <? /*if ($is_checkbox) { ?>
-            <a href="javascript:select_delete();"><img src="<?=$board_skin_path?>/img/btn_select_delete.gif" border="0"></a>
-            <a href="javascript:select_copy('copy');"><img src="<?=$board_skin_path?>/img/btn_select_copy.gif" border="0"></a>
-            <a href="javascript:select_copy('move');"><img src="<?=$board_skin_path?>/img/btn_select_move.gif" border="0"></a>
-            <a href="javascript:mw_move_cate();"><img src="<?=$board_skin_path?>/img/btn_select_cate.gif" border="0"></a>
-        <? }*/ ?>
-
-        <? if ($is_checkbox) { ?>
-        <script type="text/javascript">
-        function admin_select_action(v) {
-            switch (v) {
-                case 'delete': select_delete(); break;
-                case 'copy': select_copy('copy'); break;
-                case 'move': select_copy('move'); break;
-                case 'cate': mw_move_cate(); break;
-                case 'notice_up': mw_notice('up'); break;
-                case 'notice_down': mw_notice('down'); break;
-                case 'qna_0': mw_qna(0); break;
-                case 'qna_1': mw_qna(1); break;
-                case 'qna_2': mw_qna(2); break;
-            }
-        }
-        </script>
-        <select id="admin_action" onchange="admin_select_action(this.value)" style="font-size:11px; height:22px;">
-            <option>==글관리==</option>
-            <option value='delete'> 선택 삭제 </option>
-            <option value='copy'> 선택 복사 </option>
-            <option value='move'> 선택 이동 </option>
-            <option value='cate'> 선택 분류이동 </option>
-            <option value='notice_up'> 선택 공지올림 </option>
-            <option value='notice_down'> 선택 공지내림 </option>
-            <? if ($mw_basic[cf_attribute] == 'qna') { ?>
-            <option value='qna_0'> 선택 질문 미해결 </option>
-            <option value='qna_1'> 선택 질문 해결 </option>
-            <option value='qna_2'> 선택 질문 보류 </option>
-            <? } ?>
-        </select>
-        <? } ?>
-    </td>
-    <td align="right">
-        <? if ($is_admin || ($mw_basic['cf_search_level'] && $mw_basic['cf_search_level'] <= $member['mb_level'])) { ?>
-        <form name=fsearch method=get>
-        <input type=hidden name=bo_table value="<?=$bo_table?>">
-        <input type=hidden name=sca value="<?=$sca?>">
-        <select name=sfl>
-            <option value='wr_subject'>제목</option>
-            <option value='wr_content'>내용</option>
-            <option value='wr_subject||wr_content'>제목+내용</option>
-            <? if ($mw_basic[cf_attribute] != "anonymous" && !$mw_basic[cf_anonymous]) { ?>
-            <option value='mb_id,1'>회원아이디</option>
-            <option value='mb_id,0'>회원아이디(코)</option>
-            <option value='wr_name,1'>이름</option>
-            <option value='wr_name,0'>이름(코)</option>
-            <? } ?>
-        </select>
-        <input name=stx maxlength=15 size=10 itemname="검색어" required value='<?=stripslashes($stx)?>'>
-        <select name=sop>
-            <option value=and>and</option>
-            <option value=or>or</option>
-        </select>
-        <input type=image src="<?=$board_skin_path?>/img/btn_search.gif" border=0 align=absmiddle>
-        </form>
-        <? } ?>
     </td>
 </tr>
 </table>

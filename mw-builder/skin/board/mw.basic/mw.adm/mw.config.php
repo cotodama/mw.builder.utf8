@@ -1002,18 +1002,40 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 	<div class="cf_title"> <input type=checkbox name=chk[cf_subject_style] value=1>&nbsp; 제목 스타일 </div>
 	<div class="cf_content">
 	    <input type=checkbox name=cf_subject_style value=1> 사용
+            <span class="cf_info">(제목에 글꼴, 색상을 설정할 수 있습니다.)</span>
+            <br>
             <select name="cf_subject_style_level">
             <? for ($i=1; $i<=10; $i++) { ?>
             <option value="<?=$i?>"> <?=$i?> </option>
             <? } ?>
             </select> 레벨 이상,
             <input type="checkbox" name="cf_subject_style_color_picker" value="1">컬러피커 사용,
-            기본색 <input type="text" class="ed" size="10" name="cf_subject_style_color_default" value="<?=$mw_basic[cf_subject_style_color_default]?>"/>
-            <span class="cf_info">(제목에 글꼴, 색상을 설정할 수 있습니다.)</span>
+            기본색 <input type="text" class="ed" size="10" id="cf_subject_style_color_default" name="cf_subject_style_color_default" value="<?=$mw_basic[cf_subject_style_color_default]?>"/>
+            <input type="button" class="btn1" value="기본색 지우기" onclick="delete_subject_color()">
 	    <script>
             document.cf_form.cf_subject_style.checked = <?=$mw_basic[cf_subject_style]?>;
             document.cf_form.cf_subject_style_level.value = "<?=$mw_basic[cf_subject_style_level]?>";
             document.cf_form.cf_subject_style_color_picker.checked = "<?=$mw_basic[cf_subject_style_color_picker]?>";
+            function delete_subject_color()
+            {
+                msg = "기존에 등록된 제목색상이 기본색일 경우 색상정보를 삭제하시겠습니까?";
+                if (!confirm(msg))
+                    return;
+
+                if (!Date.now) {
+                    Date.now = function() { return new Date().getTime(); };
+                }
+                var t = Date.now() ;
+
+                $.get("<?php echo $pc_skin_path?>/mw.proc/mw.delete.subject.color.php?t="+t, {
+                        "color": $("#cf_subject_style_color_default").val(),
+                        "bo_table": "<?php echo $bo_table?>"
+                    },
+                    function (str) {
+                        alert(str);
+                    }
+                );
+            }
             </script>
 	</div>
     </div>
@@ -3011,11 +3033,29 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
     <div class="cf_item">
 	<div class="cf_title"> <input type=checkbox name=chk[cf_umz] value=1>&nbsp; 짧은링크 </div>
 	<div class="cf_content">
-	    <input type=checkbox name=cf_umz value=1> 사용 <span class="cf_info">(게시물마다 umz.kr/xxxxx 형식의 짧은 글주소 자동생성)</span>  
-            <div>도메인 선택  : <select name="cf_umz2"><option value="">umz.kr</option><option value="mwt.so">mwt.so</option></select></div>
+	    <input type=checkbox name="cf_umz" id="cf_umz" value=1> 사용 <span class="cf_info">(게시물마다 umz.kr/xxxxx 형식의 짧은 글주소 자동생성)</span>  
+            <div>도메인 선택  :
+                <select name="cf_umz2" id="cf_umz2">
+                    <option value="">umz.kr</option>
+                    <option value="mwt.so">mwt.so</option>
+                    <option value="my">내도메인 (솔루션 구매시)</option>
+                </select>
+                <span id="cf_umz_custom" style="display:none">
+                    도메인 : http://<input type="text" size="30" name="cf_umz_domain" id="cf_umz_domain"
+                        value="<?php echo $mw_basic['cf_umz_domain']?>">
+                </span>
+            </div>
 	    <script>
-            document.cf_form.cf_umz.checked = <?=$mw_basic[cf_umz]?>;
-            document.cf_form.cf_umz2.value = "<?=$mw_basic[cf_umz2]?>";
+            $(document).ready(function () {
+                $("#cf_umz2").change(function () {
+                    if ($(this).val() == "my") {
+                        $("#cf_umz_custom").css("display", "inline");
+                    }
+                });
+                $("#cf_umz").attr("checked", <?=$mw_basic[cf_umz]?"true":"false"?>);
+                $("#cf_umz2").val("<?=$mw_basic[cf_umz2]?>");
+                $("#cf_umz2").change();
+            });
             </script>
 	</div>
     </div>

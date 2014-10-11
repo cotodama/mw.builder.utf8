@@ -48,7 +48,8 @@ if ($mw_basic['cf_jump_point']) {
 }
 ?>
 
-<input type="button" class="btn1" id="btn_jump" value="새글로 점프">
+<button class="fa-button" id="btn_jump"><i class="fa fa-paper-plane-o"></i> 점프</button>
+
 <script>
 $(document).ready(function () {
     $("#btn_jump").click(function () {

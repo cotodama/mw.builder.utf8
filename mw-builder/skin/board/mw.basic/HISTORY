@@ -1,3 +1,55 @@
+ver 2.7.7 (14.10.10)
+    : font awesome 적용, 디자인 변경
+      익스플로러8 버전이하는 루트의 head.sub.php 파일의
+      <head>와 </head> 사이에 쿼크모드 (Edge) 지정을 하셔야 합니다.
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    : 제목스타일 기본색 지우기 기능 추가
+      배추스킨 디자인 변경으로 인해 작업해야할 부분입니다.
+      배추스킨설정-모양-제목스타일-기본색 #3d5b7a 지우기
+      배추스킨설정-모양-제목스타일-기본색 #555555 로 변경
+
+    mw.basic/HISTORY
+    mw.basic/mw.adm/mw.config.php
+    mw.basic/mw.adm/mw.upgrade.php
+    mw.basic/mw.css/font-awesome-4.2.0/*
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/mw.proc/mw.good.php
+    mw.basic/mw.proc/mw.jump.php
+    mw.basic/mw.proc/mw.notice.top.php
+    mw.basic/mw.proc/mw.top.button.php
+    mw.basic/mw.proc/mw.delete.subject.color.php
+    mw.basic/list.skin.php
+    mw.basic/view.skin.php
+    mw.basic/view_head.skin.php
+    mw.basic/view_comment.skin.php
+    mw.basic/write.skin.php
+    mw.basic/style.common.css
+    mw.basic/write_update.skin.php
+ 
+ver 2.7.6 (14.10.03)
+    : 짧은주소 엄지 솔루션 지원
+    : 별점평가 삭제시 Division by zero 오류 수정 (도장관님 제안)
+    : 관리자는 무조건 별점 평가 가능  (도장관님 제안)
+    : 별점 평가 스크립트 오류 (나뭇잎님 제안)
+    : 별점 소셜커머스, 재능마켓 연동 오류 (ESRB님 제안)
+    : 별점 경로 문제 (브라운아이즈님, Dae-Seok Kim님 제안)
+    : 글아이콘 출력 순서 변경 (도장관님 제안)
+    : 별점 종합평점 오류수정 (신비님 제안)
+    : IE에서 유투브 재생시 QR코드 가림문제 (심보님 제안)
+    : 재능마켓 최신목록스킨 지원
+
+    mw.basic/HISTORY
+    mw.basic/mw.adm/mw.config.php
+    mw.basic/mw.adm/mw.config.update.php
+    mw.basic/mw.adm/mw.upgrade.php
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/mw.proc/mw.rate.php
+    mw.basic/mw.js/mw.star.rate/jquery.mw.star.rate.js
+    mw.basic/list.skin.php
+    mw.basic/view.skin.php
+    mw.basic/view_comment.skin.php
+ 
 ver 2.7.5 (14.09.26)
     : 별점 평가 (브라운아이즈님 제안)
     : 배추스킨전용 RSS 사용시 에디터 첨부 이미지 경로 오류수정 (부멉님 제안)

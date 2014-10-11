@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Bechu-Basic Skin for Gnuboard4
  *
@@ -48,8 +48,9 @@ if ($mw_basic[cf_notice_top])
                 $notice = mw_list_link($notice);
                 ?>
                 <li>
+                    <i class="fa fa-bullhorn"></i>&nbsp;
                     <span class="subject"><a href="<?=$notice[href]?>"><?=$notice[subject]?></a></span>
-                    <? if ($notice[comment_cnt]) { ?> <span class=mw_basic_list_comment_count>+<?=$notice[wr_comment]?></span> <? } ?>
+                    <? if ($notice[comment_cnt]) { ?> <span class=mw_basic_list_comment_count><?=$notice[wr_comment]?></span> <? } ?>
                     <?=$notice[icon_new]?>
                     <!--<span class="datetime"><?=$notice[datetime]?></span>-->
                 </li>

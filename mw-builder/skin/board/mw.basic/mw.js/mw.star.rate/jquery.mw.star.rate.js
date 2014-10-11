@@ -172,7 +172,7 @@
         star : "star1",
         form_id : "wr_rate",
         grade : true,
-        grade_power : 2,
+        grade_power : 2
     };
 })(jQuery);
 
