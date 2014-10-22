@@ -503,17 +503,17 @@ for ($i=0; $i<$to_record; $i++) {
         </table>
         <? if ($list[$i]['mb_id'] != '@lucky-writing') { ?>
         <div style="text-align:right; padding-right:10px;">
-            <span class="mw_basic_comment_url" value="<?=$list[$i][wr_id]?>">댓글주소</span>
+            <span class="mw_basic_comment_url" value="<?=$list[$i][wr_id]?>"><i class="fa fa-link"></i> 댓글주소</span>
             <? if ($mw_basic[cf_attribute] == 'qna'
                 && ($is_admin || !$write[wr_qna_status]) && $member[mb_id] && ($member[mb_id] == $write[mb_id] || $is_admin) && !$view[is_notice]) { ?>
-                <span class="mw_basic_qna_choose"><a onclick="mw_qna_choose(<?=$list[$i][wr_id]?>)">답변채택</a> <? } ?>
+                <span class="mw_basic_qna_choose"><a onclick="mw_qna_choose(<?=$list[$i][wr_id]?>)"><i class="fa fa-graduation-cap"></i> 답변채택</a> <? } ?>
             <? if ($mw_basic[cf_comment_good]) { ?>
-                <span class="mw_basic_comment_good"><a onclick="mw_comment_good(<?=$list[$i][wr_id]?>, 'good')"><img src="<?=$board_skin_path?>/img/thumbs_up.png" alt="추천"/> 추천</a>
+                <span class="mw_basic_comment_good"><a onclick="mw_comment_good(<?=$list[$i][wr_id]?>, 'good')"><i class="fa fa-thumbs-o-up"></i> 추천</a>
                 <span id="mw_comment_good_<?=$list[$i][wr_id]?>"><?=$list[$i][wr_good]?></span></span><? } ?>
             <? if ($mw_basic[cf_comment_nogood]) { ?>
-                <span class="mw_basic_comment_nogood"><a onclick="mw_comment_good(<?=$list[$i][wr_id]?>, 'nogood')"><img src="<?=$board_skin_path?>/img/thumbs_down.png" alt="반대"/> 반대</a>
+                <span class="mw_basic_comment_nogood"><a onclick="mw_comment_good(<?=$list[$i][wr_id]?>, 'nogood')"><i class="fa fa-thumbs-o-down"></i> 반대</a>
                 <span id="mw_comment_nogood_<?=$list[$i][wr_id]?>"><?=$list[$i][wr_nogood]?></span></span><? } ?>
-            <? if ($list[$i][is_reply]) { echo "<span class='mw_basic_comment_reply'><a href=\"javascript:comment_box('{$comment_id}', 'c', '{$list[$i][wr_name]}');\">답글쓰기</a></span>"; } ?>
+            <? if ($list[$i][is_reply]) { echo "<span class='mw_basic_comment_reply'><a href=\"javascript:comment_box('{$comment_id}', 'c', '{$list[$i][wr_name]}');\"><i class='fa fa-reply'></i> 답글쓰기</a></span>"; } ?>
         </div>
 
         <div id='edit_<?=$comment_id?>' style='display:none;'></div><!-- 수정 -->

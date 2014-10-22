@@ -1,3 +1,17 @@
+ver 2.7.8 (14.10.17)
+    : css 버튼 조정 (Dae-Seok Kim님 제안)
+    : 인기 게시물 별점 추가 (브라운아이즈님 제안)
+    : 댓글 기능버튼에 폰트어썸 적용
+
+    mw.basic/HISTORY
+    mw.basic/mw.adm/mw.config.php
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/mw.proc/mw.good.php
+    mw.basic/view_comment.skin.php
+    mw.basic/view_head.skin.php
+    mw.basic/list.skin.php
+    mw.basic/style.common.css
+ 
 ver 2.7.7 (14.10.10)
     : font awesome 적용, 디자인 변경
       익스플로러8 버전이하는 루트의 head.sub.php 파일의

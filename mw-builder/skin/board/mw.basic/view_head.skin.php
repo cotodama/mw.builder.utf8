@@ -200,141 +200,6 @@ else
 
 include($pc_skin_path.'/mw.proc/mw.file.viewer.php');
 
-// 파일 출력
-/*
-if ($mw_basic[cf_social_commerce]) {
-    $file_start = 2;
-}
-else if ($mw_basic[cf_talent_market]) {
-    $file_start = 1;
-}
-else {
-    $file_start = 0;
-}
-
-$jwplayer = false;
-$jwplayer_count = 0;
-
-ob_start();
-$cf_img_1_noview = $mw_basic[cf_img_1_noview];
-for ($i=$file_start; $i<=$view[file][count]; $i++) {
-    if ($cf_img_1_noview && $view[file][$i][view]) {
-        $cf_img_1_noview = false;
-        continue;
-    }
-
-    if (strstr($mw_basic['cf_multimedia'], '/movie/') && preg_match("/\.($config[cf_movie_extension])$/i", $view[file][$i][file])) {
-        $tmp = '';
-        echo mw_jwplayer("{$g4[path]}/data/file/{$board[bo_table]}/{$view[file][$i][file]}");
-        echo "<br/><br/>";
-        if (trim($view[file][$i][content]))
-            echo $view[file][$i][content] . "<br/><br/>";
-
-        $view[file][$i][movie] = true;
-    } 
-    else if ($view[file][$i][view])
-    {
-        // 원본 강제 리사이징
-        if ($mw_basic[cf_original_width] && $mw_basic[cf_original_height]) {
-            if ($view[file][$i][image_width] > $mw_basic[cf_original_width] || $view[file][$i][image_height] > $mw_basic[cf_original_height]) {
-                $file = "$file_path/{$view[file][$i][file]}";
-                mw_make_thumbnail($mw_basic[cf_original_width], $mw_basic[cf_original_height], $file, $file, true);
-                if ($mw_basic[cf_watermark_use] && file_exists($mw_basic[cf_watermark_path])) mw_watermark_file($file);
-                $size = getImageSize($file);
-                $view[file][$i][image_width] = $size[0];
-                $view[file][$i][image_height] = $size[1];
-                sql_query("update $g4[board_file_table] set bf_width = '$size[0]', bf_height = '$size[1]',
-                    bf_filesize = '".filesize($file)."'
-                    where bo_table = '$bo_table' and wr_id = '$wr_id' and bf_file = '{$view[file][$i][file]}'");
-            }
-        }
-        // 이미지 크기 조절
-        if ($board[bo_image_width] < $view[file][$i][image_width]) {
-            $img_width = $board[bo_image_width];
-            $img_class = " class=\"content-image\" ";
-        } else {
-            $img_width = $view[file][$i][image_width];
-            $img_class = "";
-        }
-        $view[file][$i][view] = str_replace("<img", "<img {$img_class} width=\"{$img_width}\"", $view[file][$i][view]);
-
-        // 이미지 저장 방지
-        if ($mw_basic[cf_image_save_close])
-            $view[file][$i][view] = str_replace("<img", "<img oncontextmenu=\"return false\" style=\"-webkit-touch-callout:none\" ", $view[file][$i][view]);
-
-        // 워터마크 이미지 출력
-        if ($mw_basic[cf_watermark_use] && file_exists($mw_basic[cf_watermark_path])) {
-            preg_match("/src='([^']+)'/iUs", $view[file][$i][view], $match);
-            $watermark_file = mw_watermark_file($match[1]);
-            $view[file][$i][view] = str_replace($match[1], $watermark_file, $view[file][$i][view]);
-        }
-
-	if ($mw_basic[cf_exif]) {
-	    $view[file][$i][view] = str_replace("image_window(this)", "show_exif($i, this, event)", $view[file][$i][view]);
-	    $view[file][$i][view] = str_replace("title=''", "title='클릭하면 메타데이터를 보실 수 있습니다.'", $view[file][$i][view]);
-        } else if($mw_basic[cf_no_img_ext]) { // 이미지 확대 사용 안함
-	    $view[file][$i][view] = str_replace("onclick='image_window(this);'", "", $view[file][$i][view]);
-	    $view[file][$i][view] = str_replace("style='cursor:pointer;'", "", $view[file][$i][view]);
-	} else {
-	    $view[file][$i][view] = str_replace("onclick='image_window(this);'", 
-		"onclick='mw_image_window(this, {$view[file][$i][image_width]}, {$view[file][$i][image_height]});'", $view[file][$i][view]);
-	    // 제나빌더용 (그누보드 원본수정으로 인해 따옴표' 가 없음;)
-	    $view[file][$i][view] = str_replace("onclick=image_window(this);", 
-		"onclick='mw_image_window(this, {$view[file][$i][image_width]}, {$view[file][$i][image_height]});'", $view[file][$i][view]); 
-	}
-        echo $view[file][$i][view] . "<br/><br/>";
-        if (trim($view[file][$i][content]))
-            echo $view[file][$i][content] . "<br/><br/>";
-    }
-    else if ($mw_basic[cf_iframe_level] and $mw_basic[cf_iframe_level] <= $mb[mb_level]) {
-        if (strstr($mw_basic['cf_multimedia'], '/image/') && preg_match("/\.($config[cf_image_extension])$/i", $view['file'][$i]['file'])) {
-            echo mw_file_view($view['file'][$i]['path'].'/'.$view['file'][$i]['file'], $view)."<br><br>";
-        }
-        else if (strstr($mw_basic['cf_multimedia'], '/flash/') && preg_match("/\.($config[cf_flash_extension])$/i", $view['file'][$i]['file'])) {
-            echo mw_file_view($view['file'][$i]['path'].'/'.$view['file'][$i]['file'], $view)."<br><br>";
-        }
-    }
-}
-$file_viewer = ob_get_contents();
-ob_end_clean();
-
-// 링크 첨부
-$link_file_viewer = '';
-for ($i=1; $i<=$g4['link_count']; $i++) {
-    if (strstr($mw_basic['cf_multimedia'], '/youtube/') && preg_match("/youtu/i", $view['link'][$i])) {
-        $link_file_viewer .= mw_youtube($view['link'][$i])."<br><br>";
-        //$view['link'][$i] = '';
-    }
-    elseif (strstr($mw_basic['cf_multimedia'], '/youtube/') && preg_match("/vimeo/i", $view['link'][$i])) {
-        $link_file_viewer .= mw_vimeo($view['link'][$i])."<br><br>";
-        //$view['link'][$i] = '';
-    }
-    elseif (strstr($mw_basic['cf_multimedia'], '/link_movie/') && preg_match("/\.($config[cf_movie_extension])$/i", $view['link'][$i])) {
-        $link_file_viewer .= mw_jwplayer($view['link'][$i])."<br><br>";
-        $view['link'][$i] = '';
-    }
-    else if (strstr($mw_basic['cf_multimedia'], '/link_image/') && preg_match("/\.($config[cf_image_extension])$/i", $view['link'][$i])) {
-        $link_file_viewer .= mw_file_view($view['link'][$i], $view)."<br><br>";
-        $view['link'][$i] = '';
-    }
-    else if (strstr($mw_basic['cf_multimedia'], '/link_flash/') && preg_match("/\.($config[cf_flash_extension])$/i", $view['link'][$i])) {
-        $link_file_viewer .= mw_file_view($view['link'][$i], $view)."<br><br>";
-        $view['link'][$i] = '';
-    }
-    else if ($mw_basic['cf_youtube_only']) {
-        $view['link'][$i] = '';
-    }
-}
-$view[content] = $link_file_viewer . $view[content]; 
-
-// 웹에디터 첨부 이미지 워터마크 처리
-if ($mw_basic[cf_watermark_use] && file_exists($mw_basic[cf_watermark_path]))
-    $view[content] = mw_create_editor_image_watermark($view[content]);
-
-if (!$mw_basic[cf_zzal] && !strstr($view[content], "{이미지:") && !$write['wr_lightbox'])// 파일 출력  
-    $view[content] = $file_viewer . $view[content]; 
-*/
-
 if ($write[wr_singo] && $write[wr_singo] >= $mw_basic[cf_singo_number] && $mw_basic[cf_singo_write_block]) {
     $content = " <div class='singo_info'> 신고가 접수된 게시물입니다. (신고수 : $write[wr_singo]회)<br/>";
     $content.= " <span onclick=\"btn_singo_view({$view[wr_id]})\" class='btn_singo_block'>여기</span>를 클릭하시면 내용을 볼 수 있습니다.";
@@ -929,8 +794,8 @@ if ($is_admin || $history_href || $is_singo_admin)
     $(document).ready(function () {
         $(".mw_manage_title").mouseenter(function () {
             $manage_button = $(this);
-            $(".mw_manage").css("top", $manage_button.offset().top);
-            $(".mw_manage").css("left", $manage_button.offset().left - ($(".mw_manage").width()-$manage_button.width()));
+            $(".mw_manage").css("top", $manage_button.position().top);
+            $(".mw_manage").css("left", $manage_button.position().left - ($(".mw_manage").width()-$manage_button.width()));
             $(".mw_manage").css("display", "block");
             $(".mw_manage .item").mouseenter(function () {
                 $(this).css("background-color", "#ddd");

@@ -469,16 +469,16 @@ if (!$list[$i]['icon_new'] && $list[$i]['wr_last'] != $list[$i]['wr_datetime'] &
 $write_icon = mw_write_icon($list[$i]);
 
 // 썸네일
-$thumb_file = mw_thumb_jpg("$thumb_path/{$list[$i][wr_id]}");
-$thumb2_file = mw_thumb_jpg("$thumb2_path/{$list[$i][wr_id]}");
-$thumb3_file = mw_thumb_jpg("$thumb3_path/{$list[$i][wr_id]}");
-$thumb4_file = mw_thumb_jpg("$thumb4_path/{$list[$i][wr_id]}");
-$thumb5_file = mw_thumb_jpg("$thumb5_path/{$list[$i][wr_id]}");
+$thumb_file = mw_thumb_jpg("$thumb_path/{$list[$i]['wr_id']}");
+$thumb2_file = mw_thumb_jpg("$thumb2_path/{$list[$i]['wr_id']}");
+$thumb3_file = mw_thumb_jpg("$thumb3_path/{$list[$i]['wr_id']}");
+$thumb4_file = mw_thumb_jpg("$thumb4_path/{$list[$i]['wr_id']}");
+$thumb5_file = mw_thumb_jpg("$thumb5_path/{$list[$i]['wr_id']}");
 
 $set_width = $mw_basic[cf_thumb_width];
 $set_height = $mw_basic[cf_thumb_height];
 
-if (!file_exists($thumb_file))
+if (!is_file($thumb_file))
 {
     $is_thumb = mw_make_thumbnail_row($bo_table, $list[$i]['wr_id'], $list[$i]['wr_content']);
 
@@ -510,7 +510,7 @@ else {
     $set_height = $mw_basic[cf_thumb_height];
 
     if ($mw_basic[cf_thumb_keep]) {
-        $size = @getImageSize($thumb_file);
+        //$size = @getImageSize($thumb_file);
         $size = mw_thumbnail_keep($size, $set_width, $set_height);
         $set_width = $size[0];
         $set_height = $size[1];

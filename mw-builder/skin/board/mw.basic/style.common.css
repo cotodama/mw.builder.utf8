@@ -908,7 +908,7 @@ img {
 
 #mw_basic .view_good {
     float:right;
-    margin:10px 0 0 0px;
+    margin:10px 0 0 5px;
 }
 
 #mw_basic .view_good .btn1 {
@@ -925,7 +925,7 @@ img {
 
 #mw_basic .scrap_button {
     float:right;
-    margin:10px 0 0 0px;
+    margin:10px 0 0 5px;
 }
 
 #mw_basic .scrap_button .btn1 {
@@ -1745,6 +1745,7 @@ img {
 #mw_basic .fa-button {
     border:1px solid #ddd;
     padding:7px 5px 7px 5px;
+    padding:5px 7px 5px 7px;
     background-color:#fff;
     font:normal 11px 'dotum';
     text-decoration:none;
@@ -1874,7 +1875,7 @@ img {
 }
 
 #mw_basic .comment_submit_button div {
-    margin:5px 0 0 0;
+    margin:5px 0 0 5px;
     float:right;
 }
 

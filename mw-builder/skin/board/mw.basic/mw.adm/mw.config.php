@@ -619,6 +619,7 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 	    <option value="comment"> 코멘트수 </option>
 	    <option value="link1_hit"> 링크1 클릭수 </option>
 	    <option value="file"> 다운로드수 </option>
+	    <option value="rate"> 별점평가 </option>
 	    </select>
             <select name="cf_hot_limit">
             <? for ($i=2; $i<=10; $i=$i+2) { ?>

@@ -90,14 +90,20 @@ else {
     </style>
     <div class="good-box"><div class="in">
         <?php if ($board[bo_use_good]) { ?>
-        <button class="fa-button" onclick="mw_good_act('good')">
-            <div><i class="fa fa-thumbs-up"></i> 추천하기 : <?=number_format($write[wr_good])?></div></button>
-        <!--<div class="gg" onclick="mw_good_act('good')"><span>추천 : <?=number_format($write[wr_good])?></span></div>-->
+            <?php if (!$_GET['width']) { ?>
+            <button class="fa-button" onclick="mw_good_act('good')">
+                <div><i class="fa fa-thumbs-up"></i> 추천하기 : <?=number_format($write[wr_good])?></div></button>
+            <?php } else { ?>
+            <div class="gg" onclick="mw_good_act('good')"><span>추천 : <?=number_format($write[wr_good])?></span></div>
+            <?php } ?>
         <?php } ?>
         <?php if ($board[bo_use_nogood]) { ?>
-        <button class="fa-button" onclick="mw_good_act('nogood')">
-            <div><i class="fa fa-thumbs-down"></i> 다른의견 : <?=number_format($write[wr_nogood])?></div></button>
-        <!--<div class="gn" onclick="mw_good_act('nogood')"><span>비추 : <?=number_format($write[wr_nogood])?></span></div>-->
+            <?php if (!$_GET['width']) { ?>
+            <button class="fa-button" onclick="mw_good_act('nogood')">
+                <div><i class="fa fa-thumbs-down"></i> 다른의견 : <?=number_format($write[wr_nogood])?></div></button>
+            <?php } else { ?>
+            <div class="gn" onclick="mw_good_act('nogood')"><span>비추 : <?=number_format($write[wr_nogood])?></span></div>
+            <?php } ?>
         <?php } ?>
     </div></div>
 

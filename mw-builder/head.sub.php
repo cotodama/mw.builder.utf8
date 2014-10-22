@@ -54,6 +54,40 @@ header("Pragma: no-cache"); // HTTP/1.0
 <meta charset="<?=$g4['charset']?>">
 <meta http-equiv="content-type" content="text/html; charset=<?=$g4['charset']?>">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<?php
+if ($bo_table && $wr_id)
+{
+    $ogp_thumb = $g4['path']."/data/file/".$bo_table."/thumbnail/".$wr_id.".jpg";
+
+    if (!is_file($ogp_thumb))
+        $ogp_thumb = $g4['path']."/data/file/".$bo_table."/thumbnail/".$wr_id;
+
+    if (!is_file($ogp_thumb))
+        $ogp_thumb = $g4['path']."/data/file/".$bo_table."/thumb/".$wr_id;
+
+    if (!is_file($ogp_thumb))
+        $ogp_thumb = '';
+
+    $ogp_thumb = str_replace($g4['path'], $g4['url'], $ogp_thumb);
+
+    $ogp_title = trim(cut_str(strip_tags($write['wr_subject']), 255));
+    $ogp_site_name = trim(cut_str(strip_tags($config['cf_title']), 255));
+
+    $ogp_url = $g4['url']."/".$g4['bbs']."/board.php?bo_table=".$bo_table."&wr_id=".$wr_id;
+    if (function_exists("mw_seo_url"))
+        $ogp_url = mw_seo_url($bo_table, $wr_id);
+
+    $ogp_description = cut_str(str_replace("\n", " ", strip_tags($write['wr_content'])), 255);
+    $ogp_description = trim(preg_replace("/{이미지:[0-9]+}/iUs", "", $ogp_description));
+
+    $ogp = "<meta property=\"og:image\" content=\"{$ogp_thumb}\"/>\n";
+    $ogp.= "<meta property=\"og:title\" content=\"{$ogp_title}\"/>\n";
+    $ogp.= "<meta property=\"og:site_name\" content=\"{$ogp_site_name}\"/>\n";
+    $ogp.= "<meta property=\"og:url\" content=\"{$ogp_url}\"/>\n";
+    $ogp.= "<meta property=\"og:description\" content=\"{$ogp_description}\"/>\n";
+    echo $ogp;
+}
+?>
 <title><?=$g4['title']?></title>
 <link rel="stylesheet" href="<?=$g4['path']?>/style.css" type="text/css">
 </head>

@@ -3068,7 +3068,7 @@ function mw_write_icon($row)
     if ($row['wr_kcb_use'])
         $write_icon = "<img src=\"{$pc_skin_path}/img/icon_kcb.png\" {$style}>";
     elseif (in_array($row['wr_id'], $bomb_id))
-        $write_icon = "<i class='fa fa-bomb'></i>&nbsp;";
+        $write_icon = "<i class='fa fa-bomb fa-spin'></i>&nbsp;";
     elseif ($row['wr_key_password'])
         $write_icon = "<i class='fa fa-key'></i>&nbsp;";
     elseif (in_array($row['wr_id'], $quiz_id))
