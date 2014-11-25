@@ -41,21 +41,23 @@ if (!$is_admin and $write['mb_id'] != $member['mb_id']) {
     die("권한이 없습니다.");
 }
 
-$jump_days = $mw_basic['cf_jump_days'] - 1;
-$old = date("Y-m-d 00:00:00", strtotime("-{$jump_days} day", $g4['server_time']));
+if ($mw_basic['cf_jump_days'] or $mw_basic['cf_jump_count']) {
+    $jump_days = $mw_basic['cf_jump_days'] - 1;
+    $old = date("Y-m-d 00:00:00", strtotime("-{$jump_days} day", $g4['server_time']));
 
-if (!$mw_basic['cf_jump_days']) $old = "";
+    if (!$mw_basic['cf_jump_days']) $old = "";
 
-$sql = " select count(*) as cnt from {$mw['jump_log_table']} ";
-$sql.= "  where mb_id = '{$member['mb_id']}' ";
-$sql.= "    and jp_datetime > '$old' ";
-$row = sql_fetch($sql);
+    $sql = " select count(*) as cnt from {$mw['jump_log_table']} ";
+    $sql.= "  where mb_id = '{$member['mb_id']}' ";
+    $sql.= "    and jp_datetime > '$old' ";
+    $row = sql_fetch($sql);
 
-$count = $row['cnt'];
-$count++;
+    $count = $row['cnt'];
+    $count++;
 
-if ($mw_basic['cf_jump_count'] and $count > $mw_basic['cf_jump_count'] and !$is_admin) {
-    die("횟수를 초과했습니다.");
+    if ($mw_basic['cf_jump_count'] and $count > $mw_basic['cf_jump_count'] and !$is_admin) {
+        die("횟수를 초과했습니다. ({$mw_basic['cf_jump_days']}일에 {$mw_basic['cf_jump_count']}번)");
+    }
 }
 
 if ($mw_basic['cf_jump_point']) {

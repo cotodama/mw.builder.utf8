@@ -127,8 +127,19 @@ if (!$is_admin && $write[wr_view_block])
 if (!$mw_basic[cf_editor])
     $mw_basic[cf_editor] = "cheditor";
 
+if (is_g5())
+    $mw_basic['cf_editor'] = '';
+
 // 관리자만 dhtml 사용
-if ($mw_basic[cf_admin_dhtml] && $is_admin) $is_dhtml_editor = true;
+if ($mw_basic[cf_admin_dhtml] && $is_admin) {
+    $is_dhtml_editor = true;
+    if (is_g5()) {
+        $editor_html = editor_html('wr_content', $content, $is_dhtml_editor);
+        $editor_js = '';
+        $editor_js .= get_editor_js('wr_content', $is_dhtml_editor);
+        $editor_js .= chk_editor_js('wr_content', $is_dhtml_editor);
+    }
+}
 
 // 모바일 접근시 에디터 사용안함
 if (preg_match("/(iphone|samsung|lgte|mobile|BlackBerry|android|windows ce|mot|SonyEricsson)/i", $_SERVER[HTTP_USER_AGENT])) {
@@ -236,7 +247,7 @@ $write_height = 10;
 if ($mw_basic[cf_write_height])
     $write_height = $mw_basic[cf_write_height];
 
-if ($is_dhtml_editor && $mw_basic[cf_editor] == "cheditor") {
+if ($is_dhtml_editor && $mw_basic[cf_editor] == "cheditor" && !is_g5()) {
     /* $g4[cheditor4_path] = "$board_skin_path/cheditor";
     include_once("$board_skin_path/mw.lib/mw.cheditor.lib.php");
     echo "<script type='text/javascript' src='$board_skin_path/cheditor/cheditor.js'></script>";
@@ -272,6 +283,7 @@ if (!$is_member) {
     if (!$homepage) $homepage = get_cookie("mw_cookie_homepage");
 }
 ?>
+<script src="<?php echo $board_skin_path?>/mw.js/mw.g5.adapter.js.php?bo_table=<?php echo $bo_table?>"></script>
 <link href="<?php echo $pc_skin_path?>/mw.css/font-awesome-4.2.0/css/font-awesome.css" rel="stylesheet">
 
 <link rel="stylesheet" href="<?=$board_skin_path?>/style.common.css?<?=filemtime("$board_skin_path/style.common.css")?>" type="text/css">
@@ -752,14 +764,16 @@ if ($mw_basic['cf_include_write_main'] && is_file($mw_basic['cf_include_write_ma
     </table>
     <? } ?>
 
-    <? if (!$is_dhtml_editor || $mw_basic[cf_editor] != "cheditor") { ?>
+    <? if ((!$is_dhtml_editor || (!is_g5() && $mw_basic[cf_editor] != "cheditor"))) { ?>
     <textarea id="wr_content" name="wr_content" style='width:98%; word-break:break-all;' rows="<?=$write_height?>" itemname="내용" class=mw_basic_textarea
     <? if ($is_dhtml_editor && $mw_basic[cf_editor] == "geditor") echo "geditor"; ?>
     <? if ($write_min || $write_max) { ?>onkeyup="check_byte('wr_content', 'char_count');"<?}?>><?=$content?></textarea>
     <? if (($write_min || $write_max) && !$is_dhtml_editor) { ?><script> check_byte('wr_content', 'char_count'); </script><?}?>
     <? } // if (!$is_dhtml_editor || $mw_basic[cf_editor] != "cheditor") ?>
 
-    <? if ($is_dhtml_editor && $mw_basic[cf_editor] == "cheditor") echo cheditor2('wr_content', $content); ?>
+    <?php
+    if ($is_dhtml_editor && is_g5()) echo $editor_html;
+    else if ($is_dhtml_editor && $mw_basic[cf_editor] == "cheditor") echo cheditor2('wr_content', $content); ?>
     <div><button type="button" class="fa-button" onclick="mw_save_temp('임시 저장 했습니다.')"><i class="fa fa-save"></i> 임시저장</button></div>
 </td>
 </tr>
@@ -1631,21 +1645,20 @@ if ($mw_basic['cf_bbs_banner']) {
 <tr><td colspan=2 height=1 bgcolor=#e7e7e7></td></tr>
 <? } ?>
 
-<? if (file_exists("$g4[bbs_path]/kcaptcha_session.php") && $is_guest) { ?>
+<?php if ($is_guest && is_g5()) { //자동등록방지  ?>
+<tr>
+    <td class=mw_basic_write_title>· 자동등록방지</td>
+    <td class=mw_basic_write_content style="padding:5px 0 5px 0;">
+        <?php echo $captcha_html ?>
+    </td>
+</tr>
+<?php } else if ($is_guest && is_file($g4['bbs_path']."/kcaptcha_session.php")) { ?>
 <tr>
     <td class=write_head><img id='kcaptcha_image' /></td>
     <td><input class='ed' type=input size=10 name=wr_key itemname="자동등록방지" required>&nbsp;&nbsp;왼쪽의 글자를 입력하세요.</td>
 </tr>
 <tr><td colspan=2 height=1 bgcolor=#e7e7e7></td></tr>
-<? /* ?>
-<script> var md5_norobot_key = ''; </script>
-<tr>
-    <td class=write_head><img id='kcaptcha_image' border='0' width=120 height=60 onclick="imageClick();" style="cursor:pointer;" title="글자가 잘안보이는 경우 클릭하시면 새로운 글자가 나옵니다."></td>
-    <td><input class='ed' type=input size=10 name=wr_key itemname="자동등록방지" required>&nbsp;&nbsp;왼쪽의 글자를 입력하세요.</td>
-</tr>
-<tr><td colspan=2 height=1 bgcolor=#e7e7e7></td></tr>
-<? */ ?>
-<? } ?>
+<?php } ?>
 
 
 <tr><td colspan=2 height=1 class=mw_basic_line_color></td></tr>
@@ -1673,9 +1686,11 @@ if ($mw_basic[cf_include_tail] && is_file($mw_basic[cf_include_tail]) && strstr(
 
 </td></tr></table>
 
-<script src="<?="$g4[path]/js/jquery.kcaptcha.js"?>"></script>
-<script>
+<?php if (is_file($g4['path']."/js/jquery.kcaptcha.js")) { ?>
+<script src="<?php echo $g4['path']."/js/jquery.kcaptcha.js"?>"></script>
+<?php } ?>
 
+<script>
 $(document).ready(function () {
     if (typeof(document.fwrite.ca_name) != 'undefined') {
         fwrite.ca_name.value = "<?=$sca?>";
@@ -1756,7 +1771,7 @@ function mw_save_temp(msg)
     var wr_subject = $("#wr_subject").val();
     var wr_content = $("#wr_content").val();
 
-    <? if ($is_dhtml_editor && $mw_basic[cf_editor] == "cheditor") { ?>
+    <? if (!is_g5() && $is_dhtml_editor && $mw_basic[cf_editor] == "cheditor") { ?>
     wr_content = ed_wr_content.outputBodyHTML();
     <? } ?>
 
@@ -1831,15 +1846,20 @@ function fwrite_check(f) {
             return false;
         }
     }
+    <?php if (!is_g5()) { ?>
     else if ($("#wr_content")) {
         if (!trim($("#wr_content").val())) { 
             alert('내용을 입력하십시오.'); 
             return false;
         }
     }
+    <?php } ?>
 
     <?php
-    if ($is_dhtml_editor && $mw_basic[cf_editor] == "cheditor") {
+    if (is_g5()) {
+        echo $editor_js;
+    }
+    else if ($is_dhtml_editor && $mw_basic[cf_editor] == "cheditor") {
         echo cheditor3('wr_content');
 
         if (($mw_basic[cf_type] == 'desc' && $mw_basic[cf_desc_use] && $mw_basic[cf_desc_use] <= $member[mb_level]) or $mw_basic[cf_contents_shop] == '2') {
@@ -1908,9 +1928,13 @@ function fwrite_check(f) {
         return false;
     }
 
-    if (!check_kcaptcha(f.wr_key)) {
-        return false;
-    }
+    <?php if (is_g5()) { ?>
+        <?php echo $captcha_js; // 캡챠 사용시 자바스크립트에서 입력된 캡챠를 검사함  ?>
+    <?php } else { ?>
+        if (!check_kcaptcha(f.wr_key)) {
+            return false;
+        }
+    <?php } ?>
 
     /*if (typeof(f.wr_key) != 'undefined') {
         if (hex_md5(f.wr_key.value) != md5_norobot_key) {

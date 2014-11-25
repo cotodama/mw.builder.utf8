@@ -1,3 +1,32 @@
+4.37.22 (2014.11.13)
+    : 다른 회원의 아이콘을 변경 할수 있는 오류 해결 (팔팔이님이 알려주셨습니다.)
+
+        bbs/register_form_update.php
+
+            //$mb_id = trim(strip_tags(mysql_real_escape_string($_POST[mb_id])));
+            if($w == 'u')
+                $mb_id = isset($_SESSION['ss_mb_id']) ? trim($_SESSION['ss_mb_id']) : '';
+            else if($w == '')
+                $mb_id = trim(strip_tags(mysql_real_escape_string($_POST[mb_id])));
+            else
+                alert('잘못된 접근입니다', $g4[url]);
+
+    : 다른 게시물의 첨부파일을 공격(삭제) 할수 있는 오류 해결 (팔팔이님이 알려주셨습니다.)
+
+        bbs/write_update.php 아래의 코드가 위치가 변경 되었습니다.
+
+            // 디렉토리가 없다면 생성합니다. (퍼미션도 변경하구요.)
+            @mkdir("$g4[path]/data/file/$bo_table", 0707);
+            @chmod("$g4[path]/data/file/$bo_table", 0707);
+            ... 중략 ...
+                    // 올라간 파일의 퍼미션을 변경합니다.
+                    chmod($dest_file, 0606);
+
+                    //$upload[$i][image] = @getimagesize($dest_file);
+
+                }
+            }
+
 4.37.21 (2014.08.21)
     : 이 패치를 적용하신다면 어제 올린 4.37.20 버전 패치는 따로 하지 않으셔도 됩니다.
       zip.skin.php 의 역할이 사라져 버려 삭제를 하게 되었습니다.

@@ -386,10 +386,12 @@ bo_table = '$bo_table'
 ,cf_list_good = '$cf_list_good'
 ,cf_list_nogood = '$cf_list_nogood'
 ,cf_post_num = '$cf_post_num'
+,cf_list_cate = '$cf_list_cate'
 ,cf_img_1_noview = '$cf_img_1_noview'
 ,cf_thumb_jpg = '$cf_thumb_jpg'
 ,cf_image_save_close = '$cf_image_save_close'
 ,cf_image_outline = '$cf_image_outline'
+,cf_image_outline_color = '$cf_image_outline_color'
 ,cf_image_remote_save = '$cf_image_remote_save'
 ,cf_only_one = '$cf_only_one'
 ,cf_must_notice = '$cf_must_notice'
@@ -489,6 +491,7 @@ bo_table = '$bo_table'
 ,cf_include_write_head = '$cf_include_write_head'
 ,cf_include_write_main = '$cf_include_write_main'
 ,cf_include_write_tail = '$cf_include_write_tail'
+,cf_include_write_update = '$cf_include_write_update'
 ,cf_subject_style = '$cf_subject_style'
 ,cf_subject_style_level = '$cf_subject_style_level'
 ,cf_subject_style_color_default = '$cf_subject_style_color_default'
@@ -792,6 +795,7 @@ if ($chk[cf_post_hit]) $sql .= ", cf_post_hit = '$cf_post_hit' ";
 if ($chk[cf_list_good]) $sql .= ", cf_list_good = '$cf_list_good' ";
 if ($chk[cf_list_nogood]) $sql .= ", cf_list_nogood = '$cf_list_nogood' ";
 if ($chk[cf_post_num]) $sql .= ", cf_post_num = '$cf_post_num' ";
+if ($chk[cf_list_cate]) $sql .= ", cf_list_cate = '$cf_list_cate' ";
 if ($chk[cf_img_1_noview]) $sql .= ", cf_img_1_noview = '$cf_img_1_noview' ";
 if ($chk[cf_thumb_jpg]) $sql .= ", cf_thumb_jpg = '$cf_thumb_jpg' ";
 if ($chk[cf_image_save_close]) $sql .= ", cf_image_save_close = '$cf_image_save_close' ";
@@ -925,6 +929,7 @@ if ($chk[cf_include_comment_main]) $sql .= ", cf_include_comment_main = '$cf_inc
 if ($chk[cf_include_write_head]) $sql .= ", cf_include_write_head = '$cf_include_write_head' ";
 if ($chk[cf_include_write_main]) $sql .= ", cf_include_write_main = '$cf_include_write_main' ";
 if ($chk[cf_include_write_tail]) $sql .= ", cf_include_write_tail = '$cf_include_write_tail' ";
+if ($chk[cf_include_write_update]) $sql .= ", cf_include_write_update = '$cf_include_write_update' ";
 if ($chk[cf_subject_style]) {
     $sql .= ", cf_subject_style = '$cf_subject_style' ";
     $sql .= ", cf_subject_style_level = '$cf_subject_style_level' ";

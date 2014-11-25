@@ -37,8 +37,14 @@ if (function_exists("mw_cash_membership_icon") && $row[mb_id] != $config[cf_admi
     }
 }
 
-if ($mw_basic[cf_attribute] == "anonymous") $row[name] = mw_anonymous_nick($row[mb_id], $row[wr_ip]); 
-if ($row[wr_anonymous]) $row[name] = mw_anonymous_nick($row[mb_id], $row[wr_ip]); 
+if ($mw_basic[cf_attribute] == "anonymous") {
+    $row[name] = mw_anonymous_nick($row[mb_id], $row[wr_ip]); 
+    $row[wr_name] = '';
+}
+if ($row[wr_anonymous]) {
+    $row[name] = mw_anonymous_nick($row[mb_id], $row[wr_ip]); 
+    $row[wr_name] = '';
+}
 
 if ($i < $from_record) {
     $list[$i] = $row;
@@ -200,6 +206,8 @@ $str = preg_replace("/\[\<a\s.*href\=\"(http|https|ftp|mms)\:\/\/([^[:space:]]+)
 // 검색시 적용안되는 문제
 //$str = preg_replace("/\[\<a\s*href\=\"(http|https|ftp)\:\/\/([^[:space:]]+)\.(gif|png|jpg|jpeg|bmp)\"\s*[^\>]*\>[^\s]*\<\/a\>\]/i", "<img src='$1://$2.$3' id='target_resize_image[]' onclick='image_window(this);'>", $str);
 $str = preg_replace("/\[\<a\s*href\=\"(http|https|ftp)\:\/\/([^[:space:]]+)\.(gif|png|jpg|jpeg|bmp)\"\s*[^\>]*\>.*\<\/a\>\]/iUs", "<img src='$1://$2.$3' id='target_resize_image[]' onclick='image_window(this);'>", $str);
+$str = preg_replace("/\[\<a\s*href\=\"(http|https|ftp)\:\/\/([^[:space:]]+)\.(gif|png|jpg|jpeg|bmp)\]\"\s*[^\>]*\>.*\]\<\/a\>/iUs", "<img src='$1://$2.$3' id='target_resize_image[]' onclick='image_window(this);'>", $str);
+
 
 $str = preg_replace_callback("/\[code\](.*)\[\/code\]/iU", "_preg_callback", $str);
 

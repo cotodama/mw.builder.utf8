@@ -20,7 +20,7 @@
  */
 
 include_once("_common.php");
-include_once("$board_skin_path/mw.lib/mw.skin.basic.lib.php");
+include_once($board_skin_path."/mw.lib/mw.skin.basic.lib.php");
 
 if ($is_admin != "super")
     alert_close("접근 권한이 없습니다.");
@@ -33,7 +33,6 @@ if (!$mw_basic[cf_type]) $mw_basic[cf_type] = "list";
 
 $g4[title] = "배추 BASIC SKIN 관리자";
 
-header("Content-Type: text/html; charset=$g4[charset]");
 $gmnow = gmdate("D, d M Y H:i:s") . " GMT";
 header("Expires: 0"); // rfc2616 - Section 14.21
 header("Last-Modified: " . $gmnow);
@@ -50,11 +49,10 @@ set_session("ss_config_token", $token = uniqid(time()));
 ?>
 <!doctype html>
 <html lang="ko">
+<head>
 <meta charset="<?=$g4['charset']?>">
 <title><?=$g4['title']?></title>
-<link rel="stylesheet" href="<?=$g4['path']?>/style.css" type="text/css">
-</head>
-<script type="text/javascript">
+<script>
 // 자바스크립트에서 사용하는 전역변수 선언
 var g4_path      = "<?=$g4['path']?>";
 var g4_bbs       = "<?=$g4['bbs']?>";
@@ -70,8 +68,10 @@ var g4_is_gecko  = navigator.userAgent.toLowerCase().indexOf("gecko") != -1;
 var g4_is_ie     = navigator.userAgent.toLowerCase().indexOf("msie") != -1;
 <? if ($is_admin) { echo "var g4_admin = '{$g4['admin']}';"; } ?>
 </script>
-<script type="text/javascript" src="<?=$g4['path']?>/js/jquery-1.4.2.min.js"></script>
-<script type="text/javascript" src="<?=$g4['path']?>/js/common.js"></script>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+<link href="//code.jquery.com/ui/1.11.2/themes/humanity/jquery-ui.css" rel="stylesheet" />
+</head>
 <body topmargin="0" leftmargin="0" <?=isset($g4['body_script']) ? $g4['body_script'] : "";?>>
 <a name="g4_head"></a>
 
@@ -81,8 +81,6 @@ var g4_is_ie     = navigator.userAgent.toLowerCase().indexOf("msie") != -1;
 <link rel="stylesheet" href="<?=$board_skin_path?>/mw.js/ui-lightness/jquery-ui-1.7.2.custom.css" type="text/css"/>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/jquery-ui.min.js"></script>
 -->
-<link href="<?=$board_skin_path?>/mw.js/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
-<script src="<?=$board_skin_path?>/mw.js/jquery-ui-1.8.19.custom.min.js"></script>
 <script src="<?="$board_skin_path/mw.js/selectbox.js"?>"></script>
 
 <?
@@ -174,7 +172,7 @@ function reload_config() {
     });
 }
 function copy_config() {
-    win_open("mw.copy.config.php?bo_table=<?=$bo_table?>", "copy_config", "left=50, top=50, width=500, height=550, scrollbars=1");
+    window.open("mw.copy.config.php?bo_table=<?=$bo_table?>", "copy_config", "left=50, top=50, width=500, height=550, scrollbars=1");
 }
 function run_order(item, order)
 {
@@ -937,6 +935,15 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 	    <script> document.cf_form.cf_post_num.checked = <?=$mw_basic[cf_post_num]?>; </script>
 	</div>
     </div>
+
+    <div class="cf_item">
+	<div class="cf_title"> <input type=checkbox name=chk[cf_list_cate] value=1>&nbsp; 분류 </div>
+	<div class="cf_content">
+	    <input type=checkbox name=cf_list_cate value=1> 출력안함 
+	    <span class="cf_info">(체크하면 목록에서 출력하지 않습니다.)</span>
+	    <script> document.cf_form.cf_list_cate.checked = <?=$mw_basic[cf_list_cate]?>; </script>
+	</div>
+    </div>
 	
     <div class="cf_item">
 	<div class="cf_title"> <input type=checkbox name=chk[cf_post_name] value=1>&nbsp; 작성자 이름 </div>
@@ -1261,6 +1268,14 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 	<div class="cf_content">
 	    <input type="text" size="60" name="cf_include_write_tail" class="ed" value="<?=$mw_basic[cf_include_write_tail]?>"> 
 	    <div class="cf_info">글작성 페이지 내용 아래 부분에 포함될 파일입니다.</div>
+	</div>
+    </div>
+
+    <div class="cf_item">
+	<div class="cf_title"> <input type=checkbox name=chk[cf_include_write_action] value=1>&nbsp; 글쓰기 업데이트</div>
+	<div class="cf_content">
+	    <input type="text" size="60" name="cf_include_write_update" class="ed" value="<?=$mw_basic[cf_include_write_update]?>"> 
+	    <div class="cf_info">글작성 DB 업데이트 부분에에 포함될 파일입니다.</div>
 	</div>
     </div>
 
@@ -2920,10 +2935,10 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
     </div>
 
     <div class="cf_item">
-	<div class="cf_title"> <input type=checkbox name=chk[cf_image_remote_save] value=1>&nbsp; 외부이미지 </div>
+	<div class="cf_title"> <input type=checkbox name=chk[cf_image_remote_save] value=1>&nbsp; 외부썸네일 </div>
 	<div class="cf_content">
 	    <input type=checkbox name=cf_image_remote_save value=1> 사용
-            <span class="cf_info">(본문에 외부이미지 링크가 있을 경우 파일을 우리서버에 저장합니다.)</span>
+            <span class="cf_info">(본문에 외부이미지 링크가 있을 경우 썸네일을 만들어 우리서버에 저장합니다.)</span>
 	    <script> document.cf_form.cf_image_remote_save.checked = '<?=$mw_basic[cf_image_remote_save]?>'; </script>
 	</div>
     </div>
@@ -3128,7 +3143,7 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 
             <br/>진행시작일수 : <input type="text" class="ed" name="cf_social_commerce_begin" size="3" numeric value="<?=$mw_basic[cf_social_commerce_begin]?>"> 일 이내
             <br/>진행최대일수 : <input type="text" class="ed" name="cf_social_commerce_limit" size="3" numeric value="<?=$mw_basic[cf_social_commerce_limit]?>"> 일 까지
-            <div><a href="#;" onclick="win_open('<?=$social_commerce_path?>/terms_write.php?bo_table=<?=$bo_table?>', 'terms', 'width=800,height=600,scrollbars=1')" style="text-decoration:underline;">이용약관 및 개인정보 제3자제공 동의 편집</a></div>
+            <div><a href="#;" onclick="window.open('<?=$social_commerce_path?>/terms_write.php?bo_table=<?=$bo_table?>', 'terms', 'width=800,height=600,scrollbars=1')" style="text-decoration:underline;">이용약관 및 개인정보 제3자제공 동의 편집</a></div>
 	    <script>
             document.cf_form.cf_social_commerce.checked = "<?=$mw_basic[cf_social_commerce]?>";
             document.cf_form.cf_social_commerce_hp.checked = "<?=$mw_basic[cf_social_commerce_hp]?>";
@@ -3172,8 +3187,9 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 	<div class="cf_content">
             <select name="cf_collect" id="cf_collect">
                 <option value="">사용안함</option>
-                <option value="rss">RSS 수집기 <? if (file_exists("$rss_collect_path/_lib.php")) echo '(설치됨)'; else echo '(설치안됨)'; ?></option>
-                <option value="youtube">Youtube 수집기 <? if (file_exists("$youtube_collect_path/_lib.php")) echo '(설치됨)'; else echo '(설치안됨)'; ?></option>
+                <option value="rss">RSS 수집기 <? if (is_file("$rss_collect_path/_lib.php")) echo '(설치됨)'; else echo '(설치안됨)'; ?></option>
+                <option value="youtube">Youtube 수집기 <? if (is_file("$youtube_collect_path/_lib.php")) echo '(설치됨)'; else echo '(설치안됨)'; ?></option>
+                <option value="kakao">카카오스토리 수집기 <? if (is_file("$kakao_collect_path/_lib.php")) echo '(설치됨)'; else echo '(설치안됨)'; ?></option>
             </select>
             <span class="cf_info" id="cf_collect_info"></span>  
             <script>
@@ -3230,7 +3246,7 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
                 <script> document.cf_form.cf_talent_market_hp.checked = "<?=$mw_basic[cf_talent_market_hp]?>"; </script>
             </div>
             <script> document.cf_form.cf_talent_market.value = "<?=$mw_basic[cf_talent_market]?>"; </script>
-            <div><a href="#;" onclick="win_open('<?=$talent_market_path?>/terms_write.php?bo_table=<?=$bo_table?>', 'terms', 'width=800,height=600,scrollbars=1')" style="text-decoration:underline;">이용약관 및 개인정보 제3자제공 동의 편집</a></div>
+            <div><a href="#;" onclick="window.open('<?=$talent_market_path?>/terms_write.php?bo_table=<?=$bo_table?>', 'terms', 'width=800,height=600,scrollbars=1')" style="text-decoration:underline;">이용약관 및 개인정보 제3자제공 동의 편집</a></div>
         </div>
     </div>
 

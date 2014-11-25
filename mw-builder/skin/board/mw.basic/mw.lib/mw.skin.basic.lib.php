@@ -21,6 +21,9 @@
 
 if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
 
+if (defined("G5_PATH"))
+    include_once($board_skin_path."/mw.proc/mw.g5.adapter.extend.php");
+
 if (!defined("_MW_BOARD_"))
     include_once("$board_skin_path/mw.lib/mw.function.lib.php");
 
@@ -234,6 +237,10 @@ if (file_exists("{$rss_collect_path}/_config.php")) include_once("{$rss_collect_
 // youtube 수집기
 $youtube_collect_path = "{$g4['path']}/plugin/youtube-collect";
 if (file_exists("{$youtube_collect_path}/_config.php")) include_once("{$youtube_collect_path}/_config.php");
+
+// 카카오스토리 수집기
+$kakao_collect_path = "{$g4['path']}/plugin/kakao-collect";
+if (file_exists("{$kakao_collect_path}/_config.php")) include_once("{$kakao_collect_path}/_config.php");
 
 // MarketDB
 $marketdb_path = "{$g4['path']}/plugin/marketdb";

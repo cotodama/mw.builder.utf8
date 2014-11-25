@@ -283,62 +283,6 @@ if ($write_href && $mw_basic[cf_write_notice]) {
 // 스킨설정버튼
 $config_href = "javascript:mw_config()";
 
-/*
-$view[rich_content] = preg_replace("/{이미지\:([0-9]+)[:]?([^}]*)}/ie", "mw_view_image(\$view, '\\1', '\\2')", $view[content]);
-
-if ($mw_basic[cf_no_img_ext]) { // 이미지 확대 사용 안함
-    $view[rich_content] = preg_replace("/name='target_resize_image\[\]' onclick='image_window\(this\)'/iUs", "", $view[rich_content]);
-
-    if ($mw_basic[cf_image_save_close])
-        $view[rich_content] = str_replace("<img", "<img oncontextmenu=\"return false\" style=\"-webkit-touch-callout:none\" ", $view[rich_content]);
-
-
-}
-else {
-    // 웹에디터 이미지 클릭시 원본 사이즈 조정
-    $data = $view[rich_content];
-    $path = $size = null;
-    preg_match_all("/<img\s+name='target_resize_image\[\]' onclick='image_window\(this\)'.*src=\"(.*)\"/iUs", $data, $matchs);
-    for ($i=0; $i<count($matchs[1]); $i++) {
-        $match = $matchs[1][$i];
-        $no_www = str_replace("www.", "", $g4[url]);
-        $path = "";
-        if (strstr($match, $g4[url])) {
-            $path = str_replace($g4[url], $g4[path], $match);
-        } elseif (strstr($match, $no_www)) {
-            $path = str_replace($no_www, $g4[path], $match);
-        } elseif (substr($match, 0, 1) == "/") {
-            $path = $_SERVER[DOCUMENT_ROOT].$match;
-        //} else { $path = $match;
-        }
-        if ($path)
-            $size = @getimagesize($path);
-        else
-            $size = @getimagesize($match);
-        if ($size[0] && $size[1]) {
-            $match = str_replace("/", "\/", $match);
-            $match = str_replace(".", "\.", $match);
-            $match = str_replace("+", "\+", $match);
-            $pattern = "/(onclick=[\'\"]{0,1}image_window\(this\)[\'\"]{0,1}) (.*)(src=\"$match\")/iU";
-            $replacement = "onclick='mw_image_window(this, $size[0], $size[1])' $2$3";
-
-            // 이미지 저장 방지
-            if ($mw_basic[cf_image_save_close])
-                $replacement .= "oncontextmenu=\"return false\" style=\"-webkit-touch-callout:none\"";
-
-            if ($size[0] > $board[bo_image_width])
-                $replacement .= " class=\"content-image\" width=\"$board[bo_image_width]\"";
-            $data = @preg_replace($pattern, $replacement, $data);
-        }
-    }
-    $view[rich_content] = $data;
-}
-
-// 추천링크 방지
-$view[rich_content] = preg_replace("/bbs\/good\.php\?/i", "#", $view[rich_content]);
-*/
-
-
 // 조회수, 추천수, 비추천수 컴마
 if ($mw_basic[cf_comma]) {
     $view[wr_hit] = number_format($view[wr_hit]);
@@ -498,27 +442,12 @@ $new_time = date("Y-m-d H:i:s", $g4[server_time] - ($board[bo_new] * 3600));
 $row = sql_fetch(" select count(*) as cnt from $write_table where wr_is_comment = 0 and wr_datetime >= '$new_time' ");
 $new_count = $row[cnt];
 
-// 이미지 링크
-//$view[rich_content] = preg_replace("/\[\<a\s*href\=\"(http|https|ftp)\:\/\/([^[:space:]]+)\.(gif|png|jpg|jpeg|bmp)\"\s*[^\>]*\>.*\<\/a\>\]/iUs", "<img src='$1://$2.$3' id='target_resize_image[]' onclick='image_window(this);'>", $view[rich_content]);
-//$view[rich_content] = preg_replace("/\[(http|https|ftp)\:\/\/([^[:space:]]+)\.(gif|png|jpg|jpeg|bmp)\]/iUs", "<img src='$1://$2.$3' id='target_resize_image[]' onclick='image_window(this);'>", $view[rich_content]);
-
 // 최고, 그룹관리자라면 글 복사, 이동 가능
 $copy_href = $move_href = "";
 if ($write[wr_reply] == "" && ($is_admin == "super" || $is_admin == "group")) {
     $copy_href = "javascript:win_open('$pc_skin_path/move.php?sw=copy&bo_table=$bo_table&wr_id=$wr_id&page=$page".$qstr."', 'boardcopy', 'left=50, top=50, width=500, height=550, scrollbars=1');";
     $move_href = "javascript:win_open('$pc_skin_path/move.php?sw=move&bo_table=$bo_table&wr_id=$wr_id&page=$page".$qstr."', 'boardmove', 'left=50, top=50, width=500, height=550, scrollbars=1');";
 }
-
-// 배추코드
-/*$view[rich_content] = bc_code($view[rich_content], 1, 0);
-if (strstr($write[wr_option], "html")) {
-    $view[rich_content] = mw_tag_debug($view[rich_content]);
-}
-$view[rich_content] = mw_set_sync_tag($view[rich_content]);
-
-if ($mw_basic[cf_iframe_level] && $mw_basic[cf_iframe_level] <= $mb[mb_level]) {
-    $view[rich_content] = mw_special_tag($view[rich_content]);
-}*/
 
 if ($mw_basic[cf_umz]) { // 짧은 글주소 사용 
     //if ($write[wr_umz] == "") {
@@ -681,104 +610,8 @@ if ($mw_basic[cf_sns])
     ob_end_clean();
 }
 
-/*
-$google_map_code = null;
-$google_map_is_view = false;
-if ($mw_basic[cf_google_map] && trim($write[wr_google_map])) {
-    ob_start();
-    ?>
-    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&language=ko"></script>
-    <script type="text/javascript" src="<?=$pc_skin_path?>/mw.js/mw.google.js"></script>
-    <script type="text/javascript">
-    $(document).ready(function () {
-        mw_google_map("google_map", "<?=addslashes($write[wr_google_map])?>");
-    });
-    </script>
-    <div id="google_map" style="width:100%; height:300px; border:1px solid #ccc; margin:10px 0 10px 0;"></div>
-    <?
-    $google_map_code = ob_get_contents();
-    ob_end_clean();
-
-    if (strstr($view[rich_content], "{구글지도}")) {
-        $view[rich_content] = preg_replace("/\{구글지도\}/", $google_map_code, $view[rich_content]);
-        $google_map_is_view = true;
-    }
-}
-
-if ($mw_basic[cf_contents_shop] == '2' and $write[wr_contents_price]) // 배추 컨텐츠샵 내용보기 결제
-{
-    $is_per = true;
-    $is_per_msg = '예외오류';
-
-    if (!$is_member) $is_per = false;
-
-    $con = mw_is_buy_contents($member[mb_id], $bo_table, $wr_id);
-    if (!$con and $is_per) $is_per = false;
-
-    if (!$is_per) {
-
-        $view[wr_contents_preview] = conv_content($view[wr_contents_preview], $html);
-        ob_start();
-        ?>
-        <div class="contents_shop_view">
-            <?=conv_content($view[wr_contents_preview], $html)?>
-            <div style="margin:20px 0 0 0;"><input type="button" class="btn1" value="내용보기" onclick="buy_contents('<?=$bo_table?>','<?=$wr_id?>', 0)"/></div>
-        </div>
-        <script type="text/javascript">
-        function contents_shop_view() {
-        }
-        </script>
-        <?
-        $contents_shop_view = ob_get_contents();
-        ob_end_clean();
-
-        $view[wr_content] = $contents_shop_view;
-        $view[content] = $view[wr_content];
-        $view[rich_content] = $view[wr_content];
-        $write[wr_content] = $view[wr_content];
-        $write[content] = $view[wr_content];
-        $view[file] = null;
-    }
-}
-
-$view[rich_content] = mw_youtube_content($view[rich_content]);
-
-*/
-
 if (function_exists("mw_moa_read"))
     mw_moa_read($member['mb_id'], $bo_table, $wr_id);
-
-/*
-$ob_exam = '';
-$ob_exam_flag = false;
-if ($mw_basic['cf_exam']) {
-    if (is_file("{$exam_path}/view.skin.php")) {
-        ob_start();
-        include("{$exam_path}/view.skin.php");
-        $ob_exam = ob_get_clean();
-
-        if (preg_match("/\[시험문제\]/i", $view[rich_content])) {
-            $ob_exam_flag = true;
-            $view[rich_content] = preg_replace("/\[시험문제\]/i", $ob_exam, $view[rich_content]);
-        }
-    }
-}
-
-$ob_marketdb = '';
-$ob_marketdb_flag = false;
-if ($mw_basic['cf_marketdb'] and $write['wr_marketdb']) { 
-    if (is_file("{$marketdb_path}/view.skin.php")) {
-        ob_start();
-        include("{$marketdb_path}/view.skin.php");
-        $ob_marketdb = ob_get_clean();
-
-        if (preg_match("/\[마케팅DB\]/i", $view[rich_content])) {
-            $ob_marketdb_flag = true;
-            $view[rich_content] = preg_replace("/\[마케팅DB\]/i", $ob_marketdb, $view[rich_content]);
-        }
-    }
-}
-*/
 
 if (!$mw_basic['cf_time_view'])
     $mw_basic['cf_time_view'] = "Y-m-d (w) H:i";

@@ -179,10 +179,12 @@ if ($mw_basic['cf_bbs_banner']) {
 
 $watermark_files = array();
 
-$sql = "select * from $g4[board_file_table] where bo_table = '$bo_table' and wr_id = '$wr_id' and bf_width > 0  order by bf_no";
-$qry = sql_query($sql);
-while ($row = sql_fetch_array($qry)) {
-    $watermark_files[] = mw_watermark_file("$file_path/$row[bf_file]");
+if ($mw_basic['cf_watermark_use'] or $mw_basic['cf_watermark_use_thumb']) {
+    $sql = "select * from $g4[board_file_table] where bo_table = '$bo_table' and wr_id = '$wr_id' and bf_width > 0  order by bf_no";
+    $qry = sql_query($sql);
+    while ($row = sql_fetch_array($qry)) {
+        $watermark_files[] = mw_watermark_file("$file_path/$row[bf_file]");
+    }
 }
 
 // 일반회원 공지글 수정시 공지 내려가는 현상 보완 (그누보드 버그)

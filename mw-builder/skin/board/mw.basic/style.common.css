@@ -57,7 +57,7 @@ img {
 }
 
 #mw_basic td {
-    padding:0;
+    /*padding:0;*/
 }
 
 /* input type=text */
@@ -444,7 +444,7 @@ img {
     color:#555;
 }
 
-#mw_basic .mw_basic_list_subject i {
+#mw_basic .mw_basic_list_subject i:first-child {
     width:17px;
     float:left;
     margin:3px 0;
@@ -1567,6 +1567,7 @@ img {
     color:#333;
     display:none;
     cursor:pointer;
+    z-index:8888;
 }   
 
 .screenshot{

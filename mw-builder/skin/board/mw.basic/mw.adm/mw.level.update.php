@@ -37,12 +37,14 @@ for ($i=2; $i<=10; $i++)
     $sql_common.= ", cf_write_day = '{$cf_write_day[$i]}' ";
     $sql_common.= ", cf_write_day_count = '{$cf_write_day_count[$i]}' ";
 
-    $sql = " update {$mw['level_table']} set {$sql_common} where mb_level = '{$i}' and bo_table = '{$bo_table}' ";
+    $sql = " replace into {$mw['level_table']} set {$sql_common}  ";
+    $qry = sql_query($sql);
+    /*$sql = " update {$mw['level_table']} set {$sql_common} where mb_level = '{$i}' and bo_table = '{$bo_table}' ";
     $qry = sql_query($sql);
     if (!mysql_affected_rows()) {
         $sql = " insert into {$mw['level_table']} set {$sql_common} ";
         sql_query($sql);
-    }
+    }*/
 }
 
 alert("저장했습니다.", "mw.level.php?bo_table=".$bo_table);

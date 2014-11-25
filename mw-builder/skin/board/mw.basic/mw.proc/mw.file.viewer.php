@@ -61,8 +61,8 @@ for ($i=$file_start; $i<=$view[file][count]; $i++) {
             if ($view[file][$i][image_width] > $mw_basic[cf_original_width] || $view[file][$i][image_height] > $mw_basic[cf_original_height]) {
                 $file = "$file_path/{$view[file][$i][file]}";
                 mw_make_thumbnail($mw_basic[cf_original_width], $mw_basic[cf_original_height], $file, $file, true);
-                if ($mw_basic[cf_watermark_use] && file_exists($mw_basic[cf_watermark_path])) mw_watermark_file($file);
-                $size = getImageSize($file);
+                if ($mw_basic[cf_watermark_use] && is_file($mw_basic[cf_watermark_path])) mw_watermark_file($file);
+                $size = getimagesize($file);
                 $view[file][$i][image_width] = $size[0];
                 $view[file][$i][image_height] = $size[1];
                 sql_query("update $g4[board_file_table] set bf_width = '$size[0]', bf_height = '$size[1]',
@@ -85,7 +85,7 @@ for ($i=$file_start; $i<=$view[file][count]; $i++) {
             $view[file][$i][view] = str_replace("<img", "<img oncontextmenu=\"return false\" style=\"-webkit-touch-callout:none\" ", $view[file][$i][view]);
 
         // 워터마크 이미지 출력
-        if ($mw_basic[cf_watermark_use] && file_exists($mw_basic[cf_watermark_path])) {
+        if ($mw_basic[cf_watermark_use] && is_file($mw_basic[cf_watermark_path])) {
             preg_match("/src='([^']+)'/iUs", $view[file][$i][view], $match);
             $watermark_file = mw_watermark_file($match[1]);
             $view[file][$i][view] = str_replace($match[1], $watermark_file, $view[file][$i][view]);
@@ -150,7 +150,7 @@ for ($i=1; $i<=$g4['link_count']; $i++) {
 $view[content] = $link_file_viewer . $view[content]; 
 
 // 웹에디터 첨부 이미지 워터마크 처리
-if ($mw_basic[cf_watermark_use] && file_exists($mw_basic[cf_watermark_path]))
+if ($mw_basic[cf_watermark_use] && is_file($mw_basic[cf_watermark_path]))
     $view[content] = mw_create_editor_image_watermark($view[content]);
 
 if (!$mw_basic[cf_zzal] && !strstr($view[content], "{이미지:") && !$write['wr_lightbox'])// 파일 출력  
@@ -184,10 +184,17 @@ else {
             $path = $_SERVER[DOCUMENT_ROOT].$match;
         //} else { $path = $match;
         }
-        if ($path)
+        $size = null;
+        if ($path) {
             $size = @getimagesize($path);
-        else
-            $size = @getimagesize($match);
+        }
+        else if ($path && ini_get('allow_url_fopen')) {
+            $size = @getimagesize($path);
+            /*$tmp = $g4['path']."/data/tmp-remote";
+            mw_save_remote_image($match, $tmp);
+            $size = getimagesize($tmp);
+            unlink($tmp);*/
+        }
         if ($size[0] && $size[1]) {
             $match = $matchs[1][$i];
             $match = str_replace("/", "\/", $match);
@@ -219,6 +226,7 @@ $view[rich_content] = mw_reg_str($view[rich_content]);
 // 이미지 링크
 $view[rich_content] = preg_replace("/\[\<a\s*href\=\"(http|https|ftp)\:\/\/([^[:space:]]+)\.(gif|png|jpg|jpeg|bmp)\"\s*[^\>]*\>.*\<\/a\>\]/iUs", "<img src='$1://$2.$3' id='target_resize_image[]' onclick='image_window(this);'>", $view[rich_content]);
 $view[rich_content] = preg_replace("/\[(http|https|ftp)\:\/\/([^[:space:]]+)\.(gif|png|jpg|jpeg|bmp)\]/iUs", "<img src='$1://$2.$3' id='target_resize_image[]' onclick='image_window(this);'>", $view[rich_content]);
+$view[rich_content] = preg_replace("/\[\<a\s*href\=\"(http|https|ftp)\:\/\/([^[:space:]]+)\.(gif|png|jpg|jpeg|bmp)\]\"\s*[^\>]*\>.*\]\<\/a\>/iUs", "<img src='$1://$2.$3' id='target_resize_image[]' onclick='image_window(this);'>", $view[rich_content]);
 
 // 배추코드
 $view[rich_content] = bc_code($view[rich_content], 1, 0);

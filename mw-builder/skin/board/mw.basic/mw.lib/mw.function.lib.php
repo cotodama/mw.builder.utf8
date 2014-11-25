@@ -279,7 +279,7 @@ function mw_make_thumbnail($set_width, $set_height, $source_file, $thumbnail_fil
         $time = $write['wr_datetime'];
 
     if ($time)
-        @touch($thumbnail_file, strtotime($time));
+        touch($thumbnail_file, strtotime($time));
 }
 
 function mw_hex_to_rgb($hex)
@@ -834,19 +834,25 @@ function mw_get_editor_image($data)
     $url = preg_replace("(\/)", "\\\/", $url);
     $url = preg_replace("(\.)", "\.", $url);
 
-    $ext = "src=\"({$url}\/data\/geditor[^\"]+)\"";
+    $ext = "<img.*src=\"(.*\/data\/geditor[^\"]+)\"";
     preg_match_all("/$ext/iUs", $data, $matchs);
     for ($j=0; $j<count($matchs[1]); $j++) {
         $editor_image[] = $matchs[1][$j];
     }
 
-    $ext = "src=\"({$url}\/data\/mw\.cheditor[^\"]+)\"";
+    $ext = "<img.*src=\"(.*\/data\/file[^\"]+)\"";
     preg_match_all("/$ext/iUs", $data, $matchs);
     for ($j=0; $j<count($matchs[1]); $j++) {
         $editor_image[] = $matchs[1][$j];
     }
 
-    $ext = "src=\"({$url}\/data\/{$g4[cheditor4]}[^\"]+)\"";
+    $ext = "<img.*src=\"(.*\/data\/mw\.cheditor[^\"]+)\"";
+    preg_match_all("/$ext/iUs", $data, $matchs);
+    for ($j=0; $j<count($matchs[1]); $j++) {
+        $editor_image[] = $matchs[1][$j];
+    }
+
+    $ext = "<img.*src=\"(.*\/data\/{$g4[cheditor4]}[^\"]+)\"";
     preg_match_all("/$ext/iUs", $data, $matchs);
     for ($j=0; $j<count($matchs[1]); $j++) {
         $editor_image[] = $matchs[1][$j];
@@ -854,15 +860,29 @@ function mw_get_editor_image($data)
 
     for ($j=0, $m=count($editor_image); $j<$m; $j++) {
         $match = $editor_image[$j];
-        if (strstr($match, $g4[url])) { // 웹에디터로 첨부한 이미지 뿐 아니라 다양한 상황을 고려함.
-            $path = str_replace($g4[url], "..", $match);
-        } elseif (substr($match, 0, 1) == "/") {
-            $path = $_SERVER[DOCUMENT_ROOT].$match;
-        } else {
-            $path = $match;
+        $path = $match;
+        if (substr($match, 0, 7) == "http://") {
+            $path = preg_replace("/http:\/\/[^\/]+\//iUs", "", $match);
+            $path = $_SERVER['DOCUMENT_ROOT'].'/'.$path;
+            $path = str_replace("//", "/", $path);
+            $path = str_replace("//", "/", $path);
         }
-        $ret[http_path][$j] = $match;
-        $ret[local_path][$j] = $path;
+        else if (substr($match, 0, 1) == "/") {
+            $path = $_SERVER['DOCUMENT_ROOT'].'/'.$path;
+            $path = str_replace("//", "/", $path);
+            $path = str_replace("//", "/", $path);
+        }
+        else if (substr($match, 0, 3) == "../") {
+            $path = str_replace("../", "", $path);
+            for ($z=0, $zm=substr_count(dirname($_SERVER['PHP_SELF']), "/"); $z<$zm; ++$z) {
+                $path = '../'.$path;
+            }
+        }
+       
+        if (is_file($path)) {
+            $ret[http_path][] = $match;
+            $ret[local_path][] = $path;
+        }
     }
     return $ret;
 }
@@ -870,7 +890,9 @@ function mw_get_editor_image($data)
 // 에디터 이미지 워터마크 생성
 function mw_create_editor_image_watermark($data)
 {
-    global $g4, $watermark_path;
+    global $g4;
+    global $watermark_path;
+    global $mw_basic;
 
     $editor_image = mw_get_editor_image($data);
 
@@ -881,6 +903,9 @@ function mw_create_editor_image_watermark($data)
         if ($size[0] > 0) {
             $watermark_file = mw_watermark_file($path);
             $data = str_replace($match, $watermark_file, $data);
+            if ($mw_basic['cf_image_outline']) {
+                mw_image_outline($watermark_file, null, $mw_basic['cf_image_outline_color']);
+            }
         }
     }
     return $data;
@@ -1319,6 +1344,12 @@ function bc_code($str, $is_content=1, $only_admin=0) {
             return mw_pay_banner($arg[1], $arg[2]);
         }, $str);*/
     }
+
+    $str = preg_replace("/\[line\]/iU", "<hr/>", $str);
+    $str = preg_replace("/\[line\s+color=([^\]]+)\]/iU", "<hr style='border-color:\\1;'/>", $str);
+
+    $str = preg_replace("/\[hr\]/iU", "<hr/>", $str);
+    $str = preg_replace("/\[hr\s+color=([^\]]+)\]/iU", "<hr style='border-color:\\1;'/>", $str);
 
     $str = preg_replace("/\[month\]/iU", date('n', $g4[server_time]), $str);
     $str = preg_replace("/\[last_day\]/iU", date('t', $g4[server_time]), $str);
@@ -2532,7 +2563,7 @@ function mw_file_view($url, $write, $width=0, $height=0, $content="")
             return "<script>doc_write(obj_movie('{$url}', '_g4_{$ids}', '$width', '$height'));</script>";
         }
         else if (preg_match("/\.($config[cf_flash_extension])$/i", $url)) {
-            $size = @getImageSize($url);
+            $size = @getimagesize($url);
             if ($size[0]) {
                 $width = $size[0];
                 $height = $size[1];
@@ -3395,7 +3426,7 @@ function mw_save_remote_image($url, $save_path)
 }
 
 // 게시물별 썸네일 생성
-function mw_make_thumbnail_row ($bo_table, $wr_id, $wr_content, $remote=false)
+function mw_make_thumbnail_row ($bo_table, $wr_id, $wr_content, $remote=false, $time='')
 {
     global $g4;
     global $mw_basic;
@@ -3405,13 +3436,13 @@ function mw_make_thumbnail_row ($bo_table, $wr_id, $wr_content, $remote=false)
     global $thumb3_path;
     global $thumb4_path;
     global $thumb5_path;
-    /*
+
     global $thumb_file;
     global $thumb2_file;
     global $thumb3_file;
     global $thumb4_file;
     global $thumb5_file;
-    */
+
     global $is_admin;
 
     $is_thumb = false;
@@ -3457,6 +3488,8 @@ function mw_make_thumbnail_row ($bo_table, $wr_id, $wr_content, $remote=false)
             {
                 //$mat = str_replace($g4[url], "..", $mat);
                 $dat = preg_replace("/(http:\/\/.*)\/data\//i", "../data/", $mat);
+                if (!is_file($dat) && (substr($mat, 0, 1) == '/' or substr($mat, 0, 1) == '.'))
+                    $dat = str_replace("//", "/", $_SERVER['DOCUMENT_ROOT'].$mat);
 
                 // 서버내 이미지 썸네일 생성
                 if (is_file($dat))
@@ -3505,6 +3538,7 @@ function mw_make_thumbnail_all ($source_file)
     global $thumb3_file;
     global $thumb4_file;
     global $thumb5_file;
+    global $is_admin;
 
     mw_make_thumbnail($mw_basic['cf_thumb_width'], $mw_basic['cf_thumb_height'], $source_file,
         $thumb_file, $mw_basic['cf_thumb_keep']);
@@ -3588,7 +3622,7 @@ function mw_path_to_url($content)
 {
     global $g4;
 
-    //$content = str_replace($g4['path'].'/data/', $g4['url'].'/data/', $content);
+    $content = str_replace($g4['path'].'/data/', $g4['url'].'/data/', $content);
     $content = str_replace('../data/', $g4['url'].'/data/', $content);
 
     return $content;
@@ -3737,5 +3771,13 @@ function mw_rate_count($bo_table, $wr_id)
     $row = sql_fetch($sql);
 
     return $row['cnt'];
+}
+
+function is_g5()
+{
+    if (defined('G5_PATH'))
+        return true;
+
+    return false;
 }
 

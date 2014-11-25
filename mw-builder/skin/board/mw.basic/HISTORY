@@ -1,3 +1,93 @@
+ver 2.8.2 (14.11.14)
+    : 카카오스토리 수집기 지원 (신규출시!)
+    : 그누보드5 - 코멘트 get_editor_js 오류 해결 (칭와와님 제안)
+    : 그누보드5 - 이모티콘 미출력 문제 (그누보드5 auto_link 버그 보완)
+    : 그누보드5 - 링크 미출력 문제 해결
+    : 이미지 외곽선 색상변경 오류 수정 (먹는언니님 제안)
+    : 이미지 외곽선 에디터 첨부 이미지 적용 (먹는언니님 제안)
+    : 워터마크에 외곽선 적용
+
+    mw.basic/HISTORY
+    mw.basic/mw.adm/mw.config.php
+    mw.basic/mw.adm/mw.config.update.php
+    mw.basic/mw.proc/mw.file.viewer.php
+    mw.basic/mw.proc/mw.g5.adapter.php
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/mw.lib/mw.skin.basic.lib.php
+    mw.basic/mw.proc/mw.top.button.php
+    mw.basic/write.skin.php
+    mw.basic/view_comment.skin.php
+    mw.basic/view_comment_head.skin.php
+    mw.basic/write_update.tail.skin.php
+    mw.basic/write_comment_update.tail.skin.php
+ 
+ver 2.8.1 (14.11.07)
+    : 글작성 제한 권한별 설정 쿼리문 변경 (edccesl님 제안)
+    : 배추스킨설정 새창 스크립트 변경 (헨리님 제안)
+    : write_update 시 include 항목 추가 (재아님 제안)
+    : 썸네일형 사용시 목록에 분류 출력오류 (으아아아낮님 제안)
+    : 댓글 차단버튼 신고버튼 통보 아이디에 권한부여 (도장관님 제안)
+    : rss 첨부이미지 경로 자동변경 오류 수정
+    : 글작성시 그누보드5 에디터 지원 (코멘트 추후지원, 와우PC닷컴님 제안)
+
+    mw.basic/HISTORY
+    mw.basic/mw.adm/mw.config.php
+    mw.basic/mw.adm/mw.config.update.php
+    mw.basic/mw.adm/mw.upgrade.php
+    mw.basic/mw.adm/mw.level.update.php 
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/list.skin.php
+    mw.basic/view.skin.php
+    mw.basic/view_comment.skin.php
+    mw.basic/write.skin.php
+    mw.basic/write_update.tail.skin.php
+
+ver 2.8.0 (14.10.31)
+    : 본문이미지 썸네일 생성 다양한 환경 고려 (Dae-Seok Kim님 제안)
+    : 워터마크 이미지 경로 인식 개선 (금광님 제안)
+    : 익명기능 사용시 코멘트 언급 작동되지 않게 (구름★님 제안)
+    : 그누보드5 지원 아답타 탑재
+
+    mw.basic/HISTORY
+    mw.basic/_common.php
+    mw.basic/mw.adm/_common.php
+    mw.basic/mw.adm/config.php
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/mw.lib/mw.skin.basic.lib.php
+    mw.basic/mw.proc/_common.php
+    mw.basic/mw.proc/mw.file.viewer.php
+    mw.basic/mw.proc/mw.g5.adapter.php
+    mw.basic/mw.js/mw.g5.adapter.js.php
+    mw.basic/view_comment_head.skin.php
+    mw.basic/view_comment.skin.php
+    mw.basic/write.skin.php
+    mw.basic/list.skin.php
+    mw.basic/view.skin.php
+    mw.basic/style.common.css
+ 
+ver 2.7.9 (14.10.24)
+    : 목록에 분류 안보이기 (먹는언니님 제안)
+    : 점프 사용시 남은 횟수 안내 (마사지스타님 제안)
+    : 전체목록보이기 사용시 게시판 상단파일, 하단파일 읽기 미설정시 출력 안되게 (재아님 제안)
+    : 외부이미지 사용시 allow_url_fopen 사용여부 검사 (으아아아낮님 제안)
+    : 평가참여점수 무조건 부여되는 문제 해결
+    : 썸네일 비율유지시 목록에서 반복생성되는 문제 해결
+
+    mw.basic/HISTORY
+    mw.basic/mw.adm/mw.config.php
+    mw.basic/mw.adm/mw.config.update.php
+    mw.basic/mw.adm/mw.upgrade.php
+    mw.basic/mw.lib/mw.function.lib.php
+    mw.basic/mw.proc/mw.file.viewer.php
+    mw.basic/mw.proc/mw.jump.php
+    mw.basic/mw.proc/mw.jump.update.php
+    mw.basic/view_head.skin.php
+    mw.basic/view.skin.php
+    mw.basic/list.skin.php
+    mw.basic/write_update.head.skin.php
+    mw.basic/write_update.skin.php
+    mw.basic/write_update.tail.skin.php
+ 
 ver 2.7.8 (14.10.17)
     : css 버튼 조정 (Dae-Seok Kim님 제안)
     : 인기 게시물 별점 추가 (브라운아이즈님 제안)

@@ -106,8 +106,13 @@ if ($file_upload_msg)
     alert($file_upload_msg, $g4['bbs_path']."/board.php?bo_table=$bo_table&wr_id=$wr[wr_parent]&page=$page" . $qstr . "&cwin=$cwin#c_{$comment_id}");
 
 
-if ($mw_basic[cf_image_outline]) {
-    mw_image_outline($dest_file);
+if ($mw_basic['cf_image_outline']) {
+    mw_image_outline($dest_file, null, $mw_basic['cf_image_outline_color']);
+
+    $editor_image = mw_get_editor_image($_POST['wr_content']);
+    for ($j=0, $m=count($editor_image['local_path']); $j<$m; $j++) {
+        mw_image_outline($editor_image['local_path'][$j], null, $mw_basic['cf_image_outline_color']);
+    }
 }
 
 include_once($board_skin_path.'/mw.proc/naver_syndi.php');

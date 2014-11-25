@@ -208,14 +208,15 @@ $new_count = $row[cnt];
 
 <!--
 <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet" />
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/jquery-ui.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/jquery-ui.min.js"></script>
 -->
+<script src="<?php echo $board_skin_path?>/mw.js/mw.g5.adapter.js.php?bo_table=<?php echo $bo_table?>"></script>
 <link type="text/css" href="<?=$board_skin_path?>/mw.js/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
-<script type="text/javascript" src="<?=$board_skin_path?>/mw.js/jquery-ui-1.8.19.custom.min.js"></script>
+<script src="<?=$board_skin_path?>/mw.js/jquery-ui-1.8.19.custom.min.js"></script>
 <? if (!$wr_id) { ?>
-<script type="text/javascript" src="<?=$board_skin_path?>/mw.js/tooltip.js"></script>
+<script src="<?=$board_skin_path?>/mw.js/tooltip.js"></script>
 <? } ?>
-<script type="text/javascript" src="<?="$board_skin_path/mw.js/mw_image_window.js"?>"></script>
+<script src="<?="$board_skin_path/mw.js/mw_image_window.js"?>"></script>
 
 <link rel="stylesheet" href="<?php echo $pc_skin_path?>/mw.js/mw.star.rate/jquery.mw.star.rate.css" type="text/css">
 <script src="<?php echo $pc_skin_path?>/mw.js/mw.star.rate/jquery.mw.star.rate.js"></script>
@@ -225,7 +226,10 @@ $new_count = $row[cnt];
 
 <?php
 if ($mw_basic[cf_include_head] && is_file($mw_basic[cf_include_head]) && strstr($mw_basic[cf_include_head_page], '/l/')) {
-    include_once($mw_basic[cf_include_head]);
+    if (!strstr($mw_basic[cf_include_head_page], '/v/') && $wr_id)
+        ;
+    else
+        include_once($mw_basic[cf_include_head]);
 }
 
 if ($mw_basic['cf_bbs_banner']) include_once("$bbs_banner_path/list.skin.php"); // 게시판 배너
@@ -295,10 +299,7 @@ if ($is_category && $mw_basic[cf_category_tab]) {
 <tr class=mw_basic_list_title>
     <? if ($is_checkbox) { ?><td width=40><input onclick="if (this.checked) all_checked(true); else all_checked(false);" type=checkbox></td><?}?>
     <? if (!$mw_basic[cf_post_num]) { ?><td width=40>번호</td><? } ?>
-
-    <? if ($is_category) {?>
-    <td width="80">분류</td>
-    <? }?> 
+    <? if (!$mw_basic['cf_list_cate'] && $is_category) {?> <td width="80">분류</td> <? }?> 
     <? if ($mw_basic[cf_type] == "thumb") { ?><td width=<?=$mw_basic[cf_thumb_width]+20?>> 이미지 </td><?}?>
     <td>제목</td>
     <? if ($mw_basic[cf_reward]) { ?> <td width=70>충전</td> <?}?>
@@ -338,6 +339,14 @@ if ($mw_basic[cf_include_list_main] && is_file($mw_basic[cf_include_list_main]))
 }
 
 mw_basic_move_cate($bo_table, $list[$i][wr_id]);
+
+$reply = $list[$i]['wr_reply'];
+
+$list[$i]['reply'] = "";
+if (strlen($reply) > 0) {
+    for ($k=0; $k<strlen($reply); $k++)
+        $list[$i]['reply'] .= ' &nbsp;&nbsp; ';
+}
 
 $ca_color = '';
 if ($sca && $mw_category) {
@@ -461,8 +470,9 @@ if ($list[$i]['wr_view_block']) {
 // 업데이트 아이콘
 $list[$i]['icon_update'] = "";
 if (!$list[$i]['icon_new'] && $list[$i]['wr_last'] != $list[$i]['wr_datetime'] && $list[$i]['wr_last'] >= date("Y-m-d H:i:s", $g4['server_time'] - ($board['bo_new'] * 3600))) {
-    $list[$i]['icon_update'] = "<img src='$board_skin_path/img/icon_update.gif' align='absmiddle'>";
+    //$list[$i]['icon_update'] = "<img src='$board_skin_path/img/icon_update.gif' align='absmiddle'>";
     //$list[$i]['icon_new'] = '';
+    $list[$i]['icon_update'] = "&nbsp;&nbsp;<i class='fa fa-refresh fa-spin' style='font-size:9px;'></i>";
 }
 
 // 게시물 아이콘
@@ -504,21 +514,21 @@ if (!is_file($thumb_file))
     }
 }
 else {
-    $thumb_size = @getImageSize($thumb_file);
+    $thumb_size = @getimagesize($thumb_file);
 
     $set_width = $mw_basic[cf_thumb_width];
     $set_height = $mw_basic[cf_thumb_height];
 
     if ($mw_basic[cf_thumb_keep]) {
-        //$size = @getImageSize($thumb_file);
-        $size = mw_thumbnail_keep($size, $set_width, $set_height);
+        //$size = @getimagesize($thumb_file);
+        $size = mw_thumbnail_keep($thumb_size, $set_width, $set_height);
         $set_width = $size[0];
         $set_height = $size[1];
     }
 
     if ($thumb_size[0] != $set_width || $thumb_size[1] != $set_height) {
         mw_make_thumbnail($mw_basic[cf_thumb_width], $mw_basic[cf_thumb_height],
-            $thumb_file, $thumb_file, $mw_basic[cf_thumb_keep]);
+            $thumb_file, $thumb_file, $mw_basic[cf_thumb_keep], $list[$i]['wr_datetime']);
     }
 }
 
@@ -626,6 +636,12 @@ else if ($mw_basic[cf_type] == "gall")
     </td>
     <? } ?>
 
+    <?php
+    if (!$mw_basic['cf_list_cate'] && $is_category) {
+        echo "<td><a href=\"{$list[$i][ca_name_href]}\" class=mw_basic_list_category {$ca_color_style}>{$list[$i][ca_name]}</a></td>";
+    }
+    ?>
+
     <? if ($mw_basic[cf_type] == "thumb") { ?>
     <? if (!is_file($thumb_file)) $thumb_file = mw_get_noimage(); ?>
     <? if ($list[$i][icon_secret] || $list[$i][wr_view_block] || $list[$i][wr_key_password])
@@ -639,12 +655,6 @@ else if ($mw_basic[cf_type] == "gall")
         --><? if ($list[$i][icon_new]) { echo "<div class='icon_gall_new'><img src='{$pc_skin_path}/img/icon_gall_new.png'></div>"; } ?><a href="<?=$list[$i][href]?>"><img src="<?=$thumb_file?>" width=<?=$mw_basic[cf_thumb_width]?> height=<?=$mw_basic[cf_thumb_height]?> align=absmiddle></a><!--
     --></td>
     <? } ?>
-
-    <?php
-    if ($is_category) {
-        echo "<td><a href=\"{$list[$i][ca_name_href]}\" class=mw_basic_list_category {$ca_color_style}>{$list[$i][ca_name]}</a></td>";
-    }
-    ?>
 
     <!-- 글제목 -->
     <td class=mw_basic_list_subject>
@@ -791,8 +801,8 @@ else if ($mw_basic[cf_type] == "gall")
         $(document).ready(function () {
             $(".mw_manage_list_title").mouseenter(function () {
                 $manage_button = $(this);
-                $(".mw_manage_list").css("top", $manage_button.offset().top);
-                $(".mw_manage_list").css("left", $manage_button.offset().left);
+                $(".mw_manage_list").css("top", $manage_button.position().top);
+                $(".mw_manage_list").css("left", $manage_button.position().left);
                 $(".mw_manage_list").css("display", "block");
                 $(".mw_manage_list .item").mouseenter(function () {
                     $(this).css("background-color", "#ddd");
@@ -886,14 +896,17 @@ else if ($mw_basic[cf_type] == "gall")
 
 <?php
 if ($mw_basic[cf_include_tail] && is_file($mw_basic[cf_include_tail]) && strstr($mw_basic[cf_include_tail_page], '/l/')) {
-    include_once($mw_basic[cf_include_tail]);
+    if (!strstr($mw_basic[cf_include_tail_page], '/v/') && $wr_id)
+        ;
+    else
+        include_once($mw_basic[cf_include_tail]);
 }
 ?>
 
 </td></tr></table>
 
 
-<script type="text/javascript">
+<script>
 <?  if (!$mw_basic[cf_category_tab]) { ?>
 if ('<?=$sca?>') document.fcategory.sca.value = '<?=urlencode($sca)?>';
 <? } ?>
@@ -904,7 +917,7 @@ if ('<?=$stx?>') {
 </script>
 
 <? if ($mw_basic[cf_write_notice]) { ?>
-<script type="text/javascript">
+<script>
 // 글쓰기버튼 공지
 function btn_write_notice(url) {
     var msg = "<?=$mw_basic[cf_write_notice]?>";
@@ -916,7 +929,7 @@ function btn_write_notice(url) {
 
 
 <? if ($is_checkbox) { ?>
-<script type="text/javascript">
+<script>
 
 <? if ($is_admin == "super") { ?>
 function mw_config() {
@@ -1051,7 +1064,7 @@ function mw_qna(sw) {
 $(window).load(function () {
     $(".icon_gall_new").each(function () {
         var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
-        <? if ($mw_basic['cf_type'] == 'gall') { ?>
+        <?php if ($mw_basic['cf_type'] == 'gall') { ?>
         var wt = $(this).closest('td').width();
         var wi = $(this).next().find("img").width();
         var ma = (wt-wi)/2-22;
@@ -1061,10 +1074,10 @@ $(window).load(function () {
         if (navigator.appVersion.indexOf("MSIE 10") !== -1) {
             $(this).css('margin-left', ma+'px');
         }
-        <? } else if ($mw_basic['cf_type'] == 'thumb') { ?>
+        <?php } else if ($mw_basic['cf_type'] == 'thumb') { ?>
         if (is_chrome)
-            $(this).css('margin-left', '-10px');
-        <? } ?>
+            ;//$(this).css('margin-left', '-10px');
+        <?php } ?>
         $(this).css('display', 'block');
     });
 });
@@ -1094,7 +1107,7 @@ if ($mw_basic[cf_collect] == 'rss' && $rss_collect_path && file_exists("$rss_col
     include_once("$rss_collect_path/_config.php");
     if ($mw_rss_collect_config[cf_license]) {
         ?>
-        <script type="text/javascript">
+        <script>
         $(document).ready(function () {
             $.get("<?=$rss_collect_path?>/ajax.php?bo_table=<?=$bo_table?>");
         });
@@ -1108,7 +1121,7 @@ if ($mw_basic[cf_collect] == 'youtube' && $youtube_collect_path && file_exists("
     include_once("$youtube_collect_path/_config.php");
     if ($mw_youtube_collect_config[cf_license]) {
         ?>
-        <script type="text/javascript">
+        <script>
         $(document).ready(function () {
             $.get("<?=$youtube_collect_path?>/ajax.php?bo_table=<?=$bo_table?>");
         });

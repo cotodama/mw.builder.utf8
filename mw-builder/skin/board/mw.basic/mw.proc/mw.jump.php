@@ -46,6 +46,22 @@ $msg = "현재글을 새글로 갱신하시겠습니까?";
 if ($mw_basic['cf_jump_point']) {
     $msg .= "\\n\\n{$mw_basic['cf_jump_point']}포인트가 차감됩니다.";
 }
+
+if ($mw_basic['cf_jump_days'] or $mw_basic['cf_jump_count']) {
+    $jump_days = $mw_basic['cf_jump_days'] - 1;
+    $old = date("Y-m-d 00:00:00", strtotime("-{$jump_days} day", $g4['server_time']));
+
+    if (!$mw_basic['cf_jump_days']) $old = "";
+
+    $sql = " select count(*) as cnt from {$mw['jump_log_table']} ";
+    $sql.= "  where mb_id = '{$member['mb_id']}' ";
+    $sql.= "    and jp_datetime > '$old' ";
+    $row = sql_fetch($sql);
+
+    $count = $row['cnt'];
+
+    $msg .= "\\n\\n({$mw_basic['cf_jump_days']}일에 {$mw_basic['cf_jump_count']}번 가능, 현재 {$count}번 사용)";
+}
 ?>
 
 <button class="fa-button" id="btn_jump"><i class="fa fa-paper-plane-o"></i> 점프</button>

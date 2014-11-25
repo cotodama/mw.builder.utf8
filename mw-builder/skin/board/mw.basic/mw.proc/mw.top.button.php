@@ -41,6 +41,10 @@ if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
     <button class="fa-button" onclick="win_open('<?=$g4[path]?>/plugin/youtube-collect/config.php?bo_table=<?=$bo_table?>', 'youtube_collect', 'width=800,height=600,scrollbars=1')"><i class="fa fa-youtube"></i> 유투브</button>
     <? } ?>
 
+    <? if ($is_admin && $mw_basic[cf_collect] == 'kakao' && file_exists("$g4[path]/plugin/kakao-collect/_lib.php")) {?>
+    <button class="fa-button" onclick="win_open('<?=$g4[path]?>/plugin/kakao-collect/config.php?bo_table=<?=$bo_table?>', 'kakao_collect', 'width=800,height=600,scrollbars=1')"><i class="fa fa-wifi"></i> 카카오</button>
+    <? } ?>
+
     <a class="tooltip fa-button" title="읽기:<?=$board[bo_read_point]?>,
 쓰기:<?=$board[bo_write_point]?><?
 if ($mw_basic[cf_contents_shop_write]) { echo " ($mw_cash[cf_cash_name]$mw_basic[cf_contents_shop_write_cash]$mw_cash[cf_cash_unit])"; } ?>,
