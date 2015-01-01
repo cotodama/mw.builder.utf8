@@ -202,6 +202,12 @@ if ($mw_basic[cf_change_image_size] && $member[mb_level] >= $mw_basic[cf_change_
             where bo_table = '$bo_table' and wr_id = '$wr_id' and bf_no = '$row[bf_no]'");
     }
 }
+// 썸네일
+$thumb_file = mw_thumb_jpg($thumb_path.'/'.$wr_id);
+$thumb2_file = mw_thumb_jpg($thumb2_path.'/'.$wr_id);
+$thumb3_file = mw_thumb_jpg($thumb3_path.'/'.$wr_id);
+$thumb4_file = mw_thumb_jpg($thumb4_path.'/'.$wr_id);
+$thumb5_file = mw_thumb_jpg($thumb5_path.'/'.$wr_id);
 
 // 썸네일 생성
 $is_thumb = mw_make_thumbnail_row($bo_table, $wr_id, $_POST['wr_content'], $mw_basic['cf_image_remote_save']);
@@ -222,10 +228,9 @@ if ($mw_basic[cf_watermark_use] && is_file($mw_basic[cf_watermark_path]))
     }
 }
 
-
 // 생성된 썸네일이 없고, 유튜브 링크를 사용할 경우
 // 유튜브 섬네일 가져오기
-if (!$is_thumb && !is_file("{$thumb_path}/{$wr_id}")) {
+if (!$is_thumb && !is_file($thumb_file)) {
     if (preg_match("/youtu/i", $wr_link1)) mw_get_youtube_thumb($wr_id, $wr_link1);
     else if (preg_match("/youtu/i", $wr_link2)) mw_get_youtube_thumb($wr_id, $wr_link2);
     else if (preg_match("/vimeo/i", $wr_link1)) mw_get_vimeo_thumb($wr_id, $wr_link1);
@@ -403,6 +408,15 @@ if ($mw_basic[cf_vote] && $mw_basic[cf_vote_level] <= $member[mb_level])
         $vt_edate = "$vt_edate $vt_etime:00:00";
     else
         $vt_edate = '0000-00-00 00:00:00';
+
+    $tmp = array();
+    $tmp2 = array();
+    if (strstr($vt_item[0], "|")) {
+        $tmp2 = $vt_item;
+        array_shift($tmp2);
+        $tmp = array_map("trim", explode("|", $vt_item[0]));
+        $vt_item = array_merge($tmp, $tmp2);
+    }
 
     $tmp = array();
     for ($i=0, $m=sizeof($vt_item); $i<$m; $i++) {
@@ -626,5 +640,9 @@ if ($mw_basic['cf_key_level'] && $mw_basic['cf_key_level'] <= $member['mb_level'
 if ($mw_basic['cf_hidden_link'] && $mw_basic['cf_hidden_link'] <= $member['mb_level']) {
     sql_query("update {$write_table} set wr_hidden_link1 = '{$wr_hidden_link1}' where wr_id = '{$wr_id}' ");
     sql_query("update {$write_table} set wr_hidden_link2 = '{$wr_hidden_link2}' where wr_id = '{$wr_id}' ");
+}
+
+if ($mw_basic['cf_include_write_update'] && is_file($mw_basic['cf_include_write_update'])) {
+    include($mw_basic['cf_include_write_update']);
 }
 

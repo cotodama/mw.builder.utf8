@@ -68,6 +68,19 @@ if (strstr($row['wr_option'], "html2")) $html = 2;
     }
 //}
 
+// 코멘트 비밀 리플 보이기
+if ($row[content] == SECRET_COMMENT) {
+    for ($j=$i-1; $j>=0; $j--) {
+        if ($list[$j][wr_comment] == $row[wr_comment] && $list[$j][wr_comment_reply] == substr($row[wr_comment_reply], 0, strlen($row[wr_comment_reply])-1)) {
+            if (trim($list[$j][mb_id]) && $list[$j][mb_id] == $member[mb_id]) {
+                $row[content] = conv_content($row[wr_content], $html, 'wr_content');
+                $row[content] = search_font($stx, $row[content]);
+            }
+            break;
+        }
+    }
+}
+
 // 코멘트 첨부파일
 $file = get_comment_file($bo_table, $row[wr_id]);
 if (preg_match("/\.($config[cf_movie_extension])$/i", $file[0][file])) {
@@ -144,19 +157,6 @@ if ($row[wr_singo] && $row[wr_singo] >= $mw_basic[cf_singo_number] && $mw_basic[
 $comment_id = $row[wr_id];
 if ($mw_basic[cf_singo]) {
     $row[singo_href] = "javascript:btn_singo($comment_id, $write[wr_parent])";
-}
-
-// 코멘트 비밀 리플 보이기
-if ($row[content] == SECRET_COMMENT) {
-    for ($j=$i-1; $j>=0; $j--) {
-        if ($list[$j][wr_comment] == $row[wr_comment] && $list[$j][wr_comment_reply] == substr($row[wr_comment_reply], 0, strlen($row[wr_comment_reply])-1)) {
-            if (trim($list[$j][mb_id]) && $list[$j][mb_id] == $member[mb_id]) {
-                $row[content] = conv_content($row[wr_content], $html, 'wr_content');
-                $row[content] = search_font($stx, $row[content]);
-            }
-            break;
-        }
-    }
 }
 
 // 로그버튼

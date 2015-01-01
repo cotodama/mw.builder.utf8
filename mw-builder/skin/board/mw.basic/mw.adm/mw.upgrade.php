@@ -848,7 +848,7 @@ if (is_null($mw_basic[cf_attach_count])) {
 
 // 관련글 타게시판
 if (is_null($mw_basic[cf_related_table])) {
-    sql_query("alter table $mw[basic_config_table] add cf_related_table varchar(20) not null", false);
+    sql_query("alter table $mw[basic_config_table] add cf_related_table varchar(255) not null", false);
 }
 
 // 최신글 타게시판
@@ -1303,7 +1303,9 @@ if (is_null($mw_basic[cf_talent_market])) {
     sql_query("alter table {$mw['basic_config_table']} add cf_include_write_head varchar(255) not null", false);
     sql_query("alter table {$mw['basic_config_table']} add cf_include_write_main varchar(255) not null", false);
     sql_query("alter table {$mw['basic_config_table']} add cf_include_write_tail varchar(255) not null", false);
+    sql_query("alter table {$mw['basic_config_table']} add cf_include_write_update_head varchar(255) not null", false);
     sql_query("alter table {$mw['basic_config_table']} add cf_include_write_update varchar(255) not null", false);
+    sql_query("alter table {$mw['basic_config_table']} add cf_include_write_update_tail varchar(255) not null", false);
 
     $sql = "create table if not exists {$mw['category_table']} (
         bo_table varchar(20) not null,
@@ -1371,4 +1373,17 @@ if (is_null($mw_basic[cf_talent_market])) {
     sql_query("alter table {$mw['basic_config_table']} add cf_umz_domain varchar(100) not null default ''", false);
 
     sql_query("alter table {$mw['basic_config_table']} add cf_list_cate varchar(1) not null", false);
+
+    sql_query("alter table {$mw['basic_config_table']} add cf_search_name varchar(1) default '' not null", false);
+
+    sql_query("alter table {$mw[basic_config_table]} add cf_ani_nothumb varchar(1) not null default ''", false);
+
+    sql_query("alter table {$mw['basic_config_table']} change cf_related_table cf_related_table varchar(255) not null", false);
+    sql_query("alter table {$mw['basic_config_table']} add cf_related_table_div varchar(1) not null", false);
+    sql_query("alter table {$mw['basic_config_table']} add cf_related_subject varchar(1) not null default '1'", false);
+    sql_query("alter table {$mw['basic_config_table']} add cf_related_content varchar(1) not null default '1'", false);
+
+    sql_query("alter table {$mw['basic_config_table']} add cf_ca_order varchar(1) not null default ''", false);
+
+    sql_query("alter table {$mw['basic_config_table']} add cf_kakao_key varchar(255) not null default ''", false);
 

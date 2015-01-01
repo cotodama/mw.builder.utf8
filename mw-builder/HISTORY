@@ -1,3 +1,12 @@
+4.37.23 (2014.12.23)
+    : SQL Injection 취약점이 발견되어 수정 (한국인터넷진흥원 침해사고분석단 취약점분석팀 손기종님이 알려주셨습니다.)
+
+        head.sub.php
+
+            if (!$lo_location)
+                $lo_location = addslashes($_SERVER['REQUEST_URI']);
+            $lo_url = addslashes($_SERVER['REQUEST_URI']);
+
 4.37.22 (2014.11.13)
     : 다른 회원의 아이콘을 변경 할수 있는 오류 해결 (팔팔이님이 알려주셨습니다.)
 

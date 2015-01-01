@@ -61,7 +61,7 @@ sql_query("update {$write_table} set wr_num = wr_num * -1");
 $wr_num = 0;
 foreach ($data as $row) {
     $wr_num--;
-    //$row[wr_num] *= -1;
+    $row[wr_num] *= -1;
 
     $sql = "update {$write_table} set wr_num = '{$wr_num}' where wr_num = '{$row[wr_num]}'";
     sql_query($sql);

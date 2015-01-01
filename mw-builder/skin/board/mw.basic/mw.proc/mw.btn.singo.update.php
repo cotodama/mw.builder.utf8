@@ -153,7 +153,7 @@ if ($write[wr_singo] && $write[wr_singo] >= $mw_basic[cf_singo_number])
 {
     if ($mw_basic[cf_singo_id_block])
     {
-        $mb = get_member($mb_id);
+        $mb = get_member($write[mb_id]);
         if (!$mb[mb_intercept_date]) {
             $mb_intercept_date = date("Ymd", $g4[server_time]);
             $mb_memo = "$mb[mb_memo]\n\n$mw_basic[cf_singo_number]회 신고에 의한 접근차단 : $g4[time_ymdhis]";

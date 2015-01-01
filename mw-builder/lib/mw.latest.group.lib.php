@@ -34,22 +34,25 @@ function mw_latest_group($skin_dir="", $gr_id, $rows=10, $subject_len=40, $is_im
     else
         $latest_skin_path = "$g4[path]/skin/latest/basic";
 
-    $cache_file_list = "$g4[path]/data/mw.cache/latest-{$gr_id}-list-{$rows}-{$is_img}-{$subject_len}";
-    $cache_file_file = "$g4[path]/data/mw.cache/latest-{$gr_id}-file-{$rows}-{$is_img}-{$subject_len}";
-    $cache_file_board = "$g4[path]/data/mw.cache/latest-{$gr_id}-board-{$rows}-{$is_img}-{$subject_len}";
+        $cache_file_list = "$g4[path]/data/mw.cache/latest-{$gr_id}-list-{$rows}-{$is_img}-{$subject_len}";
+        $cache_file_file = "$g4[path]/data/mw.cache/latest-{$gr_id}-file-{$rows}-{$is_img}-{$subject_len}";
+        $cache_file_board = "$g4[path]/data/mw.cache/latest-{$gr_id}-board-{$rows}-{$is_img}-{$subject_len}";
 
-    $board_list = mw_cache_read($cache_file_board, $minute);
-    $list = mw_cache_read($cache_file_list, $minute);
-    $file = mw_cache_read($cache_file_file, $minute);
+        $board_list = mw_cache_read($cache_file_board, $minute);
+        $list = mw_cache_read($cache_file_list, $minute);
+        $file = mw_cache_read($cache_file_file, $minute);
 
-    $tables = array();
-    $sql = "select mm_id from $mw[menu_middle_table] where gr_id = '$gr_id' order by mm_order";
-    $qry = sql_query($sql);
-    while ($row = sql_fetch_array($qry)) {
-	$sql2 = "select * from $mw[menu_small_table] where mm_id = '$row[mm_id]' and bo_table <> '' order by ms_order";
-	$qry2 = sql_query($sql2);
-	while ($row2 = sql_fetch_array($qry2)) {
-	    $tables[] = $row2[bo_table];
+        $tables = array();
+        $sql = "select mm_id from $mw[menu_middle_table] where gr_id = '$gr_id' order by mm_order";
+        $qry = sql_query($sql);
+        while ($row = sql_fetch_array($qry)) {
+            $sql2 = "select * from $mw[menu_small_table] where mm_id = '$row[mm_id]' and bo_table <> '' order by ms_order";
+            $qry2 = sql_query($sql2);
+            while ($row2 = sql_fetch_array($qry2)) {
+                if (empty($board_list[$row2['bo_table']]))
+                    $board_list[$row2['bo_table']] = sql_fetch("select * from $g4[board_table] where bo_table = '{$row2['bo_table']}'");
+                if ($board_list[$row2['bo_table']]['bo_use_search'])
+                    $tables[] = $row2['bo_table'];
 	}
     }
     $sql_tables = implode("','", $tables);
@@ -58,8 +61,7 @@ function mw_latest_group($skin_dir="", $gr_id, $rows=10, $subject_len=40, $is_im
 	$file = array();
         $file = mw_get_last_thumb($tables, $is_img);
         for ($i=0, $m=count($file); $i<$m; ++$i) {
-            if (empty($board[$file[$i]['bo_table']]))
-                $board_list[$file[$i]['bo_table']] = sql_fetch("select * from $g4[board_table] where bo_table = '{$file[$i]['bo_table']}'");
+
             $row = sql_fetch("select * from {$g4['write_prefix']}{$file[$i]['bo_table']} where wr_id = '{$file[$i]['wr_id']}'");
             $row = mw_get_list($row, $board_list[$file[$i]['bo_table']], $latest_skin_path, $subject_len);
 

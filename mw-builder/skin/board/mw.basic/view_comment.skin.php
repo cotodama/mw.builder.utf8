@@ -857,10 +857,10 @@ $(document).ready(function () {
 
 <div style="height:40px; clear:both;">
     <div class="comment_submit_button">
-        <div><button class="fa-button primary center" accesskey="s" id="btn_comment_submit" style="width:100px;"><i class="fa fa-comment"></i> 입력</button></div>
+        <div><button type="submit" class="fa-button primary center" accesskey="s" id="btn_comment_submit" style="width:100px;"><i class="fa fa-comment"></i> 입력</button></div>
         <?php if ($good_href || $nogood_href) { // 추천, 비추천?>
-        <div><button class="fa-button" onclick="mw_good_act('good')"><i class="fa fa-thumbs-o-up"></i> 추천</button></div>
-        <div><button class="fa-button" onclick="good_submit(fviewcomment, 'good')"><i class="fa fa-thumbs-o-up"></i> + <i class="fa fa-comment-o"></i></button></div>
+        <div><a href="#;" class="fa-button" onclick="mw_good_act('good')"><i class="fa fa-thumbs-o-up"></i> 추천</a></div>
+        <div><a href="#;" class="fa-button" onclick="good_submit(fviewcomment, 'good')"><i class="fa fa-thumbs-o-up"></i> + <i class="fa fa-comment-o"></i></a></div>
         <?php } //good_href ?>
     </div>
 

@@ -72,7 +72,7 @@ $wr_num = get_next_num($write_table);
 $sql = " update {$write_table} ";
 $sql.= "    set wr_num = '{$wr_num}' ";
 $sql.= "      , wr_datetime = '{$g4['time_ymdhis']}' ";
-$sql.= "  where wr_num = '{$write['wr_num']}' ";
+$sql.= "  where wr_id = '{$write['wr_id']}' ";
 
 $qry = sql_query($sql);
 

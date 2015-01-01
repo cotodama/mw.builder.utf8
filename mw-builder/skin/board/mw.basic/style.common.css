@@ -1880,7 +1880,13 @@ img {
     float:right;
 }
 
+#mw_basic .comment_submit_button a {
+    float:right;
+}
+
 #mw_basic .comment_function button {
     float:left;
     margin:5px 5px 0 0;
 }
+
+

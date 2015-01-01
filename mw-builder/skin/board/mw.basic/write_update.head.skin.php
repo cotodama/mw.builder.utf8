@@ -21,6 +21,11 @@
 
 if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가 
 
+if (defined('G5_PATH'))
+    header("Content-Type: text/html; charset=utf-8");
+else
+    header("Content-Type: text/html; charset=$g4[charset]");
+
 $mw_is_list = false;
 $mw_is_view = false;
 $mw_is_write = true;
@@ -192,5 +197,9 @@ $is_notice = preg_match("/[^0-9]{0,1}{$write['wr_id']}[\r]{0,1}/", $board['bo_no
 
 if ($mw_category['ca_level_write'] && $mw_category['ca_level_write'] > $member['mb_level']) {
     alert("{$sca} 분류의 글작성권한이 없습니다.");
+}
+
+if ($mw_basic['cf_include_write_update_head'] && is_file($mw_basic['cf_include_write_update_head'])) {
+    include($mw_basic['cf_include_write_update_head']);
 }
 

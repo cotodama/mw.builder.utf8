@@ -21,6 +21,9 @@
 
 include_once("_common.php");
 
+if (defined("G5_PATH"))
+    include_once($board_skin_path."/mw.proc/mw.g5.adapter.extend.php");
+
 $html_title = "$group[gr_subject] > $board[bo_subject] > " . conv_subject($write[wr_subject], 255) . " > 링크";
 
 if (!($bo_table && $wr_id && $no)) 

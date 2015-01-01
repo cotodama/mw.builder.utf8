@@ -45,10 +45,13 @@ if ($mw_basic[cf_vote]) {
     $vote = sql_fetch("select * from $mw[vote_table] where bo_table = '$bo_table' and wr_id = '$wr_id'");
     $vote_list = array();
 
+    $max = 0;
     $sql = "select * from $mw[vote_item_table] where vt_id = '$vote[vt_id]'";
     $qry = sql_query($sql);
     for ($i=0; $row=sql_fetch_array($qry); $i++) {
         //$row[vt_rate] = @round($row[vt_hit] / $vote[vt_total], 4) * 100;
+        if ($max < $row['vt_hit'])
+            $max = $row['vt_hit'];
         $row[vt_rate] = @round($row[vt_hit] / $vote[vt_total], 2) * 100;
         if ($row[vt_rate])
             $row[vt_rate] = "$row[vt_rate]% <span class='count'> (".number_format($row[vt_hit]).") </span>";
@@ -58,6 +61,11 @@ if ($mw_basic[cf_vote]) {
         $row[vt_width] = @intval($width * ($row[vt_rate] / 100));
         $row[vt_item] = cut_str(get_text(strip_tags($row[vt_item])), 50);
         $vote_list[$i] = $row;
+    }
+
+    // 출력 비율 변경 (100% -> $max%)
+    foreach ((array)$vote_list as $i=>$row) {
+        $vote_list[$i]['vt_width'] = @round($width*$row['vt_hit']/$max);
     }
 
     if ($vote[vt_multi]) {
@@ -130,7 +138,7 @@ if ($mw_basic[cf_vote] && $vote && sizeof($vote_list)) {
     <? } else { ?>
         <div class="mw_vote_list">
             <div class="mw_vote_result">
-            <? for ($i=0; $i<sizeof($vote_list); $i++) { ?>
+            <? for ($i=0, $m=sizeof($vote_list); $i<$m; $i++) { ?>
             <div>
                 <span class="item"><?=$vote_list[$i][vt_item]?> </span>
                 <img src="<?=$img_path?>/vote_<?=$gr[abs($i%9)]?>.gif"
