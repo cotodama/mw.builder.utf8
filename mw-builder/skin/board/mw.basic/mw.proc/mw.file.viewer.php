@@ -22,7 +22,7 @@
 if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
 
 // 파일 출력
-if ($mw_basic[cf_social_commerce]) {
+if ($mw_basic['cf_social_commerce'] or $mw_basic['cf_talent_market']) {
     $file_start = 2;
 }
 else if ($mw_basic[cf_talent_market]) {
@@ -57,10 +57,11 @@ for ($i=$file_start; $i<=$view[file][count]; $i++) {
     else if ($view[file][$i][view])
     {
         // 원본 강제 리사이징
-        if ($mw_basic[cf_original_width] && $mw_basic[cf_original_height]) {
-            if ($view[file][$i][image_width] > $mw_basic[cf_original_width] || $view[file][$i][image_height] > $mw_basic[cf_original_height]) {
+        if ($mw_basic[cf_resize_original]) {
+            if ($view[file][$i][image_width] > $mw_basic[cf_resize_original] || $view[file][$i][image_height] > $mw_basic[cf_resize_original]) {
                 $file = "$file_path/{$view[file][$i][file]}";
-                mw_make_thumbnail($mw_basic[cf_original_width], $mw_basic[cf_original_height], $file, $file, true);
+                thumb_log($file, 'resize-original');
+                mw_make_thumbnail($iw_basic[cf_resize_original], $mw_basic[cf_resize_original], $file, $file, true);
                 if ($mw_basic[cf_watermark_use] && is_file($mw_basic[cf_watermark_path])) mw_watermark_file($file);
                 $size = getimagesize($file);
                 $view[file][$i][image_width] = $size[0];
@@ -156,7 +157,11 @@ if ($mw_basic[cf_watermark_use] && is_file($mw_basic[cf_watermark_path]))
 if (!$mw_basic[cf_zzal] && !strstr($view[content], "{이미지:") && !$write['wr_lightbox'])// 파일 출력  
     $view[content] = $file_viewer . $view[content]; 
 
-$view[rich_content] = preg_replace("/{이미지\:([0-9]+)[:]?([^}]*)}/ie", "mw_view_image(\$view, '\\1', '\\2')", $view[content]);
+if (!$mw_basic['cf_zzal'])
+    $view[rich_content] = preg_replace("/{이미지\:([0-9]+)[:]?([^}]*)}/ie", "mw_view_image(\$view, '\\1', '\\2')", $view[content]);
+else
+
+    $view[rich_content] = preg_replace("/{이미지\:([0-9]+)[:]?([^}]*)}/ie", "", $view[content]);
 
 if ($mw_basic[cf_no_img_ext]) { // 이미지 확대 사용 안함
     $view[rich_content] = preg_replace("/name='target_resize_image\[\]' onclick='image_window\(this\)'/iUs", "", $view[rich_content]);
@@ -244,9 +249,9 @@ $google_map_is_view = false;
 if ($mw_basic[cf_google_map] && trim($write[wr_google_map])) {
     ob_start();
     ?>
-    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&language=ko"></script>
-    <script type="text/javascript" src="<?=$pc_skin_path?>/mw.js/mw.google.js"></script>
-    <script type="text/javascript">
+    <script src="http://maps.google.com/maps/api/js?sensor=true&language=ko"></script>
+    <script src="<?=$pc_skin_path?>/mw.js/mw.google.js"></script>
+    <script>
     $(document).ready(function () {
         mw_google_map("google_map", "<?=addslashes($write[wr_google_map])?>");
     });
@@ -281,7 +286,7 @@ if ($mw_basic[cf_contents_shop] == '2' and $write[wr_contents_price]) // 배추 
             <?=conv_content($view[wr_contents_preview], $html)?>
             <div style="margin:20px 0 0 0;"><input type="button" class="btn1" value="내용보기" onclick="buy_contents('<?=$bo_table?>','<?=$wr_id?>', 0)"/></div>
         </div>
-        <script type="text/javascript">
+        <script>
         function contents_shop_view() {
         }
         </script>

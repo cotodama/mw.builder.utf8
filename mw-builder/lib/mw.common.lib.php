@@ -167,6 +167,8 @@ function mw_get_list($write_row, $board, $skin_path, $subject_len=40)
     else
         $list['subject'] = conv_subject($list['wr_subject'], $board['bo_subject_len'], "…");
 
+    $list['subject'] = mw_builder_reg_str($list['subject']);
+
     // 목록에서 내용 미리보기 사용한 게시판만 내용을 변환함 (속도 향상) : kkal3(커피)님께서 알려주셨습니다.
     if ($board['bo_use_list_content'])
 	{
@@ -287,17 +289,56 @@ function goto_url2($url) {
 // 자동치환
 function mw_builder_reg_str($str)
 {
+    global $g4;
     global $member;
 
-    if ($member[mb_id]) {
-        $str = str_replace("{닉네임}", $member[mb_nick], $str);
-        $str = str_replace("{별명}", $member[mb_nick], $str);
-    } else {
+    if ($member['mb_id']) {
+        $str = str_replace("{닉네임}", $member['mb_nick'], $str);
+        $str = str_replace("{별명}", $member['mb_nick'], $str);
+    }
+    else {
         $str = str_replace("{닉네임}", "회원", $str);
         $str = str_replace("{별명}", "회원", $str);
     }
 
+    $str = preg_replace("/\[month\]/iU", date('n', $g4['server_time']), $str);
+    $str = preg_replace("/\[last_day\]/iU", date('t', $g4['server_time']), $str);
+
+    $str = preg_replace("/\[today\]/iU", date('Y년 m월 d일', $g4['server_time']), $str);
+    $str = preg_replace("/\[day of the week\]/iU", get_yoil($g4['time_ymdhis']), $str);
+
+    preg_match_all("/\[counting (.*)\]/iU", $str, $matches);
+    for ($i=0, $m=count($matches[1]); $i<$m; $i++) {
+        $str = preg_replace("/\[counting {$matches[1][$i]}\]/iU", mw_builder_counting_date($matches[1][$i]), $str);
+    }
+
     return $str;
+}
+
+function mw_builder_counting_date($datetime, $endstr=" 남았습니다")
+{
+    global $g4;
+
+    $timestamp = strtotime($datetime); // 글쓴날짜시간 Unix timestamp 형식 
+    $current = $g4['server_time']; // 현재날짜시간 Unix timestamp 형식 
+
+    if ($current >= $timestamp)
+        return "종료 되었습니다.";
+
+    if ($current <= $timestamp - 86400 * 365)
+        $str = (int)(($timestamp - $current) / (86400 * 365)) . "년"; 
+    else if ($current <= $timestamp - 86400 * 31)
+        $str = (int)(($timestamp - $current) / (86400 * 31)) . "개월"; 
+    else if ($current <= $timestamp - 86400 * 1)
+        $str = (int)(($timestamp - $current) / 86400) . "일"; 
+    else if ($current <= $timestamp - 3600 * 1)
+        $str = (int)(($timestamp - $current) / 3600) . "시간"; 
+    else if ($current <= $timestamp - 60 * 1)
+        $str = (int)(($timestamp - $current) / 60) . "분"; 
+    else
+        $str = (int)($timestamp - $current) . "초"; 
+    
+    return $str.$endstr; 
 }
 
 // 자동치환

@@ -49,12 +49,15 @@ function mw_new($skin_dir="", $rows=10, $subject_len=40, $minute=0)
 	    $bo_table = $row[bo_table];
 	    $wr_id = $row[wr_id];
 	    if ($old_table != $bo_table) {
-		$board = sql_fetch("select * from $g4[board_table] where bo_table = '$bo_table'");
+		$board = sql_fetch("select * from {$g4['board_table']} where bo_table = '{$bo_table}'");
 		$old_table = $bo_table;
 	    }
-	    $ro2 = sql_fetch("select * from $g4[write_prefix]$row[bo_table] where wr_id = '$wr_id'");
-	    $list[$i] = get_list($ro2, $board, $latest_skin_path, $subject_len);
-	    $list[$i][bo_subject] = $row[bo_subject];
+	    $ro2 = sql_fetch("select * from {$g4['write_prefix']}{$row['bo_table']} where wr_id = '{$wr_id}'");
+	    //$list[$i] = get_list($ro2, $board, $latest_skin_path, $subject_len);
+            $list[$i] = mw_get_list($ro2, $board, $latest_skin_path, $subject_len);
+            $list[$i]['href'] = mw_builder_seo_url($bo_table, $ro2['wr_id']);
+            $list[$i]['content'] = $list[$i]['wr_content'] = "";
+	    $list[$i]['bo_subject'] = $row['bo_subject'];
 	}
 
 	if ($i == 0) {

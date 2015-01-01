@@ -156,13 +156,13 @@ jQuery(function($){
 <script>
 $(document).ready(function () {
     $("#tabs").tabs();
-    $("#tabs").tabs('option', 'selected', <?=$tn?>);
+    $("#tabs").tabs('option', 'active', <?=$tn?>);
 
     $("#preloader").css('display', 'none');
     $("#load").css('display', 'block');
 });
 function fsend() {
-    document.cf_form.tn.value = $('#tabs').tabs('option', 'selected')
+    document.cf_form.tn.value = $('#tabs').tabs('option', 'active')
     document.cf_form.submit();
 }
 function reload_config() {
@@ -663,14 +663,28 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 	    </select>
 	    <span class="cf_info">(본문하단에 관련 게시물을 출력합니다.)</span>
 	    <script> document.cf_form.cf_related.value = "<?=$mw_basic[cf_related]?>"; </script>
+            <div>
+                <input type="checkbox" name="cf_related_subject" value="1"> 제목
+                <input type="checkbox" name="cf_related_content" value="1"> 내용 
+            </div>
+	    <script>
+            document.cf_form.cf_related_subject.checked = '<?php echo $mw_basic['cf_related_subject']?>';
+            document.cf_form.cf_related_content.checked = '<?php echo $mw_basic['cf_related_content']?>';
+            </script>
+
 	</div>
     </div>
 
     <div class="cf_item">
 	<div class="cf_title"> <input type=checkbox name=chk[cf_related_table] value=1>&nbsp; 관련글 타게시판 </div>
 	<div class="cf_content">
-            <input type="text" size="10" class="ed" name="cf_related_table" value="<?=$mw_basic[cf_related_table]?>">
-	    <span class="cf_info">(관련 게시물을 다른게시판에서 검색합니다. 게시판 TABLE 명을 넣어주세요.)</span>
+            <input type="text" size="50" class="ed" name="cf_related_table" value="<?=$mw_basic[cf_related_table]?>">
+	    <div class="cf_info">(관련 게시물을 다른게시판에서 검색합니다. 게시판 TABLE 명을 넣어주세요. 복수의 게시판 , 컴마로 구분)</div>
+            <div>
+                <input type="checkbox" name="cf_related_table_div" value="1">
+                현재 게시판, 타게시판 모두 출력
+            </div>
+	    <script> document.cf_form.cf_related_table_div.checked = '<?php echo $mw_basic['cf_related_table_div']?>'; </script>
 	</div>
     </div>
 
@@ -941,7 +955,7 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 	<div class="cf_content">
 	    <input type=checkbox name=cf_list_cate value=1> 출력안함 
 	    <span class="cf_info">(체크하면 목록에서 출력하지 않습니다.)</span>
-	    <script> document.cf_form.cf_list_cate.checked = <?=$mw_basic[cf_list_cate]?>; </script>
+	    <script> document.cf_form.cf_list_cate.checked = '<?=$mw_basic[cf_list_cate]?>'; </script>
 	</div>
     </div>
 	
@@ -954,6 +968,15 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 	</div>
     </div>
     
+    <div class="cf_item">
+	<div class="cf_title"> <input type=checkbox name=chk[cf_search_name] value=1>&nbsp; 작성자 검색 </div>
+	<div class="cf_content">
+	    <input type=checkbox name=cf_search_name value=1> 출력안함 
+	    <span class="cf_info">(체크하면 검색에서 이름, 회원아이디를 출력하지 않습니다.)</span>
+	    <script> document.cf_form.cf_search_name.checked = '<?=$mw_basic[cf_search_name]?>'; </script>
+	</div>
+    </div>
+ 
     <div class="cf_item">
 	<div class="cf_title"> <input type=checkbox name=chk[cf_post_date] value=1>&nbsp; 게시물 날짜 </div>
 	<div class="cf_content">
@@ -1272,9 +1295,25 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
     </div>
 
     <div class="cf_item">
-	<div class="cf_title"> <input type=checkbox name=chk[cf_include_write_action] value=1>&nbsp; 글쓰기 업데이트</div>
+	<div class="cf_title"> <input type=checkbox name=chk[cf_include_write_update_head] value=1>&nbsp; 글쓰기 업데이트 HEAD</div>
+	<div class="cf_content">
+	    <input type="text" size="60" name="cf_include_write_update_head" class="ed" value="<?=$mw_basic[cf_include_write_update_head]?>"> 
+	    <div class="cf_info">글작성 DB 업데이트 부분에에 포함될 파일입니다.</div>
+	</div>
+    </div>
+
+    <div class="cf_item">
+	<div class="cf_title"> <input type=checkbox name=chk[cf_include_write_update] value=1>&nbsp; 글쓰기 업데이트</div>
 	<div class="cf_content">
 	    <input type="text" size="60" name="cf_include_write_update" class="ed" value="<?=$mw_basic[cf_include_write_update]?>"> 
+	    <div class="cf_info">글작성 DB 업데이트 부분에에 포함될 파일입니다.</div>
+	</div>
+    </div>
+
+    <div class="cf_item">
+	<div class="cf_title"> <input type=checkbox name=chk[cf_include_write_update_tail] value=1>&nbsp; 글쓰기 업데이트 TAIL</div>
+	<div class="cf_content">
+	    <input type="text" size="60" name="cf_include_write_update_tail" class="ed" value="<?=$mw_basic[cf_include_write_update_tail]?>"> 
 	    <div class="cf_info">글작성 DB 업데이트 부분에에 포함될 파일입니다.</div>
 	</div>
     </div>
@@ -1566,6 +1605,17 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
             </script>
 	</div>
     </div>
+
+
+    <div class="cf_item">
+	<div class="cf_title"><input type=checkbox name=chk[cf_ca_order] value=1>&nbsp; 분류정렬</div>
+	<div class="cf_content">
+	    <input type=checkbox name=cf_ca_order value=1> 사용 
+	    <span class="cf_info">(분류이름을 오른차순으로 정렬하여 출력합니다.)</span>
+	    <script> document.cf_form.cf_ca_order.checked = '<?=$mw_basic[cf_ca_order]?>'; </script>
+	</div>
+    </div>
+
 
     <div class="block"></div>
 </div>
@@ -1891,6 +1941,10 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 	    <input type=checkbox name=cf_sns_kakao value=1> 카카오톡 <span class="cf_info">(모바일에서만)</span>
 	    <input type=checkbox name=cf_sns_kakaostory value=1> 카카오스토리 <span class="cf_info">(모바일에서만)</span>
 	    <input type=checkbox name=cf_sns_line value=1> 라인 <span class="cf_info">(모바일에서만)</span>
+            <br>
+            카카오톡 앱 키 :
+            <input type="text" size="20" class="ed" name="cf_kakao_key" value="<?php echo $mw_basic['cf_kakao_key']?>">
+            <a href="http://www.miwit.com/b/mw_tip-4225" target="_blank">등록방법</a>
 	    <script>
             document.cf_form.cf_sns_twitter.checked = '<? echo strstr($mw_basic[cf_sns], '/twitter/')?'1':''; ?>';
             //document.cf_form.cf_sns_me2day.checked = '<? echo strstr($mw_basic[cf_sns], '/me2day/')?'1':''; ?>';
@@ -2528,7 +2582,7 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
                         <script> $("#ca_level_write_<?php echo $row['ca_id']?>").val("<?php echo $row['ca_level_write']?>"); </script>
                     </td>
                     <td>
-                        <input type="text" size="10" id="ca_color_<?php echo $row['ca_id']?>" name="ca_color_<?php echo $row['ca_id']?>" value="<?php echo $row['ca_color']?>">
+                        <input type="text" size="10" maxlength="7" id="ca_color_<?php echo $row['ca_id']?>" name="ca_color_<?php echo $row['ca_id']?>" value="#<?php echo $row['ca_color']?>">
                     </td>
                     <td>
                         <input type="button" class="bt" value="글삭제" onclick="mw_category_action('<?php echo $ca_name?>', 'del')">
@@ -2943,6 +2997,14 @@ input.bt { background-color:#efefef; height:20px; cursor:pointer; font-size:11px
 	</div>
     </div>
 
+    <div class="cf_item">
+	<div class="cf_title"> <input type=checkbox name=chk[cf_ani_nothumb] value=1>&nbsp; 애니GIF </div>
+	<div class="cf_content">
+	    <input type=checkbox name=cf_ani_nothumb value=1> 썸네일 및 워터마크 생성안함
+            <span class="cf_info">(움직이는 GIF 이미지는 썸네일, 워터마크등을 생성하지 않습니다.)</span>
+	    <script> document.cf_form.cf_ani_nothumb.checked = '<?=$mw_basic[cf_ani_nothumb]?>'; </script>
+	</div>
+    </div>
 
     <div class="block"></div>
 </div> <!-- tabs-5-2 -->

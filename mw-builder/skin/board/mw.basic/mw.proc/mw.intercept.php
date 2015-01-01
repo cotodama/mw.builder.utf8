@@ -21,7 +21,13 @@
 
 include_once("_common.php");
 include_once("$board_skin_path/mw.lib/mw.skin.basic.lib.php");
+
+$viewport = "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0\">";
+ob_start();
 include_once("$g4[path]/head.sub.php");
+$head = ob_get_clean();
+$head = str_replace("<head>", "<head>\n{$viewport}", $head);
+echo $head;
 
 if (!mw_singo_admin($member[mb_id]))
     alert_close("접근 권한이 없습니다.");

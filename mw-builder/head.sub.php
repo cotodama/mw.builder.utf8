@@ -22,9 +22,9 @@ if ($member['mb_memo_call']) {
 // 게시판 제목에 ' 포함되면 오류 발생
 $lo_location = addslashes($g4['title']);
 if (!$lo_location)
-    $lo_location = $_SERVER['REQUEST_URI'];
+    $lo_location = addslashes($_SERVER['REQUEST_URI']);
 //$lo_url = $g4[url] . $_SERVER['REQUEST_URI'];
-$lo_url = $_SERVER['REQUEST_URI'];
+$lo_url = addslashes($_SERVER['REQUEST_URI']);
 if (strstr($lo_url, "/$g4[admin]/") || $is_admin == "super") $lo_url = "";
 
 // 자바스크립트에서 go(-1) 함수를 쓰면 폼값이 사라질때 해당 폼의 상단에 사용하면

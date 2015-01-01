@@ -95,7 +95,7 @@ if ($mw_basic[cf_link_board] && !$is_admin && $view[mb_id] != $member[mb_id] && 
     goto_url($view['link_href'][1]);
 }
 // 게시물별 링크
-elseif ($write[wr_link_write] && !$is_admin && $view[mb_id] != $member[mb_id] && $view[link][1]) {
+elseif ($write[wr_link_write] && !$is_admin && ($view[mb_id] != $member[mb_id] or !$view[mb_id]) && $view[link][1]) {
     if ($mw_basic[cf_read_level] && $list[$i][wr_read_level]) {
         if ($list[$i][wr_read_level] <= $member[mb_level])
             goto_url($view['link_href'][1]);
@@ -348,6 +348,24 @@ if ($mw_basic[cf_attribute] != "1:1" && (!$prev_href || !$next_href))
     }
 }
 
+if ($prev_href) {
+    $tmp = sql_fetch(" select wr_singo, wr_view_block from {$write_table} where wr_id = '{$prev['wr_id']}' ");
+    if ($tmp['wr_singo'] && $tmp['wr_singo'] >= $mw_basic['cf_singo_number'] && $mw_basic['cf_singo_write_block']) {
+        $prev_wr_subject = "신고가 접수된 게시물입니다.";
+    }
+    if ($tmp['wr_view_block'])
+        $next_wr_subject = "보기가 차단된 게시물입니다.";
+}
+
+if ($next_href) {
+    $tmp = sql_fetch(" select wr_singo, wr_view_block from {$write_table} where wr_id = '{$next['wr_id']}' ");
+    if ($tmp['wr_singo'] && $tmp['wr_singo'] >= $mw_basic['cf_singo_number'] && $mw_basic['cf_singo_write_block']) {
+        $next_wr_subject = "신고가 접수된 게시물입니다.";
+    }
+    if ($tmp['wr_view_block'])
+        $next_wr_subject = "보기가 차단된 게시물입니다.";
+}
+
 //$view[rich_content] = preg_replace_callback("/\[code\](.*)\[\/code\]/iUs", "_preg_callback", $view[rich_content]);
 
 // 리워드
@@ -483,7 +501,8 @@ $view_sns = null;
 
 if ($mw_basic[cf_sns])
 {
-    $view_url = "$g4[url]/$g4[bbs]/board.php?bo_table=$bo_table&wr_id=$wr_id";
+    $view_url = mw_seo_url($bo_table, $wr_id);
+    //$view_url = "$g4[url]/$g4[bbs]/board.php?bo_table=$bo_table&wr_id=$wr_id";
 
     if ($mw_basic[cf_umz] && $view[wr_umz]) $sns_url = $view[wr_umz];
     else if ($mw_basic[cf_shorten]) $sns_url = $shorten;
@@ -545,18 +564,25 @@ if ($mw_basic[cf_sns])
     <? } ?>
     <? if (strstr(strtolower($_SERVER[HTTP_USER_AGENT]), "mobile") or $is_admin) { ?>
         <?
-        if (!strstr(strtolower($_SERVER[HTTP_USER_AGENT]), "mobile"))
-            $kakao_url = "#;\" onclick=\"javascript:alert('모바일 기기에서만 작동합니다.');";
-
         $kakao_name = mw_kakao_str($config[cf_title], 50);
         $kakao_subject = mw_kakao_str($view[wr_subject], 50);
         $kakao_content = mw_kakao_str($view[wr_content], 50);
+        $kakao_thumb_path = $g4['path']."/data/file/{$bo_table}/thumbnail/".$wr_id;
+        $kakao_thumb_url = $g4['url']."/data/file/{$bo_table}/thumbnail/".$wr_id;
+        if ($mw_basic['cf_thumb_jpg']) {
+            $kakao_thumb_path .= ".jpg";
+            $kakao_thumb_url .= ".jpg";
+        }
 
-        $kakao_thumb = "{$g4[url]}/data/file/{$bo_table}/thumbnail/{$wr_id}";
-        if ($mw_basic['cf_thumb_jpg'])
-            $kakao_thumb .= ".jpg";
-        ?>
-        <? if (strstr($mw_basic[cf_sns], '/kakaostory/')) { ?>
+        if (!is_file($kakao_thumb_path))
+            $kakao_thumb_url = '';
+        else
+            $kakao_thumb_size = @getImageSize($kakao_thumb_path);
+
+        if (!strstr(strtolower($_SERVER[HTTP_USER_AGENT]), "mobile"))
+            $kakao_url = "#;\" onclick=\"javascript:alert('모바일 기기에서만 작동합니다.');";
+
+        if (strstr($mw_basic[cf_sns], '/kakaostory/')) { ?>
         <script src="<?=$pc_skin_path?>/mw.js/kakao.link.js"></script>
         <script>
         function kakaostorylink()
@@ -569,21 +595,45 @@ if ($mw_basic[cf_sns])
                 appid : "<?=$_SERVER[HTTP_HOST]?>",
                 appver : "1.0",
                 appname : "<?=$kakao_name?>",
-                urlinfo : JSON.stringify({title:"<?=$kakao_subject?>", desc:"<?=$kakao_content?>", imageurl:["<?=$kakao_thumb?>"], type:"article"})
+                urlinfo : JSON.stringify({title:"<?=$kakao_subject?>", desc:"<?=$kakao_content?>", imageurl:["<?=$kakao_thumb_url?>"], type:"article"})
             });
         }
         </script>
 
         <!--<div><a href="<?=$kakaostory_url?>"><img src="<?=$pc_skin_path?>/img/send_kakaostory.png" valign="middle"></a></div>-->
         <div><a href="#;" onclick="kakaostorylink()"><img src="<?=$pc_skin_path?>/img/send_kakaostory.png" valign="middle" style="cursor:pointer;"></a></div>
-        <? } ?>
-        <? if (strstr($mw_basic[cf_sns], '/kakao/')) { ?>
-        <div><a href="<?=$kakao_url?>"><img src="<?=$pc_skin_path?>/img/send_kakaotalk.png" valign="middle"></a></div>
-        <? } ?>
-        <? if (strstr($mw_basic[cf_sns], '/line/')) { ?>
+        <?php } ?>
+
+        <?php if (strstr($mw_basic[cf_sns], '/kakao/')) { ?>
+        <div><a href="#;" id="kakao-link-btn"><img src="<?=$pc_skin_path?>/img/send_kakaotalk.png" valign="middle"></a></div>
+        <script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
+        <script>
+        // 사용할 앱의 Javascript 키를 설정해 주세요.
+        Kakao.init('<?php echo $mw_basic['cf_kakao_key']?>');
+
+        // 카카오톡 링크 버튼을 생성합니다. 처음 한번만 호출하면 됩니다.
+        Kakao.Link.createTalkLinkButton({
+            container: '#kakao-link-btn',
+            label: '<?php echo $kakao_subject?>\n',
+            <?php if ($kakao_thumb_url) { ?>
+            image: {
+                src: '<?php echo $kakao_thumb_url?>',
+                width: '<?php echo $kakao_thumb_size[0]?>',
+                height: '<?php echo $kakao_thumb_size[1]?>'
+            },
+            <?php } ?>
+            webButton: {
+                text: '<?php echo $kakao_name?>',
+                url: '<?php echo $view_url?>' // 앱 설정의 웹 플랫폼에 등록한 도메인의 URL이어야 합니다.
+            }
+        });
+        </script>
+        <?php } ?>
+
+        <?php if (strstr($mw_basic[cf_sns], '/line/')) { ?>
         <div><a href="<?=$line_url?>"><img src="<?=$pc_skin_path?>/img/send_line.png" valign="middle"></a></div>
-        <? } ?>
-    <? } ?>
+        <?php } ?>
+    <?php } ?>
 
     <? if (strstr($mw_basic[cf_sns], '/facebook_good/')) { ?>
     <div><iframe src="http://www.facebook.com/plugins/like.php?href=<?=$facebook_like_href?>&amp;layout=button_count&amp;show_faces=true&amp;width=450&amp;action=like&amp;colorscheme=light&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:100px; height:21px;" allowTransparency="true"></iframe></div>
